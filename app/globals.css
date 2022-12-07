@@ -1,9 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: white;
 }
 
 a {
@@ -19,8 +22,27 @@ a {
   html {
     color-scheme: dark;
   }
-  body {
-    color: white;
-    background: black;
-  }
+}
+
+html {
+  background-image: url('../public/lines.png'), url('../public/Rectangle.png'),
+    linear-gradient(
+      45deg,
+      rgba(65, 160, 176, 1) 0%,
+      rgba(111, 170, 205, 1) 53%,
+      rgba(185, 186, 252, 1) 73%,
+      rgba(195, 196, 240, 1) 83%,
+      rgba(179, 160, 249, 1) 100%
+    );
+  background-size: cover;
+  height: 100%;
+  /* Background image is centered vertically and horizontally at all times */
+  background-position: center center;
+
+  /* Background image doesn't tile */
+  background-repeat: no-repeat;
+
+  /* Background image is fixed in the viewport so that it doesn't move when
+the content's height is greater than the image's height */
+  background-attachment: fixed;
 }
