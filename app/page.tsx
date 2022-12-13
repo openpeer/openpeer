@@ -1,5 +1,6 @@
 'use client';
 import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import { Manrope } from '@next/font/google';
@@ -9,7 +10,6 @@ import lock from '../public/lock.png';
 import logo from '../public/logo.svg';
 import passport from '../public/passport.png';
 import people from '../public/people.png';
-import styles from './page.module.css';
 
 const regular = Manrope({
   subsets: ['latin'],
@@ -97,9 +97,9 @@ export default function Home() {
           </div>
         </div>
         <div className="text-center">
-          <a href="https://minke.app" className="bg-[#222222] px-20 py-4 rounded-lg">
+          <Link href="/app" className="bg-[#222222] px-20 py-4 rounded-lg">
             Launch App
-          </a>
+          </Link>
         </div>
       </div>
       <div className="flex flex-col justify-around mx-20 md:space-x-20 md:flex-row">
