@@ -27,7 +27,7 @@ const userNavigation = [
   { name: 'Sign out', href: '#' }
 ];
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
@@ -91,10 +91,12 @@ export default function HomePage() {
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <img
+                    <Image
+                      src={logo}
+                      alt="openpeer logo"
                       className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                      alt="Your Company"
+                      width={104}
+                      height={23}
                     />
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
