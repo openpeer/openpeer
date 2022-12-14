@@ -19,6 +19,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 
 import Head from '../app/head';
+import Button from '../components/Button/Button';
 import logo from '../public/logo.svg';
 
 const manrope = Manrope({
@@ -48,19 +49,33 @@ const myTheme = merge(lightTheme(), {
   }
 }) as Theme;
 
-const navigation = [{ name: 'P2P', href: '#', icon: ChartBarSquareIcon, current: true }];
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' }
-];
+const navigation = [{ name: 'P2P', href: '#', icon: ChartBarSquareIcon }];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+const NavItems = ({ selected }: { selected: string | undefined }) => {
+  return (
+    <div>
+      {navigation.map((item) => (
+        <a
+          key={item.name}
+          href={item.href}
+          className={`text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md ${
+            selected === item.name && 'marcos'
+          }`}
+        >
+          <item.icon
+            className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+            aria-hidden="true"
+          />
+          {item.name}
+        </a>
+      ))}
+    </div>
+  );
+};
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { title } = pageProps;
 
   return (
     <WagmiConfig client={wagmiClient}>
@@ -96,7 +111,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                     leaveFrom="translate-x-0"
                     leaveTo="-translate-x-full"
                   >
-                    <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-gray-800 pt-5 pb-4">
+                    <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-black pt-5 pb-4">
                       <Transition.Child
                         as={Fragment}
                         enter="ease-in-out duration-300"
@@ -131,29 +146,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                       </div>
                       <div className="mt-5 h-0 flex-1 overflow-y-auto">
                         <nav className="space-y-1 px-2">
-                          {navigation.map((item) => (
-                            <a
-                              key={item.name}
-                              href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? 'bg-gray-900 text-white'
-                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                'group flex items-center px-2 py-2 text-base font-medium rounded-md'
-                              )}
-                            >
-                              <item.icon
-                                className={classNames(
-                                  item.current
-                                    ? 'text-gray-300'
-                                    : 'text-gray-400 group-hover:text-gray-300',
-                                  'mr-4 flex-shrink-0 h-6 w-6'
-                                )}
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </a>
-                          ))}
+                          <NavItems selected={title} />
                         </nav>
                       </div>
                     </Dialog.Panel>
@@ -168,8 +161,8 @@ const App = ({ Component, pageProps }: AppProps) => {
             {/* Static sidebar for desktop */}
             <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
               {/* Sidebar component, swap this element with another sidebar if you like */}
-              <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
-                <div className="flex h-16 flex-shrink-0 items-center bg-gray-900 px-4">
+              <div className="flex min-h-0 flex-1 flex-col bg-black">
+                <div className="flex h-16 flex-shrink-0 items-center px-4">
                   <Image
                     src={logo}
                     alt="openpeer logo"
@@ -180,29 +173,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                 </div>
                 <div className="flex flex-1 flex-col overflow-y-auto">
                   <nav className="flex-1 space-y-1 px-2 py-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
-                        )}
-                      >
-                        <item.icon
-                          className={classNames(
-                            item.current
-                              ? 'text-gray-300'
-                              : 'text-gray-400 group-hover:text-gray-300',
-                            'mr-3 flex-shrink-0 h-6 w-6'
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
-                    ))}
+                    <NavItems selected={title} />
                   </nav>
                 </div>
               </div>
@@ -219,9 +190,12 @@ const App = ({ Component, pageProps }: AppProps) => {
                 </button>
                 <div className="flex flex-1 justify-between px-4">
                   <div className="flex flex-1 items-center">
-                    <h3 className="text-xl font-bold uppercase max-w-7xl  sm:px-6 md:px-8">
-                      P2P
+                    <h3 className="text-3xl font-bold uppercase max-w-7xl sm:px-6 md:px-8">
+                      {title}
                     </h3>
+                  </div>
+                  <div className="flex flex-1 items-center">
+                    <Button title="Buy from Merchant" />
                   </div>
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
@@ -234,36 +208,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative ml-3">
-                      <div>
-                        <ConnectButton showBalance={false} />
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  {item.name}
-                                </a>
-                              )}
-                            </Menu.Item>
-                          ))}
-                        </Menu.Items>
-                      </Transition>
+                      <ConnectButton showBalance={false} />
                     </Menu>
                   </div>
                 </div>

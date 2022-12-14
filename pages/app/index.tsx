@@ -1,3 +1,5 @@
+
+
 export default function HomePage() {
   return (
     <div className="py-6">
@@ -13,4 +15,10 @@ export default function HomePage() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: { title: 'P2P' } // will be passed to the page component as props
+  };
 }
