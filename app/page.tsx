@@ -46,7 +46,7 @@ export default function Home() {
   const [navbar, setNavbar] = useState(false);
 
   return (
-    <div>
+    <><div>
       <nav className="mt-10 relative  flex justify-between items-center w-full">
         <a className="text-3xl font-bold leading-none" href="#">
           <Image src={logo} alt="openpeer logo" width={234} height={51} />
@@ -106,26 +106,23 @@ export default function Home() {
         {[
           {
             title: 'Self-custodial',
-            description:
-              'Only you control your crypto. Deploy a smart contract with your funds that can only be withdrawn by the other party upon payment.',
+            description: 'Only you control your crypto. Deploy a smart contract with your funds that can only be withdrawn by the other party upon payment.',
             image: lock
           },
           {
             title: 'No KYC',
-            description:
-              'No KYC necessary. Funds are never custodied by any central party. Earn reputation for every successful transaction.',
+            description: 'No KYC necessary. Funds are never custodied by any central party. Earn reputation for every successful transaction.',
             image: passport
           },
           {
             title: 'Community Moderated',
-            description:
-              'Disputes are moderated by a decentralized autonomous organization (DAO) of local experts who review evidence and vote on an outcome.',
+            description: 'Disputes are moderated by a decentralized autonomous organization (DAO) of local experts who review evidence and vote on an outcome.',
             image: people
           }
         ].map((item) => (
           <Feature key={item.title} {...item} />
         ))}
       </div>
-    </div>
+    </div></>
   );
 }
