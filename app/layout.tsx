@@ -11,8 +11,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="container mx-auto">{children}</div>
         {/* Footer */}
         <div className="bg-black text-white">
-          <div className="container mx-auto p-10 flex justify-between">
-            <div className='flex flex-col'>
+          <div className="container mx-auto p-12 flex flex-col md:flex-row md:justify-between">
+            <div className='flex flex-col items-center md:items-start'>
               <a className="text-3xl font-bold leading-none" href="#">
                 <Image src={logo} alt="openpeer logo" width={132} height={51} />
               </a>
@@ -23,11 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Launch App
               </a>
             </div>
-            <div className="flex">
+            <div className="flex content-center mt-8 md:mt-0 justify-center md:justify-start">
               <a href="" className="px-2">Docs</a>
               <a href="" className="px-2">FAQ</a>
               <a href="" className="px-2">
-                <Image src={twitterLogo} alt="openpeer logo" width={24} height={24} />
+                <Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
               </a>
             </div>
           </div>
