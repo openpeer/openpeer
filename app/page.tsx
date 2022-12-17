@@ -3,26 +3,11 @@ import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Manrope } from '@next/font/google';
-
 import arrows from '../public/arrows.svg';
 import lock from '../public/lock.png';
 import logo from '../public/logo.svg';
 import passport from '../public/passport.png';
 import people from '../public/people.png';
-
-const regular = Manrope({
-  subsets: ['latin'],
-  weight: '400'
-});
-const semibold = Manrope({
-  subsets: ['latin'],
-  weight: '600'
-});
-const bold = Manrope({
-  subsets: ['latin'],
-  weight: '800'
-});
 
 interface FeatureParams {
   title: string;
@@ -35,7 +20,7 @@ const Feature = ({ title, description, image }: FeatureParams) => {
     <div className="flex flex-col items-center mb-12">
       <Image src={image} alt={title} width={176} className="mb-4" />
       <h3 className="text-2xl mb-4">{title}</h3>
-      <div className={regular.className}>
+      <div className="font-normal">
         <p className="text-center text-base">{description}</p>
       </div>
     </div>
@@ -85,11 +70,11 @@ export default function Home() {
 
       <div className="mt-20 sm:mt-40 mb-20">
         <div className="text-center text-5xl sm:text-6xl mb-8">
-          <div className={semibold.className}>
+          <div className="font-semibold">
             <h1>Decentralized P2P</h1>
           </div>
         </div>
-        <div className={regular.className}>
+        <div className="font-normal">
           <div className="flex flex-row justify-center space-x-4 text-3xl mb-12">
             <h2>crypto</h2>
             <Image src={arrows} alt="swap arrows" />

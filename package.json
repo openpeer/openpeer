@@ -20,6 +20,7 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "ethers": "^5.7.2",
+    "lodash.merge": "^4.6.2",
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -28,6 +29,7 @@
     "wagmi": "^0.9.2"
   },
   "devDependencies": {
+    "@types/lodash.merge": "^4.6.7",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
     "tailwindcss": "^3.2.4"
