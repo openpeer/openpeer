@@ -9,7 +9,7 @@ const merchant = [
     amount: '₹520',
     avaliable: '0.02394BTC',
     limit: '₹ 200-₹300',
-    action: 'buy',
+    price: '₹520',
     isCurrent: false,
   },
   {
@@ -19,7 +19,17 @@ const merchant = [
     amount: '₹720',
     avaliable: '0.02394BTC',
     limit: '₹ 200-₹300',
-    action: 'buy',
+    price: '₹520',
+    isCurrent: false,
+  },
+  {
+    id: 3,
+    name: 'Marcos Teixeira',
+    volume: '0.0212 BTC',
+    amount: '₹20',
+    avaliable: '0.02394BTC',
+    limit: '₹ 100-₹200',
+    price: '₹520',
     isCurrent: false,
   },
 ]
@@ -40,7 +50,7 @@ export default function HomePage() {
           
 
           {/* Table structure START  */}
-          <table className="min-w-full divide-y divide-gray-300 md:rounded-lg overflow-hidden" style={{ borderSpacing: 0 }}>
+          <table className="min-w-full md:rounded-lg overflow-hidden" style={{ borderSpacing: 0 }}>
             <thead className="bg-gray-100">
               <tr>
                 <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
@@ -61,10 +71,10 @@ export default function HomePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {merchant.map((merchant: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; isCurrent: boolean | undefined; volume: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; amount: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; limit: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; action: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; }, merchantIdx: number) => (
-                <tr key={merchant.id}>
-                  <td>
-                    <div className="font-medium text-gray-900">
+              {merchant.map((merchant: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; isCurrent: boolean | undefined; volume: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; amount: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; limit: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; price: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | null | undefined; }, merchantIdx: number) => (
+                <tr key={merchant.id} className="hover:bg-gray-50">
+                  <td className="pl-4 py-4">
+                    <div className="text-sm text-gray-900">
                       {merchant.name}
                     </div>
                     <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
@@ -72,16 +82,16 @@ export default function HomePage() {
                       <span>Amount: {merchant.amount}</span>
                     </div>
                   </td>
-                  <td className='hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell'>
+                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
                     {merchant.volume}
                   </td>
-                  <td className='hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell'>
+                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
                     {merchant.amount}
                   </td>
-                  <td className='hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell'>
+                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
                     {merchant.limit}
                   </td>
-                  <td>
+                  <td className="text-right py-4 pr-4">
                     <Button title="Buy" /> 
                   </td>
                 </tr>
