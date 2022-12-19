@@ -195,7 +195,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                     </h3>
                   </div>
                   <div className="flex flex-1 items-center">
-                    <Button title="Buy from Merchant" />
+                    <Button title="Sell Crypto" />
                   </div>
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
