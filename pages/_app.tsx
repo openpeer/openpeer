@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 
 import merge from 'lodash.merge';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fragment, useState } from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon, polygonMumbai } from 'wagmi/chains';
@@ -195,7 +196,9 @@ const App = ({ Component, pageProps }: AppProps) => {
                     </h3>
                   </div>
                   <div className="flex flex-1 items-center">
-                    <Button title="Sell Crypto" />
+                    <Link href="/app/sell">
+                      <Button title="Sell Crypto" />
+                    </Link>
                   </div>
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
