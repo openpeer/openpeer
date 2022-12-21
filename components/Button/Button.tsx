@@ -1,10 +1,11 @@
 interface ButtonProps {
   title: string;
+  onClick: () => void;
 }
 
-const Button = ({ title }: ButtonProps) => {
+const Button = ({ title, onClick }: ButtonProps) => {
   return (
-    <button className="px-5 py-2.5 rounded bg-[#3C9AAA] text-sm text-white">
+    <button className="w-full md:w-auto px-5 py-2.5 rounded bg-[#3C9AAA] text-sm text-white" onClick={onClick}>
       {title}
     </button>
   );
