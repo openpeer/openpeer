@@ -1,4 +1,4 @@
-import {ArrowTrendingDownIcon, ArrowTrendingUpIcon } from '@heroicons/react/20/solid'
+import { ArrowTrendingDownIcon, ArrowTrendingUpIcon } from "@heroicons/react/20/solid"
 
 export default function List() {
   return (
