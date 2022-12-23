@@ -11,6 +11,7 @@ import BankSelect from '../../components/Select/BankSelect';
 import CurrencySelect from '../../components/Select/CurrencySelect';
 import TokenSelect from '../../components/Select/TokenSelect';
 import Steps from '../../components/Steps';
+import Textarea from '../../components/Textarea/Textarea';
 
 const SellPage = () => {
   const [step, setStep] = useState(1);
@@ -160,7 +161,13 @@ const SellPage = () => {
                 <div className="text-xl font-bold">+</div>
               </div>
 
-              <Label title="Order Terms" />
+              <Textarea
+                label="Order Terms"
+                rows="4"
+                name="OrderTerms"
+                id={''}
+                placeholder={''}
+              />
             </div>
           </>
         )}
