@@ -196,7 +196,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                     </h3>
                   </div>
                   <div className="flex flex-1 items-center">
-                    <Link href="/app/sell">
+                    <Link href="/sell">
                       <Button title="Sell Crypto" />
                     </Link>
                   </div>

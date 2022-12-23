@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import Button from '../../components/Button/Button';
-import List from '../../components/List';
+import Button from '../components/Button/Button';
+import List from '../components/List';
 
 const SellPage = () => {
   const [step, setStep] = useState(1);
@@ -13,9 +13,8 @@ const SellPage = () => {
         <h1 className="text-2xl font-semibold text-gray-900">Choose order type</h1>
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-        
         <List />
-        <Link href="/app/sell">
+        <Link href="/sell">
           <Button title="Proceed" />
         </Link>
       </div>

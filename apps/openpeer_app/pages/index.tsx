@@ -1,8 +1,8 @@
 import { formatUnits } from 'ethers/lib/utils.js';
 import { useEffect, useState } from 'react';
 
-import Button from '../../components/Button/Button';
-import { List } from '../../models/types';
+import Button from '../components/Button/Button';
+import { List } from '../models/types';
 
 const HomePage = () => {
   const [lists, setLists] = useState<List[]>([]);

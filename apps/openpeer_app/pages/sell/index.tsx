@@ -1,20 +1,22 @@
-import { useState } from "react"
-import { PencilSquareIcon } from "@heroicons/react/24/outline"
-import Button from "../../../components/Button/Button"
-import ButtonOutlined from "../../../components/Button/ButtonOutlined"
-import InputAddOns from "../../../components/Input/InputAddOns"
-import Input from "../../../components/Input/Input"
-import CurrencySelect from "../../../components/Select/CurrencySelect"
-import TokenSelect from "../../../components/Select/TokenSelect"
-import Steps from "../../../components/Steps"
-import BankSelect from "../../../components/Select/BankSelect"
-import Label from "../../../components/Label/Label"
+import { useState } from 'react';
+
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
+
+import Button from '../../components/Button/Button';
+import ButtonOutlined from '../../components/Button/ButtonOutlined';
+import Input from '../../components/Input/Input';
+import InputAddOns from '../../components/Input/InputAddOns';
+import Label from '../../components/Label/Label';
+import BankSelect from '../../components/Select/BankSelect';
+import CurrencySelect from '../../components/Select/CurrencySelect';
+import TokenSelect from '../../components/Select/TokenSelect';
+import Steps from '../../components/Steps';
 
 const SellPage = () => {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const proceed = () => {
-    setStep(step + 1)
-  }
+    setStep(step + 1);
+  };
 
   return (
     <div className="py-6">
@@ -165,7 +167,7 @@ const SellPage = () => {
         <Button title="Proceed" onClick={proceed} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SellPage
+export default SellPage;
