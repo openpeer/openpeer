@@ -1,43 +1,31 @@
+import { formatUnits } from 'ethers/lib/utils.js';
+import { useEffect, useState } from 'react';
+
 import Button from '../../components/Button/Button';
-import Merchant from '../../types/merchant';
+import { List } from '../../models/types';
 
-const merchant: Merchant[] = [
-  {
-    id: 1,
-    name: 'Josh Reyes',
-    volume: '0.0212 BTC',
-    amount: '₹520',
-    avaliable: '0.02394BTC',
-    limit: '₹ 200-₹300',
-    price: '₹520'
-  },
-  {
-    id: 2,
-    name: 'Marcos Teixeira',
-    volume: '0.0212 BTC',
-    amount: '₹720',
-    avaliable: '0.02394BTC',
-    limit: '₹ 200-₹300',
-    price: '₹520'
-  },
-  {
-    id: 3,
-    name: 'Marcos Teixeira',
-    volume: '0.0212 BTC',
-    amount: '₹20',
-    avaliable: '0.02394BTC',
-    limit: '₹ 100-₹200',
-    price: '₹520'
-  }
-];
+const HomePage = () => {
+  const [lists, setLists] = useState<List[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
-export default function HomePage() {
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/lists')
+      .then((res) => res.json())
+      .then((data) => {
+        setLists(data);
+        console.log(data);
+        setLoading(false);
+      });
+  }, []);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!lists) return <p>No lists data</p>;
+
   return (
     <div className="py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-        {/* Replace with your content */}
         <div className="py-4">
-          {/* Table structure START  */}
           <table className="min-w-full md:rounded-lg overflow-hidden border-spacing-0">
             <thead className="bg-gray-100">
               <tr>
@@ -74,41 +62,54 @@ export default function HomePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {merchant.map(({ id, name, volume, amount, limit }) => (
-                <tr key={id} className="hover:bg-gray-50">
-                  <td className="pl-4 py-4">
-                    <div className="text-sm text-gray-900">{name}</div>
-                    <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                      <span>Volume: {volume}</span>
-                      <span>Amount: {amount}</span>
-                    </div>
-                  </td>
-                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-                    {volume}
-                  </td>
-                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-                    {amount}
-                  </td>
-                  <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-                    {limit}
-                  </td>
-                  <td className="text-right py-4 pr-4">
-                    <Button title="Buy" />
-                  </td>
-                </tr>
-              ))}
+              {lists.map(
+                ({
+                  id,
+                  total_available_amount: amount,
+                  seller: { address },
+                  token: { decimals, symbol },
+                  fiat_currency: { code },
+                  limit_min: min,
+                  limit_max: max
+                }) => (
+                  <tr key={id} className="hover:bg-gray-50">
+                    <td className="pl-4 py-4">
+                      <div className="text-sm text-gray-900">{address}</div>
+                      <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
+                        <span>Volume: 0.0212 BTC</span>
+                        <br />
+                        <span>
+                          Amount: {formatUnits(amount, decimals)} {symbol}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+                      0.0212 BTC
+                    </td>
+                    <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+                      {formatUnits(amount, decimals)} {symbol}
+                    </td>
+                    <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+                      {min} - {max} {code}
+                    </td>
+                    <td className="text-right py-4 pr-4">
+                      <Button title="Buy" />
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
-          {/* Table structure END  */}
         </div>
-        {/* /End replace */}
       </div>
     </div>
   );
-}
+};
 
 export async function getServerSideProps() {
   return {
     props: { title: 'P2P' } // will be passed to the page component as props
   };
 }
+
+export default HomePage;
