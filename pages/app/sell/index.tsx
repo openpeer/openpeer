@@ -3,9 +3,12 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline"
 import Button from "../../../components/Button/Button"
 import ButtonOutlined from "../../../components/Button/ButtonOutlined"
 import InputAddOns from "../../../components/Input/InputAddOns"
+import Input from "../../../components/Input/Input"
 import CurrencySelect from "../../../components/Select/CurrencySelect"
 import TokenSelect from "../../../components/Select/TokenSelect"
 import Steps from "../../../components/Steps"
+import BankSelect from "../../../components/Select/BankSelect"
+import Label from "../../../components/Label/Label"
 
 const SellPage = () => {
   const [step, setStep] = useState(1)
@@ -54,9 +57,7 @@ const SellPage = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Set Price Margin
-              </label>
+              <Label title="Set Price Margin" />
               <div
                 className="flex space-x-1 rounded-lg bg-slate-100 p-0.5"
                 role="tablist"
@@ -110,28 +111,55 @@ const SellPage = () => {
           <>
             <h2 className="text-xl mt-8">Payment Method</h2>
             <p>Choose how you want to receive your money</p>
-            <div className="w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-              <div className="w-full flex flex-row justify-between mb-4">
-                <div>Bank Transfer</div>
-                <div>
-                  <PencilSquareIcon className="h-5 w-" aria-hidden="true" />
+            <Input
+              label="Account Name"
+              type="text"
+              name="user_name"
+              placeholder="Josh Adam"
+            />
+            <Input
+              label="Account Number"
+              type="tel"
+              name="user_account_number"
+              placeholder="1000"
+            />
+            <BankSelect />
+
+            <div className="hidden">
+              <div className="w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 border-2 border-slate-200 rounded-md">
+                <div className="w-full flex flex-row justify-between mb-4">
+                  <div>Bank Transfer</div>
+                  <div>
+                    <PencilSquareIcon className="h-5 w-" aria-hidden="true" />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <div>Josh Adam</div>
+                  <div></div>
+                </div>
+                <div className="w-full flex flex-row justify-between">
+                  <div>09909999994</div>
+                  <div>Bank</div>
                 </div>
               </div>
-              <div className="mb-4">
-                <div>Josh Adam</div>
-                <div></div>
-              </div>
-              <div className="w-full flex flex-row justify-between">
-                <div>09909999994</div>
-                <div>Bank</div>
-              </div>
+              <ButtonOutlined title="Add New Payment Method +" />
             </div>
-            <ButtonOutlined title="Add New Payment Method +" />
           </>
         )}
         {step === 4 && (
           <>
-            <h1>4</h1>
+            <div className="my-8">
+              <Label title="Time Limit for Payment" />
+              <div className="flex flex-row justify-between content-center bg-gray-100 mt-1 mb-8 py-4 p-8 border-2 border-slate-200 rounded-md">
+                <div className="text-xl font-bold">-</div>
+                <div className="flex flex-col item-center">
+                  <div className="text-xl font-bold">10 mins</div>
+                </div>
+                <div className="text-xl font-bold">+</div>
+              </div>
+
+              <Label title="Order Terms" />
+            </div>
           </>
         )}
         <Button title="Proceed" onClick={proceed} />
