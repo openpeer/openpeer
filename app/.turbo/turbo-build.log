@@ -1,0 +1,40 @@
+$ next build
+info  - Loaded env from /Users/marcosteixeira/Dev/openpeer/apps/openpeer_app/.env.local
+warn  - You have enabled experimental feature (appDir) in next.config.js.
+warn  - Experimental features are not covered by semver, and may cause unexpected or broken application behavior. Use at your own risk.
+info  - Thank you for testing `appDir` please leave your feedback at https://nextjs.link/app-feedback
+
+info  - Creating an optimized production build...
+info  - Compiled successfully
+info  - Skipping validation of types
+info  - Linting...
+
+./components/Select/Select.tsx
+23:19  Warning: Do not use `<img>` element. Use `<Image />` from `next/image` instead. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+53:29  Warning: Do not use `<img>` element. Use `<Image />` from `next/image` instead. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+info  - Collecting page data...
+info  - Generating static pages (0/4)
+info  - Generating static pages (1/4)
+info  - Generating static pages (2/4)
+info  - Generating static pages (3/4)
+info  - Generating static pages (4/4)
+info  - Finalizing page optimization...
+
+Route (pages)                              Size     First Load JS
+┌ λ /                                      987 B           313 kB
+├   /_app                                  0 B             312 kB
+├ ○ /404                                   181 B           312 kB
+├ λ /api/lists                             0 B             312 kB
+├ ○ /listing (390 ms)                      1.32 kB         313 kB
+└ ○ /sell (393 ms)                         7.53 kB         320 kB
++ First Load JS shared by all              322 kB
+  ├ chunks/main-bc97463dd1a470c7.js        78.8 kB
+  ├ chunks/pages/_app-32992f38412f26b3.js  231 kB
+  ├ chunks/webpack-a37410031e6d18f9.js     2.27 kB
+  └ css/71d2eb56d0fc0a32.css               9.58 kB
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+

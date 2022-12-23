@@ -1,0 +1,33 @@
+$ next build
+info  - Loaded env from /Users/marcosteixeira/Dev/openpeer/apps/site/.env.local
+warn  - You have enabled experimental feature (appDir) in next.config.js.
+warn  - Experimental features are not covered by semver, and may cause unexpected or broken application behavior. Use at your own risk.
+
+info  - Thank you for testing `appDir` please leave your feedback at https://nextjs.link/app-feedback
+info  - Creating an optimized production build...
+info  - Compiled successfully
+info  - Skipping validation of types
+info  - Linting...
+info  - Collecting page data...
+info  - Generating static pages (0/3)
+info  - Generating static pages (3/3)
+info  - Finalizing page optimization...
+
+Route (app)                                Size     First Load JS
+─ ○ /                                      0 B                0 B
++ First Load JS shared by all              66.3 kB
+  ├ chunks/50-e03116641529b529.js          64.1 kB
+  ├ chunks/main-app-3600dcc2f6d59a93.js    200 B
+  └ chunks/webpack-09367dea99a4fdb7.js     2.04 kB
+
+Route (pages)                              Size     First Load JS
+┌ ○ /404                                   179 B          81.1 kB
+└ λ /api/lists                             0 B            80.9 kB
++ First Load JS shared by all              80.9 kB
+  ├ chunks/main-306c7c923290038e.js        78.7 kB
+  ├ chunks/pages/_app-ed33ae63542c1e9a.js  192 B
+  └ chunks/webpack-09367dea99a4fdb7.js     2.04 kB
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+
