@@ -9,23 +9,6 @@ const nextConfig = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true
-  },
-
-  rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/:path*',
-          has: [
-            {
-              type: 'host',
-              value: 'app.openpeer.xyz'
-            }
-          ],
-          destination: '/app/:path*'
-        }
-      ]
-    };
   }
 };
 
