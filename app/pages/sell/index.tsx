@@ -12,6 +12,7 @@ import CurrencySelect from "../../components/Select/CurrencySelect"
 import TokenSelect from "../../components/Select/TokenSelect"
 import Steps from "../../components/Steps"
 import Textarea from "../../components/Textarea/Textarea"
+import Checkbox from "../../components/Checkbox/Checkbox"
 
 const SellPage = () => {
   const [step, setStep] = useState(1)
@@ -170,7 +171,10 @@ const SellPage = () => {
               />
 
               <Label title="Order Approval" />
-              <div className="bg-white"></div>
+              <div className="flex flex-col content-center rounded-lg bg-white p-4">
+                <Checkbox content="Manual" id={"manual"} name="OrderApproval" />
+                <Checkbox content="Automatic" id={"automatic"} name="OrderApproval" />
+              </div>
             </div>
           </>
         )}

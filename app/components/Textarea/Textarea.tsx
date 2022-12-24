@@ -12,7 +12,7 @@ const Textarea = ({ label, rows, name, id, placeholder }: TextareaProps) => {
       <label htmlFor="comment" className="block text-base font-bold text-gray-700">
         {label}
       </label>
-      <div className="mt-1">
+      <div className="mt-1 mb-8">
         <textarea
           rows={rows}
           name={name}
