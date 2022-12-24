@@ -1,23 +1,23 @@
-import { useState } from 'react';
+import { useState } from "react"
 
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon } from "@heroicons/react/24/outline"
 
-import Button from '../../components/Button/Button';
-import ButtonOutlined from '../../components/Button/ButtonOutlined';
-import Input from '../../components/Input/Input';
-import InputAddOns from '../../components/Input/InputAddOns';
-import Label from '../../components/Label/Label';
-import BankSelect from '../../components/Select/BankSelect';
-import CurrencySelect from '../../components/Select/CurrencySelect';
-import TokenSelect from '../../components/Select/TokenSelect';
-import Steps from '../../components/Steps';
-import Textarea from '../../components/Textarea/Textarea';
+import Button from "../../components/Button/Button"
+import ButtonOutlined from "../../components/Button/ButtonOutlined"
+import Input from "../../components/Input/Input"
+import InputAddOns from "../../components/Input/InputAddOns"
+import Label from "../../components/Label/Label"
+import BankSelect from "../../components/Select/BankSelect"
+import CurrencySelect from "../../components/Select/CurrencySelect"
+import TokenSelect from "../../components/Select/TokenSelect"
+import Steps from "../../components/Steps"
+import Textarea from "../../components/Textarea/Textarea"
 
 const SellPage = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1)
   const proceed = () => {
-    setStep(step + 1);
-  };
+    setStep(step + 1)
+  }
 
   return (
     <div className="py-6">
@@ -165,16 +165,19 @@ const SellPage = () => {
                 label="Order Terms"
                 rows="4"
                 name="OrderTerms"
-                id={''}
-                placeholder={''}
+                id={""}
+                placeholder={""}
               />
+
+              <Label title="Order Approval" />
+              <div className="bg-white"></div>
             </div>
           </>
         )}
         <Button title="Proceed" onClick={proceed} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SellPage;
+export default SellPage
