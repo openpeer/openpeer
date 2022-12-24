@@ -13,6 +13,7 @@ import TokenSelect from "../../components/Select/TokenSelect"
 import Steps from "../../components/Steps"
 import Textarea from "../../components/Textarea/Textarea"
 import Checkbox from "../../components/Checkbox/Checkbox"
+import Selector from "../../components/Selector"
 
 const SellPage = () => {
   const [step, setStep] = useState(1)
@@ -91,14 +92,7 @@ const SellPage = () => {
                 </button>
               </div>
             </div>
-            <div className="flex flex-row justify-between content-center bg-gray-100 my-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-              <div className="text-xl font-bold">-</div>
-              <div className="flex flex-col item-center">
-                <div className="text-xl font-bold">20 INR</div>
-                <div className="text-sm">Spot Price</div>
-              </div>
-              <div className="text-xl font-bold">+</div>
-            </div>
+            <Selector value="20 INR" underValue="Spot Price" />
             <div className="w-full flex flex-row justify-between mb-8">
               <div>
                 <div>Lowest price</div>
@@ -154,14 +148,7 @@ const SellPage = () => {
           <>
             <div className="my-8">
               <Label title="Time Limit for Payment" />
-              <div className="flex flex-row justify-between content-center bg-gray-100 mt-1 mb-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-                <div className="text-xl font-bold">-</div>
-                <div className="flex flex-col item-center">
-                  <div className="text-xl font-bold">10 mins</div>
-                </div>
-                <div className="text-xl font-bold">+</div>
-              </div>
-
+              <Selector value="10 mins" underValue={""} />
               <Textarea
                 label="Order Terms"
                 rows="4"
