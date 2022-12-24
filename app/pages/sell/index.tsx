@@ -165,6 +165,11 @@ const SellPage = () => {
             </div>
           </>
         )}
+        {step === 5 && (
+          <>
+            <div className="p-8">Crypto Listing compleated your nex step is...</div>{" "}
+          </>
+        )}
         <Button title="Proceed" onClick={proceed} />
       </div>
     </div>
