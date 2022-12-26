@@ -3,8 +3,15 @@ import { useNetwork } from 'wagmi';
 
 import { Token } from '../../models/types';
 import Select from './Select';
+import { SelectProps } from './Select.types';
 
-const TokenSelect = () => {
+const TokenSelect = ({
+  onSelect,
+  selected
+}: {
+  onSelect: SelectProps['onSelect'];
+  selected: SelectProps['selected'];
+}) => {
   const [tokens, setTokens] = useState<Token[]>();
   const [isLoading, setLoading] = useState(false);
   const { chain, chains } = useNetwork();
@@ -23,6 +30,15 @@ const TokenSelect = () => {
   if (isLoading) {
     return <p>Loading...</p>;
   }
-  return tokens ? <Select label="Choose token to list" options={tokens} /> : <></>;
+  return tokens ? (
+    <Select
+      label="Choose token to list"
+      options={tokens}
+      selected={selected}
+      onSelect={onSelect}
+    />
+  ) : (
+    <></>
+  );
 };
 export default TokenSelect;

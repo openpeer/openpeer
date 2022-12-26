@@ -1,9 +1,9 @@
 interface TextareaProps {
-  label: string
-  rows: string
-  name: string
-  id: string
-  placeholder: string
+  label?: string;
+  rows: number;
+  name: string;
+  id?: string;
+  placeholder?: string;
 }
 
 const Textarea = ({ label, rows, name, id, placeholder }: TextareaProps) => {
@@ -19,11 +19,11 @@ const Textarea = ({ label, rows, name, id, placeholder }: TextareaProps) => {
           id={id}
           placeholder={placeholder}
           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          defaultValue={""}
+          defaultValue={''}
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Textarea
+export default Textarea;

@@ -7,18 +7,33 @@ import Checkbox from '../../components/Checkbox/Checkbox';
 import Input from '../../components/Input/Input';
 import InputAddOns from '../../components/Input/InputAddOns';
 import Label from '../../components/Label/Label';
+import MarginSwitcher from '../../components/MarginSwitcher';
 import BankSelect from '../../components/Select/BankSelect';
 import CurrencySelect from '../../components/Select/CurrencySelect';
+import { Option } from '../../components/Select/Select.types';
 import TokenSelect from '../../components/Select/TokenSelect';
 import Selector from '../../components/Selector';
 import Steps from '../../components/Steps';
-import Switcher from '../../components/Switcher';
 import Textarea from '../../components/Textarea/Textarea';
+import { List } from '../../models/types';
 
 const SellPage = () => {
   const [step, setStep] = useState(1);
   const proceed = () => {
-    setStep(step + 1);
+    let valid = true;
+    if (step === 1 && token?.id && currency?.id) {
+      valid = true;
+    }
+    if (valid) setStep(step + 1);
+  };
+  const [token, setToken] = useState<Option>();
+  const [currency, setCurrency] = useState<Option>();
+  const [marginType, setMarginType] = useState<List['margin_type']>('fixed');
+  const [percentageMargin, setPercentageMargin] = useState<number>(5);
+  const [fixedMargin, setFixedMargin] = useState<number>(1.1);
+  const margin = marginType === 'percentage' ? percentageMargin : fixedMargin;
+  const updateMargin = (m: number) => {
+    marginType === 'percentage' ? setPercentageMargin(m) : setFixedMargin(m);
   };
 
   return (
@@ -27,18 +42,18 @@ const SellPage = () => {
         <h1 className="text-2xl font-semibold text-gray-900">Crypto Listing</h1>
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-        <Steps currentStep={step} />
+        <Steps currentStep={step} onStepClick={setStep} />
         {step === 1 && (
           <>
-            <TokenSelect />
-            <CurrencySelect />
+            <TokenSelect onSelect={setToken} selected={token} />
+            <CurrencySelect onSelect={setCurrency} selected={currency} />
           </>
         )}
         {step === 2 && (
           <>
             <InputAddOns
               label="Enter total available crypto amount"
-              addOn="USDT"
+              addOn={token!.name}
               htmlFor="price"
               inputId="price"
             />
@@ -49,13 +64,13 @@ const SellPage = () => {
               <div className="flex flex-row gap-x-8">
                 <InputAddOns
                   label="Min:"
-                  addOn="INR"
+                  addOn={currency!.name}
                   htmlFor="minPrice"
                   inputId="minPrice"
                 />
                 <InputAddOns
                   label="Max:"
-                  addOn="INR"
+                  addOn={currency!.name}
                   htmlFor="maxPrice"
                   inputId="maxPrice"
                 />
@@ -63,7 +78,14 @@ const SellPage = () => {
             </div>
 
             <Label title="Set Price Margin" />
-            <Switcher />
+            <MarginSwitcher
+              selected={marginType}
+              onSelect={setMarginType}
+              currency={currency!.name}
+              token={token!.name}
+              margin={margin}
+              updateMargin={updateMargin}
+            />
 
             <div className="w-full flex flex-row justify-between mb-8">
               <div>
@@ -93,7 +115,7 @@ const SellPage = () => {
               name="user_account_number"
               placeholder="1000"
             />
-            <BankSelect />
+            <CurrencySelect onSelect={setCurrency} selected={currency} />
 
             <div className="hidden">
               <div className="w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 border-2 border-slate-200 rounded-md">
@@ -120,14 +142,13 @@ const SellPage = () => {
           <>
             <div className="my-8">
               <Label title="Time Limit for Payment" />
-              <Selector value="10 mins" underValue={''} />
-              <Textarea
-                label="Order Terms"
-                rows="4"
-                name="OrderTerms"
-                id={''}
-                placeholder={''}
+              <Selector
+                value={10}
+                suffix=" mins"
+                underValue={''}
+                updateValue={() => console.log('update')}
               />
+              <Textarea label="Order Terms" rows={4} name="OrderTerms" />
 
               <Label title="Order Approval" />
               <div className="flex flex-col content-center rounded-lg bg-white p-4">

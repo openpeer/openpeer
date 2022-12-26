@@ -9,14 +9,12 @@ const HomePage = () => {
   const [lists, setLists] = useState<List[]>([]);
   const [isLoading, setLoading] = useState(false);
   const { chain, chains } = useNetwork();
-  console.log({ chains });
   const chainId = chain?.id || chains[0]?.id;
   useEffect(() => {
     setLoading(true);
     fetch(`/api/lists?chain_id=${chainId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log({ chainId, data });
         setLists(data);
         setLoading(false);
       });
