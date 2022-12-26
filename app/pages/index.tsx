@@ -1,5 +1,6 @@
 import { formatUnits } from 'ethers/lib/utils.js';
 import { useEffect, useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 import Button from '../components/Button/Button';
 import { List } from '../models/types';
@@ -7,17 +8,19 @@ import { List } from '../models/types';
 const HomePage = () => {
   const [lists, setLists] = useState<List[]>([]);
   const [isLoading, setLoading] = useState(false);
-
+  const { chain, chains } = useNetwork();
+  console.log({ chains });
+  const chainId = chain?.id || chains[0]?.id;
   useEffect(() => {
     setLoading(true);
-    fetch('/api/lists')
+    fetch(`/api/lists?chain_id=${chainId}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log({ chainId, data });
         setLists(data);
-        console.log(data);
         setLoading(false);
       });
-  }, []);
+  }, [chainId]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!lists) return <p>No lists data</p>;
@@ -68,7 +71,7 @@ const HomePage = () => {
                   total_available_amount: amount,
                   seller: { address },
                   token: { decimals, symbol },
-                  fiat_currency: { code },
+                  fiat_currency: { code, symbol: fiatSymbol },
                   limit_min: min,
                   limit_max: max
                 }) => (
@@ -90,7 +93,8 @@ const HomePage = () => {
                       {formatUnits(amount, decimals)} {symbol}
                     </td>
                     <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-                      {min} - {max} {code}
+                      {fiatSymbol} {min} - {fiatSymbol}
+                      {max}
                     </td>
                     <td className="text-right py-4 pr-4">
                       <Button title="Buy" />

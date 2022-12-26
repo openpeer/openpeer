@@ -4,7 +4,7 @@ import { minkeApi } from './utils/utils';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 const fetchCurrencies = async (): Promise<FiatCurrency[]> => {
-  const { data } = await minkeApi.get('/currencies', { params: { chain_id: 80001 } });
+  const { data } = await minkeApi.get('/currencies');
   return data;
 };
 
