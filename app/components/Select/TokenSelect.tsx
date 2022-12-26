@@ -1,29 +1,25 @@
+import { useEffect, useState } from 'react';
+
+import { Token } from '../../models/types';
 import Select from './Select';
 
-const options = [
-  {
-    id: 1,
-    name: 'USDC',
-    icon:
-      'https://www.minke.app/assets/images/core/coins.svg#usdc',
-  },
-  {
-    id: 2,
-    name: 'USDT',
-    icon:
-      'https://www.minke.app/assets/images/core/coins.svg#usdt',
-  },
-  {
-    id: 3,
-    name: 'BUSD',
-    icon:
-      'https://www.minke.app/assets/images/core/coins.svg#busd',
-  },
-]
-
 const TokenSelect = () => {
-  return(
-    <Select label='Choose token to list' options={options} />
-  );
-}
+  const [tokens, setTokens] = useState<Token[]>();
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/tokens')
+      .then((res) => res.json())
+      .then((data) => {
+        setTokens(data);
+        setLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  return tokens ? <Select label="Choose token to list" options={tokens} /> : <></>;
+};
 export default TokenSelect;
