@@ -14,6 +14,7 @@ import Steps from "../../components/Steps"
 import Textarea from "../../components/Textarea/Textarea"
 import Checkbox from "../../components/Checkbox/Checkbox"
 import Selector from "../../components/Selector"
+import Switcher from "../../components/Switcher"
 
 const SellPage = () => {
   const [step, setStep] = useState(1)
@@ -61,38 +62,10 @@ const SellPage = () => {
                 />
               </div>
             </div>
-            <div>
-              <Label title="Set Price Margin" />
-              <div
-                className="flex space-x-1 rounded-lg bg-slate-100 p-0.5"
-                role="tablist"
-                aria-orientation="horizontal"
-              >
-                <button
-                  className="flex items-center rounded-md py-[0.4375rem] pl-2 pr-2 text-sm font-semibold lg:pr-3 bg-white shadow"
-                  id="headlessui-tabs-tab-284"
-                  role="tab"
-                  type="button"
-                  aria-selected="true"
-                  data-headlessui-state="selected"
-                  aria-controls="headlessui-tabs-panel-286"
-                >
-                  <span className="lg:ml-2 text-slate-900">Fixed</span>
-                </button>
-                <button
-                  className="flex items-center rounded-md py-[0.4375rem] pl-2 pr-2 text-sm font-semibold lg:pr-3"
-                  id="headlessui-tabs-tab-285"
-                  role="tab"
-                  type="button"
-                  aria-selected="false"
-                  data-headlessui-state=""
-                  aria-controls="headlessui-tabs-panel-287"
-                >
-                  <span className="lg:ml-2 text-slate-600">Percentage</span>
-                </button>
-              </div>
-            </div>
-            <Selector value="20 INR" underValue="Spot Price" />
+
+            <Label title="Set Price Margin" />
+            <Switcher />
+
             <div className="w-full flex flex-row justify-between mb-8">
               <div>
                 <div>Lowest price</div>
