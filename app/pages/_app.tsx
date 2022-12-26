@@ -50,7 +50,7 @@ const myTheme = merge(lightTheme(), {
   }
 }) as Theme;
 
-const navigation = [{ name: 'P2P', href: '#', icon: ChartBarSquareIcon }];
+const navigation = [{ name: 'P2P', href: '/', icon: ChartBarSquareIcon }];
 
 const NavItems = ({ selected }: { selected: string | undefined }) => {
   return (
