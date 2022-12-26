@@ -2,6 +2,9 @@ export interface FiatCurrency {
   id: number;
   code: string;
   name: string;
+  icon: string;
+  country_code: string;
+  symbol: string;
   created_at: string;
   updated_at: string;
 }
@@ -20,6 +23,7 @@ export interface Token {
   symbol: string;
   name: string;
   coingecko_id?: string;
+  icon: string;
   created_at: string;
   updated_at: string;
 }

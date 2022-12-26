@@ -1,32 +1,50 @@
-import { Fragment, useState } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { SelectProps } from './Select.types'
+import { Fragment, useEffect, useState } from 'react';
 
+import { Listbox, Transition } from '@headlessui/react';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+
+import { Option, SelectProps } from './Select.types';
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function Select({ label, options }: SelectProps) {
-  const [selected, setSelected] = useState(options[0])
-  
+  const [selected, setSelected] = useState<Option>();
+
+  useEffect(() => {
+    if (!selected && options) {
+      setSelected(options[0]);
+    }
+  }, [options, selected]);
+
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
           <div className="my-8">
-            <Listbox.Label className="block text-base font-medium text-gray-700">{label}</Listbox.Label>
+            <Listbox.Label className="block text-base font-medium text-gray-700">
+              {label}
+            </Listbox.Label>
             <div className="relative mt-1">
-              <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                <span className="flex items-center">
-                  <img src={selected.icon} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
-                  <span className="ml-3 block truncate">{selected.name}</span>
-                </span>
-                <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </span>
-              </Listbox.Button>
+              {!!selected && (
+                <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                  <span className="flex items-center">
+                    <img
+                      src={selected.icon}
+                      alt=""
+                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                    />
+                    <span className="ml-3 block truncate">{selected.name}</span>
+                  </span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                    <ChevronUpDownIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+              )}
 
               <Transition
                 show={open}
@@ -50,9 +68,16 @@ export default function Select({ label, options }: SelectProps) {
                       {({ selected, active }) => (
                         <>
                           <div className="flex items-center">
-                            <img src={person.icon} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" />
+                            <img
+                              src={person.icon}
+                              alt=""
+                              className="h-6 w-6 flex-shrink-0 rounded-full"
+                            />
                             <span
-                              className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
+                              className={classNames(
+                                selected ? 'font-semibold' : 'font-normal',
+                                'ml-3 block truncate'
+                              )}
                             >
                               {person.name}
                             </span>
@@ -79,5 +104,5 @@ export default function Select({ label, options }: SelectProps) {
         </>
       )}
     </Listbox>
-  )
+  );
 }
