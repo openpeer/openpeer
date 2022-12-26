@@ -3,14 +3,16 @@ import { useState } from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 import Button from '../../components/Button/Button';
-import ButtonOutlined from '../../components/Button/ButtonOutlined';
+import Checkbox from '../../components/Checkbox/Checkbox';
 import Input from '../../components/Input/Input';
 import InputAddOns from '../../components/Input/InputAddOns';
 import Label from '../../components/Label/Label';
 import BankSelect from '../../components/Select/BankSelect';
 import CurrencySelect from '../../components/Select/CurrencySelect';
 import TokenSelect from '../../components/Select/TokenSelect';
+import Selector from '../../components/Selector';
 import Steps from '../../components/Steps';
+import Switcher from '../../components/Switcher';
 import Textarea from '../../components/Textarea/Textarea';
 
 const SellPage = () => {
@@ -59,45 +61,10 @@ const SellPage = () => {
                 />
               </div>
             </div>
-            <div>
-              <Label title="Set Price Margin" />
-              <div
-                className="flex space-x-1 rounded-lg bg-slate-100 p-0.5"
-                role="tablist"
-                aria-orientation="horizontal"
-              >
-                <button
-                  className="flex items-center rounded-md py-[0.4375rem] pl-2 pr-2 text-sm font-semibold lg:pr-3 bg-white shadow"
-                  id="headlessui-tabs-tab-284"
-                  role="tab"
-                  type="button"
-                  aria-selected="true"
-                  data-headlessui-state="selected"
-                  aria-controls="headlessui-tabs-panel-286"
-                >
-                  <span className="lg:ml-2 text-slate-900">Fixed</span>
-                </button>
-                <button
-                  className="flex items-center rounded-md py-[0.4375rem] pl-2 pr-2 text-sm font-semibold lg:pr-3"
-                  id="headlessui-tabs-tab-285"
-                  role="tab"
-                  type="button"
-                  aria-selected="false"
-                  data-headlessui-state=""
-                  aria-controls="headlessui-tabs-panel-287"
-                >
-                  <span className="lg:ml-2 text-slate-600">Percentage</span>
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-row justify-between content-center bg-gray-100 my-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-              <div className="text-xl font-bold">-</div>
-              <div className="flex flex-col item-center">
-                <div className="text-xl font-bold">20 INR</div>
-                <div className="text-sm">Spot Price</div>
-              </div>
-              <div className="text-xl font-bold">+</div>
-            </div>
+
+            <Label title="Set Price Margin" />
+            <Switcher />
+
             <div className="w-full flex flex-row justify-between mb-8">
               <div>
                 <div>Lowest price</div>
@@ -145,7 +112,7 @@ const SellPage = () => {
                   <div>Bank</div>
                 </div>
               </div>
-              <ButtonOutlined title="Add New Payment Method +" />
+              <Button title="Add New Payment Method +" outlined />
             </div>
           </>
         )}
@@ -153,14 +120,7 @@ const SellPage = () => {
           <>
             <div className="my-8">
               <Label title="Time Limit for Payment" />
-              <div className="flex flex-row justify-between content-center bg-gray-100 mt-1 mb-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-                <div className="text-xl font-bold">-</div>
-                <div className="flex flex-col item-center">
-                  <div className="text-xl font-bold">10 mins</div>
-                </div>
-                <div className="text-xl font-bold">+</div>
-              </div>
-
+              <Selector value="10 mins" underValue={''} />
               <Textarea
                 label="Order Terms"
                 rows="4"
@@ -168,7 +128,18 @@ const SellPage = () => {
                 id={''}
                 placeholder={''}
               />
+
+              <Label title="Order Approval" />
+              <div className="flex flex-col content-center rounded-lg bg-white p-4">
+                <Checkbox content="Manual" id={'manual'} name="OrderApproval" />
+                <Checkbox content="Automatic" id={'automatic'} name="OrderApproval" />
+              </div>
             </div>
+          </>
+        )}
+        {step === 5 && (
+          <>
+            <div className="p-8">Crypto Listing compleated your nex step is...</div>{' '}
           </>
         )}
         <Button title="Proceed" onClick={proceed} />

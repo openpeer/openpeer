@@ -217,7 +217,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                 </div>
               </div>
 
-              <main className="flex-1">
+              <main className="flex-1 bg-slate-50 min-h-screen">
                 <Component {...pageProps} />
               </main>
             </div>
