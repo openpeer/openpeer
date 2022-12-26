@@ -1,60 +1,56 @@
-import type { AppProps } from "next/app"
-import "@rainbow-me/rainbowkit/styles.css"
-import "tailwindcss/tailwind.css"
+import type { AppProps } from 'next/app';
+import '@rainbow-me/rainbowkit/styles.css';
+import 'tailwindcss/tailwind.css';
 
-import merge from "lodash.merge"
-import Image from "next/image"
-import Link from "next/link"
-import { Fragment, useState } from "react"
-import { configureChains, createClient, WagmiConfig } from "wagmi"
-import { polygon, polygonMumbai } from "wagmi/chains"
-import { publicProvider } from "wagmi/providers/public"
+import merge from 'lodash.merge';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment, useState } from 'react';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { polygon, polygonMumbai } from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
 
-import { Dialog, Menu, Transition } from "@headlessui/react"
+import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-  Bars3BottomLeftIcon,
-  BellIcon,
-  ChartBarSquareIcon,
-  XMarkIcon
-} from "@heroicons/react/24/outline"
-import { Manrope } from "@next/font/google"
+	Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, XMarkIcon
+} from '@heroicons/react/24/outline';
+import { Manrope } from '@next/font/google';
 import {
-  ConnectButton,
-  getDefaultWallets,
-  lightTheme,
-  RainbowKitProvider,
-  Theme
-} from "@rainbow-me/rainbowkit"
+	ConnectButton, getDefaultWallets, lightTheme, RainbowKitProvider, Theme
+} from '@rainbow-me/rainbowkit';
 
-import Head from "../app/head"
-import Button from "../components/Button/Button"
-import logo from "../public/logo.svg"
+import Head from '../app/head';
+import Button from '../components/Button/Button';
+import logo from '../public/logo.svg';
 
 const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope"
-})
+  subsets: ['latin'],
+  variable: '--font-manrope'
+});
 
-const { chains, provider } = configureChains([polygonMumbai, polygon], [publicProvider()])
+const { chains, provider } = configureChains(
+  [polygonMumbai, polygon],
+  [publicProvider()]
+);
 
 const { connectors } = getDefaultWallets({
-  appName: "OpenPeer",
+  appName: 'OpenPeer',
   chains
-})
+});
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider
-})
+});
 
 const myTheme = merge(lightTheme(), {
   fonts: {
     body: manrope.style.fontFamily
   }
-}) as Theme
+}) as Theme;
 
-const navigation = [{ name: "P2P", href: "#", icon: ChartBarSquareIcon }]
+const navigation = [{ name: 'P2P', href: '/', icon: ChartBarSquareIcon }];
 
 const NavItems = ({ selected }: { selected: string | undefined }) => {
   return (
@@ -64,7 +60,7 @@ const NavItems = ({ selected }: { selected: string | undefined }) => {
           key={item.name}
           href={item.href}
           className={`text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md ${
-            selected === item.name && "marcos"
+            selected === item.name && 'marcos'
           }`}
         >
           <item.icon
@@ -75,12 +71,12 @@ const NavItems = ({ selected }: { selected: string | undefined }) => {
         </a>
       ))}
     </div>
-  )
-}
+  );
+};
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { title } = pageProps
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { title } = pageProps;
 
   return (
     <WagmiConfig client={wagmiClient}>
@@ -229,7 +225,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </main>
       </RainbowKitProvider>
     </WagmiConfig>
-  )
-}
+  );
+};
 
-export default App
+export default App;

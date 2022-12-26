@@ -1,29 +1,29 @@
+import { useEffect, useState } from 'react';
+
+import { FiatCurrency } from '../../models/types';
 import Select from './Select';
 
-const options = [
-  {
-    id: 1,
-    name: 'IRN',
-    icon:
-      'https://www.minke.app/assets/images/core/flags.svg#india',
-  },
-  {
-    id: 2,
-    name: 'USD',
-    icon:
-      'https://www.minke.app/assets/images/core/flags.svg#USA',
-  },
-  {
-    id: 3,
-    name: 'ARS',
-    icon:
-      'https://www.minke.app/assets/images/core/flags.svg#ARGENTINA',
-  },
-]
-
 const CurrencySelect = () => {
-  return(
-    <Select label='Choose Fiat currency to receive' options={options} />
+  const [currencies, setCurrencies] = useState<FiatCurrency[]>();
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/currencies')
+      .then((res) => res.json())
+      .then((data) => {
+        setCurrencies(data);
+        setLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  return currencies ? (
+    <Select label="Choose Fiat currency to receive" options={currencies} />
+  ) : (
+    <></>
   );
-}
+};
 export default CurrencySelect;
