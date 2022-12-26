@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { Fragment, useEffect } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
@@ -9,17 +10,17 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Select({ label, options }: SelectProps) {
-  const [selected, setSelected] = useState<Option>();
-
+export default function Select({ label, options, selected, onSelect }: SelectProps) {
   useEffect(() => {
     if (!selected && options) {
-      setSelected(options[0]);
+      onSelect(options[0]);
     }
-  }, [options, selected]);
+  }, [options, selected, onSelect]);
+
+  console.log(selected);
 
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selected} onChange={onSelect}>
       {({ open }) => (
         <>
           <div className="my-8">
@@ -30,10 +31,12 @@ export default function Select({ label, options }: SelectProps) {
               {!!selected && (
                 <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                   <span className="flex items-center">
-                    <img
+                    <Image
                       src={selected.icon}
-                      alt=""
+                      alt={selected.name}
                       className="h-6 w-6 flex-shrink-0 rounded-full"
+                      width={24}
+                      height={24}
                     />
                     <span className="ml-3 block truncate">{selected.name}</span>
                   </span>
@@ -54,36 +57,39 @@ export default function Select({ label, options }: SelectProps) {
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                  {options.map((person) => (
+                  {options.map((option) => (
                     <Listbox.Option
-                      key={person.id}
+                      key={option.id}
                       className={({ active }) =>
                         classNames(
                           active ? 'text-white bg-indigo-600' : 'text-gray-900',
                           'relative cursor-default select-none py-2 pl-3 pr-9'
                         )
                       }
-                      value={person}
+                      value={option}
                     >
                       {({ selected, active }) => (
                         <>
                           <div className="flex items-center">
-                            <img
-                              src={person.icon}
-                              alt=""
+                            <Image
+                              src={option.icon}
+                              alt={option.name}
                               className="h-6 w-6 flex-shrink-0 rounded-full"
+                              width={24}
+                              height={24}
                             />
+
                             <span
                               className={classNames(
                                 selected ? 'font-semibold' : 'font-normal',
                                 'ml-3 block truncate'
                               )}
                             >
-                              {person.name}
+                              {option.name}
                             </span>
                           </div>
 
-                          {selected ? (
+                          {selected && (
                             <span
                               className={classNames(
                                 active ? 'text-white' : 'text-indigo-600',
@@ -92,7 +98,7 @@ export default function Select({ label, options }: SelectProps) {
                             >
                               <CheckIcon className="h-5 w-5" aria-hidden="true" />
                             </span>
-                          ) : null}
+                          )}
                         </>
                       )}
                     </Listbox.Option>

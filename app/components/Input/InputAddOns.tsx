@@ -5,9 +5,9 @@ interface InputProps {
   inputId?: string;
 }
 
-const InputAddOns = ({label, addOn, htmlFor, inputId}: InputProps) => {
+const InputAddOns = ({ label, addOn, htmlFor, inputId }: InputProps) => {
   return (
-    <div className='my-8'>
+    <div className="my-8">
       <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
@@ -27,7 +27,7 @@ const InputAddOns = ({label, addOn, htmlFor, inputId}: InputProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default InputAddOns;

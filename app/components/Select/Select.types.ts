@@ -7,4 +7,6 @@ export interface Option {
 export interface SelectProps {
   label: string;
   options: Option[];
+  selected: Option | undefined;
+  onSelect: (option: Option | undefined) => void;
 }
