@@ -1,26 +1,25 @@
-import { useState } from "react"
+import { useState } from 'react';
 
-import { PencilSquareIcon } from "@heroicons/react/24/outline"
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
-import Button from "../../components/Button/Button"
-import ButtonOutlined from "../../components/Button/ButtonOutlined"
-import Input from "../../components/Input/Input"
-import InputAddOns from "../../components/Input/InputAddOns"
-import Label from "../../components/Label/Label"
-import BankSelect from "../../components/Select/BankSelect"
-import CurrencySelect from "../../components/Select/CurrencySelect"
-import TokenSelect from "../../components/Select/TokenSelect"
-import Steps from "../../components/Steps"
-import Textarea from "../../components/Textarea/Textarea"
-import Checkbox from "../../components/Checkbox/Checkbox"
-import Selector from "../../components/Selector"
-import Switcher from "../../components/Switcher"
+import Button from '../../components/Button/Button';
+import Checkbox from '../../components/Checkbox/Checkbox';
+import Input from '../../components/Input/Input';
+import InputAddOns from '../../components/Input/InputAddOns';
+import Label from '../../components/Label/Label';
+import BankSelect from '../../components/Select/BankSelect';
+import CurrencySelect from '../../components/Select/CurrencySelect';
+import TokenSelect from '../../components/Select/TokenSelect';
+import Selector from '../../components/Selector';
+import Steps from '../../components/Steps';
+import Switcher from '../../components/Switcher';
+import Textarea from '../../components/Textarea/Textarea';
 
 const SellPage = () => {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const proceed = () => {
-    setStep(step + 1)
-  }
+    setStep(step + 1);
+  };
 
   return (
     <div className="py-6">
@@ -113,7 +112,7 @@ const SellPage = () => {
                   <div>Bank</div>
                 </div>
               </div>
-              <ButtonOutlined title="Add New Payment Method +" />
+              <Button title="Add New Payment Method +" outlined />
             </div>
           </>
         )}
@@ -121,32 +120,32 @@ const SellPage = () => {
           <>
             <div className="my-8">
               <Label title="Time Limit for Payment" />
-              <Selector value="10 mins" underValue={""} />
+              <Selector value="10 mins" underValue={''} />
               <Textarea
                 label="Order Terms"
                 rows="4"
                 name="OrderTerms"
-                id={""}
-                placeholder={""}
+                id={''}
+                placeholder={''}
               />
 
               <Label title="Order Approval" />
               <div className="flex flex-col content-center rounded-lg bg-white p-4">
-                <Checkbox content="Manual" id={"manual"} name="OrderApproval" />
-                <Checkbox content="Automatic" id={"automatic"} name="OrderApproval" />
+                <Checkbox content="Manual" id={'manual'} name="OrderApproval" />
+                <Checkbox content="Automatic" id={'automatic'} name="OrderApproval" />
               </div>
             </div>
           </>
         )}
         {step === 5 && (
           <>
-            <div className="p-8">Crypto Listing compleated your nex step is...</div>{" "}
+            <div className="p-8">Crypto Listing compleated your nex step is...</div>{' '}
           </>
         )}
         <Button title="Proceed" onClick={proceed} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SellPage
+export default SellPage;
