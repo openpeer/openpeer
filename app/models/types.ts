@@ -47,3 +47,11 @@ export interface List {
   created_at: string;
   updated_at: string;
 }
+
+export interface Bank {
+  id: number;
+  name: string;
+  icon: string;
+  created_at: string;
+  updated_at: string;
+}

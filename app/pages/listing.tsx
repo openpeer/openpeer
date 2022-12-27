@@ -1,10 +1,9 @@
+import Button from 'components/Button/Button';
+import List from 'components/List';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import Button from '../components/Button/Button';
-import List from '../components/List';
-
-const SellPage = () => {
+const Listing = () => {
   const [step, setStep] = useState(1);
 
   return (
@@ -22,4 +21,4 @@ const SellPage = () => {
   );
 };
 
-export default SellPage;
+export default Listing;

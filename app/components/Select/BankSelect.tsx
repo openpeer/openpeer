@@ -1,24 +1,38 @@
+import { Bank } from 'models/types';
+import { useEffect, useState } from 'react';
+
 import Select from './Select';
+import { SelectProps } from './Select.types';
 
-const options = [
-  {
-    id: 1,
-    name: 'IRN',
-    icon: 'https://www.minke.app/assets/images/core/flags.svg#india'
-  },
-  {
-    id: 2,
-    name: 'USD',
-    icon: 'https://www.minke.app/assets/images/core/flags.svg#USA'
-  },
-  {
-    id: 3,
-    name: 'ARS',
-    icon: 'https://www.minke.app/assets/images/core/flags.svg#ARGENTINA'
+const BankSelect = ({
+  currencyId,
+  onSelect,
+  selected
+}: {
+  currencyId: number;
+  onSelect: SelectProps['onSelect'];
+  selected: SelectProps['selected'];
+}) => {
+  const [banks, setBanks] = useState<Bank[]>();
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/banks?currency_id=${currencyId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setBanks(data);
+        setLoading(false);
+      });
+  }, [currencyId]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
-];
-
-const BankSelect = () => {
-  return <Select label="Bank Name" options={options} />;
+  return banks ? (
+    <Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} />
+  ) : (
+    <></>
+  );
 };
 export default BankSelect;
