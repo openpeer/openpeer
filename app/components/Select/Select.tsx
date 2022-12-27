@@ -4,7 +4,7 @@ import { Fragment, useEffect } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-import { Option, SelectProps } from './Select.types';
+import { SelectProps } from './Select.types';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -12,12 +12,10 @@ function classNames(...classes: string[]) {
 
 export default function Select({ label, options, selected, onSelect }: SelectProps) {
   useEffect(() => {
-    if (!selected && options) {
+    if (!selected) {
       onSelect(options[0]);
     }
   }, [options, selected, onSelect]);
-
-  console.log(selected);
 
   return (
     <Listbox value={selected} onChange={onSelect}>
