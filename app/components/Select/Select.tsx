@@ -1,22 +1,17 @@
 import Image from 'next/image';
-import { Fragment, useEffect } from 'react';
+import logo from 'public/logo.svg';
+import { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-import { SelectProps } from './Select.types';
+import { Option, SelectProps } from './Select.types';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Select({ label, options, selected, onSelect }: SelectProps) {
-  useEffect(() => {
-    if (!selected) {
-      onSelect(options[0]);
-    }
-  }, [options, selected, onSelect]);
-
   return (
     <Listbox value={selected} onChange={onSelect}>
       {({ open }) => (
@@ -26,26 +21,28 @@ export default function Select({ label, options, selected, onSelect }: SelectPro
               {label}
             </Listbox.Label>
             <div className="relative mt-1">
-              {!!selected && (
-                <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                  <span className="flex items-center">
+              <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                <span className="flex items-center">
+                  {!!selected && (
                     <Image
                       src={selected.icon}
                       alt={selected.name}
-                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      className="h-6 w-6 flex-shrink-0 rounded-full "
                       width={24}
                       height={24}
                     />
-                    <span className="ml-3 block truncate">{selected.name}</span>
+                  )}
+                  <span className="ml-3 block truncate">
+                    {selected?.name || 'Select'}
                   </span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                    <ChevronUpDownIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </Listbox.Button>
-              )}
+                </span>
+                <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                  <ChevronUpDownIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </span>
+              </Listbox.Button>
 
               <Transition
                 show={open}

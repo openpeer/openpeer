@@ -1,4 +1,4 @@
-import { InputAddOns, Label, MarginSwitcher } from 'components';
+import { Input, Label, MarginSwitcher } from 'components';
 import { useState } from 'react';
 
 import { StepProps } from './Listing.types';
@@ -33,11 +33,10 @@ const Amount = ({ list, updateList }: StepProps) => {
 
   return (
     <StepLayout onProceed={onProceed}>
-      <InputAddOns
+      <Input
         label="Enter total available crypto amount"
         addOn={token!.name}
-        htmlFor="price"
-        inputId="price"
+        id="price"
         value={totalAvailableAmount}
         onChange={(n) => updateList({ ...list, ...{ totalAvailableAmount: Number(n) } })}
         type="number"
@@ -48,20 +47,20 @@ const Amount = ({ list, updateList }: StepProps) => {
           Enter fiat order limit
         </label>
         <div className="flex flex-row gap-x-8">
-          <InputAddOns
+          <Input
+            placeholder="100"
             label="Min:"
             addOn={currency!.name}
-            htmlFor="minPrice"
-            inputId="minPrice"
+            id="minPrice"
             type="number"
             value={limitMin}
             onChange={(n) => updateList({ ...list, ...{ limitMin: Number(n) } })}
           />
-          <InputAddOns
+          <Input
+            placeholder="1000"
             label="Max:"
             addOn={currency!.name}
-            htmlFor="maxPrice"
-            inputId="maxPrice"
+            id="maxPrice"
             type="number"
             value={limitMax}
             onChange={(n) => updateList({ ...list, ...{ limitMax: Number(n) } })}

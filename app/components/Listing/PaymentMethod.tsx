@@ -1,55 +1,136 @@
 import { BankSelect, Button, Input } from 'components';
+import { PaymentMethod } from 'models/types';
+import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { StepProps } from './Listing.types';
+import { StepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const PaymentMethod = ({ list, updateList }: StepProps) => {
-  const { currency, bank } = list;
+  const { address } = useAccount();
+  const { currency, paymentMethod = {} as PaymentMethod } = list;
+  const {
+    id,
+    account_name: accountName,
+    account_number: accountNumber,
+    bank
+  } = paymentMethod;
 
   const onProceed = () => {
-    if (true) {
+    if (address && accountName && accountNumber && bank?.id) {
       updateList({ ...list, ...{ step: list.step + 1 } });
     }
   };
+
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>();
+  const [isLoading, setLoading] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const setPaymentMethod = (pm: UIPaymentMethod | undefined) => {
+    setEdit(false);
+    updateList({ ...list, ...{ paymentMethod: pm } });
+  };
+
+  const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
+    updateList({ ...list, ...{ paymentMethod: pm } });
+  };
+
+  const enableEdit = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setEdit(true);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/payment-methods?address=${address}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPaymentMethods(data);
+        setPaymentMethod(data[0]);
+        setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <StepLayout onProceed={onProceed}>
       <h2 className="text-xl mt-8">Payment Method</h2>
       <p>Choose how you want to receive your money</p>
-      <Input label="Account Name" type="text" name="user_name" placeholder="Josh Adam" />
-      <Input
-        label="Account Number"
-        type="tel"
-        name="user_account_number"
-        placeholder="1000"
-      />
-      <BankSelect
-        currencyId={currency!.id}
-        onSelect={(b) => updateList({ ...list, ...{ bank: b } })}
-        selected={bank}
-      />
-
-      <div className="hidden">
-        <div className="w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 border-2 border-slate-200 rounded-md">
+      {(paymentMethods || []).map((pm) => (
+        <div
+          key={pm.id}
+          className="w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 border-2 border-slate-200 rounded-md"
+          onClick={() => setPaymentMethod(pm)}
+        >
           <div className="w-full flex flex-row justify-between mb-4">
             <div>Bank Transfer</div>
-            <div>
+            <div onClick={enableEdit}>
               <PencilSquareIcon className="h-5 w-" aria-hidden="true" />
             </div>
           </div>
           <div className="mb-4">
-            <div>Josh Adam</div>
+            <div>{pm.account_name}</div>
             <div></div>
           </div>
           <div className="w-full flex flex-row justify-between">
-            <div>09909999994</div>
-            <div>Bank</div>
+            <div>{pm.account_number}</div>
+            <div>{pm.bank?.name}</div>
           </div>
         </div>
-        <Button title="Add New Payment Method +" outlined />
-      </div>
+      ))}
+
+      {!id || edit ? (
+        <>
+          <Input
+            label="Account Name"
+            type="text"
+            id="accountName"
+            placeholder="Josh Adam"
+            value={accountName}
+            onChange={(n) =>
+              updatePaymentMethod({
+                ...paymentMethod,
+                ...{ account_name: n }
+              })
+            }
+          />
+          <Input
+            label="Account Number"
+            id="accountNumber"
+            placeholder="123456789"
+            value={accountNumber}
+            onChange={(n) =>
+              updatePaymentMethod({
+                ...paymentMethod,
+                ...{ account_number: n }
+              })
+            }
+          />
+          <BankSelect
+            currencyId={currency!.id}
+            onSelect={(b) =>
+              updatePaymentMethod({
+                ...paymentMethod,
+                ...{ bank: b }
+              })
+            }
+            selected={bank}
+          />
+        </>
+      ) : (
+        <div>
+          <Button
+            title="Add New Payment Method +"
+            outlined
+            onClick={() => updatePaymentMethod(undefined)}
+          />
+        </div>
+      )}
     </StepLayout>
   );
 };

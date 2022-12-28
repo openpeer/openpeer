@@ -55,3 +55,14 @@ export interface Bank {
   created_at: string;
   updated_at: string;
 }
+
+export interface PaymentMethod {
+  id: number;
+  account_name: string;
+  account_number: string;
+  details: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  bank: Bank;
+}

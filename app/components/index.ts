@@ -1,7 +1,6 @@
 import Button from './Button/Button';
 import Checkbox from './Checkbox/Checkbox';
 import Input from './Input/Input';
-import InputAddOns from './Input/InputAddOns';
 import Label from './Label/Label';
 import MarginSwitcher from './MarginSwitcher';
 import BankSelect from './Select/BankSelect';
@@ -15,7 +14,6 @@ export {
   Button,
   Checkbox,
   Input,
-  InputAddOns,
   Label,
   MarginSwitcher,
   BankSelect,

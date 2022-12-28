@@ -29,6 +29,7 @@ const BankSelect = ({
   if (isLoading) {
     return <p>Loading...</p>;
   }
+
   return banks ? (
     <Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} />
   ) : (

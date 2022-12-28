@@ -3,6 +3,7 @@ import { Amount, Setup } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import PaymentMethod from 'components/Listing/PaymentMethod';
 import { useState } from 'react';
+import { useAccount, useNetwork } from 'wagmi';
 
 const SETUP_STEP = 1;
 const AMOUNT_STEP = 2;
@@ -11,8 +12,14 @@ const DETAILS_STEP = 4;
 const DONE_STEP = 5;
 
 const SellPage = () => {
+  const { address } = useAccount();
+  const { chain } = useNetwork();
   const [list, setList] = useState<UIList>({ step: SETUP_STEP } as UIList);
   const step = list.step;
+
+  if (!address || !chain || chain.unsupported) {
+    return <p>Connect to Polygon</p>;
+  }
 
   return (
     <div className="py-6">

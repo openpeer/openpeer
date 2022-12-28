@@ -1,6 +1,13 @@
 import { Option } from 'components/Select/Select.types';
 import { List } from 'models/types';
 
+export interface UIPaymentMethod {
+  id: number | undefined;
+  account_name: string;
+  account_number: string;
+  bank: Option | undefined;
+}
+
 export interface UIList {
   step: number;
   token: Option | undefined;
@@ -10,7 +17,7 @@ export interface UIList {
   margin: number | undefined;
   limitMin: number | undefined;
   limitMax: number | undefined;
-  bank: Option | undefined;
+  paymentMethod: UIPaymentMethod | undefined;
 }
 
 export interface StepProps {

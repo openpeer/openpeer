@@ -2,12 +2,15 @@ import type { AppProps } from 'next/app';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'tailwindcss/tailwind.css';
 
+import Head from 'app/head';
+import { Button } from 'components';
 import merge from 'lodash.merge';
 import Image from 'next/image';
 import Link from 'next/link';
+import logo from 'public/logo.svg';
 import { Fragment, useState } from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
+import { polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
@@ -19,19 +22,12 @@ import {
 	ConnectButton, getDefaultWallets, lightTheme, RainbowKitProvider, Theme
 } from '@rainbow-me/rainbowkit';
 
-import Head from '../app/head';
-import Button from '../components/Button/Button';
-import logo from '../public/logo.svg';
-
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope'
 });
 
-const { chains, provider } = configureChains(
-  [polygonMumbai, polygon],
-  [publicProvider()]
-);
+const { chains, provider } = configureChains([polygon], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: 'OpenPeer',
@@ -82,7 +78,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={myTheme}>
         <Head />
-        <main className={`${manrope.variable} font-sans`}>
+        <div className={`${manrope.variable} font-sans`}>
           <div>
             <Transition.Root show={sidebarOpen} as={Fragment}>
               <Dialog
@@ -222,7 +218,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               </main>
             </div>
           </div>
-        </main>
+        </div>
       </RainbowKitProvider>
     </WagmiConfig>
   );
