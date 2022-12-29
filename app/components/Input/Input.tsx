@@ -1,12 +1,12 @@
 interface InputProps {
-  label: string;
-  addOn?: string;
-  id: string;
-  value?: number | string | undefined;
-  onChange?: (value: string) => void | undefined;
-  type?: 'number' | 'email' | 'text';
-  required?: boolean;
-  placeholder?: string;
+  label: string
+  addOn?: string
+  id: string
+  value?: number | string | undefined
+  onChange?: (value: string) => void | undefined
+  type?: "number" | "email" | "text"
+  required?: boolean
+  placeholder?: string
 }
 
 const Input = ({
@@ -15,17 +15,17 @@ const Input = ({
   addOn,
   value,
   onChange,
-  type = 'text',
+  type = "text",
   required = false,
   placeholder
 }: InputProps) => {
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) onChange(event.target.value);
-  };
+    if (onChange) onChange(event.target.value)
+  }
 
   return (
     <div className="my-8">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
         {label}
       </label>
       <div className="relative mt-1 rounded-md shadow-sm">
@@ -45,7 +45,7 @@ const Input = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Input;
+export default Input
