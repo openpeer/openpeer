@@ -25,10 +25,10 @@ const SellPage = () => {
   return (
     <div className="py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mb-16">
-        <h1 className="text-2xl font-semibold text-gray-900">Crypto Listing</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Crypto Listing - Sell</h1>
       </div>
       <div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
-        <div className="w-2/4">
+        <div className="w-full md:w-2/4">
           <Steps
             currentStep={step}
             onStepClick={(n) => setList({ ...list, ...{ step: n } })}
@@ -46,7 +46,12 @@ const SellPage = () => {
                 suffix=" mins"
                 updateValue={() => console.log("update")}
               />
-              <Textarea label="Order Terms" rows={4} name="OrderTerms" />
+              <Textarea
+                label="Order Terms"
+                rows={4}
+                name="OrderTerms"
+                placeholder="Write the terms and conditions for your listing here"
+              />
 
               <Label title="Order Approval" />
               <div className="flex flex-col content-center rounded-lg bg-white p-4">

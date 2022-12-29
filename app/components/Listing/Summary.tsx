@@ -1,6 +1,6 @@
 const Summary = () => {
   return (
-    <div className="SUMMARY-CARD w-2/4 hidden md:inline-flex rounded-xl border-2 border-slate-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-6 p-4">
+    <div className="w-2/4 hidden md:inline-flex bg-white rounded-xl border-2 border-slate-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-6 p-4">
       <ul className="w-full">
         <li className="w-full flex flex-row justify-between mb-4">
           <div>Token</div>
