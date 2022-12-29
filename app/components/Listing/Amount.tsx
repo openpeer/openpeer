@@ -11,22 +11,28 @@ const Amount = ({ list, updateList }: StepProps) => {
     totalAvailableAmount,
     limitMin,
     limitMax,
-    marginType = 'fixed'
+    marginType = 'fixed',
+    margin: savedMargin
   } = list;
 
-  const [percentageMargin, setPercentageMargin] = useState<number>(5);
-  const [fixedMargin, setFixedMargin] = useState<number>(1.1);
-  const margin = marginType === 'percentage' ? percentageMargin : fixedMargin;
+  const percentage = marginType === 'percentage';
+  const [percentageMargin, setPercentageMargin] = useState<number>(
+    percentage ? savedMargin || 5 : 5
+  );
+  const [fixedMargin, setFixedMargin] = useState<number>(
+    percentage ? 1.1 : savedMargin || 1.1
+  );
+  const margin = percentage ? percentageMargin : fixedMargin;
   const updateMargin = (m: number) => {
-    marginType === 'percentage' ? setPercentageMargin(m) : setFixedMargin(m);
-    updateList({ ...list, ...{ margin } });
+    percentage ? setPercentageMargin(m) : setFixedMargin(m);
+    updateList({ ...list, ...{ margin: m } });
   };
 
   const onProceed = () => {
     const total = totalAvailableAmount || 0;
     const min = limitMin || 0;
     const max = limitMax || 0;
-    if (total > 0 && min <= max && (margin > 0 || marginType === 'percentage')) {
+    if (total > 0 && min <= max && (margin > 0 || percentage)) {
       updateList({ ...list, ...{ step: list.step + 1 } });
     }
   };

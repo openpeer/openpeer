@@ -47,7 +47,7 @@ const PaymentMethod = ({ list, updateList }: StepProps) => {
       .then((res) => res.json())
       .then((data) => {
         setPaymentMethods(data);
-        setPaymentMethod(data[0]);
+        if (!paymentMethod) setPaymentMethod(data[0]);
         setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
