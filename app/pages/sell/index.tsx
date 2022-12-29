@@ -67,16 +67,19 @@ const SellPage = () => {
                 name="OrderTerms"
                 placeholder="Write the terms and conditions for your listing here"
               />
-
               <Label title="Order Approval" />
-              <div className="flex flex-col content-center rounded-lg bg-white p-4">
+              <div className="flex flex-col content-center rounded-lg bg-white p-4 border-2">
                 <Checkbox content="Manual" id="manual" name="OrderApproval" />
                 <Checkbox content="Automatic" id="automatic" name="OrderApproval" />
               </div>
             </div>
           )}
           {step === DONE_STEP && (
-            <div className="p-8">Crypto Listing completed your next step is...</div>
+            <div className="flex h-screen">
+              <div className="m-auto flex flex-col justify-items-center content-center text-center">
+                <span className="mb-6 text-xl">Crypto Listing completed.</span>
+              </div>
+            </div>
           )}
         </div>
         <Summary />
