@@ -1,27 +1,28 @@
-import { formatUnits } from 'ethers/lib/utils.js';
-import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import LoadingComponent from "components/Loading"
+import { formatUnits } from "ethers/lib/utils.js"
+import { useEffect, useState } from "react"
+import { useNetwork } from "wagmi"
 
-import Button from '../components/Button/Button';
-import { List } from '../models/types';
+import Button from "../components/Button/Button"
+import { List } from "../models/types"
 
 const HomePage = () => {
-  const [lists, setLists] = useState<List[]>([]);
-  const [isLoading, setLoading] = useState(false);
-  const { chain, chains } = useNetwork();
-  const chainId = chain?.id || chains[0]?.id;
+  const [lists, setLists] = useState<List[]>([])
+  const [isLoading, setLoading] = useState(false)
+  const { chain, chains } = useNetwork()
+  const chainId = chain?.id || chains[0]?.id
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
     fetch(`/api/lists?chain_id=${chainId}`)
       .then((res) => res.json())
       .then((data) => {
-        setLists(data);
-        setLoading(false);
-      });
-  }, [chainId]);
+        setLists(data)
+        setLoading(false)
+      })
+  }, [chainId])
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!lists) return <p>No lists data</p>;
+  if (isLoading) return <LoadingComponent />
+  if (!lists) return <p>No lists data</p>
 
   return (
     <div className="py-6">
@@ -105,13 +106,13 @@ const HomePage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export async function getServerSideProps() {
   return {
-    props: { title: 'P2P' } // will be passed to the page component as props
-  };
+    props: { title: "P2P" } // will be passed to the page component as props
+  }
 }
 
-export default HomePage;
+export default HomePage

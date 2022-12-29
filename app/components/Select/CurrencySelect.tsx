@@ -1,31 +1,32 @@
-import { useEffect, useState } from 'react';
+import LoadingComponent from "components/Loading"
+import { useEffect, useState } from "react"
 
-import { FiatCurrency } from '../../models/types';
-import Select from './Select';
-import { SelectProps } from './Select.types';
+import { FiatCurrency } from "../../models/types"
+import Select from "./Select"
+import { SelectProps } from "./Select.types"
 
 const CurrencySelect = ({
   onSelect,
   selected
 }: {
-  onSelect: SelectProps['onSelect'];
-  selected: SelectProps['selected'];
+  onSelect: SelectProps["onSelect"]
+  selected: SelectProps["selected"]
 }) => {
-  const [currencies, setCurrencies] = useState<FiatCurrency[]>();
-  const [isLoading, setLoading] = useState(false);
+  const [currencies, setCurrencies] = useState<FiatCurrency[]>()
+  const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true);
-    fetch('/api/currencies')
+    setLoading(true)
+    fetch("/api/currencies")
       .then((res) => res.json())
       .then((data) => {
-        setCurrencies(data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } })));
-        setLoading(false);
-      });
-  }, []);
+        setCurrencies(data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } })))
+        setLoading(false)
+      })
+  }, [])
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingComponent />
   }
   return currencies ? (
     <Select
@@ -36,6 +37,6 @@ const CurrencySelect = ({
     />
   ) : (
     <></>
-  );
-};
-export default CurrencySelect;
+  )
+}
+export default CurrencySelect

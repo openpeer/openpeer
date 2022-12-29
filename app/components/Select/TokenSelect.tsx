@@ -1,34 +1,35 @@
-import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import LoadingComponent from "components/Loading"
+import { useEffect, useState } from "react"
+import { useNetwork } from "wagmi"
 
-import { Token } from '../../models/types';
-import Select from './Select';
-import { SelectProps } from './Select.types';
+import { Token } from "../../models/types"
+import Select from "./Select"
+import { SelectProps } from "./Select.types"
 
 const TokenSelect = ({
   onSelect,
   selected
 }: {
-  onSelect: SelectProps['onSelect'];
-  selected: SelectProps['selected'];
+  onSelect: SelectProps["onSelect"]
+  selected: SelectProps["selected"]
 }) => {
-  const [tokens, setTokens] = useState<Token[]>();
-  const [isLoading, setLoading] = useState(false);
-  const { chain, chains } = useNetwork();
-  const chainId = chain?.id || chains[0]?.id;
+  const [tokens, setTokens] = useState<Token[]>()
+  const [isLoading, setLoading] = useState(false)
+  const { chain, chains } = useNetwork()
+  const chainId = chain?.id || chains[0]?.id
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
     fetch(`/api/tokens?chain_id=${chainId}`)
       .then((res) => res.json())
       .then((data) => {
-        setTokens(data);
-        setLoading(false);
-      });
-  }, [chainId]);
+        setTokens(data)
+        setLoading(false)
+      })
+  }, [chainId])
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingComponent />
   }
   return tokens ? (
     <Select
@@ -39,6 +40,6 @@ const TokenSelect = ({
     />
   ) : (
     <></>
-  );
-};
-export default TokenSelect;
+  )
+}
+export default TokenSelect
