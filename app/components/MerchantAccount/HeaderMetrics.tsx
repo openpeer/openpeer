@@ -16,8 +16,8 @@ import Link from "next/link"
 const HeaderMetrics = () => {
   return (
     <>
-      <div className="w-full flex flex-row mb-8">
-        <div className="w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6">
+      <div className="w-full flex flex-col md:flex-row mb-8">
+        <div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
           <div className="flex flex-col items-center">
             <span className="m-auto flex items-center justify-center bg-[#EBF5F7] w-24 h-24 rounded-full">
               IMG
@@ -59,7 +59,7 @@ const HeaderMetrics = () => {
           </div>
         </div>
         <div>
-          <div className="w-full flex flex-row justify-around gap-6">
+          <div className="w-full flex flex-col md:flex-row justify-around gap-6">
             <div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">Joined</span>
@@ -103,7 +103,7 @@ const HeaderMetrics = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-row justify-around gap-6 mt-4">
+          <div className="w-full flex flex-col md:flex-row justify-around gap-6 mt-4">
             <div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">Completion Rate</span>
