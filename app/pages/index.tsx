@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@heroicons/react/20/solid"
-import Card from "components/MerchantAccount/card"
+import HeaderMetrics from "components/MerchantAccount/HeaderMetrics"
 import { formatUnits } from "ethers/lib/utils.js"
 import { useEffect, useState } from "react"
 import { useNetwork } from "wagmi"
@@ -28,11 +28,7 @@ const HomePage = () => {
   return (
     <div className="py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-        <div className="flex flex-row justify-around">
-          <Card />
-          <Card />
-          <Card />
-        </div>
+        <HeaderMetrics />
         <div className="py-4">
           <table className="min-w-full md:rounded-lg overflow-hidden border-spacing-0">
             <thead className="bg-gray-100">
