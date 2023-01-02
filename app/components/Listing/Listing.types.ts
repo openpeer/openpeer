@@ -18,6 +18,7 @@ export interface UIList {
   limitMin: number | undefined;
   limitMax: number | undefined;
   paymentMethod: UIPaymentMethod | undefined;
+  terms?: string | undefined;
 }
 
 export interface StepProps {

@@ -10,7 +10,7 @@ const Setup = ({ list, updateList }: StepProps) => {
     updateList({ ...list, ...{ token: t } });
   };
   const updateCurrency = (c: Option | undefined) => {
-    updateList({ ...list, ...{ currency: c } });
+    updateList({ ...list, ...{ currency: c, margin: undefined } });
   };
 
   const onProceed = () => {

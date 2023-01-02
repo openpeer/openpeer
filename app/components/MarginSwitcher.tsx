@@ -1,13 +1,13 @@
-import { List } from "../models/types"
-import Selector from "./Selector"
+import { List } from '../models/types';
+import Selector from './Selector';
 
 interface Props {
-  selected: List["margin_type"]
-  onSelect: (opt: List["margin_type"]) => void
-  margin: number
-  token: string
-  currency: string
-  updateMargin: (n: number) => void
+  selected: List['margin_type'];
+  onSelect: (opt: List['margin_type']) => void;
+  margin: number | undefined;
+  token: string;
+  currency: string;
+  updateMargin: (n: number) => void;
 }
 
 const Option = ({
@@ -15,19 +15,19 @@ const Option = ({
   selected,
   onSelect
 }: {
-  label: string
-  selected: boolean
-  onSelect: Props["onSelect"]
+  label: string;
+  selected: boolean;
+  onSelect: Props['onSelect'];
 }) => (
   <button
     className={`w-full flex justify-center rounded-full py-2 ${
-      selected && "bg-white text-black"
+      selected && 'bg-white text-black'
     }`}
-    onClick={() => onSelect(label.toLowerCase() as List["margin_type"])}
+    onClick={() => onSelect(label.toLowerCase() as List['margin_type'])}
   >
     {label}
   </button>
-)
+);
 
 const MarginSwitcher = ({
   selected,
@@ -41,16 +41,16 @@ const MarginSwitcher = ({
     <>
       <div className="w-full flex flex-col rounded-full bg-[#F4F6F8]">
         <div className="flex p-1.5 items-center text-[#6A6A6A] font-bold">
-          <Option label="Fixed" selected={selected === "fixed"} onSelect={onSelect} />
+          <Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
           <Option
             label="Percentage"
-            selected={selected === "percentage"}
+            selected={selected === 'percentage'}
             onSelect={onSelect}
           />
         </div>
       </div>
       <>
-        {selected === "fixed" && (
+        {selected === 'fixed' && margin && (
           <Selector
             value={margin}
             suffix={` ${currency} per ${token}`}
@@ -58,12 +58,12 @@ const MarginSwitcher = ({
             updateValue={updateMargin}
           />
         )}
-        {selected === "percentage" && (
-          <Selector value={margin} suffix="%" updateValue={updateMargin} />
+        {selected === 'percentage' && (
+          <Selector value={margin!} suffix="%" updateValue={updateMargin} />
         )}
       </>
     </>
-  )
-}
+  );
+};
 
-export default MarginSwitcher
+export default MarginSwitcher;
