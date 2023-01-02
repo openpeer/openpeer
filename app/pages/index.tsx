@@ -1,3 +1,5 @@
+import { CalendarIcon } from "@heroicons/react/20/solid"
+import HeaderMetrics from "components/MerchantAccount/HeaderMetrics"
 import LoadingComponent from "components/Loading"
 import { formatUnits } from "ethers/lib/utils.js"
 import { useEffect, useState } from "react"
@@ -27,6 +29,7 @@ const HomePage = () => {
   return (
     <div className="py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+        <HeaderMetrics />
         <div className="py-4">
           <table className="min-w-full md:rounded-lg overflow-hidden border-spacing-0">
             <thead className="bg-gray-100">
@@ -76,13 +79,19 @@ const HomePage = () => {
                 }) => (
                   <tr key={id} className="hover:bg-gray-50">
                     <td className="pl-4 py-4">
-                      <div className="text-sm text-gray-900">{address}</div>
-                      <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                        <span>Volume: 0.0212 BTC</span>
-                        <br />
-                        <span>
-                          Amount: {formatUnits(amount, decimals)} {symbol}
-                        </span>
+                      <div className="flex flex-row justify-between">
+                        <div className="">
+                          <div className="text-sm text-gray-900">{address}</div>
+                          <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
+                            <span>Volume: 0.0212 BTC</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col lg:hidden">
+                          <span className="font-bold mb-2">
+                            {formatUnits(amount, decimals)}
+                          </span>
+                          <Button title="Buy" />
+                        </div>
                       </div>
                     </td>
                     <td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
@@ -95,7 +104,7 @@ const HomePage = () => {
                       {fiatSymbol} {min} - {fiatSymbol}
                       {max}
                     </td>
-                    <td className="text-right py-4 pr-4">
+                    <td className="hidden text-right py-4 pr-4 lg:table-cell">
                       <Button title="Buy" />
                     </td>
                   </tr>
