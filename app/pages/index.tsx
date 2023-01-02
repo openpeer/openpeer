@@ -1,5 +1,6 @@
 import { CalendarIcon } from "@heroicons/react/20/solid"
 import HeaderMetrics from "components/MerchantAccount/HeaderMetrics"
+import LoadingComponent from "components/Loading"
 import { formatUnits } from "ethers/lib/utils.js"
 import { useEffect, useState } from "react"
 import { useNetwork } from "wagmi"
@@ -22,7 +23,7 @@ const HomePage = () => {
       })
   }, [chainId])
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <LoadingComponent />
   if (!lists) return <p>No lists data</p>
 
   return (

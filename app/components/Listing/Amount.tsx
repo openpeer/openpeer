@@ -1,8 +1,8 @@
-import { Input, Label, MarginSwitcher } from 'components';
-import { useState } from 'react';
+import { Input, Label, MarginSwitcher } from "components"
+import { useState } from "react"
 
-import { StepProps } from './Listing.types';
-import StepLayout from './StepLayout';
+import { StepProps } from "./Listing.types"
+import StepLayout from "./StepLayout"
 
 const Amount = ({ list, updateList }: StepProps) => {
   const {
@@ -11,31 +11,31 @@ const Amount = ({ list, updateList }: StepProps) => {
     totalAvailableAmount,
     limitMin,
     limitMax,
-    marginType = 'fixed',
+    marginType = "fixed",
     margin: savedMargin
-  } = list;
+  } = list
 
-  const percentage = marginType === 'percentage';
+  const percentage = marginType === "percentage"
   const [percentageMargin, setPercentageMargin] = useState<number>(
     percentage ? savedMargin || 5 : 5
-  );
+  )
   const [fixedMargin, setFixedMargin] = useState<number>(
     percentage ? 1.1 : savedMargin || 1.1
-  );
-  const margin = percentage ? percentageMargin : fixedMargin;
+  )
+  const margin = percentage ? percentageMargin : fixedMargin
   const updateMargin = (m: number) => {
-    percentage ? setPercentageMargin(m) : setFixedMargin(m);
-    updateList({ ...list, ...{ margin: m } });
-  };
+    percentage ? setPercentageMargin(m) : setFixedMargin(m)
+    updateList({ ...list, ...{ margin: m } })
+  }
 
   const onProceed = () => {
-    const total = totalAvailableAmount || 0;
-    const min = limitMin || 0;
-    const max = limitMax || 0;
+    const total = totalAvailableAmount || 0
+    const min = limitMin || 0
+    const max = limitMax || 0
     if (total > 0 && min <= max && (margin > 0 || percentage)) {
-      updateList({ ...list, ...{ step: list.step + 1 } });
+      updateList({ ...list, ...{ step: list.step + 1 } })
     }
-  };
+  }
 
   return (
     <StepLayout onProceed={onProceed}>
@@ -49,10 +49,8 @@ const Amount = ({ list, updateList }: StepProps) => {
         required
       />
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Enter fiat order limit
-        </label>
-        <div className="flex flex-row gap-x-8">
+        <Label title="Enter fiat order limit" />
+        <div className="flex flex-row gap-x-8 -mt-6">
           <Input
             placeholder="100"
             label="Min:"
@@ -95,7 +93,7 @@ const Amount = ({ list, updateList }: StepProps) => {
         </div>
       </div>
     </StepLayout>
-  );
-};
+  )
+}
 
-export default Amount;
+export default Amount
