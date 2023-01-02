@@ -2,6 +2,7 @@ import Button from './Button/Button';
 import Checkbox from './Checkbox/Checkbox';
 import Input from './Input/Input';
 import Label from './Label/Label';
+import Loading from './Loading/Loading';
 import MarginSwitcher from './MarginSwitcher';
 import BankSelect from './Select/BankSelect';
 import CurrencySelect from './Select/CurrencySelect';
@@ -21,5 +22,6 @@ export {
   Selector,
   Textarea,
   CurrencySelect,
-  Steps
+  Steps,
+  Loading
 };

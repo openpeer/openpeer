@@ -1,61 +1,61 @@
-import { BankSelect, Button, Input } from "components"
-import { PaymentMethod } from "models/types"
-import { useEffect, useState } from "react"
-import { useAccount } from "wagmi"
+import { BankSelect, Button, Input, Loading } from 'components';
+import { PaymentMethod } from 'models/types';
+import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
-import { PencilSquareIcon } from "@heroicons/react/20/solid"
+import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { StepProps, UIPaymentMethod } from "./Listing.types"
-import StepLayout from "./StepLayout"
-import LoadingComponent from "components/Loading"
+import { StepProps, UIPaymentMethod } from './Listing.types';
+import StepLayout from './StepLayout';
 
 const PaymentMethod = ({ list, updateList }: StepProps) => {
-  const { address } = useAccount()
-  const { currency, paymentMethod = {} as PaymentMethod } = list
+  const { address } = useAccount();
+  const { currency, paymentMethod = {} as PaymentMethod } = list;
   const {
     id,
     account_name: accountName,
     account_number: accountNumber,
     bank
-  } = paymentMethod
+  } = paymentMethod;
 
   const onProceed = () => {
     if (address && accountName && accountNumber && bank?.id) {
-      updateList({ ...list, ...{ step: list.step + 1 } })
+      updateList({ ...list, ...{ step: list.step + 1 } });
     }
-  }
+  };
 
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>()
-  const [isLoading, setLoading] = useState(false)
-  const [edit, setEdit] = useState(false)
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>();
+  const [isLoading, setLoading] = useState(false);
+  const [edit, setEdit] = useState(false);
   const setPaymentMethod = (pm: UIPaymentMethod | undefined) => {
-    setEdit(false)
-    updateList({ ...list, ...{ paymentMethod: pm } })
-  }
+    setEdit(false);
+    updateList({ ...list, ...{ paymentMethod: pm } });
+  };
 
   const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
-    updateList({ ...list, ...{ paymentMethod: pm } })
-  }
+    updateList({ ...list, ...{ paymentMethod: pm } });
+  };
 
-  const enableEdit = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation()
-    setEdit(true)
-  }
+  const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {
+    e.stopPropagation();
+    updatePaymentMethod(pm);
+    setEdit(true);
+  };
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     fetch(`/api/payment-methods?address=${address}`)
       .then((res) => res.json())
       .then((data) => {
-        setPaymentMethods(data)
-        if (!paymentMethod) setPaymentMethod(data[0])
-        setLoading(false)
-      })
+        setPaymentMethods(data);
+        if (!paymentMethod.id) setPaymentMethod(data[0]);
+        setLoading(false);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address])
+  }, [address]);
 
   if (isLoading) {
-    return <LoadingComponent />
+    return <Loading />;
   }
 
   return (
@@ -70,7 +70,7 @@ const PaymentMethod = ({ list, updateList }: StepProps) => {
         >
           <div className="w-full flex flex-row justify-between mb-4">
             <div>Bank Transfer</div>
-            <div onClick={enableEdit}>
+            <div onClick={(e) => enableEdit(e, pm)}>
               <PencilSquareIcon className="h-5 w-" aria-hidden="true" />
             </div>
           </div>
@@ -133,7 +133,7 @@ const PaymentMethod = ({ list, updateList }: StepProps) => {
         </div>
       )}
     </StepLayout>
-  )
-}
+  );
+};
 
-export default PaymentMethod
+export default PaymentMethod;

@@ -10,15 +10,15 @@ interface SelectorProps {
 const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => {
   return (
     <div className="flex flex-row justify-between content-center bg-gray-100 my-8 py-4 p-8 border-2 border-slate-200 rounded-md">
-      <Button title="-" minimal onClick={() => updateValue(value - 1)} />
+      <Button title="-" minimal onClick={() => updateValue(value - 0.01)} />
       <div className="flex flex-col item-center">
         <div className="text-xl font-bold">
-          {value}
+          {value.toFixed(2)}
           {suffix}
         </div>
         <div className="text-sm text-center">{underValue}</div>
       </div>
-      <Button title="+" minimal onClick={() => updateValue(value + 1)} />
+      <Button title="+" minimal onClick={() => updateValue(value + 0.01)} />
     </div>
   );
 };

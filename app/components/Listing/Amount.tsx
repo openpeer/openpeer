@@ -1,8 +1,9 @@
-import { Input, Label, MarginSwitcher } from "components"
-import { useState } from "react"
+import { Input, Label, MarginSwitcher } from 'components';
+import { List } from 'models/types';
+import { useEffect, useState } from 'react';
 
-import { StepProps } from "./Listing.types"
-import StepLayout from "./StepLayout"
+import { StepProps } from './Listing.types';
+import StepLayout from './StepLayout';
 
 const Amount = ({ list, updateList }: StepProps) => {
   const {
@@ -11,31 +12,53 @@ const Amount = ({ list, updateList }: StepProps) => {
     totalAvailableAmount,
     limitMin,
     limitMax,
-    marginType = "fixed",
+    marginType = 'fixed',
     margin: savedMargin
-  } = list
+  } = list;
 
-  const percentage = marginType === "percentage"
+  const percentage = marginType === 'percentage';
   const [percentageMargin, setPercentageMargin] = useState<number>(
     percentage ? savedMargin || 5 : 5
-  )
-  const [fixedMargin, setFixedMargin] = useState<number>(
-    percentage ? 1.1 : savedMargin || 1.1
-  )
-  const margin = percentage ? percentageMargin : fixedMargin
+  );
+  const [fixedMargin, setFixedMargin] = useState<number | undefined>(
+    percentage ? undefined : savedMargin
+  );
+  const margin = percentage ? percentageMargin : fixedMargin;
   const updateMargin = (m: number) => {
-    percentage ? setPercentageMargin(m) : setFixedMargin(m)
-    updateList({ ...list, ...{ margin: m } })
-  }
+    percentage ? setPercentageMargin(m) : setFixedMargin(m);
+    updateList({ ...list, ...{ margin: m } });
+  };
 
   const onProceed = () => {
-    const total = totalAvailableAmount || 0
-    const min = limitMin || 0
-    const max = limitMax || 0
-    if (total > 0 && min <= max && (margin > 0 || percentage)) {
-      updateList({ ...list, ...{ step: list.step + 1 } })
+    const total = totalAvailableAmount || 0;
+    const min = limitMin || 0;
+    const max = limitMax || 0;
+    if (total > 0 && min <= max && ((margin || 0) > 0 || percentage)) {
+      updateList({ ...list, ...{ step: list.step + 1 } });
     }
-  }
+  };
+
+  const onSelectType = (t: List['margin_type']) => {
+    const m = t === 'fixed' ? fixedMargin : percentageMargin;
+    updateList({ ...list, ...{ marginType: t, margin: m } });
+  };
+
+  useEffect(() => {
+    fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${
+        token!.coingecko_id
+      }&vs_currencies=${currency!.name.toLowerCase()}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!fixedMargin) {
+          const m: number = data[token!.coingecko_id!][currency!.name.toLowerCase()];
+          setFixedMargin(m);
+          if (!percentage) updateMargin(m);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, currency, fixedMargin, percentage]);
 
   return (
     <StepLayout onProceed={onProceed}>
@@ -75,7 +98,7 @@ const Amount = ({ list, updateList }: StepProps) => {
       <Label title="Set Price Margin" />
       <MarginSwitcher
         selected={marginType}
-        onSelect={(t) => updateList({ ...list, ...{ marginType: t } })}
+        onSelect={onSelectType}
         currency={currency!.name}
         token={token!.name}
         margin={margin}
@@ -85,15 +108,15 @@ const Amount = ({ list, updateList }: StepProps) => {
       <div className="w-full flex flex-row justify-between mb-8 hidden">
         <div>
           <div>Lowest price</div>
-          <div className="text-xl font-bold">25.9 {list.currency!.name}</div>
+          <div className="text-xl font-bold">25.9 {currency!.name}</div>
         </div>
         <div>
           <div>Highest price</div>
-          <div className="text-xl font-bold">25.9 {list.currency!.name}</div>
+          <div className="text-xl font-bold">25.9 {currency!.name}</div>
         </div>
       </div>
     </StepLayout>
-  )
-}
+  );
+};
 
-export default Amount
+export default Amount;
