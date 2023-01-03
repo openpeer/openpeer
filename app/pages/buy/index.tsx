@@ -1,6 +1,6 @@
 import { Steps } from "components"
-import Amount from "components/Buy/Release"
-import Payment from "components/Buy/Release"
+import Amount from "components/Buy/Amount"
+import Payment from "components/Buy/Payment"
 import Release from "components/Buy/Release"
 import { UIList } from "components/Listing/Listing.types"
 import { useEffect, useState } from "react"
@@ -55,13 +55,15 @@ const SellPage = () => {
             currentStep={step}
             onStepClick={(n) => setList({ ...list, ...{ step: n } })}
           />
-          {step === AMOUNT_STEP && <Amount />}
-          {step === PAYMENT_METHOD_STEP && <Payment />}
-          {step === RELEASE_STEP && <Release />}
+          {step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
+          {step === PAYMENT_METHOD_STEP && <Payment list={list} updateList={setList} />}
+          {step === RELEASE_STEP && <Release list={list} updateList={setList} />}
           {step === DONE_STEP && (
             <div className="flex h-screen">
               <div className="m-auto flex flex-col justify-items-center content-center text-center">
-                <span className="text-xl">Crypto Listing completed.</span>
+                <span className="text-xl">
+                  You have successfully compleated the order
+                </span>
               </div>
             </div>
           )}
