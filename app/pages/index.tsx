@@ -31,9 +31,9 @@ const HomePage = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
         {/* <HeaderMetrics /> */}
         <div className="py-4">
-          <table className="min-w-full md:rounded-lg overflow-hidden border-spacing-0">
+          <table className="w-full md:rounded-lg overflow-hidden">
             <thead className="bg-gray-100">
-              <tr>
+              <tr className="w-full relative">
                 <th
                   scope="col"
                   className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -60,7 +60,7 @@ const HomePage = () => {
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
                 >
                   &nbsp;
                 </th>
@@ -96,7 +96,7 @@ const HomePage = () => {
                             <span>Volume: 0.0212 BTC</span>
                           </div>
                         </div>
-                        <div className="w-2/5 flex flex-col lg:hidden">
+                        <div className="w-2/5 flex flex-col lg:hidden px-4">
                           <span className="font-bold mb-2">
                             {formatUnits(amount, decimals)} {symbol}
                           </span>
