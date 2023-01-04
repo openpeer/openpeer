@@ -192,17 +192,13 @@ const App = ({ Component, pageProps }: AppProps) => {
                   <span className="sr-only">Open sidebar</span>
                   <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <div className="flex flex-1 justify-between px-4">
-                  <div className="flex flex-1 items-center">
-                    <h3 className="text-3xl font-bold uppercase max-w-7xl sm:px-6 md:px-8">
-                      {title}
-                    </h3>
-                  </div>
-                  <div className="flex flex-1 items-center">
-                    <Link href="/sell">
-                      <Button title="Sell Crypto" />
-                    </Link>
-                  </div>
+                <div className="w-full flex items-center justify-between px-4">
+                  <h3 className="text-xl font-bold uppercase pr-4 sm:px-6 md:px-8">
+                    {title}
+                  </h3>
+                  <Link href="/sell">
+                    <Button title="Sell Crypto" rounded />
+                  </Link>
                   <div className="ml-4 flex items-center md:ml-6">
                     <button
                       type="button"
