@@ -18,6 +18,13 @@ const Payment = ({ list, updateList }: StepProps) => {
             Kindly wait for the merchant to accept the order and escrow their funds.
             Payments details will become visible as soon as merchant accepts.
           </p>
+          <div className="hidden">
+            <HeaderH2 title="Pay Merchant" />
+            <p className="text-base">
+              Proceed to your bank app or payment platform and send the required amount to
+              the bank account details below.
+            </p>
+          </div>
           <div className="flex flex-row justify-around bg-gray-100 rounded-lg p-6 my-4">
             <div className="flex flex-col">
               <span className="text-sm">Amount to pay</span>
