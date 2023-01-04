@@ -79,19 +79,21 @@ const HomePage = () => {
                 }) => (
                   <tr key={id} className="hover:bg-gray-50">
                     <td className="pl-4 py-4">
-                      <div className="w-full flex flex-row justify-around">
+                      <div className="w-full flex flex-row justify-around md:justify-start">
                         <div className="w-3/5 mr-6">
-                          <div className="w-full flex flex-row mb-2 items-center">
-                            <Avatar
-                              size="8"
-                              image={
-                                "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                              }
-                            />
-                            <div className="ml-2">Crypto Lurd</div>
+                          <div className="flex flex-col lg:flex-row lg:items-center">
+                            <div className="w-1/3 flex flex-row mb-2 items-center">
+                              <Avatar
+                                image={
+                                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
+                                }
+                              />
+                            </div>
+                            <div className="text-sm text-gray-900 break-all">
+                              {address}
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-900 break-all">{address}</div>
-                          <div className="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
+                          <div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
                             <span>Volume: 0.0212 BTC</span>
                           </div>
                         </div>
