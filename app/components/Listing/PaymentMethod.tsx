@@ -44,15 +44,15 @@ const PaymentMethod = ({ list, updateList }: StepProps) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/payment-methods?address=${address}`)
+    fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`)
       .then((res) => res.json())
       .then((data) => {
         setPaymentMethods(data);
-        if (!paymentMethod.id) setPaymentMethod(data[0]);
+        if (!paymentMethod.account_name) setPaymentMethod(data[0]);
         setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
+  }, [address, currency]);
 
   if (isLoading) {
     return <Loading />;
@@ -117,7 +117,7 @@ const PaymentMethod = ({ list, updateList }: StepProps) => {
             onSelect={(b) =>
               updatePaymentMethod({
                 ...paymentMethod,
-                ...{ bank: b }
+                ...{ bank: b, bankId: b?.id }
               })
             }
             selected={bank}

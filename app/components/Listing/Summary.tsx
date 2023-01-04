@@ -68,7 +68,7 @@ const Summary = ({ list }: SummaryProps) => {
         )}
         {!!totalAvailableAmount && (
           <li className="w-full flex flex-row justify-between mb-4">
-            <div>Total Available Fiat</div>
+            <div>Total Available</div>
             <div className="font-bold">
               {totalAvailableAmount} {token?.name}
             </div>
