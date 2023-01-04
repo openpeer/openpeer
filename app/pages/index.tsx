@@ -79,10 +79,10 @@ const HomePage = () => {
                 }) => (
                   <tr key={id} className="hover:bg-gray-50">
                     <td className="pl-4 py-4">
-                      <div className="w-full flex flex-row justify-around md:justify-start">
+                      <div className="w-full flex flex-row justify-around md:justify-start items-center">
                         <div className="w-3/5 mr-6">
                           <div className="flex flex-col lg:flex-row lg:items-center">
-                            <div className="w-1/3 flex flex-row mb-2 items-center">
+                            <div className="w-1/3 flex flex-row mb-2">
                               <Avatar
                                 image={
                                   "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
