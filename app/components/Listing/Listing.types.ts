@@ -11,7 +11,9 @@ export interface UIPaymentMethod {
 export interface UIList {
   step: number;
   token: Option | undefined;
+  tokenId: number | undefined;
   currency: Option | undefined;
+  fiatCurrencyId: number | undefined;
   totalAvailableAmount: number | undefined;
   marginType: List['margin_type'];
   margin: number | undefined;

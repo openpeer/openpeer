@@ -7,10 +7,10 @@ import StepLayout from './StepLayout';
 const Setup = ({ list, updateList }: StepProps) => {
   const { token, currency } = list;
   const updateToken = (t: Option | undefined) => {
-    updateList({ ...list, ...{ token: t } });
+    updateList({ ...list, ...{ token: t, tokenId: t?.id } });
   };
   const updateCurrency = (c: Option | undefined) => {
-    updateList({ ...list, ...{ currency: c, margin: undefined } });
+    updateList({ ...list, ...{ currency: c, fiatCurrencyId: c?.id, margin: undefined } });
   };
 
   const onProceed = () => {

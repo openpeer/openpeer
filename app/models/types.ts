@@ -5,15 +5,11 @@ export interface FiatCurrency {
   icon: string;
   country_code: string;
   symbol: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface User {
   id: number;
   address: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Token {
@@ -24,8 +20,6 @@ export interface Token {
   name: string;
   coingecko_id?: string;
   icon: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface List {
@@ -44,16 +38,12 @@ export interface List {
   terms: string | undefined | null;
   token: Token;
   total_available_amount: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface Bank {
   id: number;
   name: string;
   icon: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface PaymentMethod {
@@ -61,8 +51,7 @@ export interface PaymentMethod {
   account_name: string;
   account_number: string;
   details: string;
-  created_at: string;
-  updated_at: string;
   user: User;
   bank: Bank;
+  bank_id: number;
 }

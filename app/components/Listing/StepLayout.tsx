@@ -2,14 +2,16 @@ import Button from 'components/Button/Button';
 
 const StepLayout = ({
   children,
-  onProceed
+  onProceed,
+  buttonText
 }: {
   children?: React.ReactNode;
   onProceed: () => void;
+  buttonText?: string;
 }) => (
   <>
     {children}
-    <Button title="Proceed" onClick={onProceed} />
+    <Button title={buttonText || 'Proceed'} onClick={onProceed} />
   </>
 );
 
