@@ -7,11 +7,12 @@ import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import SummaryBuy from 'components/Buy/Summary';
+import Compleated from 'components/Buy/Compleated';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
-const DONE_STEP = 4;
+const COMPLEATED_STEP = 4;
 
 const SellPage = () => {
 	const { address } = useAccount();
@@ -52,11 +53,9 @@ const SellPage = () => {
 					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
 					{step === PAYMENT_METHOD_STEP && <Payment list={list} updateList={setList} />}
 					{step === RELEASE_STEP && <Release list={list} updateList={setList} />}
-					{step === DONE_STEP && (
-						<div className="flex h-screen">
-							<div className="m-auto flex flex-col justify-items-center content-center text-center">
-								<span className="text-xl">You have successfully compleated the order</span>
-							</div>
+					{step === COMPLEATED_STEP && (
+						<div>
+							<Compleated list={list} updateList={setList} />
 						</div>
 					)}
 				</div>

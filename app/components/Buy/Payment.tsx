@@ -1,4 +1,5 @@
 import { ClipboardDocumentIcon, ClockIcon } from '@heroicons/react/20/solid';
+import Button from 'components/Button/Button';
 import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
@@ -59,28 +60,28 @@ const Payment = ({ list, updateList }: StepProps) => {
 
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
-							<span>Account Name</span>
+							<span className="text-[#6A6A6A]">Account Name</span>
 							<span className="flex flex-row justify-between">
 								<span className="mr-2">Josh Reyes</span>
 								<ClipboardDocumentIcon className="w-4 text-gray-500" />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
-							<span>Account Number</span>
+							<span className="text-[#6A6A6A]">Account Number</span>
 							<span className="flex flex-row justify-between">
 								<span className="mr-2">011223332222</span>
 								<ClipboardDocumentIcon className="w-4 text-gray-500" />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
-							<span>Bank Name</span>
+							<span className="text-[#6A6A6A]">Bank Name</span>
 							<span className="flex flex-row justify-between">
 								<span className="mr-2">Revolut</span>
 								<ClipboardDocumentIcon className="w-4 text-gray-500" />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
-							<span>Reference No.</span>
+							<span className="text-[#6A6A6A]">Reference No.</span>
 							<span className="flex flex-row justify-between">
 								<span className="mr-2">011223332222</span>
 								<ClipboardDocumentIcon className="w-4 text-gray-500" />
@@ -88,11 +89,19 @@ const Payment = ({ list, updateList }: StepProps) => {
 						</div>
 						<div className="border-bottom border border-color-gray-200 mb-4"></div>
 						<div className="flex flex-row justify-between">
-							<span>Payment will expire in </span>
+							<span className="text-[#6A6A6A]">Payment will expire in </span>
 							<span className="flex flex-row justify-between">
 								<span className="text-[#3C9AAA]">15m:20secs</span>
 							</span>
 						</div>
+					</div>
+					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
+						<span className="w-full md:w-1/2 md:pr-8">
+							<Button title="Cancel Order" outlined />
+						</span>
+						<span className="w-full">
+							<Button title="I’ve made the payment" />
+						</span>
 					</div>
 				</div>
 			</StepLayout>

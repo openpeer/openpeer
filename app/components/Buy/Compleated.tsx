@@ -1,10 +1,10 @@
-import { ClipboardDocumentIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { CheckBadgeIcon, ClipboardDocumentIcon, ClockIcon } from '@heroicons/react/20/solid';
 import Button from 'components/Button/Button';
 import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
 
-const Release = ({ list, updateList }: StepProps) => {
+const Compleated = ({ list, updateList }: StepProps) => {
 	const { terms } = list;
 	const onProceed = () => {
 		updateList({ ...list, ...{ step: list.step + 1 } });
@@ -15,14 +15,11 @@ const Release = ({ list, updateList }: StepProps) => {
 			<StepLayout onProceed={onProceed}>
 				<div className="my-8">
 					<div className="mb-4">
-						<span className="flex flex-row text-yellow-600 mb-2">
-							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Release" />
+						<span className="flex flex-row text-green-600 mb-2">
+							<CheckBadgeIcon className="w-8 mr-2" />
+							<HeaderH2 title="Purchase Complete" />
 						</span>
-						<p className="text-base">
-							This payment has been marked as paid. Awaiting comfirmation from the merchant and the
-							release of 159USDT.
-						</p>
+						<p className="text-base">You have successfully purchased 159 USDT from Crypto Lurd.</p>
 					</div>
 
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
@@ -47,20 +44,22 @@ const Release = ({ list, updateList }: StepProps) => {
 							</span>
 						</div>
 						<div className="border-bottom border border-color-gray-200 mb-4"></div>
-						<div className="flex flex-row justify-between">
-							<span className="text-[#6A6A6A]">Payment will expire in </span>
-							<span className="flex flex-row justify-between">
-								<span className="text-[#3C9AAA]">15m:20secs</span>
+						<div className="flex flex-row items-center justify-between">
+							<span className="text-[#6A6A6A]">Rate merchant </span>
+							<span className="w-1/2">
+								<div className="flex flex-col flex-col-reverse md:flex-row items-center">
+									<span className="w-full md:pr-8">
+										<Button title="👍 Good" outlined />
+									</span>
+									<span className="w-full">
+										<Button title="👎 Bad" outlined />
+									</span>
+								</div>
 							</span>
 						</div>
 					</div>
-					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
-						<span className="w-full md:pr-8">
-							<Button title="Cancel Order" outlined />
-						</span>
-						<span className="w-full">
-							<Button title="Dispude Transaction" />
-						</span>
+					<div className="mt-8">
+						<Button title="Goto wallet" />
 					</div>
 				</div>
 			</StepLayout>
@@ -68,4 +67,4 @@ const Release = ({ list, updateList }: StepProps) => {
 	);
 };
 
-export default Release;
+export default Compleated;
