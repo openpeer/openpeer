@@ -33,7 +33,7 @@ const InputToken = ({
 				{label}
 			</label>
 			<div className="relative mt-1 rounded-md shadow-sm">
-				<div className="w-24 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 bg-blue-500">
+				<div className="w-24 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 					<div className="flex flex-row">
 						<span className="mr-2">
 							<Image
