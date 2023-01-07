@@ -2,6 +2,7 @@ import { Loading } from 'components';
 import Avatar from 'components/Avatar';
 import HeaderMetrics from 'components/MerchantAccount/HeaderMetrics';
 import { formatUnits } from 'ethers/lib/utils.js';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
@@ -99,7 +100,9 @@ const HomePage = () => {
 													<span className="font-bold mb-2">
 														{formatUnits(amount, decimals)} {symbol}
 													</span>
-													<Button title="Buy" />
+													<Link href="/buy">
+														<Button title="Buy" />
+													</Link>
 												</div>
 											</div>
 										</td>
@@ -114,7 +117,9 @@ const HomePage = () => {
 												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<Button title="Buy" />
+											<Link href="/buy">
+												<Button title="Buy" />
+											</Link>
 										</td>
 									</tr>
 								)
