@@ -1,4 +1,4 @@
-import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/20/solid';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/20/solid';
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 
@@ -53,7 +53,17 @@ const SummaryBuy = () => {
 					Please do not include any crypto related keywords like USDT or OpenPeer. Thanks for doing business
 					with me.
 				</p>
-				<Button title="Chat with merchant" outlined />
+				<Button
+					title={
+						<>
+							<span className="flex flex-row items-center justify-center">
+								<span className="mr-2">Chat with merchant</span>
+								<ChatBubbleLeftEllipsisIcon className="w-8" />
+							</span>
+						</>
+					}
+					outlined
+				/>
 			</div>
 		</div>
 	);

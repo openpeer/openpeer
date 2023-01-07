@@ -12,7 +12,7 @@ const Release = ({ list, updateList }: StepProps) => {
 
 	return (
 		<>
-			<StepLayout onProceed={onProceed}>
+			<StepLayout>
 				<div className="my-8">
 					<div className="mb-4">
 						<span className="flex flex-row text-yellow-600 mb-2">
@@ -59,7 +59,7 @@ const Release = ({ list, updateList }: StepProps) => {
 							<Button title="Cancel Order" outlined />
 						</span>
 						<span className="w-full">
-							<Button title="Dispude Transaction" />
+							<Button title="Dispute Transaction" onClick={onProceed} />
 						</span>
 					</div>
 				</div>

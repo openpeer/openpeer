@@ -1,5 +1,5 @@
 interface ButtonProps {
-	title: string;
+	title: string | JSX.Element;
 	onClick?: () => void;
 	minimal?: boolean;
 	outlined?: boolean;

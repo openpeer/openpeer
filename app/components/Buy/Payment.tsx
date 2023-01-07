@@ -12,7 +12,7 @@ const Payment = ({ list, updateList }: StepProps) => {
 
 	return (
 		<>
-			<StepLayout onProceed={onProceed}>
+			<StepLayout>
 				<div className="my-8">
 					<div className="">
 						<span className="flex flex-row text-yellow-600 mb-2">
@@ -100,7 +100,7 @@ const Payment = ({ list, updateList }: StepProps) => {
 							<Button title="Cancel Order" outlined />
 						</span>
 						<span className="w-full">
-							<Button title="I’ve made the payment" />
+							<Button title="I’ve made the payment" onClick={onProceed} />
 						</span>
 					</div>
 				</div>

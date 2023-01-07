@@ -11,7 +11,7 @@ const Amount = ({ list, updateList }: StepProps) => {
 
 	return (
 		<>
-			<StepLayout onProceed={onProceed}>
+			<StepLayout onProceed={onProceed} buttonText="Continue">
 				<div className="my-8">
 					<InputToken label="Amount to buy" currency="INR₹" id={''} />
 					<InputToken label="Amount you’ll receive" currency="USDT" id={''} />
