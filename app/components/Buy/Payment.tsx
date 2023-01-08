@@ -82,7 +82,7 @@ const Payment = ({ list, updateList }: StepProps) => {
 								<ClipboardText itemValue="011223332222" />
 							</span>
 						</div>
-						<div className="border-bottom border border-color-gray-200 mb-4"></div>
+						<div className="border-b-2 border-dashed border-color-gray-400 mb-4"></div>
 						<div className="flex flex-row justify-between">
 							<span className="text-[#6A6A6A]">Payment will expire in </span>
 							<span className="flex flex-row justify-between">
