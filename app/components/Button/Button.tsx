@@ -4,9 +4,10 @@ interface ButtonProps {
 	minimal?: boolean;
 	outlined?: boolean;
 	rounded?: boolean;
+	link?: boolean;
 }
 
-const Button = ({ title, onClick, minimal = false, outlined = false, rounded = false }: ButtonProps) => {
+const Button = ({ title, onClick, minimal = false, outlined = false, rounded = false, link = false }: ButtonProps) => {
 	return (
 		<button
 			className={
@@ -16,6 +17,8 @@ const Button = ({ title, onClick, minimal = false, outlined = false, rounded = f
 					? 'w-full px-2 py-2.5 rounded border border-[#3C9AAA] text-base text-[#3C9AAA] my-8'
 					: rounded
 					? 'w-full px-4 py-2 rounded-full bg-[#3C9AAA] text-sm md:text-base text-white'
+					: link
+					? 'w-auto'
 					: 'w-full px-5 py-2.5 rounded bg-[#3C9AAA] text-base text-white'
 			}
 			onClick={onClick}
