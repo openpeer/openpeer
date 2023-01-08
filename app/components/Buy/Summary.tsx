@@ -1,4 +1,4 @@
-import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/20/solid';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 

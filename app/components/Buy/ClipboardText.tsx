@@ -1,10 +1,10 @@
-import { ClipboardDocumentIcon } from '@heroicons/react/20/solid';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
-interface CopyPastListItemProps {
+interface ClipboardTextProps {
 	itemValue: string;
 }
 
-const CopyPastListItem = ({ itemValue }: CopyPastListItemProps) => {
+const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
 	const copyText = (event) => {
 		const text = event.target.parentElement.querySelector('.text');
 		navigator.clipboard.writeText(text.textContent);
@@ -25,4 +25,4 @@ const CopyPastListItem = ({ itemValue }: CopyPastListItemProps) => {
 	);
 };
 
-export default CopyPastListItem;
+export default ClipboardText;

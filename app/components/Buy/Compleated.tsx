@@ -1,8 +1,9 @@
-import { CheckBadgeIcon, ClipboardDocumentIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { HandThumbDownIcon, CheckBadgeIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
 import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import ClipboardText from './ClipboardText';
 
 const Compleated = ({ list, updateList }: StepProps) => {
 	const { terms } = list;
@@ -12,7 +13,7 @@ const Compleated = ({ list, updateList }: StepProps) => {
 
 	return (
 		<>
-			<StepLayout onProceed={onProceed}>
+			<StepLayout>
 				<div className="my-8">
 					<div className="mb-4">
 						<span className="flex flex-row text-green-600 mb-2">
@@ -39,8 +40,7 @@ const Compleated = ({ list, updateList }: StepProps) => {
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Reference No.</span>
 							<span className="flex flex-row justify-between">
-								<span className="mr-2">011223332222</span>
-								<ClipboardDocumentIcon className="w-4 text-gray-500" />
+								<ClipboardText itemValue="0112233322224" />
 							</span>
 						</div>
 						<div className="border-bottom border border-color-gray-200 mb-4"></div>
@@ -49,10 +49,30 @@ const Compleated = ({ list, updateList }: StepProps) => {
 							<span className="w-1/2">
 								<div className="flex flex-col flex-col-reverse md:flex-row items-center">
 									<span className="w-full md:pr-8">
-										<Button title="👍 Good" outlined />
+										<Button
+											title={
+												<>
+													<div className="flex flex-row items-center justify-center">
+														<HandThumbUpIcon className="w-6" />
+														<span className="ml-2">Good</span>
+													</div>
+												</>
+											}
+											outlined
+										/>
 									</span>
 									<span className="w-full">
-										<Button title="👎 Bad" outlined />
+										<Button
+											title={
+												<>
+													<div className="flex flex-row items-center justify-center">
+														<HandThumbDownIcon className="w-6" />
+														<span className="ml-2">Bad</span>
+													</div>
+												</>
+											}
+											outlined
+										/>
 									</span>
 								</div>
 							</span>

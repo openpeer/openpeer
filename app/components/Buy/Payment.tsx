@@ -1,9 +1,9 @@
-import { ClipboardDocumentIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { ClockIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
 import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
-import CopyPastListItem from './CopyPastListItem';
+import ClipboardText from './ClipboardText';
 
 const Payment = ({ list, updateList }: StepProps) => {
 	const { terms } = list;
@@ -62,24 +62,24 @@ const Payment = ({ list, updateList }: StepProps) => {
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Account Name</span>
-							<CopyPastListItem itemValue="Josh Reyes" />
+							<ClipboardText itemValue="Josh Reyes" />
 						</div>
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Account Number</span>
 							<span className="flex flex-row justify-between">
-								<CopyPastListItem itemValue="011223332222" />
+								<ClipboardText itemValue="011223332222" />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Bank Name</span>
 							<span className="flex flex-row justify-between">
-								<CopyPastListItem itemValue="Revolut" />
+								<ClipboardText itemValue="Revolut" />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Reference No.</span>
 							<span className="flex flex-row justify-between">
-								<CopyPastListItem itemValue="011223332222" />
+								<ClipboardText itemValue="011223332222" />
 							</span>
 						</div>
 						<div className="border-bottom border border-color-gray-200 mb-4"></div>
