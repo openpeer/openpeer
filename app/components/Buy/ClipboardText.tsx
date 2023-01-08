@@ -8,6 +8,8 @@ const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
 	const copyText = (event) => {
 		const text = event.target.parentElement.querySelector('.text');
 		navigator.clipboard.writeText(text.textContent);
+		console.log(text);
+		console.log(text.textContent);
 	};
 	return (
 		<div className="flex flex-row justify-between">
