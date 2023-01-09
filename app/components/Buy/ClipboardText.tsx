@@ -1,15 +1,14 @@
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
+
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+
 interface ClipboardTextProps {
 	itemValue: string;
 }
 
 const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
-	const copyText = (event) => {
-		const text = event.target.parentElement.querySelector('.text');
-		navigator.clipboard.writeText(text.textContent);
-		console.log(text);
-		console.log(text.textContent);
+	const copyText = () => {
+		navigator.clipboard.writeText(itemValue);
 	};
 	return (
 		<div className="flex flex-row justify-between">
