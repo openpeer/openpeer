@@ -1,10 +1,9 @@
 import { Steps } from 'components';
 import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
+import WrongNetwork from 'components/WrongNetwork';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
-
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const SETUP_STEP = 1;
 const AMOUNT_STEP = 2;
@@ -27,17 +26,7 @@ const SellPage = () => {
 	}, [address, chain]);
 
 	if (!address || !chain || chain.unsupported) {
-		return (
-			<div className="flex h-screen">
-				<div className="m-auto flex flex-col justify-items-center content-center text-center">
-					<span className="mb-6 text-xl">Connect to Polygon</span>{' '}
-					<span className="mb-6 text-gray-500 text-xl">Access the OpenPeer using your favorite wallet</span>
-					<span className="mb-4 m-auto">
-						<ConnectButton showBalance={false} />
-					</span>
-				</div>
-			</div>
-		);
+		return <WrongNetwork />;
 	}
 
 	return (
