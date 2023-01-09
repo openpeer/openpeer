@@ -1,18 +1,14 @@
 import { Steps } from 'components';
-import Amount from 'components/Buy/Amount';
-import Payment from 'components/Buy/Payment';
-import Release from 'components/Buy/Release';
+import { Amount, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIList } from 'components/Listing/Listing.types';
+import WrongNetwork from 'components/WrongNetwork';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import SummaryBuy from 'components/Buy/Summary';
-import Compleated from 'components/Buy/Compleated';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
-const COMPLEATED_STEP = 4;
+const COMPLETED_STEP = 4;
 
 const SellPage = () => {
 	const { address } = useAccount();
@@ -53,13 +49,13 @@ const SellPage = () => {
 					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
 					{step === PAYMENT_METHOD_STEP && <Payment list={list} updateList={setList} />}
 					{step === RELEASE_STEP && <Release list={list} updateList={setList} />}
-					{step === COMPLEATED_STEP && (
+					{step === COMPLETED_STEP && (
 						<div>
-							<Compleated list={list} updateList={setList} />
+							<Completed list={list} updateList={setList} />
 						</div>
 					)}
 				</div>
-				<SummaryBuy />
+				<Summary />
 			</div>
 		</div>
 	);
