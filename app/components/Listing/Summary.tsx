@@ -100,7 +100,7 @@ const Summary = ({ list }: SummaryProps) => {
 							<span className="mb-2">{paymentMethod.account_name}</span>
 							<div className="flex flex-row justify-between">
 								<span>{paymentMethod.account_number}</span>
-								<span>{paymentMethod.bank?.name}</span>
+								<span>{paymentMethod?.bank?.name}</span>
 							</div>
 						</div>
 					</li>

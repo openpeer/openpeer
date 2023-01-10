@@ -1,14 +1,15 @@
-import { ClockIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
-import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+
+import { ClockIcon } from '@heroicons/react/24/outline';
+
+import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 
-const Release = ({ list, updateList }: StepProps) => {
-	const { terms } = list;
+const Release = ({ order, updateOrder }: BuyStepProps) => {
 	const onProceed = () => {
-		updateList({ ...list, ...{ step: list.step + 1 } });
+		updateOrder({ ...order, ...{ step: order.step + 1 } });
 	};
 
 	return (
