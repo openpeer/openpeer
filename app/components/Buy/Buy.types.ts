@@ -2,7 +2,7 @@ import { List } from 'models/types';
 
 export interface UIOrder {
 	step: number;
-	list: List;
+	list?: List;
 }
 
 export interface BuyStepProps {

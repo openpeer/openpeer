@@ -115,13 +115,7 @@ const HomePage = () => {
 												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<Link
-												href={{
-													pathname: '/buy',
-													query: { list: JSON.stringify(list) }
-												}}
-												as="/buy"
-											>
+											<Link href={`/buy/${encodeURIComponent(list.id)}`}>
 												<Button title="Buy" />
 											</Link>
 										</td>
