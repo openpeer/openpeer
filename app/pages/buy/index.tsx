@@ -1,8 +1,11 @@
 import { Steps } from 'components';
 import { Amount, Completed, Payment, Release, Summary } from 'components/Buy';
-import { UIList } from 'components/Listing/Listing.types';
+import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
-import { useEffect, useState } from 'react';
+import { useListPrice } from 'hooks';
+import { List } from 'models/types';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 const AMOUNT_STEP = 1;
@@ -13,16 +16,12 @@ const COMPLETED_STEP = 4;
 const SellPage = () => {
 	const { address } = useAccount();
 	const { chain } = useNetwork();
-	const [list, setList] = useState<UIList>({
-		step: AMOUNT_STEP,
-		marginType: 'fixed'
-	} as UIList);
-	const step = list.step;
+	const { query } = useRouter();
+	const list = JSON.parse(query.list as string) as List;
+	const [order, setOrder] = useState<UIOrder>({ list, step: AMOUNT_STEP });
+	const step = order.step || AMOUNT_STEP;
 
-	useEffect(() => {
-		if (list.step > 2) setList({ step: PAYMENT_METHOD_STEP, marginType: 'fixed' } as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain]);
+	const { price } = useListPrice(list);
 
 	if (!address || !chain || chain.unsupported) {
 		return <WrongNetwork />;
@@ -35,17 +34,17 @@ const SellPage = () => {
 			</div>
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
-					<Steps currentStep={step} onStepClick={(n) => setList({ ...list, ...{ step: n } })} />
-					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
-					{step === PAYMENT_METHOD_STEP && <Payment list={list} updateList={setList} />}
-					{step === RELEASE_STEP && <Release list={list} updateList={setList} />}
+					<Steps currentStep={step} onStepClick={(n) => setOrder({ ...order, ...{ step: n } })} />
+					{step === AMOUNT_STEP && <Amount order={order} updateOrder={setOrder} price={price} />}
+					{step === PAYMENT_METHOD_STEP && <Payment order={order} updateOrder={setOrder} />}
+					{step === RELEASE_STEP && <Release order={order} updateOrder={setOrder} />}
 					{step === COMPLETED_STEP && (
 						<div>
-							<Completed list={list} updateList={setList} />
+							<Completed order={order} updateOrder={setOrder} />
 						</div>
 					)}
 				</div>
-				<Summary />
+				<Summary list={order.list} price={price} />
 			</div>
 		</div>
 	);

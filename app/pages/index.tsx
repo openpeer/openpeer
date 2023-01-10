@@ -14,6 +14,7 @@ const HomePage = () => {
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
+
 	useEffect(() => {
 		setLoading(true);
 		fetch(`/api/lists?chain_id=${chainId}`)
@@ -30,7 +31,6 @@ const HomePage = () => {
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-				{/* <HeaderMetrics /> */}
 				<div className="py-4">
 					<table className="w-full md:rounded-lg overflow-hidden">
 						<thead className="bg-gray-100">
@@ -68,27 +68,25 @@ const HomePage = () => {
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-200 bg-white">
-							{lists.map(
-								({
+							{lists.map((list) => {
+								const {
 									id,
 									total_available_amount: amount,
-									seller: { address },
+									seller,
 									token: { decimals, symbol },
 									fiat_currency: { symbol: fiatSymbol },
 									limit_min: min,
 									limit_max: max
-								}) => (
+								} = list;
+								const { address } = seller;
+								return (
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
 											<div className="w-full flex flex-row justify-around md:justify-start items-center">
 												<div className="w-3/5 mr-6">
 													<div className="flex flex-col lg:flex-row lg:items-center">
 														<div className="w-1/3 flex flex-row mb-2">
-															<Avatar
-																image={
-																	'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'
-																}
-															/>
+															<Avatar user={seller} />
 														</div>
 														<div className="text-sm text-gray-900 break-all">{address}</div>
 													</div>
@@ -117,13 +115,19 @@ const HomePage = () => {
 												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<Link href="/buy">
+											<Link
+												href={{
+													pathname: '/buy',
+													query: { list: JSON.stringify(list) }
+												}}
+												as="/buy"
+											>
 												<Button title="Buy" />
 											</Link>
 										</td>
 									</tr>
-								)
-							)}
+								);
+							})}
 						</tbody>
 					</table>
 				</div>

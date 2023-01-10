@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@coingecko/cryptoformat": "^0.5.4",
     "@headlessui/react": "^1.7.5",
     "@heroicons/react": "^2.0.13",
     "@next/font": "^13.0.6",
@@ -20,6 +21,7 @@
     "axios": "^1.2.1",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.7.2",
     "lodash.merge": "^4.6.2",
     "next": "13.0.6",

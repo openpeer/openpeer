@@ -27,16 +27,15 @@ export interface List {
 	automatic_approval: boolean;
 	chain_id: number;
 	fiat_currency: FiatCurrency;
-	fiat_currency_id: number;
 	limit_min: number | null | undefined;
 	limit_max: number | null | undefined;
 	margin_type: 'fixed' | 'percentage';
 	margin: number;
 	seller: User;
-	seller_id: number;
 	status: 'created' | 'active' | 'closed';
 	terms: string | undefined | null;
 	token: Token;
+	payment_method: PaymentMethod;
 	total_available_amount: string;
 }
 
