@@ -53,7 +53,7 @@ const SellPage = ({ id }: { id: number }) => {
 						</div>
 					)}
 				</div>
-				<Summary list={order.list} price={price} />
+				{!!order.list && <Summary list={order.list} price={price} />}
 			</div>
 		</div>
 	);
