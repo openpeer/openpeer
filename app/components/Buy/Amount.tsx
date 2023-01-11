@@ -1,7 +1,8 @@
 import Input from 'components/Input/Input';
 import StepLayout from 'components/Listing/StepLayout';
+import { List } from 'models/types';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { BuyStepProps } from './Buy.types';
 
@@ -27,19 +28,21 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
-	const { list } = order;
+	const { list = {} as List, tokenAmount: orderTokenAmount, fiatAmount: orderFiatAmount } = order;
+
+	const { fiat_currency: currency, token } = list;
 
 	const onProceed = () => {
-		if (fiatAmount && tokenAmount) {
-			const { limit_min: limitMin, limit_max: limitMax } = list;
-			if (limitMin && fiatAmount < limitMin) return;
-			if (limitMax && fiatAmount > limitMax) return;
-			updateOrder({ ...order, ...{ step: order.step + 1 } });
+		if (list && fiatAmount && tokenAmount) {
+			const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
+			if (fiatAmount < (limitMin || 0)) return;
+			if (fiatAmount > (limitMax || totalAvailableAmount)) return;
+			updateOrder({ ...order, ...{ step: order.step + 1, fiatAmount, tokenAmount } });
 		}
 	};
 
-	const [fiatAmount, setFiatAmount] = useState<number>();
-	const [tokenAmount, setTokenAmount] = useState<number>();
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderTokenAmount);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderFiatAmount);
 
 	function onChangeFiat(val: number | undefined) {
 		setFiatAmount(val);
@@ -49,6 +52,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		setTokenAmount(val);
 		if (price && val) setFiatAmount(val * price);
 	}
+
+	useEffect(() => {
+		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [tokenAmount, fiatAmount]);
 
 	const format = (s: string, updater: (s: number | undefined) => void) => {
 		if (s) {
@@ -63,7 +71,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			<div className="my-8">
 				<Input
 					label="Amount to buy"
-					prefix={<Prefix label={list.fiat_currency!.symbol} imageSRC={list.fiat_currency!.icon} />}
+					prefix={<Prefix label={currency!.symbol} imageSRC={currency!.icon} />}
 					id="amountBuy"
 					value={fiatAmount}
 					onChange={(s) => format(s, onChangeFiat)}
@@ -71,7 +79,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				/>
 				<Input
 					label="Amount you'll receive"
-					prefix={<Prefix label={list.token!.name} imageSRC={list.token!.icon} />}
+					prefix={<Prefix label={token!.name} imageSRC={token!.icon} />}
 					id="amountToReceive"
 					value={tokenAmount}
 					onChange={(s) => format(s, onChangeToken)}

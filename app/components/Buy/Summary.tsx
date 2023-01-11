@@ -1,5 +1,6 @@
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
+import Loading from 'components/Loading/Loading';
 import { List } from 'models/types';
 
 import {
@@ -15,7 +16,8 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 		seller,
 		token,
 		margin_type: marginType
-	} = list;
+	} = list || {};
+
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
 			<div className="flex flex-row justify-between items-center mb-6 mt-4 px-2">

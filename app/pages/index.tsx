@@ -98,7 +98,7 @@ const HomePage = () => {
 													<span className="font-bold mb-2">
 														{formatUnits(amount, decimals)} {symbol}
 													</span>
-													<Link href="/buy">
+													<Link href={`/buy/${encodeURIComponent(list.id)}`}>
 														<Button title="Buy" />
 													</Link>
 												</div>
