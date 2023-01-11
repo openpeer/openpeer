@@ -1,5 +1,4 @@
 import Button from './Button/Button';
-import Input from './Input/Input';
 
 interface SelectorProps {
 	value: number;
@@ -17,7 +16,7 @@ const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => 
 					<input
 						type="tel"
 						value={value.toFixed(2)}
-						className="bg-transparent w-1/3 text-center border-0 border-b-2 border-gray-300 py-1 mx-2"
+						className="bg-white w-1/3 text-center rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 mr-2"
 					/>
 					{suffix}
 				</div>
@@ -29,3 +28,6 @@ const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => 
 };
 
 export default Selector;
+function handleChange(event: Event | undefined) {
+	throw new Error('Function not implemented.');
+}
