@@ -19,6 +19,8 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 	const percentage = marginType === 'percentage';
 	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 5 : 5);
 	const [fixedMargin, setFixedMargin] = useState<number | undefined>(percentage ? undefined : savedMargin);
+	const [price, setPrice] = useState<number | undefined>();
+
 	const margin = percentage ? percentageMargin : fixedMargin;
 	const updateMargin = (m: number) => {
 		percentage ? setPercentageMargin(m) : setFixedMargin(m);
@@ -47,14 +49,19 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				if (!fixedMargin) {
-					const m: number = data[token!.coingecko_id!][currency!.name.toLowerCase()];
-					setFixedMargin(m);
-					if (!percentage) updateMargin(m);
-				}
+				setPrice(data[token!.coingecko_id!][currency!.name.toLowerCase()]);
 			});
+	}, [token, currency]);
+
+	useEffect(() => {
+		if (price) {
+			if (fixedMargin === undefined) {
+				setFixedMargin(price);
+				if (!percentage) updateMargin(price);
+			}
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [token, currency, fixedMargin, percentage]);
+	}, [fixedMargin, percentage, price]);
 
 	return (
 		<StepLayout onProceed={onProceed}>
@@ -63,8 +70,8 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 				addOn={token!.name}
 				id="price"
 				value={totalAvailableAmount}
-				onChange={(n) => updateList({ ...list, ...{ totalAvailableAmount: Number(n) } })}
-				type="number"
+				onChangeNumber={(n) => updateList({ ...list, ...{ totalAvailableAmount: n } })}
+				type="decimal"
 				required
 			/>
 			<div>
@@ -75,18 +82,18 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 						label="Min:"
 						addOn={currency!.name}
 						id="minPrice"
-						type="number"
+						type="decimal"
 						value={limitMin}
-						onChange={(n) => updateList({ ...list, ...{ limitMin: Number(n) } })}
+						onChangeNumber={(n) => updateList({ ...list, ...{ limitMin: n } })}
 					/>
 					<Input
 						placeholder="1000"
 						label="Max:"
 						addOn={currency!.name}
 						id="maxPrice"
-						type="number"
+						type="decimal"
 						value={limitMax}
-						onChange={(n) => updateList({ ...list, ...{ limitMax: Number(n) } })}
+						onChangeNumber={(n) => updateList({ ...list, ...{ limitMax: n } })}
 					/>
 				</div>
 			</div>

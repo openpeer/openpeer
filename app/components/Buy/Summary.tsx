@@ -15,7 +15,7 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 		payment_method: paymentMethod,
 		seller,
 		token,
-		margin_type: marginType
+		total_available_amount: totalAvailableAmount
 	} = list || {};
 
 	return (
@@ -37,6 +37,13 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 				</div>
 			</div>
 			<ul className="flex flex-col bg-gray-100 rounded-lg p-6">
+				<li className="w-full flex flex-row justify-between mb-4">
+					<div>Total available amount</div>
+					<div className="font-bold">
+						{totalAvailableAmount} {token.symbol}{' '}
+						{!!price && `(${currency.symbol} ${Number(totalAvailableAmount) * price})`}
+					</div>
+				</li>
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Price</div>
 					<div className="font-bold">
