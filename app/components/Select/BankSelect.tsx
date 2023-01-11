@@ -6,35 +6,31 @@ import Select from './Select';
 import { SelectProps } from './Select.types';
 
 const BankSelect = ({
-  currencyId,
-  onSelect,
-  selected
+	currencyId,
+	onSelect,
+	selected
 }: {
-  currencyId: number;
-  onSelect: SelectProps['onSelect'];
-  selected: SelectProps['selected'];
+	currencyId: number;
+	onSelect: SelectProps['onSelect'];
+	selected: SelectProps['selected'];
 }) => {
-  const [banks, setBanks] = useState<Bank[]>();
-  const [isLoading, setLoading] = useState(false);
+	const [banks, setBanks] = useState<Bank[]>();
+	const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`/api/banks?currency_id=${currencyId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBanks(data);
-        setLoading(false);
-      });
-  }, [currencyId]);
+	useEffect(() => {
+		setLoading(true);
+		fetch(`/api/banks?currency_id=${currencyId}`)
+			.then((res) => res.json())
+			.then((data) => {
+				setBanks(data);
+				setLoading(false);
+			});
+	}, [currencyId]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+	if (isLoading) {
+		return <Loading />;
+	}
 
-  return banks ? (
-    <Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} />
-  ) : (
-    <></>
-  );
+	return banks ? <Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} /> : <></>;
 };
 export default BankSelect;

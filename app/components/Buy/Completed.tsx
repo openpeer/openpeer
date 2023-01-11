@@ -1,16 +1,13 @@
-import { HandThumbDownIcon, CheckBadgeIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
-import { StepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+
+import { CheckBadgeIcon, HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
+
+import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 
-const Compleated = ({ list, updateList }: StepProps) => {
-	const { terms } = list;
-	const onProceed = () => {
-		updateList({ ...list, ...{ step: list.step + 1 } });
-	};
-
+const Completed = ({ order, updateOrder }: BuyStepProps) => {
 	return (
 		<>
 			<StepLayout>
@@ -87,4 +84,4 @@ const Compleated = ({ list, updateList }: StepProps) => {
 	);
 };
 
-export default Compleated;
+export default Completed;
