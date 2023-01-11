@@ -29,7 +29,7 @@ const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMar
 				</div>
 			</div>
 			<>
-				{selected === 'fixed' && margin && (
+				{selected === 'fixed' && margin != undefined && (
 					<Selector
 						value={margin}
 						suffix={` ${currency} per ${token}`}

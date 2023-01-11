@@ -55,7 +55,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 
 	useEffect(() => {
 		if (price) {
-			if (!fixedMargin) {
+			if (fixedMargin === undefined) {
 				setFixedMargin(price);
 				if (!percentage) updateMargin(price);
 			}
@@ -70,8 +70,8 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 				addOn={token!.name}
 				id="price"
 				value={totalAvailableAmount}
-				onChange={(n) => updateList({ ...list, ...{ totalAvailableAmount: Number(n) } })}
-				type="number"
+				onChangeNumber={(n) => updateList({ ...list, ...{ totalAvailableAmount: n } })}
+				type="decimal"
 				required
 			/>
 			<div>
@@ -82,18 +82,18 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 						label="Min:"
 						addOn={currency!.name}
 						id="minPrice"
-						type="number"
+						type="decimal"
 						value={limitMin}
-						onChange={(n) => updateList({ ...list, ...{ limitMin: Number(n) } })}
+						onChangeNumber={(n) => updateList({ ...list, ...{ limitMin: n } })}
 					/>
 					<Input
 						placeholder="1000"
 						label="Max:"
 						addOn={currency!.name}
 						id="maxPrice"
-						type="number"
+						type="decimal"
 						value={limitMax}
-						onChange={(n) => updateList({ ...list, ...{ limitMax: Number(n) } })}
+						onChangeNumber={(n) => updateList({ ...list, ...{ limitMax: n } })}
 					/>
 				</div>
 			</div>

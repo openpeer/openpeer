@@ -33,16 +33,16 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const { fiat_currency: currency, token } = list;
 
 	const onProceed = () => {
-		if (list && fiatAmount && tokenAmount) {
+		if (list && fiatAmount && tokenAmount && price) {
 			const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
 			if (fiatAmount < (limitMin || 0)) return;
-			if (fiatAmount > (limitMax || totalAvailableAmount)) return;
+			if (fiatAmount > (limitMax || Number(totalAvailableAmount) * price)) return;
 			updateOrder({ ...order, ...{ step: order.step + 1, fiatAmount, tokenAmount } });
 		}
 	};
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderTokenAmount);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderFiatAmount);
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
 
 	function onChangeFiat(val: number | undefined) {
 		setFiatAmount(val);
@@ -58,14 +58,6 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, fiatAmount]);
 
-	const format = (s: string, updater: (s: number | undefined) => void) => {
-		if (s) {
-			updater(Number(s.replace(/[^0-9,|.]/g, '')));
-		} else {
-			updater(undefined);
-		}
-	};
-
 	return (
 		<StepLayout onProceed={onProceed} buttonText="Continue">
 			<div className="my-8">
@@ -74,16 +66,16 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					prefix={<Prefix label={currency!.symbol} imageSRC={currency!.icon} />}
 					id="amountBuy"
 					value={fiatAmount}
-					onChange={(s) => format(s, onChangeFiat)}
-					type="number"
+					onChangeNumber={onChangeFiat}
+					type="decimal"
 				/>
 				<Input
 					label="Amount you'll receive"
 					prefix={<Prefix label={token!.name} imageSRC={token!.icon} />}
 					id="amountToReceive"
 					value={tokenAmount}
-					onChange={(s) => format(s, onChangeToken)}
-					type="number"
+					onChangeNumber={onChangeToken}
+					type="decimal"
 				/>
 			</div>
 		</StepLayout>
