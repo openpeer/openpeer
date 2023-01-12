@@ -38,9 +38,6 @@ const SellPage = ({ id }: { id: number }) => {
 
 	return (
 		<div className="pt-6">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mb-8">
-				<h1 className="text-2xl font-semibold text-gray-900">Buy</h1>
-			</div>
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
 					<Steps currentStep={step} onStepClick={(n) => setOrder({ ...order, ...{ step: n } })} />
@@ -61,6 +58,6 @@ const SellPage = ({ id }: { id: number }) => {
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
 	// Pass data to the page via props
-	return { props: { id: String(context.params?.id) } };
+	return { props: { title: 'Buy', id: String(context.params?.id) } };
 };
 export default SellPage;

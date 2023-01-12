@@ -14,13 +14,9 @@ import { polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import {
-	Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, XMarkIcon
-} from '@heroicons/react/24/outline';
+import { Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
-import {
-	ConnectButton, getDefaultWallets, lightTheme, RainbowKitProvider, Theme
-} from '@rainbow-me/rainbowkit';
+import { ConnectButton, getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -46,7 +42,10 @@ const myTheme = merge(lightTheme(), {
 	}
 }) as Theme;
 
-const navigation = [{ name: 'P2P', href: '/', icon: ChartBarSquareIcon }];
+const navigation = [
+	{ name: 'P2P', href: '/', icon: ChartBarSquareIcon },
+	{ name: 'Post Ad', href: '/sell', icon: ChartBarSquareIcon }
+];
 
 const NavItems = ({ selected }: { selected: string | undefined }) => {
 	return (
@@ -179,10 +178,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 									<Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
 								</button>
 								<div className="w-full flex items-center justify-between px-4">
-									<h3 className="text-xl font-bold uppercase pr-4 sm:px-6 md:px-8">{title}</h3>
-									<Link href="/sell">
-										<Button title="Sell Crypto" rounded />
-									</Link>
+									<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 									<div className="ml-4 flex items-center md:ml-6">
 										<button
 											type="button"
