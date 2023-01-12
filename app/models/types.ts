@@ -54,3 +54,14 @@ export interface PaymentMethod {
 	bank: Bank;
 	bank_id: number;
 }
+
+export interface Order {
+	id: number;
+	fiat_amount: number;
+	token_amount: number;
+	price: number;
+	list: List;
+	buyer: User;
+	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
+	tx_hash: string | null | undefined;
+}

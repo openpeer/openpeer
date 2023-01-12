@@ -1,28 +1,60 @@
 import { Avatar, Button, Loading } from 'components';
-import { formatUnits } from 'ethers/lib/utils.js';
-import { List } from 'models/types';
+import { Order } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
-const HomePage = () => {
-	const [lists, setLists] = useState<List[]>([]);
+const NextButton = ({ order: { id, status } }: { order: Order }) => {
+	return ['created', 'escrowed', 'release', 'dispute'].includes(status) ? (
+		<Link href={`/orders/${encodeURIComponent(id)}`}>
+			<Button title="Continue" />
+		</Link>
+	) : (
+		<></>
+	);
+};
+const OrdersPage = () => {
+	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
+	const { address } = useAccount();
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/lists?chain_id=${chainId}`)
+		fetch(`/api/orders?address=${address}&chainId=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setLists(data);
+				setOrders(data);
 				setLoading(false);
 			});
-	}, [chainId]);
+	}, [chainId, address]);
 
 	if (isLoading) return <Loading />;
-	if (!lists) return <p>No lists data</p>;
+	if (!orders) return <p>No orders</p>;
+
+	const orderStatus = (status: Order['status']) => {
+		switch (status) {
+			case 'created': {
+				return 'Waiting seller deposit';
+			}
+			case 'escrowed': {
+				return 'Waiting payment';
+			}
+			case 'release': {
+				return 'Waiting seller release';
+			}
+			case 'dispute': {
+				return 'In dispute';
+			}
+			case 'closed': {
+				return 'Finished';
+			}
+			case 'cancelled': {
+				return 'Cancelled';
+			}
+		}
+	};
 
 	return (
 		<div className="py-6">
@@ -41,19 +73,25 @@ const HomePage = () => {
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Volume
+									Price
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Amount
+									Pay
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Limit
+									Receive
+								</th>
+								<th
+									scope="col"
+									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+								>
+									Status
 								</th>
 								<th
 									scope="col"
@@ -64,17 +102,15 @@ const HomePage = () => {
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-200 bg-white">
-							{lists.map((list) => {
+							{orders.map((order) => {
 								const {
 									id,
-									total_available_amount: amount,
-									seller,
-									token: { decimals, symbol },
-									fiat_currency: { symbol: fiatSymbol },
-									limit_min: min,
-									limit_max: max
-								} = list;
-								const { address } = seller;
+									list: { seller, fiat_currency: currency, token },
+									price,
+									fiat_amount: fiatAmount,
+									token_amount: tokenAmount,
+									status
+								} = order;
 								return (
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
@@ -87,33 +123,34 @@ const HomePage = () => {
 														<div className="text-sm text-gray-900 break-all">{address}</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-														<span>Volume: 0.0212 BTC</span>
+														<span>
+															{currency.symbol} {fiatAmount}
+														</span>
+														<span>{orderStatus(status)}</span>
 													</div>
 												</div>
 												<div className="w-2/5 flex flex-col lg:hidden px-4">
 													<span className="font-bold mb-2">
-														{formatUnits(amount, decimals)} {symbol}
+														{Number(tokenAmount).toFixed(2)} {token.symbol}
 													</span>
-													<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-														<Button title="Buy" />
-													</Link>
+													<NextButton order={order} />
 												</div>
 											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											0.0212 BTC
+											{currency.symbol} {price}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{formatUnits(amount, decimals)} {symbol}
+											{currency.symbol} {fiatAmount}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{(!!min || !!max) &&
-												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
+											{Number(tokenAmount).toFixed(2)} {token.symbol}
+										</td>
+										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+											{orderStatus(status)}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-												<Button title="Buy" />
-											</Link>
+											<NextButton order={order} />
 										</td>
 									</tr>
 								);
@@ -125,11 +162,10 @@ const HomePage = () => {
 		</div>
 	);
 };
+export default OrdersPage;
 
 export async function getServerSideProps() {
 	return {
-		props: { title: 'P2P' } // will be passed to the page component as props
+		props: { title: 'Orders' } // will be passed to the page component as props
 	};
 }
-
-export default HomePage;

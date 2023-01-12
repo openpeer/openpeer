@@ -1,7 +1,8 @@
 import { Steps } from 'components';
-import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
+import { Amount, Details, PaymentMethod, Setup, Summary, UpdateEmail } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -9,7 +10,7 @@ const SETUP_STEP = 1;
 const AMOUNT_STEP = 2;
 const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
-const DONE_STEP = 5;
+const UPDATE_EMAIL_STEP = 5;
 
 const SellPage = () => {
 	const { address } = useAccount();
@@ -19,13 +20,15 @@ const SellPage = () => {
 		marginType: 'fixed'
 	} as UIList);
 	const step = list.step;
+	const [wrongNetwork, setWrongNetwork] = useState(false);
 
 	useEffect(() => {
 		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: 'fixed' } as UIList);
+		setWrongNetwork(!!(!address || !chain || chain.unsupported));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, chain]);
 
-	if (!address || !chain || chain.unsupported) {
+	if (wrongNetwork) {
 		return <WrongNetwork />;
 	}
 
@@ -36,18 +39,15 @@ const SellPage = () => {
 			</div>
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
-					<Steps currentStep={step} onStepClick={(n) => setList({ ...list, ...{ step: n } })} />
+					<Steps
+						currentStep={step}
+						onStepClick={(n) => step < UPDATE_EMAIL_STEP && setList({ ...list, ...{ step: n } })}
+					/>
 					{step === SETUP_STEP && <Setup list={list} updateList={setList} />}
 					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
-					{step === DONE_STEP && (
-						<div className="flex h-screen">
-							<div className="m-auto flex flex-col justify-items-center content-center text-center">
-								<span className="text-xl">Crypto Listing completed.</span>
-							</div>
-						</div>
-					)}
+					{step === UPDATE_EMAIL_STEP && <UpdateEmail list={list} updateList={setList} />}
 				</div>
 				<Summary list={list} />
 			</div>

@@ -49,6 +49,7 @@ const Input = ({
 						inputMode="decimal"
 						placeholder={placeholder}
 						required={required}
+						allowNegative={false}
 					/>
 				) : (
 					<input

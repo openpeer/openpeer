@@ -22,7 +22,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 							<HeaderH2 title="Awaiting Release" />
 						</span>
 						<p className="text-base">
-							This payment has been marked as paid. Awaiting comfirmation from the merchant and the
+							This payment has been marked as paid. Awaiting confirmation from the merchant and the
 							release of 159USDT.
 						</p>
 					</div>

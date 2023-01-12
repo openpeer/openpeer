@@ -15,7 +15,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, XMarkIcon
+	Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import {
@@ -46,7 +46,11 @@ const myTheme = merge(lightTheme(), {
 	}
 }) as Theme;
 
-const navigation = [{ name: 'P2P', href: '/', icon: ChartBarSquareIcon }];
+const navigation = [
+	{ name: 'P2P', href: '/', icon: ChartBarSquareIcon },
+	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
+	{ name: 'Orders', href: '/orders', icon: ShoppingBagIcon }
+];
 
 const NavItems = ({ selected }: { selected: string | undefined }) => {
 	return (
