@@ -3,9 +3,7 @@ import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
 import { List } from 'models/types';
 
-import {
-	ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
 const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) => {
 	const {
@@ -39,7 +37,7 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 			<ul className="flex flex-col bg-gray-100 rounded-lg p-6">
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Total available amount</div>
-					<div className="font-bold">
+					<div className="font-bold text-right">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${Number(totalAvailableAmount) * price})`}
 					</div>
