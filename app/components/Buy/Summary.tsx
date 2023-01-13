@@ -18,10 +18,12 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
-			<div className="flex flex-row justify-between items-center mb-6 mt-4 px-2">
-				<div className="flex flex-row items-center">
+			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
+				<div className="flex flex-row items-center w-1/2">
 					<Avatar user={seller} />
-					<span className="ml-2">{seller.address}</span>
+					<span className="transform ml-2 overflow-hidden text-ellipsis transition-all delay-500 hover:overflow-visible hover:break-all cursor-pointer">
+						{seller.address}
+					</span>
 				</div>
 				<div className="flex flex-row">
 					<div className="flex flex-row">
@@ -44,14 +46,14 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 				</li>
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Price</div>
-					<div className="font-bold">
+					<div className="font-bold text-right">
 						{currency.symbol} {price}
 					</div>
 				</li>
 				{!!limitMin && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Min order</div>
-						<div className="font-bold">
+						<div className="font-bold text-right">
 							{currency.symbol} {limitMin}
 						</div>
 					</li>
@@ -59,7 +61,7 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 				{!!limitMax && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Max order</div>
-						<div className="font-bold">
+						<div className="font-bold text-right">
 							{currency.symbol} {limitMax}
 						</div>
 					</li>
