@@ -21,7 +21,7 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
 				<div className="flex flex-row items-center w-1/2">
 					<Avatar user={seller} />
-					<span className="transform ml-2 overflow-hidden text-ellipsis transition-all delay-500 hover:overflow-visible hover:break-all cursor-pointer">
+					<span className="ml-2 overflow-hidden text-ellipsis hover:overflow-visible hover:break-all cursor-pointer">
 						{seller.address}
 					</span>
 				</div>
