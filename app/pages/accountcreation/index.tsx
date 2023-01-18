@@ -1,11 +1,12 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { Button, Checkbox, Input, Textarea } from 'components';
+import Link from 'next/link';
 
 const AccountCreation = () => {
 	return (
 		<>
 			<div className="p-4">
-				<div className="w-full mt-8 md:w-1/2 md:m-auto md:mt-16 rounded-lg shadow overflow-hidden">
+				<div className="w-full mt-8 md:w-1/2 md:m-auto md:mt-8 rounded-lg shadow overflow-hidden">
 					<image></image>
 					<div className="py-4 px-8 bg-white">
 						<Input id={''} value={undefined} label="Wallet Address" />
@@ -39,7 +40,12 @@ const AccountCreation = () => {
 								<Button title="Switch wallet" outlined />
 							</span>
 							<span className="w-full">
-								<Button title="Continue" />
+								<div className="hidden">
+									<Button title="Continue" />
+								</div>
+								<Link href="/accountcreation/accountcreated">
+									<Button title="Create New Account" />
+								</Link>
 							</span>
 						</div>
 					</div>
