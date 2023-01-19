@@ -1,15 +1,19 @@
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { Button, Checkbox, Input, Textarea } from 'components';
-import Link from 'next/link';
 import React from 'react';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { Button, Checkbox, Input } from 'components';
+import Link from 'next/link';
+import Image from 'next/image';
+import logoMetamask from '../../public/logo_metamask.svg';
 
 const AccountCreation = () => {
 	const [visible, setVisible] = React.useState(false);
 	return (
 		<>
 			<div className="p-4">
+				<div className="flex justify-center w-full mt-8 md:w-1/2 md:m-auto md:mt-8">
+					<Image src={logoMetamask} alt={''} className="w-120" />
+				</div>
 				<div className="w-full mt-8 md:w-1/2 md:m-auto md:mt-8 rounded-lg shadow overflow-hidden">
-					<image></image>
 					<div className="py-4 px-8 bg-white">
 						<Input id={''} value={undefined} label="Wallet Address" />
 
