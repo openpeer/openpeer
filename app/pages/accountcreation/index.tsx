@@ -17,7 +17,7 @@ const AccountCreation = () => {
 					<div className="py-4 px-8 bg-white">
 						<Input id={''} value={undefined} label="Wallet Address" />
 
-						<div className={visible ? 'hidden' : 'block'}>
+						<div className="hidden">
 							<div className="flex flex-row items-center text-[#3C9AAA] text-base -ml-1">
 								<InformationCircleIcon className="w-6" />
 								<span className="pl-2">No account found for this address</span>
@@ -26,7 +26,7 @@ const AccountCreation = () => {
 
 						{visible && (
 							<div>
-								<Input id={''} value={undefined} label="Username" addOn="10/20" />
+								<Input id={''} value={undefined} label="Username" addOn="0/20" />
 
 								<Input id={''} value={undefined} label="Email Address" />
 
