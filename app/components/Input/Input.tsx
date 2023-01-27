@@ -11,6 +11,7 @@ export interface InputProps {
 	required?: boolean;
 	placeholder?: string;
 	prefix?: JSX.Element;
+	LabelSideInfo?: string;
 }
 
 const Input = ({
@@ -23,6 +24,7 @@ const Input = ({
 	required = false,
 	placeholder,
 	prefix,
+	LabelSideInfo,
 	onChangeNumber
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +35,14 @@ const Input = ({
 
 	return (
 		<div className="my-8">
-			<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
-				{label}
-			</label>
+			<div className="flex justify-between items-center">
+				<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
+					{label}
+				</label>
+				<span className="text-sm text-gray-500" id={id}>
+					{LabelSideInfo}
+				</span>
+			</div>
 			<div className="relative mt-1 rounded-md shadow-sm">
 				{prefix}
 				{type === 'decimal' ? (
