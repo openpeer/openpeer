@@ -1,15 +1,20 @@
 import { Avatar, Button, Loading } from 'components';
 import { formatUnits } from 'ethers/lib/utils.js';
 import { List } from 'models/types';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
+import { getSession, useSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 
-const HomePage = () => {
+const HomePage = ({ address }: AuthenticatedPageProps) => {
 	const [lists, setLists] = useState<List[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
+	const { data: session, status } = useSession();
+	console.log({ address, session, status });
 
 	useEffect(() => {
 		setLoading(true);
@@ -19,8 +24,9 @@ const HomePage = () => {
 				setLists(data);
 				setLoading(false);
 			});
-	}, [chainId]);
+	}, [chainId, address]);
 
+	if (!address) return <h1>Unauthenticated</h1>;
 	if (isLoading) return <Loading />;
 	if (!lists) return <p>No lists data</p>;
 
@@ -126,10 +132,26 @@ const HomePage = () => {
 	);
 };
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const session = await getSession(context);
+	const token = await getToken({ req: context.req });
+
+	const address = token?.sub ?? null;
+	// If you have a value for "address" here, your
+	// server knows the user is authenticated.
+
+	// You can then pass any data you want
+	// to the page component here.
 	return {
-		props: { title: 'P2P' } // will be passed to the page component as props
+		props: {
+			token,
+			address,
+			session,
+			title: 'P2P'
+		}
 	};
-}
+};
+
+type AuthenticatedPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default HomePage;
