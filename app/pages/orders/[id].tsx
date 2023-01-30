@@ -2,24 +2,17 @@ import { Loading, Steps } from 'components';
 import { Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
+import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
 
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
 const COMPLETED_STEP = 4;
 
 const OrderPage = ({ id }: { id: number }) => {
-	const { address } = useAccount();
-	const { chain } = useNetwork();
 	const [order, setOrder] = useState<UIOrder>();
-	const [wrongNetwork, setWrongNetwork] = useState(false);
-
-	useEffect(() => {
-		setWrongNetwork(!!(!address || !chain || chain.unsupported));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain]);
+	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		fetch(`/api/orders/${id}`)
@@ -34,14 +27,9 @@ const OrderPage = ({ id }: { id: number }) => {
 	// 	setOrder({ ...order, ...{ price } });
 	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	// }, [price]);
+	if (wrongNetwork) return <WrongNetwork />;
+	if (status === 'loading' || !order) return <Loading />;
 
-	if (wrongNetwork) {
-		return <WrongNetwork />;
-	}
-
-	if (!order) {
-		return <Loading />;
-	}
 	const step = 2;
 	return (
 		<div className="pt-6">

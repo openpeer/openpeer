@@ -2,28 +2,20 @@ import { Loading, Steps } from 'components';
 import { Amount, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
-import { useListPrice } from 'hooks';
+import { useConnection, useListPrice } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
 const COMPLETED_STEP = 4;
 
-const SellPage = ({ id }: { id: number }) => {
-	const { address } = useAccount();
-	const { chain } = useNetwork();
+const BuyPage = ({ id }: { id: number }) => {
 	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP });
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
-	const [wrongNetwork, setWrongNetwork] = useState(false);
-
-	useEffect(() => {
-		setWrongNetwork(!!(!address || !chain || chain.unsupported));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain]);
+	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		fetch(`/api/lists/${id}`)
@@ -39,13 +31,8 @@ const SellPage = ({ id }: { id: number }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
-	if (wrongNetwork) {
-		return <WrongNetwork />;
-	}
-
-	if (!list) {
-		return <Loading />;
-	}
+	if (wrongNetwork) return <WrongNetwork />;
+	if (status === 'loading' || !list) return <Loading />;
 
 	return (
 		<div className="pt-6">
@@ -74,4 +61,4 @@ export const getServerSideProps: GetServerSideProps<{ id: string }> = async (con
 	// Pass data to the page via props
 	return { props: { id: String(context.params?.id) } };
 };
-export default SellPage;
+export default BuyPage;

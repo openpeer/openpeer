@@ -1,7 +1,8 @@
-import { Steps } from 'components';
+import { Loading, Steps } from 'components';
 import { Amount, Details, PaymentMethod, Setup, Summary, UpdateEmail } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
+import { useConnection } from 'hooks';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
@@ -20,17 +21,15 @@ const SellPage = () => {
 		marginType: 'fixed'
 	} as UIList);
 	const step = list.step;
-	const [wrongNetwork, setWrongNetwork] = useState(false);
+	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: 'fixed' } as UIList);
-		setWrongNetwork(!!(!address || !chain || chain.unsupported));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, chain]);
 
-	if (wrongNetwork) {
-		return <WrongNetwork />;
-	}
+	if (wrongNetwork) return <WrongNetwork />;
+	if (status === 'loading') return <Loading />;
 
 	return (
 		<div className="py-6">
