@@ -30,8 +30,6 @@ export default async function auth(req: any, res: any) {
 						domain: nextAuthUrl.host,
 						nonce: await getCsrfToken({ req })
 					});
-
-					console.log('result', result);
 					if (result.success) {
 						return {
 							id: siwe.address
@@ -39,7 +37,7 @@ export default async function auth(req: any, res: any) {
 					}
 					return null;
 				} catch (e) {
-					console.error('deu ruim', e);
+					console.error(e);
 					return null;
 				}
 			}
@@ -52,7 +50,6 @@ export default async function auth(req: any, res: any) {
 	if (isDefaultSigninPage) {
 		providers.pop();
 	}
-
 	return await NextAuth(req, res, {
 		// https://next-auth.js.org/configuration/providers/oauth
 		providers,
@@ -63,8 +60,6 @@ export default async function auth(req: any, res: any) {
 		callbacks: {
 			async session({ session, token }: { session: any; token: any }) {
 				session.address = token.sub;
-				session.user.name = token.sub;
-				session.user.image = 'https://www.fillmurray.com/128/128';
 				return session;
 			}
 		}
