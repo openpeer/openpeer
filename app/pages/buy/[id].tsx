@@ -5,6 +5,7 @@ import WrongNetwork from 'components/WrongNetwork';
 import { useConnection, useListPrice } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -15,6 +16,7 @@ const BuyPage = ({ id }: { id: number }) => {
 	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP });
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
+	const { address } = useAccount();
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
@@ -31,8 +33,10 @@ const BuyPage = ({ id }: { id: number }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
+	const canBuy = order.list?.seller && order.list.seller.address !== address;
+
 	if (wrongNetwork) return <WrongNetwork />;
-	if (status === 'loading' || !list) return <Loading />;
+	if (status === 'loading' || !list || !canBuy) return <Loading />;
 
 	return (
 		<div className="pt-6">

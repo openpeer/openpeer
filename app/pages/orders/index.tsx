@@ -1,17 +1,42 @@
 import { Avatar, Button, Loading } from 'components';
+import WrongNetwork from 'components/WrongNetwork';
+import { useConnection } from 'hooks';
 import { Order } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-const NextButton = ({ order: { id, status } }: { order: Order }) => {
-	return ['created', 'escrowed', 'release', 'dispute'].includes(status) ? (
-		<Link href={`/orders/${encodeURIComponent(id)}`}>
-			<Button title="Continue" />
-		</Link>
-	) : (
-		<></>
-	);
+const NextButton = ({
+	order: { id, status, buyer: buyerUser },
+	address
+}: {
+	order: Order;
+	address: string | undefined;
+}) => {
+	const buyer = address === buyerUser.address;
+	const seller = !buyer;
+
+	if (buyer) {
+		if (['escrowed', 'dispute'].includes(status)) {
+			return (
+				<Link href={`/orders/${encodeURIComponent(id)}`}>
+					<Button title="Continue" />
+				</Link>
+			);
+		} else {
+			return <></>;
+		}
+	} else {
+		if (['created', 'release', 'dispute'].includes(status)) {
+			return (
+				<Link href={`/orders/${encodeURIComponent(id)}`}>
+					<Button title="Continue" />
+				</Link>
+			);
+		} else {
+			return <></>;
+		}
+	}
 };
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
@@ -19,6 +44,7 @@ const OrdersPage = () => {
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
 	const { address } = useAccount();
+	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		setLoading(true);
@@ -30,8 +56,9 @@ const OrdersPage = () => {
 			});
 	}, [chainId, address]);
 
-	if (isLoading) return <Loading />;
 	if (!orders) return <p>No orders</p>;
+	if (wrongNetwork) return <WrongNetwork />;
+	if (status === 'loading' || isLoading) return <Loading />;
 
 	const orderStatus = (status: Order['status']) => {
 		switch (status) {
@@ -133,7 +160,7 @@ const OrdersPage = () => {
 													<span className="font-bold mb-2">
 														{Number(tokenAmount).toFixed(2)} {token.symbol}
 													</span>
-													<NextButton order={order} />
+													<NextButton order={order} address={address} />
 												</div>
 											</div>
 										</td>
@@ -150,7 +177,7 @@ const OrdersPage = () => {
 											{orderStatus(status)}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<NextButton order={order} />
+											<NextButton order={order} address={address} />
 										</td>
 									</tr>
 								);

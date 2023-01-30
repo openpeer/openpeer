@@ -78,7 +78,8 @@ const HomePage = () => {
 									limit_min: min,
 									limit_max: max
 								} = list;
-								const { address } = seller;
+								const { address: sellerAddress } = seller;
+								const canBuy = sellerAddress !== address;
 								return (
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
@@ -88,7 +89,9 @@ const HomePage = () => {
 														<div className="w-1/3 flex flex-row mb-2">
 															<Avatar user={seller} />
 														</div>
-														<div className="text-sm text-gray-900 break-all">{address}</div>
+														<div className="text-sm text-gray-900 break-all">
+															{sellerAddress}
+														</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
 														<span>Volume: 0.0212 BTC</span>
@@ -98,9 +101,11 @@ const HomePage = () => {
 													<span className="font-bold mb-2">
 														{formatUnits(amount, decimals)} {symbol}
 													</span>
-													<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-														<Button title="Buy" />
-													</Link>
+													{canBuy && (
+														<Link href={`/buy/${encodeURIComponent(list.id)}`}>
+															<Button title="Buy" />
+														</Link>
+													)}
 												</div>
 											</div>
 										</td>
@@ -115,9 +120,11 @@ const HomePage = () => {
 												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-												<Button title="Buy" />
-											</Link>
+											{canBuy && (
+												<Link href={`/buy/${encodeURIComponent(list.id)}`}>
+													<Button title="Buy" />
+												</Link>
+											)}
 										</td>
 									</tr>
 								);
