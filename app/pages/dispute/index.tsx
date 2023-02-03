@@ -24,6 +24,7 @@ const Dispute = () => {
 					content="Once you cancel the dispute and the merchant accepts the cancellation
 					then this order will be cancelled"
 					error="true"
+					actionButtonTitle="Yes, confirm"
 				/>
 			</div>
 		</div>
