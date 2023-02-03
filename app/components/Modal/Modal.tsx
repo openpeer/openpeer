@@ -2,9 +2,14 @@ import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-const ModalWindow = () => {
-	const [open, setOpen] = useState(true);
+export interface ModalProps {
+	title: string;
+	content: string;
+	error?: string;
+}
 
+const ModalWindow = ({ title, content, error }: ModalProps) => {
+	const [open, setOpen] = useState(true);
 	const cancelButtonRef = useRef(null);
 
 	return (
@@ -36,25 +41,25 @@ const ModalWindow = () => {
 							<Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
 								<div>
 									<div>
-										<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-											<CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
-										</div>
-										<div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-											<ExclamationTriangleIcon
-												className="h-6 w-6 text-red-600"
-												aria-hidden="true"
-											/>
-										</div>
+										{error ? (
+											<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+												<ExclamationTriangleIcon
+													className="h-6 w-6 text-red-600"
+													aria-hidden="true"
+												/>
+											</div>
+										) : (
+											<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+												<CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
+											</div>
+										)}
 									</div>
 									<div className="mt-3 text-center sm:mt-5">
 										<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-											Cancel Dispute?
+											{title}
 										</Dialog.Title>
 										<div className="mt-2">
-											<p className="text-sm text-gray-500">
-												Once you cancel the dispute and the merchant accepts the cancellation
-												then this order will be cancelled
-											</p>
+											<p className="text-sm text-gray-500">{content}</p>
 										</div>
 									</div>
 								</div>

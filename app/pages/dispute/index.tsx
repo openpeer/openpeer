@@ -19,7 +19,12 @@ const Dispute = () => {
 					</span>
 				</div>
 				<DisputeNotes />
-				<ModalWindow />
+				<ModalWindow
+					title={'Cancel Dispute?'}
+					content="Once you cancel the dispute and the merchant accepts the cancellation
+					then this order will be cancelled"
+					error="true"
+				/>
 			</div>
 		</div>
 	);
