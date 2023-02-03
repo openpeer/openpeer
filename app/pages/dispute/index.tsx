@@ -1,6 +1,8 @@
 import DisputeClaim from 'components/DisputeTrade/Claim';
 import DisputeNotes from 'components/DisputeTrade/DisputeNotes';
 import DisputeStatus from 'components/DisputeTrade/Status';
+import ModalWindow from 'components/Modal/Modal';
+
 import { GetServerSideProps } from 'next';
 
 const Dispute = () => {
@@ -16,8 +18,8 @@ const Dispute = () => {
 						<DisputeStatus />
 					</span>
 				</div>
-
 				<DisputeNotes />
+				<ModalWindow />
 			</div>
 		</div>
 	);
