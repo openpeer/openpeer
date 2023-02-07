@@ -1,8 +1,12 @@
 import Input from 'components/Input/Input';
 import StepLayout from 'components/Listing/StepLayout';
+import { verifyMessage } from 'ethers/lib/utils.js';
 import { List } from 'models/types';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import snakecaseKeys from 'snakecase-keys';
+import { useAccount, useSignMessage } from 'wagmi';
 
 import { BuyStepProps } from './Buy.types';
 
@@ -28,16 +32,65 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
-	const { list = {} as List, tokenAmount: orderTokenAmount, fiatAmount: orderFiatAmount } = order;
-
+	const { list = {} as List, tokenAmount: orderTokenAmount, fiatAmount: orderFiatAmount, listId } = order;
+	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
+
+	const router = useRouter();
+
+	const { signMessage } = useSignMessage({
+		onSuccess: async (data, variables) => {
+			const signingAddress = verifyMessage(variables.message, data);
+			if (signingAddress === address) {
+				const result = await fetch(`/api/orders/`, {
+					method: 'POST',
+					body: JSON.stringify(
+						snakecaseKeys(
+							{
+								order: {
+									listId: order.listId,
+									fiatAmount: order.fiatAmount,
+									tokenAmount: order.tokenAmount,
+									price
+								},
+								data,
+								address,
+								message: variables.message
+							},
+							{ deep: true }
+						)
+					)
+				});
+				const { uuid } = await result.json();
+				if (uuid) {
+					router.push(`/orders/${uuid}`);
+				}
+			}
+		}
+	});
 
 	const onProceed = () => {
 		if (list && fiatAmount && tokenAmount && price) {
 			const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
-			if (fiatAmount < (limitMin || 0)) return;
-			if (fiatAmount > (limitMax || Number(totalAvailableAmount) * price)) return;
-			updateOrder({ ...order, ...{ step: order.step + 1, fiatAmount, tokenAmount } });
+			if (fiatAmount < (Number(limitMin) || 0)) return;
+			if (fiatAmount > (Number(limitMax) || Number(totalAvailableAmount) * price)) return;
+
+			const newOrder = { ...order, ...{ fiatAmount, tokenAmount, price } };
+			updateOrder(newOrder);
+			const message = JSON.stringify(
+				snakecaseKeys(
+					{
+						listId: newOrder.listId,
+						fiatAmount: newOrder.fiatAmount,
+						tokenAmount: newOrder.tokenAmount,
+						price
+					},
+					{ deep: true }
+				),
+				undefined,
+				4
+			);
+			signMessage({ message: message });
 		}
 	};
 
@@ -59,7 +112,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	}, [tokenAmount, fiatAmount]);
 
 	return (
-		<StepLayout onProceed={onProceed} buttonText="Continue">
+		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
 			<div className="my-8">
 				<Input
 					label="Amount to buy"

@@ -22,6 +22,7 @@ const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => 
 						allowedDecimalSeparators={[',', '.']}
 						decimalScale={2}
 						inputMode="decimal"
+						allowNegative={false}
 					/>
 					{suffix}
 				</div>

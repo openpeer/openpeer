@@ -1,31 +1,88 @@
 import { Avatar, Button, Loading } from 'components';
-import { List } from 'models/types';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { getToken } from 'next-auth/jwt';
-import { getSession } from 'next-auth/react';
+import WrongNetwork from 'components/WrongNetwork';
+import { useConnection } from 'hooks';
+import { Order } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-const HomePage = () => {
-	const [lists, setLists] = useState<List[]>([]);
+const NextButton = ({
+	order: { id, status, buyer: buyerUser, uuid },
+	address
+}: {
+	order: Order;
+	address: string | undefined;
+}) => {
+	const buyer = address === buyerUser.address;
+
+	if (buyer) {
+		if (['escrowed', 'dispute'].includes(status)) {
+			return (
+				<Link href={`/orders/${encodeURIComponent(id)}`} as={`/orders/${encodeURIComponent(uuid)}`}>
+					<Button title="Continue" />
+				</Link>
+			);
+		} else {
+			return <></>;
+		}
+	} else {
+		if (['created', 'release', 'dispute'].includes(status)) {
+			return (
+				<Link href={`/orders/${encodeURIComponent(id)}`}>
+					<Button title="Continue" />
+				</Link>
+			);
+		} else {
+			return <></>;
+		}
+	}
+};
+const OrdersPage = () => {
+	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
 	const { address } = useAccount();
+	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
+		if (status !== 'authenticated') return;
+
 		setLoading(true);
-		fetch(`/api/lists?chain_id=${chainId}`)
+		fetch(`/api/orders?address=${address}&chainId=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setLists(data);
+				setOrders(data);
 				setLoading(false);
 			});
-	}, [chainId, address]);
+	}, [chainId, address, status]);
 
-	if (isLoading) return <Loading />;
-	if (!lists) return <p>No lists data</p>;
+	if (!orders) return <p>No orders</p>;
+	if (wrongNetwork) return <WrongNetwork />;
+	if (status === 'loading' || isLoading) return <Loading />;
+
+	const orderStatus = (status: Order['status']) => {
+		switch (status) {
+			case 'created': {
+				return 'Waiting seller deposit';
+			}
+			case 'escrowed': {
+				return 'Waiting payment';
+			}
+			case 'release': {
+				return 'Waiting seller release';
+			}
+			case 'dispute': {
+				return 'In dispute';
+			}
+			case 'closed': {
+				return 'Finished';
+			}
+			case 'cancelled': {
+				return 'Cancelled';
+			}
+		}
+	};
 
 	return (
 		<div className="py-6">
@@ -44,19 +101,25 @@ const HomePage = () => {
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Volume
+									Price
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Amount
+									Pay
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Limit
+									Receive
+								</th>
+								<th
+									scope="col"
+									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+								>
+									Status
 								</th>
 								<th
 									scope="col"
@@ -67,18 +130,15 @@ const HomePage = () => {
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-200 bg-white">
-							{lists.map((list) => {
+							{orders.map((order) => {
 								const {
 									id,
-									total_available_amount: amount,
-									seller,
-									token: { decimals, symbol },
-									fiat_currency: { symbol: fiatSymbol },
-									limit_min: min,
-									limit_max: max
-								} = list;
-								const { address: sellerAddress } = seller;
-								const canBuy = sellerAddress !== address;
+									list: { seller, fiat_currency: currency, token },
+									price,
+									fiat_amount: fiatAmount,
+									token_amount: tokenAmount,
+									status
+								} = order;
 								return (
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
@@ -89,41 +149,38 @@ const HomePage = () => {
 															<Avatar user={seller} />
 														</div>
 														<div className="text-sm text-gray-900 break-all">
-															{sellerAddress}
+															{seller.address}
 														</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-														<span>Volume: 0.0212 BTC</span>
+														<span>
+															{currency.symbol} {fiatAmount}
+														</span>
+														<span>{orderStatus(status)}</span>
 													</div>
 												</div>
 												<div className="w-2/5 flex flex-col lg:hidden px-4">
 													<span className="font-bold mb-2">
-														{amount} {symbol}
+														{Number(tokenAmount).toFixed(2)} {token.symbol}
 													</span>
-													{canBuy && (
-														<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-															<Button title="Buy" />
-														</Link>
-													)}
+													<NextButton order={order} address={address} />
 												</div>
 											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											0.0212 BTC
+											{currency.symbol} {price}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{amount} {symbol}
+											{currency.symbol} {fiatAmount}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{(!!min || !!max) &&
-												`${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
+											{Number(tokenAmount).toFixed(2)} {token.symbol}
+										</td>
+										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+											{orderStatus(status)}
 										</td>
 										<td className="hidden text-right py-4 pr-4 lg:table-cell">
-											{canBuy && (
-												<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-													<Button title="Buy" />
-												</Link>
-											)}
+											<NextButton order={order} address={address} />
 										</td>
 									</tr>
 								);
@@ -135,26 +192,10 @@ const HomePage = () => {
 		</div>
 	);
 };
+export default OrdersPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	const session = await getSession(context);
-	const token = await getToken({ req: context.req });
-	const address = token?.sub ?? null;
-	// If you have a value for "address" here, your
-	// server knows the user is authenticated.
-
-	// You can then pass any data you want
-	// to the page component here.
+export async function getServerSideProps() {
 	return {
-		props: {
-			token,
-			address,
-			session,
-			title: 'P2P'
-		}
+		props: { title: 'Orders' } // will be passed to the page component as props
 	};
-};
-
-type AuthenticatedPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-export default HomePage;
+}

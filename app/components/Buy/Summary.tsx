@@ -1,11 +1,13 @@
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
-import { List } from 'models/types';
 
 import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
-const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) => {
+import { UIOrder } from './Buy.types';
+
+const SummaryBuy = ({ order }: { order: UIOrder }) => {
+	const { list, price, fiatAmount, tokenAmount } = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
@@ -13,8 +15,9 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 		payment_method: paymentMethod,
 		seller,
 		token,
-		total_available_amount: totalAvailableAmount
-	} = list || {};
+		total_available_amount: totalAvailableAmount,
+		terms
+	} = list!;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
@@ -50,6 +53,22 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 						{currency.symbol} {price}
 					</div>
 				</li>
+				{!!fiatAmount && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Amount to pay</div>
+						<div className="font-bold">
+							{currency.symbol} {fiatAmount}
+						</div>
+					</li>
+				)}
+				{!!tokenAmount && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Amount to receive</div>
+						<div className="font-bold">
+							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+						</div>
+					</li>
+				)}
 				{!!limitMin && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Min order</div>
@@ -70,6 +89,12 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 					<div>Payment channel</div>
 					<div className="font-bold">{paymentMethod?.bank?.name}</div>
 				</li>
+				{!!terms && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Terms</div>
+						<div className="font-bold">{terms}</div>
+					</li>
+				)}
 				{/* <li className="w-full flex flex-row justify-between mb-4">
 					<div>Payment Limit</div>
 					<div className="font-bold">10 minutes</div>
@@ -82,13 +107,14 @@ const SummaryBuy = ({ list, price }: { list: List; price: number | undefined }) 
 					business with me.
 				</p>
 				<Button
+					onClick={() =>
+						window.open(`https://chat.blockscan.com/index?a=${seller.address}`, '_blank', 'noreferrer')
+					}
 					title={
-						<>
-							<span className="flex flex-row items-center justify-center">
-								<span className="mr-2">Chat with merchant</span>
-								<ChatBubbleLeftEllipsisIcon className="w-8" />
-							</span>
-						</>
+						<span className="flex flex-row items-center justify-center">
+							<span className="mr-2">Chat with merchant</span>
+							<ChatBubbleLeftEllipsisIcon className="w-8" />
+						</span>
 					}
 					outlined
 				/>
