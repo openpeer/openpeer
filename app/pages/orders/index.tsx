@@ -15,27 +15,15 @@ const NextButton = ({
 }) => {
 	const buyer = address === buyerUser.address;
 
-	if (buyer) {
-		if (['escrowed', 'dispute'].includes(status)) {
-			return (
-				<Link href={`/orders/${encodeURIComponent(id)}`} as={`/orders/${encodeURIComponent(uuid)}`}>
-					<Button title="Continue" />
-				</Link>
-			);
-		} else {
-			return <></>;
-		}
-	} else {
-		if (['created', 'release', 'dispute'].includes(status)) {
-			return (
-				<Link href={`/orders/${encodeURIComponent(id)}`}>
-					<Button title="Continue" />
-				</Link>
-			);
-		} else {
-			return <></>;
-		}
+	if ((buyer && !['escrowed', 'dispute'].includes(status)) || !['created', 'release', 'dispute'].includes(status)) {
+		return <></>;
 	}
+
+	return (
+		<Link href={`/orders/${encodeURIComponent(uuid)}`}>
+			<Button title="Continue" />
+		</Link>
+	);
 };
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
