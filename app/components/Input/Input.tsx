@@ -1,4 +1,4 @@
-import { NumericFormat } from 'react-number-format';
+import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
 	label: string;
@@ -11,6 +11,7 @@ export interface InputProps {
 	required?: boolean;
 	placeholder?: string;
 	prefix?: JSX.Element;
+	decimalScale?: number;
 }
 
 const Input = ({
@@ -23,14 +24,15 @@ const Input = ({
 	required = false,
 	placeholder,
 	prefix,
-	onChangeNumber
+	onChangeNumber,
+	decimalScale = 2
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (onChange) onChange(event.target.value);
+		onChange?.(event.target.value);
 	};
 	// Added errors = false here to hide the error statement
 	const errors = false;
-
+	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
 		<div className="my-8">
 			<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
@@ -42,12 +44,12 @@ const Input = ({
 					<NumericFormat
 						id={id}
 						value={value}
-						onValueChange={({ floatValue }) => !!onChangeNumber && onChangeNumber(floatValue)}
+						onValueChange={onValueChange}
 						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
 							!!prefix && 'text-right'
 						}`}
 						allowedDecimalSeparators={[',', '.']}
-						decimalScale={2}
+						decimalScale={decimalScale}
 						inputMode="decimal"
 						placeholder={placeholder}
 						required={required}

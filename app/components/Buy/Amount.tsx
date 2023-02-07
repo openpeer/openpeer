@@ -14,6 +14,8 @@ interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
 }
 
+const truncate = (num: number, places: number) => Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+
 const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 	<div className="w-24 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 		<div className="flex flex-row">
@@ -99,7 +101,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	function onChangeFiat(val: number | undefined) {
 		setFiatAmount(val);
-		if (price && val) setTokenAmount(val / price);
+		if (price && val) setTokenAmount(truncate(val / price, token.decimals));
 	}
 	function onChangeToken(val: number | undefined) {
 		setTokenAmount(val);
@@ -129,6 +131,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					value={tokenAmount}
 					onChangeNumber={onChangeToken}
 					type="decimal"
+					decimalScale={token.decimals}
 				/>
 			</div>
 		</StepLayout>
