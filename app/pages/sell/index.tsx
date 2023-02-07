@@ -33,9 +33,6 @@ const SellPage = () => {
 
 	return (
 		<div className="py-6">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mb-16">
-				<h1 className="text-2xl font-semibold text-gray-900">Crypto Listing » Sell Order</h1>
-			</div>
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
 					<Steps
@@ -53,5 +50,11 @@ const SellPage = () => {
 		</div>
 	);
 };
+
+export async function getServerSideProps() {
+	return {
+		props: { title: 'Post Ad' } // will be passed to the page component as props
+	};
+}
 
 export default SellPage;

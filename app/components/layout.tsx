@@ -1,6 +1,5 @@
 import type { AppProps } from 'next/app';
 
-import { Button } from 'components';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -117,7 +116,6 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 											className="h-8 w-auto"
 											width={104}
 											height={23}
-											priority
 										/>
 									</div>
 									<div className="mt-5 h-0 flex-1 overflow-y-auto">
@@ -139,14 +137,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
-							<Image
-								src={logo}
-								alt="openpeer logo"
-								className="h-8 w-auto"
-								width={104}
-								height={23}
-								priority
-							/>
+							<Image src={logo} alt="openpeer logo" className="h-8 w-auto" width={104} height={23} />
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
 							<nav className="flex-1 space-y-1 px-2 py-4">
@@ -166,10 +157,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 							<Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
 						</button>
 						<div className="w-full flex items-center justify-between px-4">
-							<h3 className="text-xl font-bold uppercase pr-4 sm:px-6 md:px-8">{title}</h3>
-							<Link href="/sell">
-								<Button title="Sell Crypto" rounded />
-							</Link>
+							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
 								<button
 									type="button"

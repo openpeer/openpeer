@@ -28,6 +28,8 @@ const Input = ({
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (onChange) onChange(event.target.value);
 	};
+	// Added errors = false here to hide the error statement
+	const errors = false;
 
 	return (
 		<div className="my-8">
@@ -70,6 +72,12 @@ const Input = ({
 					</div>
 				)}
 			</div>
+			{/* error statement */}
+			{errors && (
+				<p className="mt-2 text-sm text-red-600" id={id}>
+					This field is required and must be at least 3 characters long.
+				</p>
+			)}
 		</div>
 	);
 };

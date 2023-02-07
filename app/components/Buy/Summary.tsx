@@ -2,9 +2,7 @@ import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
 
-import {
-	ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 
@@ -23,10 +21,12 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
-			<div className="flex flex-row justify-between items-center mb-6 mt-4 px-2">
-				<div className="flex flex-row items-center">
+			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
+				<div className="flex flex-row items-center w-1/2">
 					<Avatar user={seller} />
-					<span className="ml-2">{seller.address}</span>
+					<span className="ml-2 overflow-hidden text-ellipsis hover:overflow-visible hover:break-all cursor-pointer">
+						{seller.address}
+					</span>
 				</div>
 				<div className="flex flex-row">
 					<div className="flex flex-row">
@@ -42,14 +42,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			<ul className="flex flex-col bg-gray-100 rounded-lg p-6">
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Total available amount</div>
-					<div className="font-bold">
+					<div className="font-bold text-right">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${Number(totalAvailableAmount) * price})`}
 					</div>
 				</li>
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Price</div>
-					<div className="font-bold">
+					<div className="font-bold text-right">
 						{currency.symbol} {price}
 					</div>
 				</li>
@@ -72,7 +72,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				{!!limitMin && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Min order</div>
-						<div className="font-bold">
+						<div className="font-bold text-right">
 							{currency.symbol} {limitMin}
 						</div>
 					</li>
@@ -80,7 +80,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				{!!limitMax && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Max order</div>
-						<div className="font-bold">
+						<div className="font-bold text-right">
 							{currency.symbol} {limitMax}
 						</div>
 					</li>
