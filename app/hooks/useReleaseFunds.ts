@@ -1,16 +1,16 @@
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseEscrowContractParams {
+interface UseReleaseFundsParams {
 	address: `0x${string}`;
 }
 
-const useEscrowContract = ({ address }: UseEscrowContractParams) => {
+const useReleaseFunds = ({ address }: UseReleaseFundsParams) => {
 	const { config } = usePrepareContractWrite({
 		address: address,
 		abi: [
 			{
 				inputs: [],
-				name: 'markAsPaid',
+				name: 'release',
 				outputs: [
 					{
 						internalType: 'bool',
@@ -22,7 +22,7 @@ const useEscrowContract = ({ address }: UseEscrowContractParams) => {
 				type: 'function'
 			}
 		],
-		functionName: 'markAsPaid'
+		functionName: 'release'
 	});
 
 	const { data, write } = useContractWrite(config);
@@ -31,7 +31,7 @@ const useEscrowContract = ({ address }: UseEscrowContractParams) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, markAsPaid: write, data };
+	return { isLoading, isSuccess, releaseFunds: write, data };
 };
 
-export default useEscrowContract;
+export default useReleaseFunds;

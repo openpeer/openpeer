@@ -49,19 +49,6 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 						</p>
 					</div>
 				)}
-				{status === 'release' && (
-					<div>
-						<span className="flex flex-row text-yellow-600 mb-2">
-							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Release" />
-						</span>
-						<p className="text-base">
-							This payment has been marked as paid. Awaiting confirmation from the merchant and the
-							release of
-							{Number(tokenAmount)?.toFixed(2)} {token.symbol}.
-						</p>
-					</div>
-				)}
 				<div className="flex flex-row justify-around bg-gray-100 rounded-lg p-6 my-4">
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to pay</span>

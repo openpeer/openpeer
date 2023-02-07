@@ -37,6 +37,7 @@ const SellPage = () => {
 				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
+						stepsCount={4}
 						onStepClick={(n) => step < UPDATE_EMAIL_STEP && setList({ ...list, ...{ step: n } })}
 					/>
 					{step === SETUP_STEP && <Setup list={list} updateList={setList} />}

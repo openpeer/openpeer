@@ -18,7 +18,7 @@ export interface Token {
 	decimals: number;
 	symbol: string;
 	name: string;
-	coingecko_id?: string;
+	coingecko_id: string;
 	icon: string;
 }
 
