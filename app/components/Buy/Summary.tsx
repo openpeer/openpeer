@@ -1,13 +1,14 @@
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
+import { useAccount } from 'wagmi';
 
 import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
-	const { list, price, fiatAmount, tokenAmount } = order;
+	const { list, price, fiatAmount, tokenAmount, buyer } = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
@@ -18,6 +19,10 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		total_available_amount: totalAvailableAmount,
 		terms
 	} = list!;
+
+	const { address } = useAccount();
+	const selling = seller.address === address;
+	const chatAddress = selling ? seller.address : buyer?.address;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
@@ -106,18 +111,24 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
 					business with me.
 				</p>
-				<Button
-					onClick={() =>
-						window.open(`https://chat.blockscan.com/index?a=${seller.address}`, '_blank', 'noreferrer')
-					}
-					title={
-						<span className="flex flex-row items-center justify-center">
-							<span className="mr-2">Chat with merchant</span>
-							<ChatBubbleLeftEllipsisIcon className="w-8" />
-						</span>
-					}
-					outlined
-				/>
+				{!!chatAddress && (
+					<Button
+						onClick={() =>
+							window.open(
+								`https://chat.blockscan.com/index?a=${selling ? seller.address : buyer?.address}`,
+								'_blank',
+								'noreferrer'
+							)
+						}
+						title={
+							<span className="flex flex-row items-center justify-center">
+								<span className="mr-2">Chat with {selling ? 'merchant' : 'buyer'}</span>
+								<ChatBubbleLeftEllipsisIcon className="w-8" />
+							</span>
+						}
+						outlined
+					/>
+				)}
 			</div>
 		</div>
 	);

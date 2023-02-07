@@ -1,5 +1,5 @@
 import { Button } from 'components';
-import useEscrowContract from 'hooks/useEscrowContract';
+import { useMarkAsPaid } from 'hooks';
 import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -11,7 +11,7 @@ interface MarkAsPaidButtonParams {
 const MarkAsPaidButton = ({ escrowAddress, onFinished }: MarkAsPaidButtonParams) => {
 	const { isConnected } = useAccount();
 
-	const { isLoading, isSuccess, data, markAsPaid } = useEscrowContract({ address: escrowAddress });
+	const { isLoading, isSuccess, data, markAsPaid } = useMarkAsPaid({ address: escrowAddress });
 
 	const onPaymentDone = () => {
 		if (!isConnected) return;

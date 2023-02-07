@@ -7,12 +7,17 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
+interface Prices {
+	[key: string]: { [key: string]: number };
+}
+
 const HomePage = () => {
 	const [lists, setLists] = useState<List[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
 	const { address } = useAccount();
+	const [prices, setPrices] = useState<Prices>();
 
 	useEffect(() => {
 		setLoading(true);
@@ -23,6 +28,29 @@ const HomePage = () => {
 				setLoading(false);
 			});
 	}, [chainId, address]);
+
+	useEffect(() => {
+		const fetchPrices = async () => {
+			const percentageLists = lists; // .filter(({ margin_type: marginType }) => marginType === 'percentage');
+			const fiats = percentageLists
+				.map(({ fiat_currency: c }) => c.code.toLowerCase())
+				.filter((v, i, a) => a.indexOf(v) == i);
+			const tokens = percentageLists
+				.map(({ token: t }) => t.coingecko_id.toLowerCase())
+				.filter((v, i, a) => a.indexOf(v) == i);
+			if (fiats.length > 0 && tokens.length > 0) {
+				const response = await fetch(
+					`https://api.coingecko.com/api/v3/simple/price?ids=${tokens.join(',')}&vs_currencies=${fiats.join(
+						','
+					)}`
+				);
+
+				setPrices(await response.json());
+			}
+		};
+
+		fetchPrices();
+	}, [lists]);
 
 	if (isLoading) return <Loading />;
 	if (!lists) return <p>No lists data</p>;
@@ -44,19 +72,19 @@ const HomePage = () => {
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Volume
+									Available
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Amount
+									Price
 								</th>
 								<th
 									scope="col"
 									className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 								>
-									Limit
+									Min-Max Order
 								</th>
 								<th
 									scope="col"
@@ -72,13 +100,23 @@ const HomePage = () => {
 									id,
 									total_available_amount: amount,
 									seller,
-									token: { decimals, symbol },
-									fiat_currency: { symbol: fiatSymbol },
+									token: { symbol, coingecko_id },
+									fiat_currency: { symbol: fiatSymbol, code },
 									limit_min: min,
-									limit_max: max
+									limit_max: max,
+									margin_type: marginType,
+									margin
 								} = list;
 								const { address: sellerAddress } = seller;
 								const canBuy = sellerAddress !== address;
+								const apiPrice = prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
+
+								const price =
+									marginType === 'fixed'
+										? margin
+										: apiPrice
+										? apiPrice + apiPrice * (margin / 100)
+										: '';
 								return (
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
@@ -93,12 +131,14 @@ const HomePage = () => {
 														</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-														<span>Volume: 0.0212 BTC</span>
+														<span>
+															{amount} {symbol}
+														</span>
 													</div>
 												</div>
 												<div className="w-2/5 flex flex-col lg:hidden px-4">
 													<span className="font-bold mb-2">
-														{amount} {symbol}
+														{fiatSymbol} {price} per {symbol}
 													</span>
 													{canBuy && (
 														<Link href={`/buy/${encodeURIComponent(list.id)}`}>
@@ -109,10 +149,10 @@ const HomePage = () => {
 											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											0.0212 BTC
+											{amount} {symbol}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{amount} {symbol}
+											{fiatSymbol} {price} per {symbol}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 											{(!!min || !!max) &&

@@ -1,6 +1,7 @@
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import { useReleaseFunds } from 'hooks';
 import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
@@ -9,14 +10,19 @@ import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 
 const Release = ({ order, updateOrder }: BuyStepProps) => {
-	const onProceed = () => {
-		updateOrder({ ...order, ...{ step: order.step + 1 } });
-	};
-	const { address } = useAccount();
+	const { address, isConnected } = useAccount();
 
-	const { tokenAmount, list, fiatAmount } = order;
+	const { tokenAmount, list, fiatAmount, escrow } = order;
 	const { token, fiat_currency: currency } = list || {};
 	const seller = list?.seller.address === address;
+
+	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ address: escrow!.address });
+
+	const onReleaseFunds = () => {
+		if (!isConnected || !seller || !escrow) return;
+
+		releaseFunds?.();
+	};
 
 	return (
 		<>
@@ -71,9 +77,9 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 						</span>
 						<span className="w-full">
 							{seller ? (
-								<Button title="Release funds" onClick={onProceed} />
+								<Button title="Release funds" onClick={onReleaseFunds} />
 							) : (
-								<Button title="Cancel Order" onClick={onProceed} />
+								<Button title="Cancel Order" onClick={() => console.log('cancel order')} />
 							)}
 						</span>
 					</div>
