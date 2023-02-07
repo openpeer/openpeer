@@ -1,36 +1,29 @@
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
 
-const steps = [
-	{ number: 1, href: '#' },
-	{ number: 2, href: '#' },
-	{ number: 3, href: '#' },
-	{ number: 4, href: '#' },
-	{ number: 5, href: '#' }
-];
-
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');
 }
 
 interface StepsProps {
+	stepsCount: number;
 	currentStep: number;
 	onStepClick?: (step: number) => void;
 }
 
-const Steps = ({ currentStep, onStepClick }: StepsProps) => {
+const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => {
 	return (
 		<nav aria-label="Progress">
 			<ol role="list" className="flex items-center justify-center md:justify-start">
-				{steps.map(({ number }, stepIdx) => {
+				{Array.from({ length: stepsCount + 1 }, (_, i) => i + 1).map((number) => {
 					const futureStep = currentStep < number;
 					const actualStep = currentStep === number;
 					const pastStep = currentStep > number;
-					const isTheLastStep = stepIdx == steps.length - 1;
+					const isTheLastStep = number === stepsCount + 1;
 
 					return (
 						<li
 							key={number}
-							className={classNames(stepIdx !== steps.length - 1 ? 'pr-16 sm:pr-20' : '', 'relative')}
+							className={classNames(!isTheLastStep ? 'pr-16 sm:pr-20' : '', 'relative')}
 							onClick={pastStep && !!onStepClick ? () => onStepClick(number) : undefined}
 						>
 							<>

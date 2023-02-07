@@ -10,6 +10,15 @@ const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
 const COMPLETED_STEP = 4;
 
+const steps: { [key: string]: number } = {
+	created: PAYMENT_METHOD_STEP,
+	escrowed: PAYMENT_METHOD_STEP,
+	release: RELEASE_STEP,
+	cancelled: COMPLETED_STEP,
+	dispute: COMPLETED_STEP,
+	closed: COMPLETED_STEP
+};
+
 const OrderPage = ({ id }: { id: number }) => {
 	const [order, setOrder] = useState<UIOrder>();
 	const { wrongNetwork, status } = useConnection();
@@ -18,19 +27,16 @@ const OrderPage = ({ id }: { id: number }) => {
 		fetch(`/api/orders/${id}`)
 			.then((res) => res.json())
 			.then((data) => {
-				// setOrder({ ...order, ...{ list: data, listId: data.id } });
+				const { fiat_amount: fiatAmount, token_amount: tokenAmount, status } = data;
+				setOrder({ ...data, ...{ fiatAmount, tokenAmount, step: steps[status] } });
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
-	// useEffect(() => {
-	// 	setOrder({ ...order, ...{ price } });
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [price]);
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !order) return <Loading />;
 
-	const step = 2;
+	const { step, list } = order;
 	return (
 		<div className="pt-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mb-8">
@@ -38,7 +44,7 @@ const OrderPage = ({ id }: { id: number }) => {
 			</div>
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
-					<Steps currentStep={step} />
+					<Steps currentStep={step} stepsCount={3} />
 					{step === PAYMENT_METHOD_STEP && <Payment order={order} updateOrder={setOrder} />}
 					{step === RELEASE_STEP && <Release order={order} updateOrder={setOrder} />}
 					{step === COMPLETED_STEP && (
@@ -47,7 +53,7 @@ const OrderPage = ({ id }: { id: number }) => {
 						</div>
 					)}
 				</div>
-				{!!order.list && <Summary order={order} />}
+				{!!list && <Summary order={order} />}
 			</div>
 		</div>
 	);

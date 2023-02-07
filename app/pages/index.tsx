@@ -1,5 +1,4 @@
 import { Avatar, Button, Loading } from 'components';
-import { formatUnits } from 'ethers/lib/utils.js';
 import { List } from 'models/types';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getToken } from 'next-auth/jwt';
@@ -99,7 +98,7 @@ const HomePage = () => {
 												</div>
 												<div className="w-2/5 flex flex-col lg:hidden px-4">
 													<span className="font-bold mb-2">
-														{formatUnits(amount, decimals)} {symbol}
+														{amount} {symbol}
 													</span>
 													{canBuy && (
 														<Link href={`/buy/${encodeURIComponent(list.id)}`}>
@@ -113,7 +112,7 @@ const HomePage = () => {
 											0.0212 BTC
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{formatUnits(amount, decimals)} {symbol}
+											{amount} {symbol}
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 											{(!!min || !!max) &&

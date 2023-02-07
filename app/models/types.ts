@@ -9,7 +9,7 @@ export interface FiatCurrency {
 
 export interface User {
 	id: number;
-	address: string;
+	address: `0x${string}`;
 }
 
 export interface Token {
@@ -55,6 +55,13 @@ export interface PaymentMethod {
 	bank_id: number;
 }
 
+export interface Escrow {
+	id: number;
+	order_id: number;
+	tx: `0x${string}`;
+	address: `0x${string}`;
+}
+
 export interface Order {
 	id: number;
 	fiat_amount: number;
@@ -64,4 +71,6 @@ export interface Order {
 	buyer: User;
 	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
 	tx_hash: string | null | undefined;
+	uuid: string;
+	escrow: Escrow;
 }

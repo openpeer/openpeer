@@ -65,7 +65,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Amount to receive</div>
 						<div className="font-bold">
-							{tokenAmount.toFixed(2)} {token.symbol}
+							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
 						</div>
 					</li>
 				)}

@@ -7,19 +7,18 @@ import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 const NextButton = ({
-	order: { id, status, buyer: buyerUser },
+	order: { id, status, buyer: buyerUser, uuid },
 	address
 }: {
 	order: Order;
 	address: string | undefined;
 }) => {
 	const buyer = address === buyerUser.address;
-	const seller = !buyer;
 
 	if (buyer) {
 		if (['escrowed', 'dispute'].includes(status)) {
 			return (
-				<Link href={`/orders/${encodeURIComponent(id)}`}>
+				<Link href={`/orders/${encodeURIComponent(id)}`} as={`/orders/${encodeURIComponent(uuid)}`}>
 					<Button title="Continue" />
 				</Link>
 			);
@@ -47,6 +46,8 @@ const OrdersPage = () => {
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
+		if (status !== 'authenticated') return;
+
 		setLoading(true);
 		fetch(`/api/orders?address=${address}&chainId=${chainId}`)
 			.then((res) => res.json())
@@ -54,7 +55,7 @@ const OrdersPage = () => {
 				setOrders(data);
 				setLoading(false);
 			});
-	}, [chainId, address]);
+	}, [chainId, address, status]);
 
 	if (!orders) return <p>No orders</p>;
 	if (wrongNetwork) return <WrongNetwork />;
@@ -147,7 +148,9 @@ const OrdersPage = () => {
 														<div className="w-1/3 flex flex-row mb-2">
 															<Avatar user={seller} />
 														</div>
-														<div className="text-sm text-gray-900 break-all">{address}</div>
+														<div className="text-sm text-gray-900 break-all">
+															{seller.address}
+														</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
 														<span>

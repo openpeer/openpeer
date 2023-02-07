@@ -3,6 +3,7 @@ import StepLayout from 'components/Listing/StepLayout';
 import { verifyMessage } from 'ethers/lib/utils.js';
 import { List } from 'models/types';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useSignMessage } from 'wagmi';
@@ -35,6 +36,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
 
+	const router = useRouter();
+
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
 			const signingAddress = verifyMessage(variables.message, data);
@@ -58,9 +61,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 						)
 					)
 				});
-				const { id, buyer, status } = await result.json();
-				if (id) {
-					updateOrder({ ...order, ...{ buyer, id, status, step: order.step + 1 } });
+				const { uuid } = await result.json();
+				if (uuid) {
+					router.push(`/orders/${uuid}`);
 				}
 			}
 		}
@@ -69,8 +72,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const onProceed = () => {
 		if (list && fiatAmount && tokenAmount && price) {
 			const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
-			if (fiatAmount < (limitMin || 0)) return;
-			if (fiatAmount > (limitMax || Number(totalAvailableAmount) * price)) return;
+			if (fiatAmount < (Number(limitMin) || 0)) return;
+			if (fiatAmount > (Number(limitMax) || Number(totalAvailableAmount) * price)) return;
 
 			const newOrder = { ...order, ...{ fiatAmount, tokenAmount, price } };
 			updateOrder(newOrder);
