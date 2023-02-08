@@ -42,7 +42,7 @@ const useCreateContract = ({ orderID, buyer, amount }: UseCreateContractParams) 
 		functionName: 'deployNativeEscrow',
 		args: [orderID, buyer, amount],
 		overrides: {
-			gasLimit: BigNumber.from('2000220'),
+			gasLimit: BigNumber.from('1619220'),
 			value: amount.add(fee)
 		}
 	});
