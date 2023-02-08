@@ -1,6 +1,5 @@
 import { Textarea } from 'components';
 import { verifyMessage } from 'ethers/lib/utils.js';
-import { useRouter } from 'next/router';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 
@@ -9,7 +8,6 @@ import StepLayout from './StepLayout';
 
 const Details = ({ list, updateList }: ListStepProps) => {
 	const { terms } = list;
-	const router = useRouter();
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id;
@@ -40,7 +38,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				const { id } = await result.json();
 
 				if (id) {
-					router.push('/');
+					updateList({ ...list, ...{ step: list.step + 1 } });
 				}
 			}
 		}
