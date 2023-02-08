@@ -1301,16 +1301,6 @@ acorn@^8.8.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.1.tgz#0a3f9cbecc4ec3bea6f0a80b66ae8dd2da250b73"
   integrity sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==
 
-action-cable-react-jwt@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/action-cable-react-jwt/-/action-cable-react-jwt-0.0.5.tgz#41666e478818919eee55fa0441b57c31df76d68f"
-  integrity sha512-+b5g5Mb0ov4yOm3n6GXz9aFlvW1WPHRotg0BPskkIm34jpMVVQDPaoLc5HbQ4ino7fV23L6apUUznmsdSg40tg==
-
-actioncable-jwt@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/actioncable-jwt/-/actioncable-jwt-1.1.0.tgz#fbcf7d27b3ee5fa3090474b81e21ed843a1b152a"
-  integrity sha512-WPD8RQ5pYazWpesx2G5eRjAFKZrihF5PZzcuNPHLbeRimL0BVHayv7jwyEYO8QVAhgaTVgNC+hEnfqUq5EVAEA==
-
 aes-js@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.0.0.tgz#e21df10ad6c2053295bcbb8dab40b09dbea87e4d"
@@ -4733,11 +4723,6 @@ react-style-singleton@^2.2.1:
     get-nonce "^1.0.0"
     invariant "^2.2.4"
     tslib "^2.0.0"
-
-react-use-websocket@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-use-websocket/-/react-use-websocket-4.2.0.tgz#658c4e44ee5e0fc3d29a66c2a753a72754a5db87"
-  integrity sha512-ZovaTlc/tWX6a590fi3kMWImhyoWj46BWJWvO5oucZJzRnVVhYtes2D9g+5MKXjSdR7Es3456hB89v4/1pcBKg==
 
 react@^18.2.0:
   version "18.2.0"
