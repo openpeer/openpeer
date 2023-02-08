@@ -38,6 +38,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
 
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
+
 	const router = useRouter();
 
 	const { signMessage } = useSignMessage({
@@ -51,8 +54,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 							{
 								order: {
 									listId: order.list.id,
-									fiatAmount: order.fiat_amount,
-									tokenAmount: order.token_amount,
+									fiatAmount: fiatAmount,
+									tokenAmount: tokenAmount,
 									price
 								},
 								data,
@@ -95,9 +98,6 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			signMessage({ message: message });
 		}
 	};
-
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
 
 	function onChangeFiat(val: number | undefined) {
 		setFiatAmount(val);
