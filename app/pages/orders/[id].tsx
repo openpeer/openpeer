@@ -6,7 +6,7 @@ import { useConnection } from 'hooks';
 import useCable from 'hooks/useCable';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
@@ -37,6 +37,14 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
+	const updateOrder = useCallback(
+		(data: string) => {
+			const updatedOrder = JSON.parse(data);
+			setOrder({ ...order, ...updatedOrder });
+		},
+		[order]
+	);
+
 	useEffect(() => {
 		const setupChannel = async () => {
 			if (!jwt) return;
@@ -49,9 +57,11 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 					order_id: id
 				},
 				{
+					connected() {
+						console.log('Connected');
+					},
 					received(data: string) {
-						const updatedOrder = JSON.parse(data);
-						setOrder({ ...order, ...updatedOrder });
+						updateOrder(data);
 					}
 				}
 			);
