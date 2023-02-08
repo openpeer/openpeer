@@ -48,11 +48,7 @@ const OrderPage = ({ id }: { id: number }) => {
 					<Steps currentStep={step} stepsCount={3} />
 					{step === PAYMENT_METHOD_STEP && <Payment order={order} updateOrder={setOrder} />}
 					{step === RELEASE_STEP && <Release order={order} updateOrder={setOrder} />}
-					{step === COMPLETED_STEP && (
-						<div>
-							<Completed order={order} updateOrder={setOrder} />
-						</div>
-					)}
+					{step === COMPLETED_STEP && <Completed order={order} updateOrder={setOrder} />}
 				</div>
 				{!!list && <Summary order={order} />}
 			</div>

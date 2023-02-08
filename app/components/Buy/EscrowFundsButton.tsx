@@ -1,5 +1,5 @@
 import { Button } from 'components';
-import { parseUnits } from 'ethers/lib/utils.js';
+import { toBn } from 'evm-bn';
 import { useCreateContract } from 'hooks';
 import { Token } from 'models/types';
 import { useAccount } from 'wagmi';
@@ -17,7 +17,7 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount }: EscrowFundsButto
 	const { isLoading, isSuccess, data, createContract } = useCreateContract({
 		orderID: uuid!,
 		buyer,
-		amount: parseUnits(String((tokenAmount || 0) * 10 ** token.decimals), token.decimals)
+		amount: toBn(String(tokenAmount), token.decimals)
 	});
 
 	const escrow = () => {

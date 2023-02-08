@@ -1,13 +1,13 @@
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
-import { useReleaseFunds } from 'hooks';
 import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
+import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Release = ({ order, updateOrder }: BuyStepProps) => {
 	const { address, isConnected } = useAccount();
@@ -15,14 +15,6 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 	const { tokenAmount, list, fiatAmount, escrow } = order;
 	const { token, fiat_currency: currency } = list || {};
 	const seller = list?.seller.address === address;
-
-	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ address: escrow!.address });
-
-	const onReleaseFunds = () => {
-		if (!isConnected || !seller || !escrow) return;
-
-		releaseFunds?.();
-	};
 
 	return (
 		<>
@@ -34,8 +26,12 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 							<HeaderH2 title="Awaiting Release" />
 						</span>
 						<p className="text-base">
-							This payment has been marked as paid. Awaiting confirmation from the merchant and the
-							release of {tokenAmount} {token?.name}.
+							This payment has been marked as paid.{' '}
+							{seller
+								? `Please, confirm the payment of ${currency?.symbol} ${Number(fiatAmount).toFixed(
+										2
+								  )} in your bank and release the funds to the buyer. You can also dispute the transaction.`
+								: `Awaiting confirmation from the merchant and the release of ${tokenAmount} ${token?.name}.`}
 						</p>
 					</div>
 
@@ -77,7 +73,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 						</span>
 						<span className="w-full">
 							{seller ? (
-								<Button title="Release funds" onClick={onReleaseFunds} />
+								!!escrow && <ReleaseFundsButton address={escrow.address} />
 							) : (
 								<Button title="Cancel Order" onClick={() => console.log('cancel order')} />
 							)}

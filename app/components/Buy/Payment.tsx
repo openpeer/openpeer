@@ -9,9 +9,10 @@ import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 import EscrowFundsButton from './EscrowFundsButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
+import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order, updateOrder }: BuyStepProps) => {
-	const { list, fiatAmount, tokenAmount, price, status, uuid, buyer, escrow } = order;
+	const { list, fiatAmount, tokenAmount, price, uuid, buyer, status, escrow } = order;
 	const { token, fiat_currency: currency, payment_method: paymentMethod } = list!;
 	const { address } = useAccount();
 	const seller = list?.seller.address === address;
@@ -27,7 +28,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 			<div className="my-8">
 				{status === 'created' && (
 					<div>
-						<span className="flex flex-row text-yellow-600 mb-2">
+						<span className="flex flex-row mb-2 text-yellow-600">
 							<ClockIcon className="w-8 mr-2" />
 							<HeaderH2 title="Awaiting Merchant Deposit" />
 						</span>
@@ -40,12 +41,13 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 				)}
 				{status === 'escrowed' && (
 					<div>
-						<span className="flex flex-row mb-2">
-							<HeaderH2 title="Pay Merchant" />
+						<span className={`flex flex-row mb-2 ${!!seller && 'text-yellow-600'}`}>
+							<HeaderH2 title={seller ? 'Awaiting Buyer Payment' : 'Pay Merchant'} />
 						</span>
 						<p className="text-base">
-							Proceed to your bank app or payment platform and send the required amount to the bank
-							account details below.
+							{seller
+								? 'Kindly wait for the buyer to pay. If the buyer already paid you can release the funds. Be careful.'
+								: 'Proceed to your bank app or payment platform and send the required amount to the bank account details below.'}
 						</p>
 					</div>
 				)}
@@ -118,6 +120,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 							uuid={uuid!}
 						/>
 					)}
+					{status === 'escrowed' && seller && !!escrow && <ReleaseFundsButton address={escrow.address} />}
 					{status === 'escrowed' && !seller && !!escrow && (
 						<MarkAsPaidButton escrowAddress={escrow.address} onFinished={onFinishedPayment} />
 					)}
