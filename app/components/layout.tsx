@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo.svg';
 import { Fragment, useEffect, useState } from 'react';
-import useWebSocket from 'react-use-websocket';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
