@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 
 import Head from 'app/head';
 import Layout from 'components/layout';
+import useCable from 'hooks/useCable';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';

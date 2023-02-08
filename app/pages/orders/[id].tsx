@@ -3,6 +3,7 @@ import { Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
+import useCable from 'hooks/useCable';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
 
