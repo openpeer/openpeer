@@ -1,7 +1,11 @@
 import { BigNumber } from 'ethers';
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 const FEE_BPS = 30;
+const DEPLOYER_CONTRACTS: { [key: number]: string } = {
+	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS!,
+	80001: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS!
+};
 
 interface UseCreateContractParams {
 	orderID: `0x${string}`;
@@ -10,10 +14,11 @@ interface UseCreateContractParams {
 }
 
 const useCreateContract = ({ orderID, buyer, amount }: UseCreateContractParams) => {
+	const { chain } = useNetwork();
 	// @TODO: read the fee from the contract
 	const fee = amount.mul(BigNumber.from(FEE_BPS)).div(BigNumber.from('10000'));
 	const { config } = usePrepareContractWrite({
-		address: process.env.NEXT_PUBLIC_DEPLOYER_CONTRACT_ADDRESS,
+		address: DEPLOYER_CONTRACTS[chain?.id!],
 		abi: [
 			{
 				inputs: [

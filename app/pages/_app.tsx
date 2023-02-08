@@ -7,14 +7,15 @@ import Layout from 'components/layout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { polygon, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Manrope } from '@next/font/google';
 import { getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 
-const { chains, provider } = configureChains([polygon], [publicProvider()]);
+// @TODO: ALCHEMY PROVIDER
+const { chains, provider } = configureChains([polygon, polygonMumbai], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
 	appName: 'OpenPeer',
