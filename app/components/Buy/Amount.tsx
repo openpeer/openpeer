@@ -34,7 +34,7 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
-	const { list = {} as List, tokenAmount: orderTokenAmount, fiatAmount: orderFiatAmount, listId } = order;
+	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
 
@@ -50,9 +50,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 						snakecaseKeys(
 							{
 								order: {
-									listId: order.listId,
-									fiatAmount: order.fiatAmount,
-									tokenAmount: order.tokenAmount,
+									listId: order.list.id,
+									fiatAmount: order.fiat_amount,
+									tokenAmount: order.token_amount,
 									price
 								},
 								data,
@@ -82,7 +82,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			const message = JSON.stringify(
 				snakecaseKeys(
 					{
-						listId: newOrder.listId,
+						listId: newOrder.list.id,
 						fiatAmount: newOrder.fiatAmount,
 						tokenAmount: newOrder.tokenAmount,
 						price

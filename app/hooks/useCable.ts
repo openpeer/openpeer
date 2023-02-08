@@ -1,7 +1,11 @@
-// const consumer = createConsumer(`${process.env.NEXT_PUBLIC_API_WS_URL}/cable?token=${session?.token}`);
 import { useSession } from 'next-auth/react';
 
-const useCable = async () => {
+interface UseCableParameters {
+	uuid: `0x${string}`;
+	onReceived: (data: any) => void;
+}
+
+const useCable = async ({ uuid, onReceived }: UseCableParameters) => {
 	const { data: session } = useSession();
 	//@ts-ignore
 	const jwt = session?.jwt;
@@ -10,19 +14,6 @@ const useCable = async () => {
 
 		if (!jwt) return;
 		const consumer = createConsumer(`${process.env.NEXT_PUBLIC_API_WS_URL}/cable?token=${jwt}`);
-		consumer.subscriptions.create(
-			{
-				channel: 'OrdersChannel'
-			},
-			{
-				connected() {
-					console.log('OrdersChannel connected');
-				},
-				received(data) {
-					console.log('NEW NOTIFICATION: ', data);
-				}
-			}
-		);
 		return consumer;
 	};
 

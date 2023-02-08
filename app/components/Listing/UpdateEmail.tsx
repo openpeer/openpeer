@@ -27,8 +27,8 @@ const Details = ({}: ListStepProps) => {
 						snakecaseKeys({ user, data, address, message: variables.message }, { deep: true })
 					)
 				});
-				const { id } = await result.json();
-				if (id) {
+				const response = await result.json();
+				if (response.id) {
 					router.push('/');
 				}
 			}

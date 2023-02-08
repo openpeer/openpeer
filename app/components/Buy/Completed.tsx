@@ -9,7 +9,7 @@ import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 
 const Completed = ({ order }: BuyStepProps) => {
-	const { list, tokenAmount, buyer, fiatAmount } = order;
+	const { list, token_amount: tokenAmount, buyer, fiat_amount: fiatAmount } = order;
 	const { token, seller, fiat_currency: currency } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;

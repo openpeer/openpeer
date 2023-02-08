@@ -67,37 +67,6 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 		}
 	}, [session, address, disconnect]);
 
-	// In functional React component
-
-	// @ts-ignore
-	const jwt = session?.jwt;
-
-	const apiCall = {
-		command: 'subscribe',
-		identifier: JSON.stringify({ channel: 'OrdersChannel', id: Math.random().toString(36).substring(2, 15) })
-	};
-	// This can also be an async getter function. See notes below on Async Urls.
-	const socketUrl = `${process.env.NEXT_PUBLIC_API_WS_URL}/cable?token=${jwt}`;
-	useEffect(() => {
-		if (!jwt) return;
-		const ws = new WebSocket(socketUrl);
-		ws.onopen = (event) => {
-			ws.send(JSON.stringify(apiCall));
-		};
-		ws.onmessage = function (event) {
-			console.log(event);
-			const json = JSON.parse(event.data);
-			try {
-				// console.log(json);
-			} catch (err) {
-				console.log(err);
-			}
-		};
-		//clean up function
-		return () => ws.close();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [jwt]);
-
 	return (
 		<div className={`${manrope.variable} font-sans`}>
 			<div>

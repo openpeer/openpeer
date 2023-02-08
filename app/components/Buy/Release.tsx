@@ -12,7 +12,7 @@ import ReleaseFundsButton from './ReleaseFundsButton';
 const Release = ({ order, updateOrder }: BuyStepProps) => {
 	const { address, isConnected } = useAccount();
 
-	const { tokenAmount, list, fiatAmount, escrow } = order;
+	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow } = order;
 	const { token, fiat_currency: currency } = list || {};
 	const seller = list?.seller.address === address;
 

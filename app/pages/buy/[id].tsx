@@ -10,7 +10,7 @@ import { useAccount } from 'wagmi';
 const AMOUNT_STEP = 1;
 
 const BuyPage = ({ id }: { id: number }) => {
-	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP });
+	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP } as UIOrder);
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
 	const { address } = useAccount();
