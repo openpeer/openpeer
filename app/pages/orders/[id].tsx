@@ -3,10 +3,9 @@ import { Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
-import useCable from 'hooks/useCable';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PAYMENT_METHOD_STEP = 2;
 const RELEASE_STEP = 3;
@@ -37,14 +36,6 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
-	const updateOrder = useCallback(
-		(data: string) => {
-			const updatedOrder = JSON.parse(data);
-			setOrder({ ...order, ...updatedOrder });
-		},
-		[order]
-	);
-
 	useEffect(() => {
 		const setupChannel = async () => {
 			if (!jwt) return;
@@ -61,7 +52,9 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 						console.log('Connected');
 					},
 					received(data: string) {
-						updateOrder(data);
+						const updatedOrder = JSON.parse(data);
+						console.log('Order', updatedOrder);
+						setOrder({ ...updatedOrder, ...{ step: steps[updatedOrder.status] } });
 					}
 				}
 			);
