@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useSignMessage } from 'wagmi';
 
-import { BuyStepProps } from './Buy.types';
+import { BuyStepProps, UIOrder } from './Buy.types';
 
 interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
@@ -77,14 +77,14 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			if (fiatAmount < (Number(limitMin) || 0)) return;
 			if (fiatAmount > (Number(limitMax) || Number(totalAvailableAmount) * price)) return;
 
-			const newOrder = { ...order, ...{ fiatAmount, tokenAmount, price } };
+			const newOrder: UIOrder = { ...order, ...{ fiat_amount: fiatAmount, token_amount: tokenAmount, price } };
 			updateOrder(newOrder);
 			const message = JSON.stringify(
 				snakecaseKeys(
 					{
 						listId: newOrder.list.id,
-						fiatAmount: newOrder.fiatAmount,
-						tokenAmount: newOrder.tokenAmount,
+						fiatAmount: newOrder.fiat_amount,
+						tokenAmount: newOrder.token_amount,
 						price
 					},
 					{ deep: true }
