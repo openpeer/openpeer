@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
@@ -59,8 +60,10 @@ export default async function auth(req: any, res: any) {
 		secret: process.env.NEXTAUTH_SECRET,
 		callbacks: {
 			async session({ session, token }: { session: any; token: any }) {
+				const encodedToken = jwt.sign(token, process.env.NEXTAUTH_SECRET!, { algorithm: 'HS256' });
 				session.address = token.sub;
 				session.token = token;
+				session.jwt = encodedToken;
 				return session;
 			}
 		}

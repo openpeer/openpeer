@@ -12,7 +12,7 @@ import MarkAsPaidButton from './MarkAsPaidButton';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order, updateOrder }: BuyStepProps) => {
-	const { list, fiatAmount, tokenAmount, price, uuid, buyer, status, escrow } = order;
+	const { list, fiat_amount: fiatAmount, token_amount: tokenAmount, price, uuid, buyer, status, escrow } = order;
 	const { token, fiat_currency: currency, payment_method: paymentMethod } = list!;
 	const { address } = useAccount();
 	const seller = list?.seller.address === address;

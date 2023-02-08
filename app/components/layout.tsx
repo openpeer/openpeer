@@ -5,11 +5,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo.svg';
 import { Fragment, useEffect, useState } from 'react';
+import useWebSocket from 'react-use-websocket';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	Bars3BottomLeftIcon, BellIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
+	Bars3BottomLeftIcon,
+	BellIcon,
+	ChartBarSquareIcon,
+	PlusCircleIcon,
+	ShoppingBagIcon,
+	XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
