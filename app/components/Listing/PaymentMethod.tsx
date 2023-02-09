@@ -7,14 +7,34 @@ import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
+import { Errors, Resolver } from 'models/errors';
+import { useFormErrors } from 'hooks';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
 	const { currency, paymentMethod = {} as PaymentMethod } = list;
 	const { id, account_name: accountName, account_number: accountNumber, bank } = paymentMethod;
+	const { errors, clearErrors, validate } = useFormErrors();
+
+	const resolver: Resolver = () => {
+		const error: Errors = {};
+
+		if (!accountName) {
+			error.accountName = 'Should be present';
+		}
+
+		if (!accountNumber) {
+			error.accountNumber = 'Should be present';
+		}
+		if (!bank?.id) {
+			error.bankId = 'Should be present';
+		}
+
+		return error;
+	};
 
 	const onProceed = () => {
-		if (address && accountName && accountNumber && bank?.id) {
+		if (validate(resolver)) {
 			updateList({ ...list, ...{ step: list.step + 1 } });
 		}
 	};
@@ -29,6 +49,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		updateList({ ...list, ...{ paymentMethod: pm } });
+		clearErrors(['accountName', 'accountNumber', 'bankId']);
 	};
 
 	const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {
@@ -94,6 +115,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 								...{ account_name: n }
 							})
 						}
+						error={errors.accountName}
 					/>
 					<Input
 						label="Account Number"
@@ -106,6 +128,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 								...{ account_number: n }
 							})
 						}
+						error={errors.accountNumber}
 					/>
 					<BankSelect
 						currencyId={currency!.id}
@@ -116,6 +139,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 							})
 						}
 						selected={bank}
+						error={errors.bankId}
 					/>
 				</>
 			) : (
