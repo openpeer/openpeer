@@ -1,14 +1,13 @@
 import { Button } from 'components';
-import { useMarkAsPaid } from 'hooks';
-import { useEffect } from 'react';
+import TransactionLink from 'components/TransactionLink';
+import { useMarkAsPaid, useTransactionFeedback } from 'hooks';
 import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {
 	escrowAddress: `0x${string}`;
-	onFinished?: () => void;
 }
 
-const MarkAsPaidButton = ({ escrowAddress, onFinished }: MarkAsPaidButtonParams) => {
+const MarkAsPaidButton = ({ escrowAddress }: MarkAsPaidButtonParams) => {
 	const { isConnected } = useAccount();
 
 	const { isLoading, isSuccess, data, markAsPaid } = useMarkAsPaid({ address: escrowAddress });
@@ -18,14 +17,20 @@ const MarkAsPaidButton = ({ escrowAddress, onFinished }: MarkAsPaidButtonParams)
 		markAsPaid?.();
 	};
 
-	useEffect(() => {
-		onFinished?.();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isSuccess]);
+	useTransactionFeedback({
+		hash: data?.hash,
+		isSuccess,
+		Link: <TransactionLink hash={data?.hash} />
+	});
 
 	return (
 		<span className="w-full">
-			<Button title="I've made the payment" onClick={onPaymentDone} />
+			<Button
+				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : "I've made the payment"}
+				processing={isLoading}
+				disabled={isSuccess}
+				onClick={onPaymentDone}
+			/>
 		</span>
 	);
 };

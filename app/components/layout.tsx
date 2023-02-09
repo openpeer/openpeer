@@ -1,10 +1,12 @@
 import type { AppProps } from 'next/app';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
 import logo from 'public/logo.svg';
 import { Fragment, useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
@@ -185,6 +187,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					</main>
 				</div>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 };

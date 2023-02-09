@@ -14,7 +14,7 @@ export interface User {
 
 export interface Token {
 	id: number;
-	address: string;
+	address: `0x${string}`;
 	decimals: number;
 	symbol: string;
 	name: string;

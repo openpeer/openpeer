@@ -7,7 +7,7 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
-import EscrowFundsButton from './EscrowFundsButton';
+import EscrowButton from './EscrowButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
@@ -20,8 +20,6 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 	const onProceed = () => {
 		updateOrder({ ...order, ...{ step: order.step + 1 } });
 	};
-
-	const onFinishedPayment = () => {};
 
 	return (
 		<StepLayout>
@@ -113,7 +111,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 						<Button title="Cancel Order" outlined />
 					</span>
 					{status === 'created' && seller && (
-						<EscrowFundsButton
+						<EscrowButton
 							buyer={buyer!.address}
 							token={token}
 							tokenAmount={tokenAmount || 0}
@@ -122,7 +120,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 					)}
 					{status === 'escrowed' && seller && !!escrow && <ReleaseFundsButton address={escrow.address} />}
 					{status === 'escrowed' && !seller && !!escrow && (
-						<MarkAsPaidButton escrowAddress={escrow.address} onFinished={onFinishedPayment} />
+						<MarkAsPaidButton escrowAddress={escrow.address} />
 					)}
 				</div>
 			</div>
