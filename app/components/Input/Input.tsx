@@ -12,6 +12,7 @@ export interface InputProps {
 	placeholder?: string;
 	prefix?: JSX.Element;
 	decimalScale?: number;
+	error?: string;
 }
 
 const Input = ({
@@ -25,13 +26,13 @@ const Input = ({
 	placeholder,
 	prefix,
 	onChangeNumber,
-	decimalScale = 2
+	decimalScale = 2,
+	error
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
 	};
-	// Added errors = false here to hide the error statement
-	const errors = false;
+
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
 		<div className="my-8">
@@ -74,12 +75,7 @@ const Input = ({
 					</div>
 				)}
 			</div>
-			{/* error statement */}
-			{errors && (
-				<p className="mt-2 text-sm text-red-600" id={id}>
-					This field is required and must be at least 3 characters long.
-				</p>
-			)}
+			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>
 	);
 };

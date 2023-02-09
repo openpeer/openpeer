@@ -3,7 +3,6 @@ import { Amount, Details, PaymentMethod, Setup, Summary, UpdateEmail } from 'com
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 

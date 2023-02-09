@@ -68,11 +68,12 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 			<Input
 				label="Enter total available crypto amount"
 				addOn={token!.name}
-				id="price"
+				id="totalAvailableAmount"
 				value={totalAvailableAmount}
 				onChangeNumber={(n) => updateList({ ...list, ...{ totalAvailableAmount: n } })}
 				type="decimal"
 				required
+				decimalScale={18}
 			/>
 			<div>
 				<Label title="Enter fiat order limit" />
@@ -81,7 +82,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 						placeholder="100"
 						label="Min:"
 						addOn={currency!.name}
-						id="minPrice"
+						id="limitMin"
 						type="decimal"
 						value={limitMin}
 						onChangeNumber={(n) => updateList({ ...list, ...{ limitMin: n } })}
@@ -90,7 +91,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 						placeholder="1000"
 						label="Max:"
 						addOn={currency!.name}
-						id="maxPrice"
+						id="limitMax"
 						type="decimal"
 						value={limitMax}
 						onChangeNumber={(n) => updateList({ ...list, ...{ limitMax: n } })}
