@@ -37,6 +37,7 @@ const Button = ({
 					: 'w-full px-5 py-2.5 rounded bg-[#3C9AAA] text-base text-white'
 			}
 			onClick={onClick}
+			disabled={disabled || processing}
 		>
 			{!!processing && (
 				<svg
