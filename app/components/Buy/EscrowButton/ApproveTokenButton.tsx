@@ -1,0 +1,58 @@
+import { Button } from 'components';
+import TransactionLink from 'components/TransactionLink';
+import { BigNumber } from 'ethers';
+import { useTokenApproval, useTransactionFeedback } from 'hooks';
+import { Token } from 'models/types';
+import { useEffect } from 'react';
+import { useAccount, useContractRead } from 'wagmi';
+
+const ApproveTokenButton = ({
+	token,
+	amount,
+	spender,
+	onTokenApproved
+}: {
+	token: Token;
+	spender: `0x${string}`;
+	amount: BigNumber;
+	onTokenApproved: () => void;
+}) => {
+	const { address, isConnected } = useAccount();
+
+	const { isLoading, isSuccess, data, approve } = useTokenApproval({
+		address: token.address,
+		spender,
+		amount
+	});
+
+	const { data: allowance } = useContractRead({
+		address: token.address,
+		abi: ['function allowance(address owner, address spender) external view returns (uint256)'],
+		functionName: 'allowance',
+		args: [address, spender]
+	});
+
+	const approved = (allowance as BigNumber).gte(amount);
+	const approveToken = () => {
+		if (!isConnected) return;
+		approve?.();
+	};
+
+	useTransactionFeedback({ hash: data?.hash, isSuccess, Link: <TransactionLink hash={data?.hash} /> });
+
+	useEffect(() => {
+		if (isSuccess || approved) onTokenApproved();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isSuccess, approved]);
+
+	return (
+		<Button
+			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : `Approve ${token.symbol}`}
+			onClick={approveToken}
+			processing={isLoading}
+			disabled={isSuccess}
+		/>
+	);
+};
+
+export default ApproveTokenButton;
