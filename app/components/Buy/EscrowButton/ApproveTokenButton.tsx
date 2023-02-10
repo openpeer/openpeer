@@ -4,7 +4,7 @@ import { BigNumber, constants } from 'ethers';
 import { useTokenApproval, useTransactionFeedback } from 'hooks';
 import { Token } from 'models/types';
 import { useEffect } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { erc20ABI, useAccount, useContractRead } from 'wagmi';
 
 const ApproveTokenButton = ({
 	token,
@@ -34,9 +34,9 @@ const ApproveTokenButton = ({
 
 	const { data: allowance } = useContractRead({
 		address: token.address,
-		abi: ['function allowance(address owner, address spender) external view returns (uint256)'],
+		abi: erc20ABI,
 		functionName: 'allowance',
-		args: [address, spender]
+		args: [address!, spender]
 	});
 
 	const approved = ((allowance as BigNumber) || constants.Zero).gte(amount);

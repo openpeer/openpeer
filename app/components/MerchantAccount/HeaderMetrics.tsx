@@ -2,9 +2,24 @@ import { Avatar } from 'components';
 import { User } from 'models/types';
 import Link from 'next/link';
 
-import { CalendarIcon, ChartBarIcon, ClockIcon, EnvelopeIcon, StarIcon } from '@heroicons/react/20/solid';
+import {
+	CalendarDaysIcon,
+	ChartBarIcon,
+	ChartBarSquareIcon,
+	ClockIcon,
+	EnvelopeIcon,
+	StarIcon
+} from '@heroicons/react/24/outline';
 
-const Metric = ({ label, value, Icon }: { label: string; value: string; Icon: (props: any) => JSX.Element }) => {
+const Metric = ({
+	label,
+	value,
+	Icon
+}: {
+	label: string;
+	value: string | number;
+	Icon: (props: any) => JSX.Element;
+}) => {
 	return (
 		<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
 			<div className="flex flex-col">
@@ -20,16 +35,20 @@ const Metric = ({ label, value, Icon }: { label: string; value: string; Icon: (p
 	);
 };
 
-const HeaderMetrics = () => {
+interface HeaderMetricsParams {
+	user: User;
+}
+
+const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
+	const { trades, created_at: createdAt } = user;
+	const date = new Date(createdAt);
+
 	return (
 		<div className="w-full flex flex-col md:flex-row mb-8">
 			<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
 				<div className="flex flex-col items-center">
 					<span className="m-auto flex items-center justify-center bg-[#EBF5F7] w-24 h-24 rounded-full">
-						<Avatar
-							user={{ address: '0xB98206A86e61bc59E9632D06679a5515eBf02e81', id: 0 } as User}
-							className="inline-block h-20 w-20"
-						/>
+						<Avatar user={user} className="inline-block h-20 w-20" />
 					</span>
 					<div className="flex items-center pl-4 text-lg mb-2 mt-4">
 						<span className="mr-2">Crypto Lurd</span>
@@ -63,81 +82,19 @@ const HeaderMetrics = () => {
 			</div>
 			<div>
 				<div className="w-full flex flex-col md:flex-row justify-around gap-6">
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Joined</span>
-							<span>11 Sept, 2021</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<CalendarIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Trades</span>
-							<span>130</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<ChartBarIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Trades</span>
-							<span>130</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<ChartBarIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Reviews</span>
-							<span>3,000</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<StarIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
+					<Metric
+						label="Joined"
+						value={date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+						Icon={CalendarDaysIcon}
+					/>
+					{/* <Metric label="Wallet Age" value="5 years" Icon={CalendarIcon} /> */}
+					<Metric label="Trades" value={trades} Icon={ChartBarIcon} />
 				</div>
 
 				<div className="w-full flex flex-col md:flex-row justify-around gap-6 mt-4">
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Completion Rate</span>
-							<span>98%</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<ChartBarIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-
-					<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-						<div className="flex flex-col">
-							<span className="text-sm text-gray-500">Avg Crypto Release Time</span>
-							<span>5 Minutes</span>
-						</div>
-						<div>
-							<div className="bg-[#EBF5F7] p-4 rounded-full">
-								<ClockIcon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-
-					<Metric label="Avg Payout Time" value="5 minutes" Icon={ClockIcon} />
+					<Metric label="Reviews" value="3,000" Icon={StarIcon} />
+					<Metric label="Completion Rate" value="98%" Icon={ChartBarSquareIcon} />
+					<Metric label="Avg Trade Completion" value="5 minutes" Icon={ClockIcon} />
 				</div>
 			</div>
 		</div>
