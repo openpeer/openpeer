@@ -6,7 +6,7 @@ import Toogle from 'components/SwitchToggle/Toggle';
 const EditProfile = () => {
 	return (
 		<>
-			<div className="w-full m-auto flex flex-col sm:flex-row p-8 gap-x-16">
+			<div className="w-full 2xl:w-1/2 m-auto flex flex-col sm:flex-row p-8 gap-x-16">
 				<div className="w-full md:w-1/4 mb-8">
 					<div className="flex items-start">
 						<div className="w-48">
