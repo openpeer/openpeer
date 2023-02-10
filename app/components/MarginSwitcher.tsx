@@ -8,6 +8,7 @@ interface Props {
 	token: string;
 	currency: string;
 	updateMargin: (n: number) => void;
+	error?: string;
 }
 
 const Option = ({ label, selected, onSelect }: { label: string; selected: boolean; onSelect: Props['onSelect'] }) => (
@@ -19,7 +20,7 @@ const Option = ({ label, selected, onSelect }: { label: string; selected: boolea
 	</button>
 );
 
-const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin }: Props) => {
+const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => {
 	return (
 		<>
 			<div className="w-full flex flex-col rounded-full bg-[#F4F6F8]">
@@ -35,9 +36,12 @@ const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMar
 						suffix={` ${currency} per ${token}`}
 						underValue="Spot Price"
 						updateValue={updateMargin}
+						error={error}
 					/>
 				)}
-				{selected === 'percentage' && <Selector value={margin!} suffix="%" updateValue={updateMargin} />}
+				{selected === 'percentage' && (
+					<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} />
+				)}
 			</>
 		</>
 	);

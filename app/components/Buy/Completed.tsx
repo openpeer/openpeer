@@ -1,13 +1,21 @@
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import { useAccount } from 'wagmi';
 
 import { CheckBadgeIcon, HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
 import ClipboardText from './ClipboardText';
 
-const Completed = ({ order, updateOrder }: BuyStepProps) => {
+const Completed = ({ order }: BuyStepProps) => {
+	const { list, token_amount: tokenAmount, buyer, fiat_amount: fiatAmount } = order;
+	const { token, seller, fiat_currency: currency } = list!;
+	const { address } = useAccount();
+	const selling = seller.address === address;
+
+	const tokenValue = `${tokenAmount} ${token.symbol}`;
+	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
 	return (
 		<>
 			<StepLayout>
@@ -17,24 +25,28 @@ const Completed = ({ order, updateOrder }: BuyStepProps) => {
 							<CheckBadgeIcon className="w-8 mr-2" />
 							<HeaderH2 title="Purchase Complete" />
 						</span>
-						<p className="text-base">You have successfully purchased 159 USDT from Crypto Lurd.</p>
+						<p className="text-base">
+							{selling
+								? `You have successfully sold ${tokenValue} to ${buyer?.address}.`
+								: `You have successfully purchased ${tokenValue} from ${seller.address}.`}
+						</p>
 					</div>
 
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Amount Paid</span>
-							<span className="flex flex-row justify-between">INR₹159</span>
+							<span className="flex flex-row justify-between">{selling ? tokenValue : fiatValue}</span>
 						</div>
 
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-[#6A6A6A]">Amount Received</span>
-							<span className="flex flex-row justify-between">159 USDT</span>
+							<span className="flex flex-row justify-between">{selling ? fiatValue : tokenValue}</span>
 						</div>
-						<div className="flex flex-row justify-between mb-4">
+						<div className="flex flex-row justify-between mb-4 hidden">
 							<span className="text-[#6A6A6A]">Order Time</span>
 							<span className="flex flex-row justify-between">11:00am, 12/11/2022</span>
 						</div>
-						<div className="flex flex-row justify-between mb-4">
+						<div className="flex flex-row justify-between mb-4 hidden">
 							<span className="text-[#6A6A6A]">Reference No.</span>
 							<span className="flex flex-row justify-between">
 								<ClipboardText itemValue="0112233322224" />
@@ -42,7 +54,7 @@ const Completed = ({ order, updateOrder }: BuyStepProps) => {
 						</div>
 						<div className="border-bottom border border-color-gray-200 mb-4"></div>
 						<div className="flex flex-row items-center justify-between">
-							<span className="text-[#6A6A6A]">Rate merchant </span>
+							<span className="text-[#6A6A6A]">Rate {selling ? 'buyer' : 'merchant'}</span>
 							<span className="w-1/2">
 								<div className="flex flex-col flex-col-reverse md:flex-row items-center">
 									<span className="w-full md:pr-8">
@@ -74,9 +86,6 @@ const Completed = ({ order, updateOrder }: BuyStepProps) => {
 								</div>
 							</span>
 						</div>
-					</div>
-					<div className="mt-8">
-						<Button title="Goto wallet" />
 					</div>
 				</div>
 			</StepLayout>

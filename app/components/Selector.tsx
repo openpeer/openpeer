@@ -7,9 +7,10 @@ interface SelectorProps {
 	suffix: string;
 	underValue?: string;
 	updateValue: (n: number) => void;
+	error?: string;
 }
 
-const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => {
+const Selector = ({ value, suffix, underValue, updateValue, error }: SelectorProps) => {
 	return (
 		<div className="flex flex-row justify-between items-center bg-gray-100 my-8 py-4 p-8 border-2 border-slate-200 rounded-md">
 			<Button title="-" minimal onClick={() => updateValue(value - 0.01)} />
@@ -26,6 +27,7 @@ const Selector = ({ value, suffix, underValue, updateValue }: SelectorProps) => 
 					/>
 					{suffix}
 				</div>
+				{!!error && <p className="text-center mt-2 text-sm text-red-600">{error}</p>}
 				<div className="text-sm text-center">{underValue}</div>
 			</div>
 			<Button title="+" minimal onClick={() => updateValue(value + 0.01)} />

@@ -1,6 +1,8 @@
 import Input from 'components/Input/Input';
 import StepLayout from 'components/Listing/StepLayout';
 import { verifyMessage } from 'ethers/lib/utils.js';
+import { useFormErrors } from 'hooks';
+import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -8,7 +10,7 @@ import { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useSignMessage } from 'wagmi';
 
-import { BuyStepProps } from './Buy.types';
+import { BuyStepProps, UIOrder } from './Buy.types';
 
 interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
@@ -17,7 +19,7 @@ interface BuyAmountStepProps extends BuyStepProps {
 const truncate = (num: number, places: number) => Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
 
 const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
-	<div className="w-24 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+	<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 		<div className="flex flex-row">
 			<span className="mr-2">
 				<Image
@@ -34,9 +36,14 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
-	const { list = {} as List, tokenAmount: orderTokenAmount, fiatAmount: orderFiatAmount, listId } = order;
+	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
+
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
+
+	const { errors, clearErrors, validate } = useFormErrors();
 
 	const router = useRouter();
 
@@ -50,9 +57,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 						snakecaseKeys(
 							{
 								order: {
-									listId: order.listId,
-									fiatAmount: order.fiatAmount,
-									tokenAmount: order.tokenAmount,
+									listId: order.list.id,
+									fiatAmount: fiatAmount,
+									tokenAmount: tokenAmount,
 									price
 								},
 								data,
@@ -71,20 +78,40 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		}
 	});
 
-	const onProceed = () => {
-		if (list && fiatAmount && tokenAmount && price) {
-			const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
-			if (fiatAmount < (Number(limitMin) || 0)) return;
-			if (fiatAmount > (Number(limitMax) || Number(totalAvailableAmount) * price)) return;
+	const resolver: Resolver = () => {
+		const error: Errors = {};
 
-			const newOrder = { ...order, ...{ fiatAmount, tokenAmount, price } };
+		const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
+		const max = Number(limitMax) || Number(totalAvailableAmount) * (price || 0);
+
+		if (!fiatAmount || fiatAmount < (Number(limitMin) || 0)) {
+			error.fiatAmount = `Should be more or equal ${limitMin}`;
+		} else if (fiatAmount > max) {
+			error.fiatAmount = `Should be less or equal ${max}`;
+		}
+
+		if (!tokenAmount) {
+			error.tokenAmount = 'Should be bigger than 0';
+		}
+
+		return error;
+	};
+
+	const onProceed = () => {
+		if (list && price) {
+			if (!validate(resolver)) return;
+
+			const newOrder: UIOrder = {
+				...order,
+				...{ fiat_amount: fiatAmount!, token_amount: tokenAmount!, price }
+			};
 			updateOrder(newOrder);
 			const message = JSON.stringify(
 				snakecaseKeys(
 					{
-						listId: newOrder.listId,
-						fiatAmount: newOrder.fiatAmount,
-						tokenAmount: newOrder.tokenAmount,
+						listId: newOrder.list.id,
+						fiatAmount: newOrder.fiat_amount,
+						tokenAmount: newOrder.token_amount,
 						price
 					},
 					{ deep: true }
@@ -96,14 +123,14 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		}
 	};
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
-
 	function onChangeFiat(val: number | undefined) {
+		clearErrors(['fiatAmount']);
 		setFiatAmount(val);
 		if (price && val) setTokenAmount(truncate(val / price, token.decimals));
 	}
 	function onChangeToken(val: number | undefined) {
+		clearErrors(['tokenAmount']);
+
 		setTokenAmount(val);
 		if (price && val) setFiatAmount(val * price);
 	}
@@ -123,6 +150,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					value={fiatAmount}
 					onChangeNumber={onChangeFiat}
 					type="decimal"
+					error={errors.fiatAmount}
 				/>
 				<Input
 					label="Amount you'll receive"
@@ -132,6 +160,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					onChangeNumber={onChangeToken}
 					type="decimal"
 					decimalScale={token.decimals}
+					error={errors.tokenAmount}
 				/>
 			</div>
 		</StepLayout>

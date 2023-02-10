@@ -1,48 +1,35 @@
-import { BigNumber } from 'ethers';
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { BigNumber, constants } from 'ethers';
+import { Token } from 'models/types';
+import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-const DEPLOYER_CONTRACT = '0xafA2DdF945586c44Cf1afd9e88E70c06cBC4e476';
-const FEE_BPS = 30;
+import OpenPeerDeployer from '../abis/OpenPeerDeployer.json';
+
+export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
+	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
+	80001: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
+};
 
 interface UseCreateContractParams {
 	orderID: `0x${string}`;
 	buyer: `0x${string}`;
 	amount: BigNumber;
+	fee: BigNumber;
+	token: Token;
 }
 
-const useCreateContract = ({ orderID, buyer, amount }: UseCreateContractParams) => {
-	const fee = amount.mul(BigNumber.from(FEE_BPS)).div(BigNumber.from('10000'));
+const useCreateContract = ({ orderID, buyer, amount, token, fee }: UseCreateContractParams) => {
+	const { chain } = useNetwork();
+	const { address } = token;
+	const nativeToken = address === constants.AddressZero;
+
 	const { config } = usePrepareContractWrite({
-		address: DEPLOYER_CONTRACT,
-		abi: [
-			{
-				inputs: [
-					{
-						internalType: 'bytes32',
-						name: '_orderID',
-						type: 'bytes32'
-					},
-					{
-						internalType: 'address payable',
-						name: '_buyer',
-						type: 'address'
-					},
-					{
-						internalType: 'uint256',
-						name: '_amount',
-						type: 'uint256'
-					}
-				],
-				name: 'deployNativeEscrow',
-				outputs: [],
-				stateMutability: 'payable',
-				type: 'function'
-			}
-		],
-		functionName: 'deployNativeEscrow',
-		args: [orderID, buyer, amount],
+		address: DEPLOYER_CONTRACTS[chain?.id!],
+		abi: OpenPeerDeployer,
+		functionName: nativeToken ? 'deployNativeEscrow' : 'deployERC20Escrow',
+		args: nativeToken ? [orderID, buyer, amount] : [orderID, buyer, address, amount],
 		overrides: {
-			value: amount.add(fee)
+			gasLimit: nativeToken ? BigNumber.from('1619220') : BigNumber.from('1669916'),
+			value: nativeToken ? amount.add(fee) : undefined
 		}
 	});
 

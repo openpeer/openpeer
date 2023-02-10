@@ -1,17 +1,7 @@
-import { Escrow, List, Order, User } from 'models/types';
+import { Order } from 'models/types';
 
-export interface UIOrder {
+export interface UIOrder extends Order {
 	step: number;
-	list?: List;
-	listId?: number;
-	fiatAmount?: number | undefined;
-	tokenAmount?: number | undefined;
-	price?: number | undefined;
-	buyer?: User;
-	status?: Order['status'];
-	tx_hash?: Order['tx_hash'];
-	uuid?: `0x${string}`;
-	escrow?: Escrow;
 }
 
 export interface BuyStepProps {

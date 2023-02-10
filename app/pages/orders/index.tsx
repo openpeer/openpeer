@@ -7,15 +7,20 @@ import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 const NextButton = ({
-	order: { id, status, buyer: buyerUser, uuid },
+	order: { buyer: buyerUser, uuid, status },
 	address
 }: {
 	order: Order;
 	address: string | undefined;
 }) => {
 	const buyer = address === buyerUser.address;
-
-	if ((buyer && !['escrowed', 'dispute'].includes(status)) || !['created', 'release', 'dispute'].includes(status)) {
+	// buyer
+	if (buyer) {
+		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
+			return <></>;
+		}
+	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
+		// seller
 		return <></>;
 	}
 

@@ -14,7 +14,7 @@ export interface User {
 
 export interface Token {
 	id: number;
-	address: string;
+	address: `0x${string}`;
 	decimals: number;
 	symbol: string;
 	name: string;
@@ -66,11 +66,11 @@ export interface Order {
 	id: number;
 	fiat_amount: number;
 	token_amount: number;
-	price: number;
+	price: number | undefined;
 	list: List;
 	buyer: User;
 	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
 	tx_hash: string | null | undefined;
-	uuid: string;
+	uuid: `0x${string}`;
 	escrow: Escrow;
 }

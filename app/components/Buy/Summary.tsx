@@ -122,7 +122,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						}
 						title={
 							<span className="flex flex-row items-center justify-center">
-								<span className="mr-2">Chat with {selling ? 'merchant' : 'buyer'}</span>
+								<span className="mr-2">Chat with {selling ? 'buyer' : 'merchant'}</span>
 								<ChatBubbleLeftEllipsisIcon className="w-8" />
 							</span>
 						}
