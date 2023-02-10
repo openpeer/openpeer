@@ -97,7 +97,6 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		<StepLayout onProceed={onProceed}>
 			<Input
 				label="Enter total available crypto amount"
-				error="Ops, type your name"
 				addOn={token!.name}
 				id="totalAvailableAmount"
 				value={totalAvailableAmount}

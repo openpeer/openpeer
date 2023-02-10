@@ -31,7 +31,7 @@ const HomePage = () => {
 
 	useEffect(() => {
 		const fetchPrices = async () => {
-			const percentageLists = lists; // .filter(({ margin_type: marginType }) => marginType === 'percentage');
+			const percentageLists = lists.filter(({ margin_type: marginType }) => marginType === 'percentage');
 			const fiats = percentageLists
 				.map(({ fiat_currency: c }) => c.code.toLowerCase())
 				.filter((v, i, a) => a.indexOf(v) == i);
@@ -54,6 +54,8 @@ const HomePage = () => {
 
 	if (isLoading) return <Loading />;
 	if (!lists) return <p>No lists data</p>;
+
+	console.log({ prices });
 
 	return (
 		<div className="py-6">
@@ -109,7 +111,10 @@ const HomePage = () => {
 								} = list;
 								const { address: sellerAddress } = seller;
 								const canBuy = sellerAddress !== address;
-								const apiPrice = prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
+								const apiPrice =
+									marginType === 'percentage' && prices
+										? prices[coingecko_id][code.toLowerCase()]
+										: undefined;
 
 								const price =
 									marginType === 'fixed'
