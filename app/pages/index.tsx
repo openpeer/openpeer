@@ -1,4 +1,5 @@
 import { Avatar, Button, Loading } from 'components';
+import Pagination from 'components/Pagination/Pagination';
 import { List } from 'models/types';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getToken } from 'next-auth/jwt';
@@ -176,6 +177,7 @@ const HomePage = () => {
 						</tbody>
 					</table>
 				</div>
+				<Pagination next={'URL'} prev={'URL'} minResult={'1'} maxResult={'10'} totalResult={'90'} />
 			</div>
 		</div>
 	);
