@@ -10,13 +10,13 @@ const Pagintion = ({ next, prev, minResult, maxResult, totalResult }: Pagination
 	return (
 		<>
 			<nav
-				className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-8"
+				className="flex items-center justify-between border-t border-gray-200 px-4 py-8 sm:px-6 mt-8"
 				aria-label="Pagination"
 			>
 				<div className="hidden sm:block">
 					<p className="text-sm text-gray-700">
-						Showing <span className="font-medium">{minResult}</span> to{' '}
-						<span className="font-medium">{maxResult}</span> of{' '}
+						Showing <span className="font-medium">{minResult}</span> to
+						<span className="font-medium">{maxResult}</span> of
 						<span className="font-medium">{totalResult}</span> results
 					</p>
 				</div>
