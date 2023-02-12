@@ -1,6 +1,6 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { BigNumber } from 'ethers';
+import { BigNumber, constants } from 'ethers';
 import { useTokenApproval, useTransactionFeedback } from 'hooks';
 import { Token } from 'models/types';
 import { useEffect } from 'react';
@@ -25,6 +25,13 @@ const ApproveTokenButton = ({
 		amount
 	});
 
+	useTransactionFeedback({ hash: data?.hash, isSuccess, Link: <TransactionLink hash={data?.hash} /> });
+
+	const approveToken = () => {
+		if (!isConnected) return;
+		approve?.();
+	};
+
 	const { data: allowance } = useContractRead({
 		address: token.address,
 		abi: ['function allowance(address owner, address spender) external view returns (uint256)'],
@@ -32,13 +39,7 @@ const ApproveTokenButton = ({
 		args: [address, spender]
 	});
 
-	const approved = (allowance as BigNumber).gte(amount);
-	const approveToken = () => {
-		if (!isConnected) return;
-		approve?.();
-	};
-
-	useTransactionFeedback({ hash: data?.hash, isSuccess, Link: <TransactionLink hash={data?.hash} /> });
+	const approved = ((allowance as BigNumber) || constants.Zero).gte(amount);
 
 	useEffect(() => {
 		if (isSuccess || approved) onTokenApproved();

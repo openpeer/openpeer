@@ -17,10 +17,6 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 	const { address } = useAccount();
 	const seller = list?.seller.address === address;
 
-	const onProceed = () => {
-		updateOrder({ ...order, ...{ step: order.step + 1 } });
-	};
-
 	return (
 		<StepLayout>
 			<div className="my-8">
