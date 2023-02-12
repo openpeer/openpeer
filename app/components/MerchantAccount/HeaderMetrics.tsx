@@ -44,7 +44,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 	const date = new Date(createdAt);
 
 	return (
-		<div className="w-full p-4 flex flex-col md:flex-row mb-8 justify-center md:mt-8">
+		<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8">
 			<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
 				<div className="flex flex-col items-center">
 					<span className="m-auto flex items-center justify-center bg-[#EBF5F7] w-24 h-24 rounded-full">
