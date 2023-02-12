@@ -21,6 +21,8 @@ import {
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import Notification from './Notification/Notification';
+
 const manrope = Manrope({
 	subsets: ['latin'],
 	variable: '--font-manrope'
@@ -166,13 +168,8 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 						<div className="w-full flex items-center justify-between px-4">
 							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
-								<button
-									type="button"
-									className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-								>
-									<span className="sr-only">View notifications</span>
-									<BellIcon className="h-6 w-6" aria-hidden="true" />
-								</button>
+								{/* Notifications */}
+								<Notification title="You have a new order" />
 
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative ml-3">
