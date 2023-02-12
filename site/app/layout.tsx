@@ -1,9 +1,9 @@
-import './globals.css';
+import "./globals.css"
 
-import Image from 'next/image';
+import Image from "next/image"
 
-import logo from '../public/logo.svg';
-import twitterLogo from '../public/twitter.svg';
+import logo from "../public/logo.svg"
+import twitterLogo from "../public/twitter.svg"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,9 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 OpenPeer is a completely decentralized P2P on/off ramp for emerging
                 markets.
               </p>
-              <a href="" className="bg-[#A790F7] w-40 rounded-md p-2 text-center mt-8">
+              {/* <a href="" className="bg-[#A790F7] w-40 rounded-md p-2 text-center mt-8">
                 Launch App
-              </a>
+              </a> */}
             </div>
             <div className="flex content-center mt-8 md:mt-0 justify-center md:justify-start">
               <a href="" className="px-2">
@@ -41,5 +41,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
       </body>
     </html>
-  );
+  )
 }
