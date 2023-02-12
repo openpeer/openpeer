@@ -3,7 +3,7 @@ import { User } from 'models/types';
 
 const EditProfile = () => {
 	return (
-		<div className="w-full m-auto flex flex-col sm:flex-row p-8 gap-x-16">
+		<div className="w-full m-auto flex flex-col sm:flex-row px-8 py-4 gap-x-16 justify-center mt-8">
 			<div className="w-full md:w-1/4 mb-8">
 				<div className="flex items-start">
 					<div className="w-48">
