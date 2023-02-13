@@ -2,15 +2,18 @@ import { Fragment, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { BellIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import { setConstantValue } from 'typescript';
 
 interface NotificationProps {
 	title: string;
 	message?: string;
 	onClick?: () => void;
+	unread?: boolean;
 }
 
-const Notification = ({ title, message, onClick }: NotificationProps) => {
+const Notification = ({ title, message, onClick, unread = false }: NotificationProps) => {
 	const [show, setShow] = useState(false);
+	const [isUnread, setIsUnread] = useState(unread);
 
 	return (
 		<>
@@ -21,6 +24,9 @@ const Notification = ({ title, message, onClick }: NotificationProps) => {
 			>
 				<span className="sr-only">View notifications</span>
 				<BellIcon className="h-6 w-6" aria-hidden="true" />
+				{isUnread ? (
+					<span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-red-400 ring-2 ring-white" />
+				) : null}
 			</button>
 			{show && (
 				<div
@@ -51,7 +57,10 @@ const Notification = ({ title, message, onClick }: NotificationProps) => {
 												<button
 													type="button"
 													className="rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-													onClick={onClick}
+													onClick={() => {
+														setIsUnread(!isUnread);
+														setShow(false);
+													}}
 												>
 													See details
 												</button>
