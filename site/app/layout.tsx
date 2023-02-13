@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head />
       <body>
-        <div className="container mx-auto">{children}</div>
+        <div className="container mx-auto px-4">{children}</div>
         {/* Footer */}
         <div className="bg-black text-white">
           <div className="container mx-auto p-12 flex flex-col md:flex-row md:justify-between">
@@ -22,9 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 OpenPeer is a completely decentralized P2P on/off ramp for emerging
                 markets.
               </p>
-              {/* <a href="" className="bg-[#A790F7] w-40 rounded-md p-2 text-center mt-8">
-                Launch App
-              </a> */}
             </div>
             <div className="flex content-center mt-8 md:mt-0 justify-center md:justify-start">
               <a href="" className="px-2">

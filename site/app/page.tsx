@@ -3,9 +3,8 @@ import Image, { StaticImageData } from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
-import arrows from "../public/arrows.svg"
-import lock from "../public/lock.png"
 import logo from "../public/logo.svg"
+import lock from "../public/lock.png"
 import passport from "../public/passport.png"
 import people from "../public/people.png"
 
@@ -18,7 +17,7 @@ interface FeatureParams {
 const Feature = ({ title, description, image }: FeatureParams) => {
   return (
     <div className="flex flex-col items-center mb-12">
-      <Image src={image} alt={title} width={176} className="mb-4" />
+      <Image src={image} alt={title} width={150} className="mb-4" />
       <h3 className="text-2xl mb-4">{title}</h3>
       <div className="font-normal">
         <p className="text-center text-base">{description}</p>
@@ -33,9 +32,9 @@ export default function Home() {
   return (
     <>
       <div>
-        <nav className="mt-10 relative  flex justify-between items-center w-full">
+        <nav className="mt-10 relative flex justify-between w-full">
           <a className="text-3xl font-bold leading-none" href="#">
-            <Image src={logo} alt="openpeer logo" width={234} height={51} />
+            <Image src={logo} alt="openpeer logo" width={200} height={51} />
           </a>
           <div className="sm:hidden" onClick={() => setNavbar(!navbar)}>
             <button className="navbar-burger flex items-center p-3">
@@ -69,28 +68,28 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-20 sm:mt-40 mb-20">
+        <div className="mt-24 sm:mt-24 mb-24">
           <div className="text-center text-5xl sm:text-6xl mb-8">
             <div className="font-semibold">
               <h1>Self-Custodial P2P Exchange</h1>
             </div>
           </div>
           <div className="font-normal">
-            <div className="flex flex-row justify-center space-x-4 text-2xl mb-12">
+            <div className="flex flex-row text-center justify-center space-x-4 text-2xl mb-12">
               Buy crypto directly to your wallet from your bank account with zero-fees
             </div>
           </div>
-          <div className="text-center">
+          <div className="text-center mt-24">
             <Link
               href="https://forms.gle/GAVzdT8kK4CWpZXUA"
               target="_blank"
-              className="bg-[#222222] px-20 py-4 rounded-lg"
+              className="bg-[#222222] px-20 py-4 rounded-lg font-bold"
             >
-              Sign Up for the Waitlist
+              Sign up for the waitlist
             </Link>
           </div>
         </div>
-        <div className="flex flex-col justify-around mx-20 md:space-x-20 md:flex-row">
+        <div className="flex flex-col justify-around mx-20 md:space-x-20 md:flex-row mb-24">
           {[
             {
               title: "Self-Custodial",
