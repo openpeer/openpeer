@@ -1,32 +1,38 @@
-import { HeaderMetrics, Loading } from 'components';
+import { HeaderMetrics, ListsTable, Loading } from 'components';
 import ImageUploader from 'components/ImageUploader';
-import { User } from 'models/types';
+import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import { useEffect, useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 const Profile = ({ id }: { id: number }) => {
 	const [user, setUser] = useState<User | null>();
+	const [lists, setLists] = useState<List[]>([]);
+	const { chain, chains } = useNetwork();
+	const chainId = chain?.id || chains[0]?.id;
 
 	useEffect(() => {
-		// fetch(`/api/users/${id}`)
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (data.errors) {
-		// 			setUser(null);
-		// 		} else {
-		// 			setUser(data);
-		// 		}
-		// 	});
-		setUser({
-			address: '0xB98206A86e61bc59E9632D06679a5515eBf02e81',
-			created_at: '2022-12-28T12:33:25.712Z',
-			email: 'm.*****@gm*****',
-			id: 5,
-			image_url: null,
-			trades: 16
-		});
-	}, [id]);
+		fetch(`/api/users/${id}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [id, chainId]);
+
+	useEffect(() => {
+		if (!user) return;
+
+		fetch(`/api/lists?chain_id=${chainId}&seller=${user.address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				setLists(data);
+			});
+	}, [user, chainId]);
 
 	if (user === undefined) {
 		return <Loading />;
@@ -37,8 +43,16 @@ const Profile = ({ id }: { id: number }) => {
 
 	return (
 		<>
-			<HeaderMetrics user={user} />
-			{/* <ImageUploader address={user.address} /> */}
+			<HeaderMetrics user={user} />;
+			{!!user && (
+				<div className="py-6">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+						<div className="py-4">
+							<ListsTable address={user.address} lists={lists} />
+						</div>
+					</div>
+				</div>
+			)}
 		</>
 	);
 };

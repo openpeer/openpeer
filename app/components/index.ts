@@ -3,6 +3,7 @@ import Button from './Button/Button';
 import Checkbox from './Checkbox/Checkbox';
 import Input from './Input/Input';
 import Label from './Label/Label';
+import ListsTable from './ListsTable';
 import Loading from './Loading/Loading';
 import MarginSwitcher from './MarginSwitcher';
 import HeaderMetrics from './MerchantAccount/HeaderMetrics';
@@ -29,5 +30,6 @@ export {
 	Loading,
 	Avatar,
 	HeaderMetrics,
-	HeaderH3
+	HeaderH3,
+	ListsTable
 };
