@@ -7,6 +7,8 @@ import logo from "../public/logo.svg"
 import lock from "../public/lock.png"
 import passport from "../public/passport.png"
 import people from "../public/people.png"
+import polygonLogoWhite from "../public/polygon-logo-white.png"
+import outlierVentures from "../public/outlier-ventures.png"
 
 interface FeatureParams {
   title: string
@@ -112,6 +114,13 @@ export default function Home() {
           ].map((item) => (
             <Feature key={item.title} {...item} />
           ))}
+        </div>
+        <div className="flex flex-col text-center mb-24">
+          <h3 className="text-2xl mb-12">Supported by</h3>
+          <div className="flex flex-row items-center gap-x-8 m-auto">
+            <Image src={outlierVentures} alt="Outlier Ventures" />
+            <Image src={polygonLogoWhite} alt="Polygon" />
+          </div>
         </div>
       </div>
     </>
