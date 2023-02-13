@@ -20,7 +20,7 @@ const Feature = ({ title, description, image }: FeatureParams) => {
 	return (
 		<div className="flex flex-col items-center mb-12">
 			<Image src={image} alt={title} width={150} className="mb-4" />
-			<h3 className="text-2xl mb-4">{title}</h3>
+			<h3 className="text-2xl mb-4 text-center">{title}</h3>
 			<div className="font-normal">
 				<p className="text-center text-base">{description}</p>
 			</div>
