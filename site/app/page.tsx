@@ -117,7 +117,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col text-center mb-24">
           <h3 className="text-2xl mb-12">Supported by</h3>
-          <div className="flex flex-row items-center gap-x-8 m-auto">
+          <div className="flex flex-col md:flex-row items-center gap-8 m-auto">
             <Image src={outlierVentures} alt="Outlier Ventures" />
             <Image src={polygonLogoWhite} alt="Polygon" />
           </div>
