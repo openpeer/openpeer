@@ -1,15 +1,22 @@
+import { S3 } from 'aws-sdk';
 import React, { useEffect, useState } from 'react';
 
 const MAX_FILE_SIZE = 1000000; // 1 MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
-const ImageUploader = ({ address }: { address: `0x${string}` }) => {
-	const [file, setFile] = useState(null);
-	const [error, setError] = useState(null);
-	const [signedUrl, setSignedUrl] = useState('');
+interface ImageUploaderParams {
+	address: `0x${string}`;
+	onUploadFinished?: (data: S3.ManagedUpload.SendData) => void;
+}
 
-	const handleFileChange = (event) => {
-		const selectedFile = event.target.files[0];
+const ImageUploader = ({ address, onUploadFinished }: ImageUploaderParams) => {
+	const [file, setFile] = useState<File>();
+	const [error, setError] = useState('');
+	const [isUploading, setIsUploading] = useState(false);
+
+	const handleFileChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+		if (!target.files) return;
+		const selectedFile = target.files[0];
 		if (!selectedFile) {
 			return;
 		}
@@ -22,15 +29,12 @@ const ImageUploader = ({ address }: { address: `0x${string}` }) => {
 			return;
 		}
 		setFile(selectedFile);
-		setError(null);
-	};
-
-	const handleUpload = (data) => {
-		console.log('File uploaded successfully:', data);
+		setError('');
 	};
 
 	useEffect(() => {
 		if (file) {
+			setIsUploading(true);
 			const formData = new FormData();
 			formData.append('address', address);
 			formData.append('file', file);
@@ -42,17 +46,35 @@ const ImageUploader = ({ address }: { address: `0x${string}` }) => {
 				}
 			})
 				.then((res) => res.json())
-				.then((data) => {
-					console.log(data);
-					if (data.error) return;
-					setSignedUrl(data);
+				.then(({ data }) => {
+					setIsUploading(false);
+					if (data.error) {
+						setError(data.error);
+					} else {
+						onUploadFinished?.(data);
+					}
 				});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [file]);
 
 	return (
 		<div>
-			<input type="file" accept={ALLOWED_FILE_TYPES.join(',')} multiple={false} onChange={handleFileChange} />
+			<label
+				htmlFor="file-input"
+				className="w-full px-2 py-2.5 rounded border border-[#3C9AAA] text-base text-[#3C9AAA] hover:bg-[#3C9AAA] hover:text-white my-8 cursor-pointer"
+			>
+				{isUploading ? 'Uploading...' : 'Upload'}
+			</label>
+			<input
+				type="file"
+				id="file-input"
+				className="hidden"
+				accept={ALLOWED_FILE_TYPES.join(',')}
+				multiple={false}
+				onChange={handleFileChange}
+				disabled={isUploading}
+			/>
 			{!!error && <p style={{ color: 'red' }}>{error}</p>}
 		</div>
 	);

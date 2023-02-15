@@ -11,7 +11,7 @@ const s3 = new S3({
 });
 
 interface AWSSignedUrlParams {
-	data?: string;
+	data?: S3.ManagedUpload.SendData;
 	error?: string;
 }
 
@@ -34,16 +34,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 				Body: fileContent
 			};
 
-			const lala = await s3.upload(params).promise();
-			console.log('lala', lala);
-			return res.status(200).json({ data: 'success' });
+			const uploadData = await s3.upload(params).promise();
+			return res.status(200).json({ data: uploadData });
 		} else {
 			// Handle any other HTTP method
 			res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
 		}
 	} catch (err) {
 		console.error(err);
-		return res.status(500).json({ error: 'Error generating signed URL' });
+		return res.status(500).json({ error: 'Error uploading the selected image' });
 	}
 };
 

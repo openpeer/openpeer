@@ -59,7 +59,7 @@ const ListsTable = ({ lists, address }: ListsTableParams) => {
 						margin_type: marginType,
 						margin
 					} = list;
-					const { address: sellerAddress } = seller;
+					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
 					const apiPrice =
 						marginType === 'percentage' && prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
@@ -75,7 +75,9 @@ const ListsTable = ({ lists, address }: ListsTableParams) => {
 											<div className="w-1/3 flex flex-row mb-2">
 												<Avatar user={seller} />
 											</div>
-											<div className="text-sm text-gray-900 break-all">{sellerAddress}</div>
+											<div className="text-sm text-gray-900 break-all">
+												{name || sellerAddress}
+											</div>
 										</div>
 										<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
 											<span>

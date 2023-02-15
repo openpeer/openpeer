@@ -3,14 +3,10 @@ import { providers } from 'ethers';
 import { User } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import {
-	CalendarDaysIcon,
-	CalendarIcon,
-	ChartBarIcon,
-	ChartBarSquareIcon,
-	StarIcon
+	CalendarDaysIcon, CalendarIcon, ChartBarIcon, ChartBarSquareIcon, StarIcon
 } from '@heroicons/react/24/outline';
 
 const Metric = ({
@@ -69,6 +65,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 	const date = new Date(createdAt);
 	const [walletAge, setWalletAge] = useState<string>();
 	const { chain } = useNetwork();
+	const { address: connectedAddress } = useAccount();
 
 	useEffect(() => {
 		const fetchWalletAge = async () => {
@@ -115,13 +112,19 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 					{!!twitter && <span className="text-sm mb-4">@{twitter}</span>}
 					{!!chain && (
 						<div className="flex flex-row">
-							<Link
-								href={`${chain.blockExplorers!.default.url}/address/${address}`}
-								className="flex items-center py-2 px-6 border rounded"
-								target="_blank"
-							>
-								View on {chain.blockExplorers!.default.name}
-							</Link>
+							{user.address === connectedAddress ? (
+								<Link href={`/${address}/edit`} className="flex items-center py-2 px-6 border rounded">
+									Edit profile
+								</Link>
+							) : (
+								<Link
+									href={`${chain.blockExplorers!.default.url}/address/${address}`}
+									className="flex items-center py-2 px-6 border rounded"
+									target="_blank"
+								>
+									View on {chain.blockExplorers!.default.name}
+								</Link>
+							)}
 						</div>
 					)}
 				</div>
@@ -141,7 +144,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 					<Metric label="Reviews" value="3,000" Icon={StarIcon} />
 					<Metric
 						label="Completion Rate"
-						value={!!completionRate ? `${completionRate * 100}%` : 'No trades'}
+						value={!!completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}
 						Icon={ChartBarSquareIcon}
 					/>
 					{/* <Metric label="Avg Trade Completion" value="5 minutes" Icon={ClockIcon} /> */}

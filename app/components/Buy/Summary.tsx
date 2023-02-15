@@ -8,7 +8,7 @@ import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroi
 import { UIOrder } from './Buy.types';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
-	const { list, price, fiatAmount, tokenAmount, buyer } = order;
+	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer } = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
@@ -30,15 +30,15 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				<div className="flex flex-row items-center w-1/2">
 					<Avatar user={seller} />
 					<span className="ml-2 overflow-hidden text-ellipsis hover:overflow-visible hover:break-all cursor-pointer">
-						{seller.address}
+						{seller.name || seller.address}
 					</span>
 				</div>
 				<div className="flex flex-row">
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />
-						<span>150 Trades</span>
+						<span>{seller.trades} Trades</span>
 					</div>
-					<div className="flex flex-row ml-4">
+					<div className="flex flex-row ml-4 hidden">
 						<StarIcon className="w-6 mr-2 text-yellow-400" />
 						<span> 4.5 </span>
 					</div>

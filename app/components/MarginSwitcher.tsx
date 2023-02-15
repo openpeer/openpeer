@@ -1,4 +1,5 @@
 import { List } from '../models/types';
+import Loading from './Loading/Loading';
 import Selector from './Selector';
 
 interface Props {
@@ -30,15 +31,18 @@ const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMar
 				</div>
 			</div>
 			<>
-				{selected === 'fixed' && margin != undefined && (
-					<Selector
-						value={margin}
-						suffix={` ${currency} per ${token}`}
-						underValue="Spot Price"
-						updateValue={updateMargin}
-						error={error}
-					/>
-				)}
+				{selected === 'fixed' &&
+					(margin == undefined ? (
+						<Loading big={false} />
+					) : (
+						<Selector
+							value={margin}
+							suffix={` ${currency} per ${token}`}
+							underValue="Spot Price"
+							updateValue={updateMargin}
+							error={error}
+						/>
+					))}
 				{selected === 'percentage' && (
 					<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} />
 				)}

@@ -1,5 +1,5 @@
 import { Loading, Steps } from 'components';
-import { Amount, Details, PaymentMethod, Setup, Summary, UpdateEmail } from 'components/Listing';
+import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
@@ -10,7 +10,6 @@ const SETUP_STEP = 1;
 const AMOUNT_STEP = 2;
 const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
-const UPDATE_EMAIL_STEP = 5;
 
 const SellPage = () => {
 	const { address } = useAccount();
@@ -36,14 +35,13 @@ const SellPage = () => {
 				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
-						stepsCount={4}
-						onStepClick={(n) => step < UPDATE_EMAIL_STEP && setList({ ...list, ...{ step: n } })}
+						stepsCount={3}
+						onStepClick={(n) => setList({ ...list, ...{ step: n } })}
 					/>
 					{step === SETUP_STEP && <Setup list={list} updateList={setList} />}
 					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
-					{step === UPDATE_EMAIL_STEP && <UpdateEmail list={list} updateList={setList} />}
 				</div>
 				<Summary list={list} />
 			</div>

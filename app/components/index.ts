@@ -14,6 +14,7 @@ import TokenSelect from './Select/TokenSelect';
 import Selector from './Selector';
 import Steps from './Steps';
 import Textarea from './Textarea/Textarea';
+import WrongNetwork from './WrongNetwork';
 
 export {
 	Button,
@@ -31,5 +32,6 @@ export {
 	Avatar,
 	HeaderMetrics,
 	HeaderH3,
-	ListsTable
+	ListsTable,
+	WrongNetwork
 };

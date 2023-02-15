@@ -1,5 +1,4 @@
 import { HeaderMetrics, ListsTable, Loading } from 'components';
-import ImageUploader from 'components/ImageUploader';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
@@ -22,7 +21,7 @@ const Profile = ({ id }: { id: number }) => {
 					setUser(data);
 				}
 			});
-	}, [id, chainId]);
+	}, [id]);
 
 	useEffect(() => {
 		if (!user) return;
@@ -44,7 +43,7 @@ const Profile = ({ id }: { id: number }) => {
 	return (
 		<>
 			<HeaderMetrics user={user} />;
-			{!!user && (
+			{!!user && lists && lists.length > 0 && (
 				<div className="py-6">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
 						<div className="py-4">
