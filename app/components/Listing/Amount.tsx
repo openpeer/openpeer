@@ -19,7 +19,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 	} = list;
 
 	const percentage = marginType === 'percentage';
-	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 5 : 5);
+	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 1 : 1);
 	const [fixedMargin, setFixedMargin] = useState<number | undefined>(percentage ? undefined : savedMargin);
 	const [price, setPrice] = useState<number | undefined>();
 

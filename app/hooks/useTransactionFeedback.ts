@@ -16,7 +16,7 @@ const useTransactionFeedback = ({ isSuccess, hash, Link }: Params) => {
 			toast.success(Link, {
 				theme: 'dark',
 				position: 'top-right',
-				autoClose: 5000,
+				autoClose: 10000,
 				hideProgressBar: false,
 				closeOnClick: true,
 				pauseOnHover: true,

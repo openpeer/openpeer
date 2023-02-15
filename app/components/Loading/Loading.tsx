@@ -1,6 +1,10 @@
-const Loading = () => {
+interface LoadingParams {
+	big?: boolean;
+}
+
+const Loading = ({ big = true }: LoadingParams) => {
 	return (
-		<div className="flex h-screen">
+		<div className={`flex mb-2 ${big && 'h-screen'}`}>
 			<div className="m-auto flex flex-row justify-center justify-items-center content-center text-center">
 				<svg className="animate-spin h-7 w-5 mr-3" viewBox="0 0 55 61">
 					<path
@@ -10,7 +14,7 @@ const Loading = () => {
 						fill="#3C9AAA"
 					/>
 				</svg>
-				<span className="text-xl">Loading...</span>
+				<span className={`${big && 'text-xl'}`}>Loading...</span>
 			</div>
 		</div>
 	);
