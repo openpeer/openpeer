@@ -35,7 +35,7 @@ const Input = ({
 
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
-		<div className="my-8">
+		<div className="my-6">
 			<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
 				{label}
 			</label>

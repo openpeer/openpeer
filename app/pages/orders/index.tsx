@@ -45,7 +45,7 @@ const OrdersPage = () => {
 		fetch(`/api/orders?address=${address}&chainId=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setOrders(data);
+				setOrders(data.filter((o: Order) => o.status !== 'closed'));
 				setLoading(false);
 			});
 	}, [chainId, address, status]);
@@ -142,7 +142,7 @@ const OrdersPage = () => {
 															<Avatar user={seller} />
 														</div>
 														<div className="text-sm text-gray-900 break-all">
-															{seller.address}
+															{seller.name || seller.address}
 														</div>
 													</div>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">

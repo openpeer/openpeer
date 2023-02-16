@@ -9,7 +9,15 @@ export interface FiatCurrency {
 
 export interface User {
 	id: number;
+	email: string;
 	address: `0x${string}`;
+	trades: number;
+	image_url: string | null;
+	name: string | null;
+	twitter: string | null;
+	verified: boolean;
+	completion_rate: number | null;
+	created_at: string;
 }
 
 export interface Token {

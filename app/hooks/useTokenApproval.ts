@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers';
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { erc20ABI, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 interface UseTokenApprovalParams {
 	address: `0x${string}`;
@@ -10,7 +10,7 @@ interface UseTokenApprovalParams {
 const useTokenApproval = ({ address, spender, amount }: UseTokenApprovalParams) => {
 	const { config } = usePrepareContractWrite({
 		address,
-		abi: ['function approve(address spender, uint256 amount) external returns (bool)'],
+		abi: erc20ABI,
 		functionName: 'approve',
 		args: [spender, amount]
 	});

@@ -2,6 +2,7 @@ import useConnection from './useConnection';
 import useCreateContract from './useCreateContract';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
+import useListsPrices from './useListsPrices';
 import useMarkAsPaid from './useMarkAsPaid';
 import useReleaseFunds from './useReleaseFunds';
 import useTokenApproval from './useTokenApproval';
@@ -15,5 +16,6 @@ export {
 	useReleaseFunds,
 	useFormErrors,
 	useTransactionFeedback,
-	useTokenApproval
+	useTokenApproval,
+	useListsPrices
 };
