@@ -11,17 +11,12 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	Bars3BottomLeftIcon,
-	BellIcon,
-	ChartBarSquareIcon,
-	PlusCircleIcon,
-	ShoppingBagIcon,
-	XMarkIcon
+	Bars3BottomLeftIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-import Notification from './Notification/Notification';
+import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -169,7 +164,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
 								{/* Notifications */}
-								<Notification title="You have a new order" unread />
+								<Notifications />
 
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative ml-3">
