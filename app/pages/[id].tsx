@@ -44,11 +44,9 @@ const Profile = ({ id }: { id: number }) => {
 		<>
 			<HeaderMetrics user={user} />
 			{!!user && lists && lists.length > 0 && (
-				<div className="py-6">
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-						<div className="py-4">
-							<ListsTable address={user.address} lists={lists} />
-						</div>
+				<div className="flex px-6">
+					<div className="w-full md:w-5/6 m-auto">
+						<ListsTable address={user.address} lists={lists} />
 					</div>
 				</div>
 			)}
