@@ -6,7 +6,11 @@ import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {
-	CalendarDaysIcon, CalendarIcon, ChartBarIcon, ChartBarSquareIcon, StarIcon
+	CalendarDaysIcon,
+	CalendarIcon,
+	ChartBarIcon,
+	ChartBarSquareIcon,
+	StarIcon
 } from '@heroicons/react/24/outline';
 
 const Metric = ({
