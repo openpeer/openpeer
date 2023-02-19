@@ -20,6 +20,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import ReminderHeader from './ReminderHeader';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -154,6 +155,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					</div>
 				</div>
 				<div className="flex flex-col md:pl-64">
+					<ReminderHeader message={'Updade your email address to receive sale notifications'} hidden />
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
 						<button
 							type="button"
