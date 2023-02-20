@@ -11,15 +11,12 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	Bars3BottomLeftIcon,
-	BellIcon,
-	ChartBarSquareIcon,
-	PlusCircleIcon,
-	ShoppingBagIcon,
-	XMarkIcon
+	Bars3BottomLeftIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -166,13 +163,8 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 						<div className="w-full flex items-center justify-between px-4">
 							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
-								<button
-									type="button"
-									className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-								>
-									<span className="sr-only">View notifications</span>
-									<BellIcon className="h-6 w-6" aria-hidden="true" />
-								</button>
+								{/* Notifications */}
+								<Notifications />
 
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative ml-3">
