@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 
 const NotificationDetail = ({ notification, onOpen, onDismiss }: NotificationParams) => {
-	const { id, title, description, unseen, unread, url } = notification;
+	const { id, title, description, url } = notification;
 	const router = useRouter();
 	const onClick = () => {
 		onOpen(id);
@@ -15,7 +15,7 @@ const NotificationDetail = ({ notification, onOpen, onDismiss }: NotificationPar
 	};
 
 	return (
-		<div className={`p-4 ${!unread && 'bg-slate-900'}`} onClick={onClick}>
+		<div className="p-4" onClick={onClick}>
 			<div className="flex items-start">
 				<div className="flex-shrink-0">
 					<InboxIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />

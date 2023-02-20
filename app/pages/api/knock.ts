@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'jsonwebtoken';
 import { getSession } from 'next-auth/react';
 
-import Knock from '@knocklabs/client';
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<{ token: string }>) {
 	const session = await getSession({ req });
 

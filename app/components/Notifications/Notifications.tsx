@@ -15,7 +15,8 @@ const Notifications = () => {
 		if (open) {
 			markAllAsSeen();
 		}
-	}, [open, markAllAsSeen]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [open]);
 
 	if (notifications.length === 0) {
 		return <></>;
