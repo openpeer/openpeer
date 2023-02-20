@@ -15,7 +15,6 @@ const fetchUser = async (address: string, token: string): Promise<User> => {
 };
 
 const updateUser = async (address: string, body: NextApiRequest['body'], token: string): Promise<User> => {
-	console.log({ body, token });
 	const { data } = await minkeApi.patch(`/user_profiles/${address}`, body, {
 		headers: {
 			Authorization: `Bearer ${token}`

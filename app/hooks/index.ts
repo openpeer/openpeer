@@ -4,6 +4,7 @@ import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
 import useListsPrices from './useListsPrices';
 import useMarkAsPaid from './useMarkAsPaid';
+import useNotifications from './useNotifications';
 import useReleaseFunds from './useReleaseFunds';
 import useTokenApproval from './useTokenApproval';
 import useTransactionFeedback from './useTransactionFeedback';
@@ -17,5 +18,6 @@ export {
 	useFormErrors,
 	useTransactionFeedback,
 	useTokenApproval,
-	useListsPrices
+	useListsPrices,
+	useNotifications
 };

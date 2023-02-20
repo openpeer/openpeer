@@ -11,7 +11,7 @@ const fetchUser = async (address: string): Promise<User> => {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<User>) {
-	const { query, method, body } = req;
+	const { query, method } = req;
 	const { address } = query;
 
 	switch (method) {
