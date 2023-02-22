@@ -2,7 +2,7 @@ import { useNotifications } from 'hooks';
 import { Fragment, useEffect, useState } from 'react';
 
 import { Transition } from '@headlessui/react';
-import { BellIcon } from '@heroicons/react/24/outline';
+import { BellIcon, BellSnoozeIcon } from '@heroicons/react/24/outline';
 
 import NotificationDetail from './NotificationDetail';
 
@@ -17,10 +17,6 @@ const Notifications = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [open]);
-
-	if (notifications.length === 0) {
-		return <></>;
-	}
 
 	return (
 		<>
@@ -52,14 +48,23 @@ const Notifications = () => {
 							leaveTo="opacity-0"
 						>
 							<div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-								{notifications.map((notification) => (
-									<NotificationDetail
-										key={notification.id}
-										notification={notification}
-										onOpen={markAsRead}
-										onDismiss={markAsArchived}
-									/>
-								))}
+								{notifications.length === 0 ? (
+									<div className="p-4">
+										<div className="flex flex-row items-center">
+											<BellSnoozeIcon className="h-8 w-8 text-cyan-700" aria-hidden="true" />
+											<p className="pl-2">You have no notifications</p>
+										</div>
+									</div>
+								) : (
+									notifications.map((notification) => (
+										<NotificationDetail
+											key={notification.id}
+											notification={notification}
+											onOpen={markAsRead}
+											onDismiss={markAsArchived}
+										/>
+									))
+								)}
 							</div>
 						</Transition>
 					</div>
