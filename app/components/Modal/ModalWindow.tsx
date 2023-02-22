@@ -1,7 +1,8 @@
-import { Fragment, useRef, useState } from 'react';
+import Button from 'components/Button/Button';
+import { Fragment, useState } from 'react';
+
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import Button from 'components/Button/Button';
 
 export interface ModalProps {
 	title: string;
@@ -12,11 +13,10 @@ export interface ModalProps {
 
 const ModalWindow = ({ title, content, error, actionButtonTitle }: ModalProps) => {
 	const [open, setOpen] = useState(true);
-	const cancelButtonRef = useRef(null);
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+			<Dialog as="div" className="relative z-10" onClose={setOpen}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -67,12 +67,7 @@ const ModalWindow = ({ title, content, error, actionButtonTitle }: ModalProps) =
 								</div>
 								<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between sm:gap-3">
 									<span className="w-full">
-										<Button
-											title="Cancel"
-											outlined
-											onClick={() => setOpen(false)}
-											ref={cancelButtonRef}
-										/>
+										<Button title="Cancel" outlined onClick={() => setOpen(false)} />
 									</span>
 									<span className="w-full">
 										<Button title={actionButtonTitle} />

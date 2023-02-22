@@ -1,15 +1,16 @@
-import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import Textarea from 'components/Textarea/Textarea';
+
+import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
 const DisputeClaim = () => {
 	return (
 		<>
 			<div>
 				<Label title="Comments" />
-				<Textarea rows={0} id={''} value={undefined} placeholder="Tell us more about the transaction" />
+				<Textarea rows={0} id="details" value={undefined} placeholder="Tell us more about the transaction" />
 			</div>
 			<div>
 				<Label title="Upload proof" />
@@ -26,7 +27,7 @@ const DisputeClaim = () => {
 				</label>
 			</div>
 			<div className="-mb-8">
-				<Input label="Pay" id={''} LabelSideInfo="Balance: 250USDT" />
+				<Input label="Pay" id="pay" labelSideInfo="Balance: 250USDT" />
 			</div>
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">
 				<Button title="Cancel" outlined />
