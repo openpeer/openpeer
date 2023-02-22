@@ -1,4 +1,6 @@
 import { Input, Label, MarginSwitcher } from 'components';
+import { useFormErrors } from 'hooks';
+import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
 import { useEffect, useState } from 'react';
 
@@ -17,28 +19,56 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 	} = list;
 
 	const percentage = marginType === 'percentage';
-	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 5 : 5);
+	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 1 : 1);
 	const [fixedMargin, setFixedMargin] = useState<number | undefined>(percentage ? undefined : savedMargin);
 	const [price, setPrice] = useState<number | undefined>();
 
+	const { errors, clearErrors, validate } = useFormErrors();
+
 	const margin = percentage ? percentageMargin : fixedMargin;
-	const updateMargin = (m: number) => {
-		percentage ? setPercentageMargin(m) : setFixedMargin(m);
-		updateList({ ...list, ...{ margin: m } });
+
+	const updateValue = (obj: any) => {
+		clearErrors(Object.keys(obj));
+		updateList({ ...list, ...obj });
 	};
 
-	const onProceed = () => {
+	const updateMargin = (m: number) => {
+		clearErrors(['margin']);
+		percentage ? setPercentageMargin(m) : setFixedMargin(m);
+		updateValue({ margin: m });
+	};
+
+	const resolver: Resolver = () => {
 		const total = totalAvailableAmount || 0;
 		const min = limitMin || 0;
 		const max = limitMax || 0;
-		if (total > 0 && min <= max && ((margin || 0) > 0 || percentage)) {
-			updateList({ ...list, ...{ step: list.step + 1 } });
+
+		const error: Errors = {};
+
+		if (total <= 0) {
+			error.totalAvailableAmount = 'Should be bigger than 0';
+		}
+
+		if (min > max) {
+			error.limitMin = 'Should be smaller than the max';
+		}
+
+		if (!percentage && (margin || 0) <= 0) {
+			error.margin = 'Should be bigger than zero';
+		}
+
+		return error;
+	};
+
+	const onProceed = () => {
+		if (validate(resolver)) {
+			updateValue({ step: list.step + 1 });
 		}
 	};
 
 	const onSelectType = (t: List['margin_type']) => {
 		const m = t === 'fixed' ? fixedMargin : percentageMargin;
-		updateList({ ...list, ...{ marginType: t, margin: m } });
+		updateValue({ marginType: t, margin: m });
 	};
 
 	useEffect(() => {
@@ -67,13 +97,14 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		<StepLayout onProceed={onProceed}>
 			<Input
 				label="Enter total available crypto amount"
-				error="Ops, type your name"
 				addOn={token!.name}
-				id="price"
+				id="totalAvailableAmount"
 				value={totalAvailableAmount}
-				onChangeNumber={(n) => updateList({ ...list, ...{ totalAvailableAmount: n } })}
+				onChangeNumber={(n) => updateValue({ totalAvailableAmount: n })}
 				type="decimal"
 				required
+				decimalScale={18}
+				error={errors.totalAvailableAmount}
 			/>
 			<div>
 				<Label title="Enter fiat order limit" />
@@ -82,19 +113,20 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 						placeholder="100"
 						label="Min:"
 						addOn={currency!.name}
-						id="minPrice"
+						id="limitMin"
 						type="decimal"
 						value={limitMin}
-						onChangeNumber={(n) => updateList({ ...list, ...{ limitMin: n } })}
+						onChangeNumber={(n) => updateValue({ limitMin: n })}
+						error={errors.limitMin}
 					/>
 					<Input
 						placeholder="1000"
 						label="Max:"
 						addOn={currency!.name}
-						id="maxPrice"
+						id="limitMax"
 						type="decimal"
 						value={limitMax}
-						onChangeNumber={(n) => updateList({ ...list, ...{ limitMax: n } })}
+						onChangeNumber={(n) => updateValue({ limitMax: n })}
 					/>
 				</div>
 			</div>
@@ -107,6 +139,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 				token={token!.name}
 				margin={margin}
 				updateMargin={updateMargin}
+				error={errors.margin}
 			/>
 
 			<div className="w-full flex flex-row justify-between mb-8 hidden">

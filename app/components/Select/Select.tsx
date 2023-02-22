@@ -1,17 +1,16 @@
 import Image from 'next/image';
-import logo from 'public/logo.svg';
 import { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 
-import { Option, SelectProps } from './Select.types';
+import { SelectProps } from './Select.types';
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');
 }
 
-export default function Select({ label, options, selected, onSelect }: SelectProps) {
+export default function Select({ label, options, selected, onSelect, error }: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
 			{({ open }) => (
@@ -94,6 +93,7 @@ export default function Select({ label, options, selected, onSelect }: SelectPro
 								</Listbox.Options>
 							</Transition>
 						</div>
+						{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 					</div>
 				</>
 			)}

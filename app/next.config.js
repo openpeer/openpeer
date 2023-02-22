@@ -18,7 +18,7 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
-				hostname: 'images.unsplash.com'
+				hostname: 'openpeerimages.s3.us-west-1.amazonaws.com'
 			}
 		]
 	}

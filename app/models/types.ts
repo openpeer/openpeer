@@ -9,16 +9,24 @@ export interface FiatCurrency {
 
 export interface User {
 	id: number;
-	address: string;
+	email: string;
+	address: `0x${string}`;
+	trades: number;
+	image_url: string | null;
+	name: string | null;
+	twitter: string | null;
+	verified: boolean;
+	completion_rate: number | null;
+	created_at: string;
 }
 
 export interface Token {
 	id: number;
-	address: string;
+	address: `0x${string}`;
 	decimals: number;
 	symbol: string;
 	name: string;
-	coingecko_id?: string;
+	coingecko_id: string;
 	icon: string;
 }
 
@@ -53,4 +61,24 @@ export interface PaymentMethod {
 	user: User;
 	bank: Bank;
 	bank_id: number;
+}
+
+export interface Escrow {
+	id: number;
+	order_id: number;
+	tx: `0x${string}`;
+	address: `0x${string}`;
+}
+
+export interface Order {
+	id: number;
+	fiat_amount: number;
+	token_amount: number;
+	price: number | undefined;
+	list: List;
+	buyer: User;
+	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
+	tx_hash: string | null | undefined;
+	uuid: `0x${string}`;
+	escrow: Escrow;
 }

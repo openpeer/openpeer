@@ -8,11 +8,13 @@ import { SelectProps } from './Select.types';
 const BankSelect = ({
 	currencyId,
 	onSelect,
-	selected
+	selected,
+	error
 }: {
 	currencyId: number;
 	onSelect: SelectProps['onSelect'];
 	selected: SelectProps['selected'];
+	error?: SelectProps['error'];
 }) => {
 	const [banks, setBanks] = useState<Bank[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -31,6 +33,10 @@ const BankSelect = ({
 		return <Loading />;
 	}
 
-	return banks ? <Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} /> : <></>;
+	return banks ? (
+		<Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} error={error} />
+	) : (
+		<></>
+	);
 };
 export default BankSelect;

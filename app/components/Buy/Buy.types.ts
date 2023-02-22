@@ -1,10 +1,7 @@
-import { List } from 'models/types';
+import { Order } from 'models/types';
 
-export interface UIOrder {
+export interface UIOrder extends Order {
 	step: number;
-	list?: List;
-	fiatAmount?: number | undefined;
-	tokenAmount?: number | undefined;
 }
 
 export interface BuyStepProps {
