@@ -1,7 +1,7 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useReleaseFunds, useTransactionFeedback } from 'hooks';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {
 	address: `0x${string}`;
@@ -9,7 +9,6 @@ interface ReleaseFundsButtonParams {
 
 const ReleaseFundsButton = ({ address }: ReleaseFundsButtonParams) => {
 	const { isConnected } = useAccount();
-	const { chain } = useNetwork();
 	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ address });
 
 	const onReleaseFunds = () => {

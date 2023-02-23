@@ -28,7 +28,7 @@ const useCreateContract = ({ orderID, buyer, amount, token, fee }: UseCreateCont
 		functionName: nativeToken ? 'deployNativeEscrow' : 'deployERC20Escrow',
 		args: nativeToken ? [orderID, buyer, amount] : [orderID, buyer, address, amount],
 		overrides: {
-			gasLimit: nativeToken ? BigNumber.from('1619220') : BigNumber.from('2000000'),
+			gasLimit: BigNumber.from('2000000'),
 			value: nativeToken ? amount.add(fee) : undefined
 		}
 	});

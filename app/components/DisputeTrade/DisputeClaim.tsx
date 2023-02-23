@@ -10,7 +10,7 @@ const DisputeClaim = () => {
 		<>
 			<div>
 				<Label title="Comments" />
-				<Textarea rows={0} id="details" value={undefined} placeholder="Tell us more about the transaction" />
+				<Textarea rows={4} id="details" value={undefined} placeholder="Tell us more about the transaction" />
 			</div>
 			<div>
 				<Label title="Upload proof" />
@@ -26,7 +26,7 @@ const DisputeClaim = () => {
 					</div>
 				</label>
 			</div>
-			<div className="-mb-8">
+			<div className="-mb-8 hidden">
 				<Input label="Pay" id="pay" labelSideInfo="Balance: 250USDT" />
 			</div>
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">

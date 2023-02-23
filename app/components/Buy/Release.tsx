@@ -6,11 +6,12 @@ import { useAccount } from 'wagmi';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
+import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Release = ({ order, updateOrder }: BuyStepProps) => {
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 
 	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow } = order;
 	const { token, fiat_currency: currency } = list || {};
@@ -75,7 +76,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 							{seller ? (
 								!!escrow && <ReleaseFundsButton address={escrow.address} />
 							) : (
-								<Button title="Cancel Order" onClick={() => console.log('cancel order')} />
+								<CancelOrderButton order={order} />
 							)}
 						</span>
 					</div>

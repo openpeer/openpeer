@@ -1,6 +1,7 @@
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
+import Link from 'next/link';
 import { useAccount } from 'wagmi';
 
 import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
@@ -27,12 +28,12 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
-				<div className="flex flex-row items-center w-1/2">
-					<Avatar user={seller} />
-					<span className="ml-2 overflow-hidden text-ellipsis hover:overflow-visible hover:break-all cursor-pointer">
-						{seller.name || seller.address}
-					</span>
-				</div>
+				<Link href={`/${seller.address}`} target="_blank">
+					<div className="flex flex-row items-center">
+						<Avatar user={seller} />
+						<span className="ml-2 cursor-pointer">{seller.name || seller.address}</span>
+					</div>
+				</Link>
 				<div className="flex flex-row">
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />

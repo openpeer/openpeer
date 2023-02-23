@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
+import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
 import EscrowButton from './EscrowButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
@@ -104,7 +105,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 				)}
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
-						<Button title="Cancel Order" outlined />
+						<CancelOrderButton order={order} />
 					</span>
 					{status === 'created' && seller && (
 						<EscrowButton

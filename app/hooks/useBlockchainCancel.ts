@@ -2,15 +2,16 @@ import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from
 
 import OpenPeerEscrow from '../abis/OpenPeerEscrow.json';
 
-interface UseReleaseFundsParams {
-	address: `0x${string}`;
+interface UseBlockchainCancelParams {
+	contract: `0x${string}`;
+	isBuyer: boolean;
 }
 
-const useReleaseFunds = ({ address }: UseReleaseFundsParams) => {
+const useBlockchainCancel = ({ contract, isBuyer }: UseBlockchainCancelParams) => {
 	const { config } = usePrepareContractWrite({
-		address,
+		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: 'release'
+		functionName: isBuyer ? 'buyerCancel' : 'sellerCancel'
 	});
 
 	const { data, write } = useContractWrite(config);
@@ -19,7 +20,7 @@ const useReleaseFunds = ({ address }: UseReleaseFundsParams) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, releaseFunds: write, data };
+	return { isLoading, isSuccess, cancelOrder: write, data };
 };
 
-export default useReleaseFunds;
+export default useBlockchainCancel;

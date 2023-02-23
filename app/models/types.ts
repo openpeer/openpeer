@@ -81,4 +81,5 @@ export interface Order {
 	tx_hash: string | null | undefined;
 	uuid: `0x${string}`;
 	escrow: Escrow;
+	cancelled_at: string;
 }

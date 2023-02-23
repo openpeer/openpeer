@@ -1,3 +1,4 @@
+import useBlockchainCancel from './useBlockchainCancel';
 import useConnection from './useConnection';
 import useCreateContract from './useCreateContract';
 import useFormErrors from './useFormErrors';
@@ -19,5 +20,6 @@ export {
 	useTransactionFeedback,
 	useTokenApproval,
 	useListsPrices,
-	useNotifications
+	useNotifications,
+	useBlockchainCancel
 };

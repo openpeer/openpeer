@@ -42,10 +42,10 @@ const OrdersPage = () => {
 		if (status !== 'authenticated') return;
 
 		setLoading(true);
-		fetch(`/api/orders?address=${address}&chainId=${chainId}`)
+		fetch(`/api/orders?chain_id=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setOrders(data.filter((o: Order) => o.status !== 'closed'));
+				setOrders(data.filter((o: Order) => !['closed', 'cancelled'].includes(o.status)));
 				setLoading(false);
 			});
 	}, [chainId, address, status]);
@@ -137,14 +137,16 @@ const OrdersPage = () => {
 										<td className="pl-4 py-4">
 											<div className="w-full flex flex-row justify-around md:justify-start items-center">
 												<div className="w-3/5 mr-6">
-													<div className="flex flex-col lg:flex-row lg:items-center">
-														<div className="w-1/3 flex flex-row mb-2">
-															<Avatar user={seller} />
+													<Link href={`/${seller.address}`}>
+														<div className="flex flex-col lg:flex-row lg:items-center cursor-pointer">
+															<div className="w-1/3 flex flex-row mb-2">
+																<Avatar user={seller} />
+															</div>
+															<div className="text-sm text-gray-900 break-all">
+																{seller.name || seller.address}
+															</div>
 														</div>
-														<div className="text-sm text-gray-900 break-all">
-															{seller.name || seller.address}
-														</div>
-													</div>
+													</Link>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
 														<span>
 															{currency.symbol} {fiatAmount}

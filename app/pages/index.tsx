@@ -1,9 +1,8 @@
 import { ListsTable, Loading } from 'components';
 import { List } from 'models/types';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { getSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -56,7 +55,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	};
 };
-
-type AuthenticatedPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default HomePage;

@@ -27,8 +27,10 @@ const Completed = ({ order }: BuyStepProps) => {
 						</span>
 						<p className="text-base">
 							{selling
-								? `You have successfully sold ${tokenValue} to ${buyer?.address}.`
-								: `You have successfully purchased ${tokenValue} from ${seller.address}.`}
+								? `You have successfully sold ${tokenValue} to ${buyer?.name || buyer?.address}.`
+								: `You have successfully purchased ${tokenValue} from ${
+										seller?.name || seller.address
+								  }.`}
 						</p>
 					</div>
 

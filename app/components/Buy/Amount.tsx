@@ -51,7 +51,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		onSuccess: async (data, variables) => {
 			const signingAddress = verifyMessage(variables.message, data);
 			if (signingAddress === address) {
-				const result = await fetch(`/api/orders/`, {
+				const result = await fetch('/api/orders/', {
 					method: 'POST',
 					body: JSON.stringify(
 						snakecaseKeys(
