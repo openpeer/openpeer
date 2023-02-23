@@ -38,7 +38,7 @@ const ImageUploader = ({ address, onUploadFinished }: ImageUploaderParams) => {
 			const formData = new FormData();
 			formData.append('address', address);
 			formData.append('file', file);
-			fetch('/api/s3', {
+			fetch('/api/s3/profiles', {
 				method: 'POST',
 				body: formData,
 				headers: {

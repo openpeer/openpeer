@@ -6,6 +6,7 @@ import useListPrice from './useListPrice';
 import useListsPrices from './useListsPrices';
 import useMarkAsPaid from './useMarkAsPaid';
 import useNotifications from './useNotifications';
+import useOpenDispute from './useOpenDispute';
 import useReleaseFunds from './useReleaseFunds';
 import useTokenApproval from './useTokenApproval';
 import useTransactionFeedback from './useTransactionFeedback';
@@ -21,5 +22,6 @@ export {
 	useTokenApproval,
 	useListsPrices,
 	useNotifications,
-	useBlockchainCancel
+	useBlockchainCancel,
+	useOpenDispute
 };

@@ -5,6 +5,7 @@ import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const ERROR_STEP = 0;
@@ -29,6 +30,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const { data: session } = useSession();
 	// @ts-ignore
 	const { jwt } = session || {};
+	const router = useRouter();
 
 	useEffect(() => {
 		if (!session) return;
@@ -68,6 +70,13 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [jwt]);
+
+	useEffect(() => {
+		if (order?.status === 'dispute') {
+			router.push(`/dispute/${order.uuid}`);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [order]);
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !order) return <Loading />;

@@ -2,29 +2,31 @@ import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import Textarea from 'components/Textarea/Textarea';
+import { useState } from 'react';
 
-import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
+import FilesUploader from './FilesUploader';
 
-const DisputeClaim = () => {
+const DisputeClaim = ({ uuid, address }: { uuid: `0x${string}`; address: `0x${string}` }) => {
+	const [comments, setComments] = useState('');
 	return (
 		<>
 			<div>
 				<Label title="Comments" />
-				<Textarea rows={4} id="details" value={undefined} placeholder="Tell us more about the transaction" />
+				<Textarea
+					rows={4}
+					id="details"
+					value={comments}
+					placeholder="Tell us more about the transaction"
+					onChange={(e) => setComments(e.target.value)}
+				/>
 			</div>
 			<div>
 				<Label title="Upload proof" />
-				<label htmlFor="file-upload" className="bg-transparent relative cursor-pointer rounded-md font-medium">
-					<div className="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-dashed border-cyan-600 bg-gray-100">
-						<CloudArrowUpIcon className="text-cyan-600 w-10" />
-						<div className="flex text-sm text-gray-600">
-							<span className="text-cyan-600 underline hover:no-underline">Upload a file</span>
-							<input id="file-upload" name="file-upload" type="file" className="sr-only" />
-							<p className="pl-1">or drag and drop</p>
-						</div>
-						<p className="text-xs text-gray-500 py-2">Supported formats: JPEG, JPG, PNG, PDF</p>
-					</div>
-				</label>
+				<FilesUploader
+					uuid={uuid}
+					address={address}
+					onUploadFinished={(data) => console.log('finished', data)}
+				/>
 			</div>
 			<div className="-mb-8 hidden">
 				<Input label="Pay" id="pay" labelSideInfo="Balance: 250USDT" />

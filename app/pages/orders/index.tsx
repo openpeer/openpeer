@@ -14,7 +14,6 @@ const NextButton = ({
 	address: string | undefined;
 }) => {
 	const buyer = address === buyerUser.address;
-	// buyer
 	if (buyer) {
 		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
 			return <></>;
@@ -24,8 +23,11 @@ const NextButton = ({
 		return <></>;
 	}
 
+	let url = `/orders/${encodeURIComponent(uuid)}`;
+	if (status === 'dispute') url = `/dispute/${encodeURIComponent(uuid)}`;
+
 	return (
-		<Link href={`/orders/${encodeURIComponent(uuid)}`}>
+		<Link href={url}>
 			<Button title="Continue" />
 		</Link>
 	);

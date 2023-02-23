@@ -8,6 +8,7 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
+import OpenDisputeButton from './OpenDisputeButton';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Release = ({ order, updateOrder }: BuyStepProps) => {
@@ -70,7 +71,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 					</div>
 					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 						<span className="w-full md:pr-8">
-							<Button title="Dispute Transaction" outlined />
+							<OpenDisputeButton order={order} />
 						</span>
 						<span className="w-full">
 							{seller ? (

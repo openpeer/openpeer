@@ -48,7 +48,7 @@ const Dispute = ({ id }: { id: `0x${string}` }) => {
 						</div>
 					</div>
 					<span>
-						<DisputeClaim />
+						<DisputeClaim address={address} uuid={order.uuid} />
 					</span>
 					<span className="hidden">
 						<DisputeStatus />
