@@ -9,6 +9,7 @@ import outlierVentures from '../public/outlier-ventures.png';
 import passport from '../public/passport.png';
 import people from '../public/people.png';
 import polygonLogoWhite from '../public/polygon-logo-white.png';
+import twitterLogo from '../public/twitter.svg';
 
 interface FeatureParams {
 	title: string;
@@ -52,19 +53,44 @@ export default function Home() {
 					</div>
 
 					<div className="flex flex-row justify-between space-x-8 text-xl hidden sm:block">
-						<a href="faq.html">FAQ</a>
-						<a href="docs.html">Docs</a>
+						<a className="hidden" href="faq.html">
+							FAQ
+						</a>
+						<a className="hidden" href="docs.html">
+							Docs
+						</a>
+						<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer" className="px-2">
+							<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
+						</a>
 					</div>
 				</nav>
 
 				<div className={`navbar-menu ${navbar ? '' : 'hidden'}`}>
 					<div className="flex flex-column space-x-8 text-xl">
 						<ul className="text-center flex-1">
-							<li>
+							<li className="hidden">
 								<a href="faq.html">FAQ</a>
 							</li>
-							<li>
+							<li className="hidden">
 								<a href="docs.html">Docs</a>
+							</li>
+							<li>
+								<a
+									href="https://twitter.com/openpeer_xyz"
+									target="_blank"
+									rel="noreferrer"
+									className="px-2"
+								>
+									<div>
+										<Image
+											src={twitterLogo}
+											alt="openpeer logo"
+											width={20}
+											height={20}
+											className="inline-block"
+										/>
+									</div>
+								</a>
 							</li>
 						</ul>
 					</div>

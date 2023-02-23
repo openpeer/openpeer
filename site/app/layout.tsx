@@ -23,13 +23,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							</p>
 						</div>
 						<div className="flex content-center mt-8 md:mt-0 justify-center md:justify-start">
-							<a href="" className="px-2">
+							<a href="" className="px-2 hidden">
 								Docs
 							</a>
-							<a href="" className="px-2">
+							<a href="" className="px-2 hidden">
 								FAQ
 							</a>
-							<a href="" className="px-2">
+							<a
+								href="https://twitter.com/openpeer_xyz"
+								target="_blank"
+								rel="noreferrer"
+								className="px-2"
+							>
 								<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
 							</a>
 						</div>
