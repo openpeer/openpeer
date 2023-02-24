@@ -12,6 +12,7 @@
     "@coingecko/cryptoformat": "^0.5.4",
     "@headlessui/react": "^1.7.5",
     "@heroicons/react": "^2.0.13",
+    "@knocklabs/client": "^0.8.6",
     "@next/font": "^13.0.6",
     "@rails/actioncable": "^7.0.4-2",
     "@rainbow-me/rainbowkit": "^0.8.1",
