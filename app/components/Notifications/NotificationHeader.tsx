@@ -1,6 +1,6 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
-interface ReminderHeaderProps {
+interface NotificationHeaderProps {
 	message: string;
 	info?: boolean;
 	error?: boolean;
@@ -8,13 +8,13 @@ interface ReminderHeaderProps {
 	hidden?: boolean;
 }
 
-const ReminderHeader = ({
+const NotificationHeader = ({
 	message,
 	info = false,
 	error = false,
 	success = false,
 	hidden = true
-}: ReminderHeaderProps) => {
+}: NotificationHeaderProps) => {
 	return (
 		<div
 			className={
@@ -47,4 +47,4 @@ const ReminderHeader = ({
 	);
 };
 
-export default ReminderHeader;
+export default NotificationHeader;
