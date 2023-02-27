@@ -15,6 +15,7 @@ import {
 	ChartBarSquareIcon,
 	PlusCircleIcon,
 	ShoppingBagIcon,
+	UserCircleIcon,
 	XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
@@ -173,8 +174,16 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 								<Notifications />
 
 								{/* Profile dropdown */}
-								<Menu as="div" className="relative ml-3">
-									<ConnectButton showBalance={false} />
+								<Menu as="div" className="relative">
+									<div className="flex flex-row items-center">
+										<a
+											className="pr-4 pl-2 text-gray-400 hover:text-gray-500"
+											href="http://localhost:3000/0x7d73f03b8e60b8594E9ca562d2081b2328DCd2e9"
+										>
+											<UserCircleIcon className="w-6 h-6" />
+										</a>
+										<ConnectButton showBalance={false} />
+									</div>
 								</Menu>
 							</div>
 						</div>
