@@ -2,46 +2,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address payable",
-				"name": "_seller",
-				"type": "address"
-			},
-			{
-				"internalType": "address payable",
-				"name": "_buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_token",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_fee",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_arbitrator",
-				"type": "address"
-			},
-			{
-				"internalType": "address payable",
-				"name": "_feeRecipient",
-				"type": "address"
-			},
-			{
-				"internalType": "uint32",
-				"name": "_sellerWaitingTime",
-				"type": "uint32"
-			},
-			{
 				"internalType": "address",
 				"name": "_trustedForwarder",
 				"type": "address"
@@ -72,6 +32,19 @@
 		"anonymous": false,
 		"inputs": [],
 		"name": "DisputeResolved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "version",
+				"type": "uint8"
+			}
+		],
+		"name": "Initialized",
 		"type": "event"
 	},
 	{
@@ -175,6 +148,54 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_seller",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_fee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_feeRecipient",
+				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "_sellerWaitingTime",
+				"type": "uint32"
+			}
+		],
+		"name": "initialize",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

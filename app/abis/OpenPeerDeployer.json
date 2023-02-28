@@ -328,6 +328,19 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address payable",
+				"name": "_implementation",
+				"type": "address"
+			}
+		],
+		"name": "setImplementation",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint32",
 				"name": "_sellerWaitingTime",
 				"type": "uint32"
