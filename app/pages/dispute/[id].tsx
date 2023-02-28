@@ -24,7 +24,7 @@ const Dispute = ({ id }: { id: `0x${string}` }) => {
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !order) return <Loading />;
 
-	const { token_amount: tokenAmount, list, buyer } = order;
+	const { token_amount: tokenAmount, list, buyer, dispute } = order;
 	const { token, seller } = list;
 	const isSeller = address === seller.address;
 	const isBuyer = address === buyer.address;
@@ -48,10 +48,11 @@ const Dispute = ({ id }: { id: `0x${string}` }) => {
 						</div>
 					</div>
 					<span>
-						<DisputeClaim address={address} uuid={order.uuid} />
-					</span>
-					<span className="hidden">
-						<DisputeStatus />
+						{!!dispute ? (
+							<DisputeStatus address={address} order={order} />
+						) : (
+							<DisputeClaim address={address} order={order} />
+						)}
 					</span>
 				</div>
 				<DisputeNotes />

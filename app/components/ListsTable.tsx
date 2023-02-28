@@ -1,17 +1,18 @@
 import { useListsPrices } from 'hooks';
 import { List } from 'models/types';
 import Link from 'next/link';
+import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
 
 interface ListsTableParams {
 	lists: List[];
-	address: `0x${string}` | undefined;
 }
 
-const ListsTable = ({ lists, address }: ListsTableParams) => {
+const ListsTable = ({ lists }: ListsTableParams) => {
 	const prices = useListsPrices(lists);
+	const { address } = useAccount();
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -61,6 +62,7 @@ const ListsTable = ({ lists, address }: ListsTableParams) => {
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
+					console.log({ sellerAddress, address });
 					const apiPrice =
 						marginType === 'percentage' && prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
 

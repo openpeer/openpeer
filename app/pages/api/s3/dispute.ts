@@ -10,10 +10,26 @@ const s3 = new S3({
 	region: process.env.AWS_REGION
 });
 
+interface Upload {
+	key: string;
+	signedURL: string;
+	filename: string;
+}
+
 interface AWSSignedUrlParams {
-	data?: S3.ManagedUpload.SendData[];
+	data?: Upload[];
 	error?: string;
 }
+
+const generateSignedUrl = async (key: string) => {
+	const params = {
+		Bucket: process.env.AWS_IMAGES_BUCKET!,
+		Key: key,
+		Expires: 60 // The URL will expire in 60 seconds
+	};
+
+	return s3.getSignedUrlPromise('getObject', params);
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlParams>) => {
 	try {
@@ -29,21 +45,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 			);
 
 			const uploads: Promise<S3.ManagedUpload.SendData>[] = [];
+			const signedUrls: Upload[] = [];
+			const { uuid, address } = data.fields;
 
 			for (const file of Object.values(data.files).flat()) {
 				const fileContent = fs.readFileSync(file.filepath);
+				const key = `disputes/${uuid}/${address}/${file.originalFilename}`;
 				const params = {
 					Bucket: process.env.AWS_IMAGES_BUCKET!,
-					Key: `disputes/${data.fields.uuid}/${data.fields.address}/${file.originalFilename}`,
+					Key: key,
 					Body: fileContent
 				};
 
 				const upload = s3.upload(params).promise();
 				uploads.push(upload);
+
+				const signedURL = await generateSignedUrl(key);
+				signedUrls.push({ key, signedURL, filename: file.originalFilename });
 			}
 
 			const uploadData = await Promise.all(uploads);
-			return res.status(200).json({ data: uploadData });
+			return res.status(200).json({ data: signedUrls });
 		} else {
 			// Handle any other HTTP method
 			res.status(405).json({ error: `Method '${req.method}' Not Allowed` });

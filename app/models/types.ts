@@ -70,6 +70,22 @@ export interface Escrow {
 	address: `0x${string}`;
 }
 
+export interface DisputeFile {
+	id: number;
+	upload_url: string;
+	key: string;
+	filename: string;
+}
+
+export interface Dispute {
+	id: number;
+	seller_comment: string;
+	buyer_comment: string;
+	resolved: boolean;
+	winner: User | null;
+	dispute_files: DisputeFile[];
+}
+
 export interface Order {
 	id: number;
 	fiat_amount: number;
@@ -82,4 +98,5 @@ export interface Order {
 	uuid: `0x${string}`;
 	escrow: Escrow;
 	cancelled_at: string;
+	dispute: Dispute;
 }

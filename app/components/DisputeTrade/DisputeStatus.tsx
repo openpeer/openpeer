@@ -1,26 +1,34 @@
 import Button from 'components/Button/Button';
 import Label from 'components/Label/Label';
+import { Order } from 'models/types';
 
 import StatusTimeLine from './StatusTimeLine';
 
-const DisputeStatus = () => {
+const DisputeStatus = ({ order, address }: { order: Order; address: `0x${string}` }) => {
+	const {
+		dispute: { resolved, winner }
+	} = order;
 	return (
 		<div>
 			<div className="flex flex-col border-b pb-4">
-				<div className="flex flex-row justify-between">
-					<div className="font-bold">Dispute Pending</div>
-					<div className="text-cyan-600">
-						Time left <span>15m:20secs</span>
+				{!resolved ? (
+					<div className="flex flex-row justify-between">
+						<div className="font-bold">Dispute Pending</div>
+						<div className="text-cyan-600 hidden">
+							Time left <span>15m:20secs</span>
+						</div>
 					</div>
-				</div>
-				<div className="text-cyan-600 hidden">
-					<div className="font-bold">Dispute Ended</div>
-					Congratulations. You won the dispute. 158 USDT has been credited to your account
-				</div>
-				<div className="text-red-600 hidden">
-					<div className="font-bold">Dispute Ended</div>
-					Unfortunately, You lost the dispute. 158 USDT has been credited back to the merchant’s account
-				</div>
+				) : !!winner && winner.address === address ? (
+					<div className="text-cyan-600">
+						<div className="font-bold">Dispute Ended</div>
+						Congratulations. You won the dispute. 158 USDT has been credited to your account
+					</div>
+				) : (
+					<div className="text-red-600">
+						<div className="font-bold">Dispute Ended</div>
+						Unfortunately, You lost the dispute. 158 USDT has been credited back to the merchant’s account
+					</div>
+				)}
 			</div>
 
 			<div className="py-8">
