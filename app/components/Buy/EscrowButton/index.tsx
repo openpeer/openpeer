@@ -15,12 +15,7 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 	const spender = DEPLOYER_CONTRACTS[chain!.id];
 	const [approved, setApproved] = useState(nativeToken);
 
-	const {
-		data: feeBps,
-		isError,
-		isSuccess,
-		isFetching
-	} = useContractRead({
+	const { data: feeBps, isFetching } = useContractRead({
 		address: spender,
 		abi: OpenPeerDeployer,
 		functionName: 'fee'

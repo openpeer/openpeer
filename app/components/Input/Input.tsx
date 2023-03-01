@@ -14,6 +14,7 @@ export interface InputProps {
 	labelSideInfo?: string;
 	decimalScale?: number;
 	error?: string;
+	disabled?: boolean;
 }
 
 const Input = ({
@@ -29,7 +30,8 @@ const Input = ({
 	labelSideInfo,
 	onChangeNumber,
 	decimalScale = 2,
-	error
+	error,
+	disabled = false
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -60,6 +62,7 @@ const Input = ({
 						placeholder={placeholder}
 						required={required}
 						allowNegative={false}
+						disabled={disabled}
 					/>
 				) : (
 					<input
@@ -72,6 +75,7 @@ const Input = ({
 						onChange={onInputChange}
 						placeholder={placeholder}
 						required={required}
+						disabled={disabled}
 					/>
 				)}
 				{!!addOn && (

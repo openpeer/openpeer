@@ -1,4 +1,4 @@
-import { CloudArrowUpIcon, DocumentIcon } from '@heroicons/react/24/outline';
+import { DocumentIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
@@ -9,6 +9,8 @@ import { Order } from 'models/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
+import { useContractRead } from 'wagmi';
+import OpenPeerEscrow from '../../abis/OpenPeerEscrow.json';
 
 import FilesUploader from './FilesUploader';
 
@@ -19,7 +21,7 @@ interface Upload {
 }
 
 const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}` }) => {
-	const { uuid, buyer, dispute } = order;
+	const { uuid, buyer, dispute, escrow } = order;
 	const { seller_comment: sellerComment, buyer_comment: buyerComment, dispute_files: files } = dispute;
 	const isBuyer = buyer.address === address;
 	const [comments, setComments] = useState((isBuyer ? buyerComment : sellerComment) || '');
@@ -30,10 +32,16 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 			filename: file.filename
 		};
 	});
-	console.log(isBuyer);
 
 	const [uploads, setUploads] = useState<Upload[]>(orderUploads);
 	const { errors, clearErrors, validate } = useFormErrors();
+
+	const { data: paidForDispute, isFetching } = useContractRead({
+		address: escrow.address,
+		abi: OpenPeerEscrow,
+		functionName: 'paidForDispute',
+		args: [address]
+	});
 
 	const onUploadFinished = (newUploads: Upload[]) => {
 		setUploads([...newUploads, ...uploads]);
@@ -103,14 +111,19 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 					</div>
 				)}
 				{uploads.length > 0 && (
-					<div className="flex flex-row">
+					<div className="flex flex-row items-center justify-center">
 						{uploads.map(({ key, signedURL, filename }) => {
 							const fileType = key.split('.').pop()?.toLowerCase();
 							if (fileType === 'pdf') {
 								return (
-									<div className="rounded-md border" key={key}>
-										<DocumentIcon className="text-cyan-600 w-10 text-center" />
-										<p>{filename}</p>
+									<div
+										className="rounded-md border flex flex-col items-center justify-center"
+										key={key}
+									>
+										<DocumentIcon className="text-cyan-600 w-10" />
+										<p className="text-xs text-grey-600 text-ellipsis overflow-hidden">
+											{filename}
+										</p>
 									</div>
 								);
 							} else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType!)) {
@@ -133,8 +146,8 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 					</div>
 				)}
 			</div>
-			<div className="-mb-8 hidden">
-				<Input label="Pay" id="pay" labelSideInfo="Balance: 250USDT" />
+			<div className="-mb-8">
+				<Input label="Pay" disabled id="pay" value="1 MATIC" />
 			</div>
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">
 				<Button title="Cancel" outlined />
