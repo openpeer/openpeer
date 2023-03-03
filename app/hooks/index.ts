@@ -1,6 +1,7 @@
 import useBlockchainCancel from './useBlockchainCancel';
 import useConnection from './useConnection';
 import useCreateContract from './useCreateContract';
+import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
 import useListsPrices from './useListsPrices';
@@ -23,5 +24,6 @@ export {
 	useListsPrices,
 	useNotifications,
 	useBlockchainCancel,
-	useOpenDispute
+	useOpenDispute,
+	useEscrowFee
 };

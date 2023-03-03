@@ -1,8 +1,9 @@
+import { OpenPeerDeployer } from 'abis';
 import { BigNumber, constants } from 'ethers';
 import { Token } from 'models/types';
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-
-import OpenPeerDeployer from '../abis/OpenPeerDeployer.json';
+import {
+	useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction
+} from 'wagmi';
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,

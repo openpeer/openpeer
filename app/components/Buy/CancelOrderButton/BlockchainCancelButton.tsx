@@ -1,3 +1,4 @@
+import { OpenPeerEscrow } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
@@ -5,13 +6,13 @@ import { useBlockchainCancel, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useAccount, useContractRead } from 'wagmi';
 
-import OpenPeerEscrow from '../../../abis/OpenPeerEscrow.json';
-
 interface BlockchainCancelButtonParams {
 	order: Order;
+	outlined?: boolean;
+	title?: string;
 }
 
-const BlockchainCancelButton = ({ order }: BlockchainCancelButtonParams) => {
+const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: BlockchainCancelButtonParams) => {
 	const {
 		escrow,
 		buyer,
@@ -22,12 +23,12 @@ const BlockchainCancelButton = ({ order }: BlockchainCancelButtonParams) => {
 	const isSeller = seller.address === connectedAddress;
 
 	const { data: sellerCanCancelAfter }: { data: BigNumber | undefined } = useContractRead({
-		address: escrow.address,
+		address: escrow!.address,
 		abi: OpenPeerEscrow,
 		functionName: 'sellerCanCancelAfter'
 	});
 
-	const { isLoading, isSuccess, cancelOrder, data } = useBlockchainCancel({ contract: escrow.address, isBuyer });
+	const { isLoading, isSuccess, cancelOrder, data } = useBlockchainCancel({ contract: escrow!.address, isBuyer });
 
 	useTransactionFeedback({
 		hash: data?.hash,
@@ -51,19 +52,11 @@ const BlockchainCancelButton = ({ order }: BlockchainCancelButtonParams) => {
 
 	return (
 		<Button
-			title={
-				sellerCantCancel
-					? 'You cannot cancel'
-					: isLoading
-					? 'Processing...'
-					: isSuccess
-					? 'Done'
-					: 'Cancel Order'
-			}
+			title={sellerCantCancel ? 'You cannot cancel' : isLoading ? 'Processing...' : isSuccess ? 'Done' : title}
 			processing={isLoading}
 			disabled={isSuccess || sellerCantCancel || sellerCantCancel}
 			onClick={onBlockchainCancel}
-			outlined
+			outlined={outlined}
 		/>
 	);
 };

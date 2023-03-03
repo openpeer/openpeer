@@ -1,12 +1,12 @@
-import { S3 } from 'aws-sdk';
+import Loading from 'components/Loading/Loading';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
-import Loading from 'components/Loading/Loading';
 
 const MAX_FILE_SIZE = 2000000; // 2 MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+const MAX_FILES = 5;
 
 interface Upload {
 	key: string;
@@ -40,6 +40,13 @@ const FilesUploader = ({ uuid, address, onUploadFinished }: FilesUploaderParams)
 		if (invalidFiles.length) {
 			const errorMsg = `Invalid file(s): ${invalidFiles.map((file) => file.name).join(', ')}`;
 			setError(errorMsg);
+			setIsUploading(false);
+			return;
+		}
+
+		if (newFiles.length - invalidFiles.length + files.length > MAX_FILES) {
+			setFiles([...files, ...newFiles].slice(0, 5));
+			setError('You cannot upload more than 5 files');
 			setIsUploading(false);
 			return;
 		}

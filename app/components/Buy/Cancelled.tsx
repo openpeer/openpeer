@@ -2,6 +2,7 @@ import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
 import { useRouter } from 'next/router';
+import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
 import { XCircleIcon } from '@heroicons/react/24/outline';
@@ -29,7 +30,7 @@ const Cancelled = ({ order }: BuyStepProps) => {
 						{selling
 							? `Your sale of ${tokenValue} to ${buyer?.name || buyer?.address} has been cancelled.`
 							: `Your purchase of ${tokenValue} from ${
-									seller?.name || seller.address
+									seller?.name || smallWalletAddress(seller.address)
 							  } has been cancelled.`}
 					</p>
 					<p className="text-base">Cancelled at: {new Date(cancelledAt).toLocaleString()}</p>

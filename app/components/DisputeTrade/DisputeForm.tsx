@@ -1,7 +1,8 @@
-import { DocumentIcon } from '@heroicons/react/24/outline';
 import Button from 'components/Button/Button';
+import OpenDisputeButton from 'components/Buy/OpenDisputeButton';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
+import Loading from 'components/Loading/Loading';
 import Textarea from 'components/Textarea/Textarea';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
@@ -9,8 +10,8 @@ import { Order } from 'models/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useContractRead } from 'wagmi';
-import OpenPeerEscrow from '../../abis/OpenPeerEscrow.json';
+
+import { DocumentIcon } from '@heroicons/react/24/outline';
 
 import FilesUploader from './FilesUploader';
 
@@ -20,11 +21,17 @@ interface Upload {
 	filename: string;
 }
 
-const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}` }) => {
-	const { uuid, buyer, dispute, escrow } = order;
-	const { seller_comment: sellerComment, buyer_comment: buyerComment, dispute_files: files } = dispute;
-	const isBuyer = buyer.address === address;
-	const [comments, setComments] = useState((isBuyer ? buyerComment : sellerComment) || '');
+interface DisputeFormParams {
+	order: Order;
+	address: `0x${string}`;
+	paidForDispute: boolean;
+}
+
+const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
+	const { uuid, dispute } = order;
+	const { user_dispute } = dispute || {};
+	const { comments: userComment, dispute_files: files = [] } = user_dispute || {};
+	const [comments, setComments] = useState(userComment || '');
 	const orderUploads: Upload[] = files.map((file) => {
 		return {
 			signedURL: file.upload_url,
@@ -35,13 +42,6 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 
 	const [uploads, setUploads] = useState<Upload[]>(orderUploads);
 	const { errors, clearErrors, validate } = useFormErrors();
-
-	const { data: paidForDispute, isFetching } = useContractRead({
-		address: escrow.address,
-		abi: OpenPeerEscrow,
-		functionName: 'paidForDispute',
-		args: [address]
-	});
 
 	const onUploadFinished = (newUploads: Upload[]) => {
 		setUploads([...newUploads, ...uploads]);
@@ -66,7 +66,7 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 	};
 
 	const onContinue = async () => {
-		if (validate(resolver)) {
+		if (validate(resolver) && paidForDispute) {
 			const result = await fetch(`/api/orders/${uuid}/disputes`, {
 				method: 'POST',
 				headers: {
@@ -75,15 +75,13 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 				body: JSON.stringify(
 					snakecaseKeys(
 						{
-							buyerComment: isBuyer ? comments : undefined,
-							sellerComment: isBuyer ? undefined : comments,
+							comments,
 							files: uploads.map(({ key }) => key)
 						},
 						{ deep: true }
 					)
 				)
 			});
-
 			const response = await result.json();
 			console.log('response', response);
 		}
@@ -146,15 +144,21 @@ const DisputeClaim = ({ order, address }: { order: Order; address: `0x${string}`
 					</div>
 				)}
 			</div>
-			<div className="-mb-8">
-				<Input label="Pay" disabled id="pay" value="1 MATIC" />
-			</div>
+			{!paidForDispute && (
+				<div className="-mb-8">
+					<Input label="Pay" disabled id="pay" value="1 MATIC" />
+				</div>
+			)}
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">
 				<Button title="Cancel" outlined />
-				<Button title="Continue" onClick={onContinue} />
+				{paidForDispute ? (
+					<Button title="Continue" onClick={onContinue} />
+				) : (
+					<OpenDisputeButton order={order} outlined={false} title="Open Dispute" />
+				)}
 			</div>
 		</>
 	);
 };
 
-export default DisputeClaim;
+export default DisputeForm;

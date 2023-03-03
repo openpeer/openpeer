@@ -4,12 +4,13 @@ import { useReleaseFunds, useTransactionFeedback } from 'hooks';
 import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {
-	address: `0x${string}`;
+	escrow: `0x${string}`;
+	title?: string;
 }
 
-const ReleaseFundsButton = ({ address }: ReleaseFundsButtonParams) => {
+const ReleaseFundsButton = ({ escrow, title = 'Release funds' }: ReleaseFundsButtonParams) => {
 	const { isConnected } = useAccount();
-	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ address });
+	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ escrow });
 
 	const onReleaseFunds = () => {
 		if (!isConnected) return;
@@ -25,7 +26,7 @@ const ReleaseFundsButton = ({ address }: ReleaseFundsButtonParams) => {
 
 	return (
 		<Button
-			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Release funds'}
+			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : title}
 			processing={isLoading}
 			disabled={isSuccess}
 			onClick={onReleaseFunds}

@@ -77,13 +77,18 @@ export interface DisputeFile {
 	filename: string;
 }
 
+export interface UserDispute {
+	id: number;
+	comments: string;
+	dispute_files: DisputeFile[];
+}
+
 export interface Dispute {
 	id: number;
-	seller_comment: string;
-	buyer_comment: string;
 	resolved: boolean;
 	winner: User | null;
-	dispute_files: DisputeFile[];
+	user_dispute: UserDispute;
+	counterpart_replied: boolean;
 }
 
 export interface Order {
@@ -96,7 +101,8 @@ export interface Order {
 	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
 	tx_hash: string | null | undefined;
 	uuid: `0x${string}`;
-	escrow: Escrow;
 	cancelled_at: string;
-	dispute: Dispute;
+	escrow?: Escrow;
+	dispute?: Dispute;
+	created_at: string;
 }

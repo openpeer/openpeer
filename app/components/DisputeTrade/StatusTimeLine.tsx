@@ -1,22 +1,53 @@
-import { CheckIcon } from '@heroicons/react/24/outline';
+import { OpenPeerEscrow } from 'abis';
 import Label from 'components/Label/Label';
+import { BigNumber } from 'ethers';
+import { formatUnits } from 'ethers/lib/utils.js';
+import { Dispute } from 'models/types';
+import { useContractRead } from 'wagmi';
 
-const steps = [
-	{
-		name: 'Pay Dispute Fee',
-		description: 'Pay 1% of the trade amount.',
-		status: 'complete'
-	},
-	{ name: 'Notify Mechant', description: 'Merchant has been notified', status: 'current' },
-	{ name: 'Merchant Response', description: 'Merchant is yet to respond', status: 'upcoming' },
-	{ name: 'Openpeer Arbitrary', description: 'Openpeer arbitrate the dispute', status: 'upcoming' }
-];
+import { CheckIcon } from '@heroicons/react/24/outline';
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');
 }
 
-const StatusTimeLine = () => {
+interface StatusTimeLineParams {
+	dispute: Dispute;
+	escrow: `0x${string}`;
+	isBuyer: boolean;
+}
+
+const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
+	const { counterpart_replied: replied, resolved } = dispute;
+	const counterpart = isBuyer ? 'Merchant' : 'Buyer';
+
+	const { data: disputeFee }: { data: BigNumber | undefined } = useContractRead({
+		address: escrow,
+		abi: OpenPeerEscrow,
+		functionName: 'disputeFee'
+	});
+
+	const steps = [
+		{
+			name: 'Pay Dispute Fee',
+			description: `Pay ${disputeFee ? formatUnits(disputeFee) : 1} MATIC to open dispute.`,
+			status: 'complete'
+		},
+		{ name: `${counterpart} Notified`, description: `${counterpart} has been notified`, status: 'complete' },
+		{
+			name: `${counterpart} Responded`,
+			description: replied ? `${counterpart} has responded to the dispute` : `${counterpart} is yet to respond`,
+			status: replied ? 'complete' : 'current'
+		},
+		{
+			name: 'Openpeer Arbitrary',
+			description: `Openpeer ${resolved ? 'arbitraded' : 'is arbitrating'} the dispute`,
+			status: resolved ? 'complete' : replied ? 'current' : 'upcoming'
+		}
+	];
+
+	if (!disputeFee) return <></>;
+
 	return (
 		<>
 			<Label title="Dispute progress" />

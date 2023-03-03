@@ -1,17 +1,17 @@
 import { Button } from 'components';
-import TransactionLink from 'components/TransactionLink';
 import { verifyMessage } from 'ethers/lib/utils.js';
 import { Order } from 'models/types';
-import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useSignMessage } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
 
 interface CancelOrderButtonParams {
 	order: Order;
+	outlined?: boolean;
+	title?: string;
 }
 
-const CancelOrderButton = ({ order }: CancelOrderButtonParams) => {
+const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
 	const {
 		list: { seller },
 		buyer,
@@ -55,9 +55,9 @@ const CancelOrderButton = ({ order }: CancelOrderButtonParams) => {
 	if ((!isBuyer && !isSeller) || cancelIsNotAvailable) return <></>;
 
 	return simpleCancel ? (
-		<Button title="Cancel Order" onClick={onCancelOrder} outlined />
+		<Button title={title} onClick={onCancelOrder} outlined={outlined} />
 	) : (
-		<BlockchainCancelButton order={order} />
+		<BlockchainCancelButton order={order} title={title} outlined={outlined} />
 	);
 };
 

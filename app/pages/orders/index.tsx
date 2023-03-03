@@ -4,6 +4,7 @@ import { useConnection } from 'hooks';
 import { Order } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
 const NextButton = ({
@@ -23,8 +24,7 @@ const NextButton = ({
 		return <></>;
 	}
 
-	let url = `/orders/${encodeURIComponent(uuid)}`;
-	if (status === 'dispute') url = `/dispute/${encodeURIComponent(uuid)}`;
+	const url = `/orders/${encodeURIComponent(uuid)}`;
 
 	return (
 		<Link href={url}>
@@ -145,7 +145,7 @@ const OrdersPage = () => {
 																<Avatar user={seller} />
 															</div>
 															<div className="text-sm text-gray-900 break-all">
-																{seller.name || seller.address}
+																{seller.name || smallWalletAddress(seller.address)}
 															</div>
 														</div>
 													</Link>

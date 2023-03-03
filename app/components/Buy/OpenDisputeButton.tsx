@@ -1,3 +1,4 @@
+import { OpenPeerEscrow } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
@@ -5,15 +6,15 @@ import { useOpenDispute, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
-
-import OpenPeerEscrow from '../../abis/OpenPeerEscrow.json';
+import { useAccount, useContractReads } from 'wagmi';
 
 interface OpenDisputeButtonParams {
 	order: Order;
+	outlined?: boolean;
+	title?: string;
 }
 
-const OpenDisputeButton = ({ order }: OpenDisputeButtonParams) => {
+const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }: OpenDisputeButtonParams) => {
 	const {
 		uuid,
 		escrow,
@@ -24,14 +25,19 @@ const OpenDisputeButton = ({ order }: OpenDisputeButtonParams) => {
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
 	const router = useRouter();
+	const escrowAddress = escrow!.address;
+	const escrowContract = { address: escrowAddress, abi: OpenPeerEscrow };
 
-	const { data: sellerCanCancelAfter }: { data: BigNumber | undefined } = useContractRead({
-		address: escrow.address,
-		abi: OpenPeerEscrow,
-		functionName: 'sellerCanCancelAfter'
+	const { data: readData = [] } = useContractReads({
+		contracts: [
+			{ ...escrowContract, ...{ functionName: 'sellerCanCancelAfter' } },
+			{ ...escrowContract, ...{ functionName: 'disputeFee' } },
+			{ ...escrowContract, ...{ functionName: 'paidForDispute', args: [connectedAddress] } }
+		]
 	});
+	const [sellerCanCancelAfter, disputeFee, paidForDispute] = readData as [BigNumber, BigNumber, boolean];
 
-	const { isLoading, isSuccess, openDispute, data } = useOpenDispute({ contract: escrow.address });
+	const { isLoading, isSuccess, openDispute, data } = useOpenDispute({ contract: escrowAddress, disputeFee });
 
 	useTransactionFeedback({
 		hash: data?.hash,
@@ -41,19 +47,18 @@ const OpenDisputeButton = ({ order }: OpenDisputeButtonParams) => {
 
 	useEffect(() => {
 		if (isSuccess) {
-			router.push(`/dispute/${uuid}`);
+			router.push(`/orders/${uuid}`);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, uuid]);
 
-	if (sellerCanCancelAfter === undefined) {
+	if (sellerCanCancelAfter === undefined || disputeFee === undefined || paidForDispute === undefined) {
 		return <p>Loading...</p>;
 	}
 
 	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString()) == 1;
 
 	const onOpenDispute = () => {
-		console.log({ isConnected, canOpenDispute });
 		if (!isConnected || !canOpenDispute) return;
 
 		openDispute?.();
@@ -62,18 +67,20 @@ const OpenDisputeButton = ({ order }: OpenDisputeButtonParams) => {
 	return (
 		<Button
 			title={
-				!canOpenDispute
+				paidForDispute
+					? 'Already opened'
+					: !canOpenDispute
 					? 'You cannot dispute'
 					: isLoading
 					? 'Processing...'
 					: isSuccess
 					? 'Done'
-					: 'Open a dispute'
+					: title
 			}
 			processing={isLoading}
-			disabled={isSuccess || !canOpenDispute}
+			disabled={isSuccess || !canOpenDispute || paidForDispute}
 			onClick={onOpenDispute}
-			outlined
+			outlined={outlined}
 		/>
 	);
 };

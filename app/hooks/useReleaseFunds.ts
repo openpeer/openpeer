@@ -1,14 +1,13 @@
+import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-import OpenPeerEscrow from '../abis/OpenPeerEscrow.json';
-
 interface UseReleaseFundsParams {
-	address: `0x${string}`;
+	escrow: `0x${string}`;
 }
 
-const useReleaseFunds = ({ address }: UseReleaseFundsParams) => {
+const useReleaseFunds = ({ escrow }: UseReleaseFundsParams) => {
 	const { config } = usePrepareContractWrite({
-		address,
+		address: escrow,
 		abi: OpenPeerEscrow,
 		functionName: 'release'
 	});

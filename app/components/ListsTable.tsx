@@ -1,6 +1,7 @@
 import { useListsPrices } from 'hooks';
 import { List } from 'models/types';
 import Link from 'next/link';
+import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
@@ -62,7 +63,6 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
-					console.log({ sellerAddress, address });
 					const apiPrice =
 						marginType === 'percentage' && prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
 
@@ -79,7 +79,7 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 													<Avatar user={seller} />
 												</div>
 												<div className="text-sm text-gray-900 break-all">
-													{name || sellerAddress}
+													{name || smallWalletAddress(sellerAddress)}
 												</div>
 											</div>
 										</Link>

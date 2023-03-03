@@ -1,16 +1,20 @@
+import { OpenPeerEscrow } from 'abis';
+import { BigNumber } from 'ethers';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-
-import OpenPeerEscrow from '../abis/OpenPeerEscrow.json';
 
 interface UseOpenDisputeParams {
 	contract: `0x${string}`;
+	disputeFee: BigNumber;
 }
 
-const useOpenDispute = ({ contract }: UseOpenDisputeParams) => {
+const useOpenDispute = ({ contract, disputeFee }: UseOpenDisputeParams) => {
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: 'openDispute'
+		functionName: 'openDispute',
+		overrides: {
+			value: disputeFee
+		}
 	});
 
 	const { data, write } = useContractWrite(config);

@@ -7,7 +7,6 @@ import { minkeApi } from '../../utils/utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const createDispute = async (id: string, body: NextApiRequest['body'], token: string): Promise<Order> => {
-	console.log(body);
 	const { data } = await minkeApi.post(`/orders/${id}/disputes`, body, {
 		headers: {
 			Authorization: `Bearer ${token}`

@@ -1,6 +1,7 @@
 import { Loading, Steps } from 'components';
 import { Cancelled, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
+import Dispute from 'components/Dispute/Dispute';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
@@ -40,7 +41,6 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 			.then((data) => {
 				setOrder({ ...data, ...{ step: steps[data.status || 'error'] } });
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id, session]);
 
 	useEffect(() => {
@@ -71,17 +71,15 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [jwt]);
 
-	useEffect(() => {
-		if (order?.status === 'dispute') {
-			router.push(`/dispute/${order.uuid}`);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [order]);
-
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !order) return <Loading />;
 
-	const { step, list } = order;
+	const { step, list, dispute } = order;
+
+	if (!!dispute || order.status === 'dispute') {
+		return <Dispute order={order} />;
+	}
+
 	return (
 		<div className="pt-6">
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">

@@ -3,6 +3,7 @@ import { providers } from 'ethers';
 import { User } from 'models/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {
@@ -36,9 +37,6 @@ const Metric = ({
 interface HeaderMetricsParams {
 	user: User;
 }
-
-const smallWalletAddress = (address: `0x${string}`, length = 4): string =>
-	`${address.substring(0, length)}..${address.substring(address.length - length)}`;
 
 const getTimePassed = (timestamp: number): string => {
 	const now = Date.now() / 1000; // convert milliseconds to seconds
@@ -141,7 +139,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 				</div>
 
 				<div className="w-full flex flex-col md:flex-row justify-around gap-6 mt-4">
-					<Metric label="Reviews" value="3,000" Icon={StarIcon} />
+					<Metric label="Reviews" value="Coming soon..." Icon={StarIcon} />
 					<Metric
 						label="Completion Rate"
 						value={!!completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}

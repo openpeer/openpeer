@@ -135,7 +135,6 @@ const useNotifications = () => {
 			setNotifications((n) => n.map((notification) => ({ ...notification, ...{ unseen: false } })));
 		}
 	};
-
 	const activeNotifications = notifications.filter(({ status }) => status === 'active');
 	const anyUnseen = activeNotifications.filter(({ unseen }) => unseen).length > 0;
 

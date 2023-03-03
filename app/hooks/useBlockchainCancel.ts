@@ -1,6 +1,5 @@
+import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-
-import OpenPeerEscrow from '../abis/OpenPeerEscrow.json';
 
 interface UseBlockchainCancelParams {
 	contract: `0x${string}`;
