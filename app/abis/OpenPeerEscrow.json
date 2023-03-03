@@ -2,46 +2,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address payable",
-				"name": "_seller",
-				"type": "address"
-			},
-			{
-				"internalType": "address payable",
-				"name": "_buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_token",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_fee",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_arbitrator",
-				"type": "address"
-			},
-			{
-				"internalType": "address payable",
-				"name": "_feeRecipient",
-				"type": "address"
-			},
-			{
-				"internalType": "uint32",
-				"name": "_sellerWaitingTime",
-				"type": "uint32"
-			},
-			{
 				"internalType": "address",
 				"name": "_trustedForwarder",
 				"type": "address"
@@ -64,7 +24,14 @@
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_sender",
+				"type": "address"
+			}
+		],
 		"name": "DisputeOpened",
 		"type": "event"
 	},
@@ -72,6 +39,19 @@
 		"anonymous": false,
 		"inputs": [],
 		"name": "DisputeResolved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "version",
+				"type": "uint8"
+			}
+		],
+		"name": "Initialized",
 		"type": "event"
 	},
 	{
@@ -153,6 +133,19 @@
 	},
 	{
 		"inputs": [],
+		"name": "disputeFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "fee",
 		"outputs": [
 			{
@@ -175,6 +168,54 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_seller",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_fee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_arbitrator",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_feeRecipient",
+				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "_sellerWaitingTime",
+				"type": "uint32"
+			}
+		],
+		"name": "initialize",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -213,7 +254,26 @@
 		"inputs": [],
 		"name": "openDispute",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "paidForDispute",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

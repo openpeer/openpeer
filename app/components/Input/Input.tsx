@@ -11,8 +11,10 @@ export interface InputProps {
 	required?: boolean;
 	placeholder?: string;
 	prefix?: JSX.Element;
+	labelSideInfo?: string;
 	decimalScale?: number;
 	error?: string;
+	disabled?: boolean;
 }
 
 const Input = ({
@@ -25,9 +27,11 @@ const Input = ({
 	required = false,
 	placeholder,
 	prefix,
+	labelSideInfo,
 	onChangeNumber,
 	decimalScale = 2,
-	error
+	error,
+	disabled = false
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -35,10 +39,13 @@ const Input = ({
 
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
-		<div className="my-6">
-			<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
-				{label}
-			</label>
+		<div className="my-8">
+			<div className="flex justify-between items-center">
+				<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
+					{label}
+				</label>
+				<span className="text-sm text-gray-500">{labelSideInfo}</span>
+			</div>
 			<div className="relative mt-1 rounded-md shadow-sm">
 				{prefix}
 				{type === 'decimal' ? (
@@ -55,6 +62,7 @@ const Input = ({
 						placeholder={placeholder}
 						required={required}
 						allowNegative={false}
+						disabled={disabled}
 					/>
 				) : (
 					<input
@@ -67,6 +75,7 @@ const Input = ({
 						onChange={onInputChange}
 						placeholder={placeholder}
 						required={required}
+						disabled={disabled}
 					/>
 				)}
 				{!!addOn && (

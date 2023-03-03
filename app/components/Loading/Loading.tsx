@@ -1,8 +1,9 @@
 interface LoadingParams {
 	big?: boolean;
+	message?: string;
 }
 
-const Loading = ({ big = true }: LoadingParams) => {
+const Loading = ({ big = true, message = 'Loading...' }: LoadingParams) => {
 	return (
 		<div className={`flex mb-2 ${big && 'h-screen'}`}>
 			<div className="m-auto flex flex-row justify-center justify-items-center content-center text-center">
@@ -14,7 +15,7 @@ const Loading = ({ big = true }: LoadingParams) => {
 						fill="#3C9AAA"
 					/>
 				</svg>
-				<span className={`${big && 'text-xl'}`}>Loading...</span>
+				<span className={`${big && 'text-xl'}`}>{message}</span>
 			</div>
 		</div>
 	);

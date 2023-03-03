@@ -70,6 +70,27 @@ export interface Escrow {
 	address: `0x${string}`;
 }
 
+export interface DisputeFile {
+	id: number;
+	upload_url: string;
+	key: string;
+	filename: string;
+}
+
+export interface UserDispute {
+	id: number;
+	comments: string;
+	dispute_files: DisputeFile[];
+}
+
+export interface Dispute {
+	id: number;
+	resolved: boolean;
+	winner: User | null;
+	user_dispute: UserDispute;
+	counterpart_replied: boolean;
+}
+
 export interface Order {
 	id: number;
 	fiat_amount: number;
@@ -80,5 +101,8 @@ export interface Order {
 	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
 	tx_hash: string | null | undefined;
 	uuid: `0x${string}`;
-	escrow: Escrow;
+	cancelled_at: string;
+	escrow?: Escrow;
+	dispute?: Dispute;
+	created_at: string;
 }

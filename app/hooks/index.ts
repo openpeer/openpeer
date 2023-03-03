@@ -1,10 +1,13 @@
+import useBlockchainCancel from './useBlockchainCancel';
 import useConnection from './useConnection';
 import useCreateContract from './useCreateContract';
+import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
 import useListsPrices from './useListsPrices';
 import useMarkAsPaid from './useMarkAsPaid';
 import useNotifications from './useNotifications';
+import useOpenDispute from './useOpenDispute';
 import useReleaseFunds from './useReleaseFunds';
 import useTokenApproval from './useTokenApproval';
 import useTransactionFeedback from './useTransactionFeedback';
@@ -19,5 +22,8 @@ export {
 	useTransactionFeedback,
 	useTokenApproval,
 	useListsPrices,
-	useNotifications
+	useNotifications,
+	useBlockchainCancel,
+	useOpenDispute,
+	useEscrowFee
 };

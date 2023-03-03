@@ -1,8 +1,9 @@
+import { OpenPeerDeployer } from 'abis';
 import { BigNumber, constants } from 'ethers';
 import { Token } from 'models/types';
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
-
-import OpenPeerDeployer from '../abis/OpenPeerDeployer.json';
+import {
+	useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction
+} from 'wagmi';
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -28,7 +29,7 @@ const useCreateContract = ({ orderID, buyer, amount, token, fee }: UseCreateCont
 		functionName: nativeToken ? 'deployNativeEscrow' : 'deployERC20Escrow',
 		args: nativeToken ? [orderID, buyer, amount] : [orderID, buyer, address, amount],
 		overrides: {
-			gasLimit: nativeToken ? BigNumber.from('1619220') : BigNumber.from('2000000'),
+			gasLimit: BigNumber.from('2000000'),
 			value: nativeToken ? amount.add(fee) : undefined
 		}
 	});

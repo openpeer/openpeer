@@ -6,15 +6,18 @@ import { useAccount } from 'wagmi';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
+import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
+import OpenDisputeButton from './OpenDisputeButton';
+import OrderResume from './OrderResume';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Release = ({ order, updateOrder }: BuyStepProps) => {
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 
 	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow } = order;
 	const { token, fiat_currency: currency } = list || {};
-	const seller = list?.seller.address === address;
+	const selling = list?.seller.address === address;
 
 	return (
 		<>
@@ -27,7 +30,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 						</span>
 						<p className="text-base">
 							This payment has been marked as paid.{' '}
-							{seller
+							{selling
 								? `Please, confirm the payment of ${currency?.symbol} ${Number(fiatAmount).toFixed(
 										2
 								  )} in your bank and release the funds to the buyer. You can also dispute the transaction.`
@@ -35,47 +38,17 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 						</p>
 					</div>
 
-					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
-						<div className="flex flex-row justify-between mb-4">
-							<span className="text-[#6A6A6A]">Amount Paid</span>
-							<span className="flex flex-row justify-between">
-								{currency?.symbol} {fiatAmount}
-							</span>
-						</div>
+					<OrderResume order={order} />
 
-						<div className="flex flex-row justify-between mb-4">
-							<span className="text-[#6A6A6A]">Amount Received</span>
-							<span className="flex flex-row justify-between">
-								{tokenAmount} {token?.name}
-							</span>
-						</div>
-						<div className="flex flex-row justify-between mb-4 hidden">
-							<span className="text-[#6A6A6A]">Order Time</span>
-							<span className="flex flex-row justify-between">11:00am, 12/11/2022</span>
-						</div>
-						<div className="flex flex-row justify-between mb-4 hidden">
-							<span className="text-[#6A6A6A]">Reference No.</span>
-							<span className="flex flex-row justify-between">
-								<ClipboardText itemValue="011223332222" />
-							</span>
-						</div>
-						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden"></div>
-						<div className="flex flex-row justify-between hidden">
-							<span className="text-[#6A6A6A]">Payment will expire in </span>
-							<span className="flex flex-row justify-between">
-								<span className="text-[#3C9AAA]">15m:20secs</span>
-							</span>
-						</div>
-					</div>
 					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 						<span className="w-full md:pr-8">
-							<Button title="Dispute Transaction" outlined />
+							<OpenDisputeButton order={order} />
 						</span>
 						<span className="w-full">
-							{seller ? (
-								!!escrow && <ReleaseFundsButton address={escrow.address} />
+							{selling ? (
+								!!escrow && <ReleaseFundsButton escrow={escrow.address} />
 							) : (
-								<Button title="Cancel Order" onClick={() => console.log('cancel order')} />
+								<CancelOrderButton order={order} />
 							)}
 						</span>
 					</div>

@@ -2,12 +2,12 @@
 import { Order } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import { minkeApi } from '../utils/utils';
+import { minkeApi } from '../../utils/utils';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-const fetchOrder = async (id: string, token: string): Promise<Order> => {
-	const { data } = await minkeApi.get(`/orders/${id}`, {
+const cancelOrder = async (id: string, body: NextApiRequest['body'], token: string): Promise<Order> => {
+	const { data } = await minkeApi.patch(`/orders/${id}/cancel`, body, {
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
@@ -16,12 +16,12 @@ const fetchOrder = async (id: string, token: string): Promise<Order> => {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order>) {
-	const { id } = req.query;
+	const { id, body } = req.query;
 	// @ts-ignore
 	const { jwt } = await getSession({ req });
 
 	try {
-		const result = await fetchOrder(id as string, jwt);
+		const result = await cancelOrder(id as string, body, jwt);
 		res.status(200).json(result);
 	} catch (err) {
 		res.status(500).json({} as Order);

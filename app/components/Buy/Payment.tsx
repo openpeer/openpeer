@@ -6,9 +6,11 @@ import { useAccount } from 'wagmi';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
+import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
 import EscrowButton from './EscrowButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
+import FeeDisplay from './Payment/FeeDisplay';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order, updateOrder }: BuyStepProps) => {
@@ -51,9 +53,10 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 						<span className="text-xl">
 							{seller
 								? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
-								: `${currency.symbol} ${fiatAmount}`}
+								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 						</span>
 					</div>
+					{seller && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
 					<div className="flex flex-col">
 						<span className="text-sm">Price</span>
 						<span className="text-xl">
@@ -64,7 +67,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 						<span className="text-sm">Amount to receive</span>
 						<span className="text-xl">
 							{seller
-								? `${currency.symbol} ${fiatAmount}`
+								? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
 								: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
 						</span>
 					</div>
@@ -104,7 +107,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 				)}
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
-						<Button title="Cancel Order" outlined />
+						<CancelOrderButton order={order} />
 					</span>
 					{status === 'created' && seller && (
 						<EscrowButton
@@ -114,7 +117,7 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 							uuid={uuid!}
 						/>
 					)}
-					{status === 'escrowed' && seller && !!escrow && <ReleaseFundsButton address={escrow.address} />}
+					{status === 'escrowed' && seller && !!escrow && <ReleaseFundsButton escrow={escrow.address} />}
 					{status === 'escrowed' && !seller && !!escrow && (
 						<MarkAsPaidButton escrowAddress={escrow.address} />
 					)}

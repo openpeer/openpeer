@@ -1,15 +1,16 @@
 import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseEscrowContractParams {
-	address: `0x${string}`;
+interface UseBlockchainCancelParams {
+	contract: `0x${string}`;
+	isBuyer: boolean;
 }
 
-const useMarkAsPaid = ({ address }: UseEscrowContractParams) => {
+const useBlockchainCancel = ({ contract, isBuyer }: UseBlockchainCancelParams) => {
 	const { config } = usePrepareContractWrite({
-		address: address,
+		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: 'markAsPaid'
+		functionName: isBuyer ? 'buyerCancel' : 'sellerCancel'
 	});
 
 	const { data, write } = useContractWrite(config);
@@ -18,7 +19,7 @@ const useMarkAsPaid = ({ address }: UseEscrowContractParams) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, markAsPaid: write, data };
+	return { isLoading, isSuccess, cancelOrder: write, data };
 };
 
-export default useMarkAsPaid;
+export default useBlockchainCancel;
