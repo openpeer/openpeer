@@ -49,7 +49,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 			error.totalAvailableAmount = 'Should be bigger than 0';
 		}
 
-		if (min > max) {
+		if (!!limitMax && min > max) {
 			error.limitMin = 'Should be smaller than the max';
 		}
 
@@ -97,7 +97,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		<StepLayout onProceed={onProceed}>
 			<Input
 				label="Enter total available crypto amount"
-				addOn={<span className="text-gray-500 sm:text-sm">{token!.name}</span>}
+				addOn={<span className="text-gray-500 sm:text-sm mr-3">{token!.name}</span>}
 				id="totalAvailableAmount"
 				value={totalAvailableAmount}
 				onChangeNumber={(n) => updateValue({ totalAvailableAmount: n })}
@@ -112,7 +112,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 					<Input
 						placeholder="100"
 						label="Min:"
-						addOn={<span className="text-gray-500 sm:text-sm">{currency!.name}</span>}
+						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency!.name}</span>}
 						id="limitMin"
 						type="decimal"
 						value={limitMin}
@@ -122,7 +122,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 					<Input
 						placeholder="1000"
 						label="Max:"
-						addOn={<span className="text-gray-500 sm:text-sm">{currency!.name}</span>}
+						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency!.name}</span>}
 						id="limitMax"
 						type="decimal"
 						value={limitMax}

@@ -1,8 +1,9 @@
 import { Loading } from 'components';
+import { Token } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
-import { Token } from 'models/types';
 import Select from './Select';
 import { SelectProps } from './Select.types';
 
@@ -20,15 +21,17 @@ const TokenSelect = ({
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
+		if (!chainId) return;
+
 		setLoading(true);
 		fetch(`/api/tokens?chain_id=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				onSelect(undefined);
 				setTokens(data);
+				if (minimal && !selected && data[0]) onSelect(data[0]);
 				setLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

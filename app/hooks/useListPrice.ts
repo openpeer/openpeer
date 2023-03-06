@@ -31,7 +31,7 @@ const useListPrice = (list: List | undefined) => {
 
 	useEffect(() => {
 		updatePrice();
-		const timer = setInterval(updatePrice, 30 * 1000);
+		const timer = setInterval(updatePrice, 60 * 1000);
 
 		return () => {
 			clearTimeout(timer);

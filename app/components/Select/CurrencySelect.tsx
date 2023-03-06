@@ -24,7 +24,9 @@ const CurrencySelect = ({
 		fetch('/api/currencies')
 			.then((res) => res.json())
 			.then((data) => {
-				setCurrencies(data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } })));
+				const filtered = data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } }));
+				setCurrencies(filtered);
+				if (minimal && !selected && filtered[0]) onSelect(filtered[0]);
 				setLoading(false);
 			});
 	}, []);

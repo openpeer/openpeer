@@ -26,7 +26,7 @@ const manrope = Manrope({
 const navigation = [
 	{ name: 'P2P', href: '/', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'Orders', href: '/orders', icon: ShoppingBagIcon }
+	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
 
 const NavItems = ({ selected }: { selected: string | undefined }) => {

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 const NextButton = ({
 	order: { buyer: buyerUser, uuid, status },
@@ -36,7 +37,7 @@ const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
 	const { wrongNetwork, status } = useConnection();
 
@@ -193,6 +194,6 @@ export default OrdersPage;
 
 export async function getServerSideProps() {
 	return {
-		props: { title: 'Orders' } // will be passed to the page component as props
+		props: { title: 'My Trades' } // will be passed to the page component as props
 	};
 }

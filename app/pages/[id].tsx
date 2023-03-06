@@ -4,12 +4,13 @@ import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 const Profile = ({ id }: { id: number }) => {
 	const [user, setUser] = useState<User | null>();
 	const [lists, setLists] = useState<List[]>([]);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
 		fetch(`/api/users/${id}`)

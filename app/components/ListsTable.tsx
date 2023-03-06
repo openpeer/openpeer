@@ -1,5 +1,5 @@
-import { useListsPrices } from 'hooks';
 import { List } from 'models/types';
+import Image from 'next/image';
 import Link from 'next/link';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
@@ -12,7 +12,6 @@ interface ListsTableParams {
 }
 
 const ListsTable = ({ lists }: ListsTableParams) => {
-	const prices = useListsPrices(lists);
 	const { address } = useAccount();
 
 	return (
@@ -44,7 +43,13 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						&nbsp;
+						Payment Method
+					</th>
+					<th
+						scope="col"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+					>
+						Trade
 					</th>
 				</tr>
 			</thead>
@@ -54,20 +59,16 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 						id,
 						total_available_amount: amount,
 						seller,
-						token: { symbol, coingecko_id },
-						fiat_currency: { symbol: fiatSymbol, code },
+						token: { symbol },
+						fiat_currency: { symbol: fiatSymbol },
 						limit_min: min,
 						limit_max: max,
-						margin_type: marginType,
-						margin
+						price,
+						payment_method: { bank }
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
-					const apiPrice =
-						marginType === 'percentage' && prices ? prices[coingecko_id][code.toLowerCase()] : undefined;
 
-					const price =
-						marginType === 'fixed' ? margin : apiPrice ? apiPrice + apiPrice * (margin / 100) : '';
 					return (
 						<tr key={id} className="hover:bg-gray-50">
 							<td className="pl-4 py-4">
@@ -109,6 +110,19 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
+							</td>
+							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+								<div className="flex flex-row items-center">
+									<Image
+										src={bank.icon}
+										alt={bank.name}
+										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+										width={24}
+										height={24}
+										unoptimized
+									/>
+									<span>{bank.name}</span>
+								</div>
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
 								{canBuy && (
