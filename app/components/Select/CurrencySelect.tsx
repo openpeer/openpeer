@@ -8,11 +8,13 @@ import { SelectProps } from './Select.types';
 const CurrencySelect = ({
 	onSelect,
 	selected,
-	error
+	error,
+	minimal = false
 }: {
-	onSelect: SelectProps['onSelect'];
+	onSelect: (option: FiatCurrency | undefined) => void;
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
+	minimal?: SelectProps['minimal'];
 }) => {
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -35,8 +37,9 @@ const CurrencySelect = ({
 			label="Choose Fiat currency to receive"
 			options={currencies}
 			selected={selected}
-			onSelect={onSelect}
+			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
+			minimal={minimal}
 		/>
 	) : (
 		<></>
