@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from 'public/logo.svg';
 import { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -11,7 +12,11 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	Bars3BottomLeftIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
+	Bars3BottomLeftIcon,
+	ChartBarSquareIcon,
+	PlusCircleIcon,
+	ShoppingBagIcon,
+	XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -24,7 +29,7 @@ const manrope = Manrope({
 });
 
 const navigation = [
-	{ name: 'P2P', href: '/', icon: ChartBarSquareIcon },
+	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
@@ -36,9 +41,7 @@ const NavItems = ({ selected }: { selected: string | undefined }) => {
 				<a
 					key={item.name}
 					href={item.href}
-					className={`text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md ${
-						selected === item.name && 'marcos'
-					}`}
+					className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md"
 				>
 					<item.icon
 						className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
@@ -57,6 +60,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	const { address } = useAccount();
 	const { disconnect } = useDisconnect();
 	const { data: session } = useSession();
+
 	useEffect(() => {
 		// @ts-ignore
 		if (session && session.address !== address) {
@@ -114,13 +118,15 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 										</div>
 									</Transition.Child>
 									<div className="flex flex-shrink-0 items-center px-4">
-										<Image
-											src={logo}
-											alt="openpeer logo"
-											className="h-8 w-auto"
-											width={104}
-											height={23}
-										/>
+										<Link href="/">
+											<Image
+												src={logo}
+												alt="openpeer logo"
+												className="h-8 w-auto"
+												width={104}
+												height={23}
+											/>
+										</Link>
 									</div>
 									<div className="mt-5 h-0 flex-1 overflow-y-auto">
 										<nav className="space-y-1 px-2">
@@ -141,7 +147,9 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
-							<Image src={logo} alt="openpeer logo" className="h-8 w-auto" width={104} height={23} />
+							<Link href="/">
+								<Image src={logo} alt="openpeer logo" className="h-8 w-auto" width={104} height={23} />
+							</Link>
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
 							<nav className="flex-1 space-y-1 px-2 py-4">

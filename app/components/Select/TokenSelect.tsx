@@ -11,12 +11,14 @@ const TokenSelect = ({
 	onSelect,
 	selected,
 	error,
-	minimal
+	minimal,
+	onlySymbol = false
 }: {
 	onSelect: (option: Token | undefined) => void;
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
 	minimal?: SelectProps['minimal'];
+	onlySymbol?: boolean;
 }) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -30,8 +32,9 @@ const TokenSelect = ({
 		fetch(`/api/tokens?chain_id=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setTokens(data);
-				if (minimal && !selected && data[0]) onSelect(data[0]);
+				const source = minimal ? data.map((t: Token) => ({ ...t, ...{ name: t.symbol } })) : data;
+				setTokens(source);
+				if (minimal && !selected && source[0]) onSelect(source[0]);
 				setLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

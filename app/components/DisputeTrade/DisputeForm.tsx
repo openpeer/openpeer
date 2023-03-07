@@ -119,7 +119,7 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 										key={key}
 									>
 										<DocumentIcon className="text-cyan-600 w-10" />
-										<p className="text-xs text-grey-600 text-ellipsis overflow-hidden">
+										<p className="text-xs text-gray-600 text-ellipsis overflow-hidden">
 											{filename}
 										</p>
 									</div>

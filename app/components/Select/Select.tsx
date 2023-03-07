@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, ChevronDownIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import { SelectProps } from './Select.types';
 
@@ -21,10 +21,10 @@ export default function Select({ label, options, selected, onSelect, error, mini
 						)}
 						<div className={`relative ${minimal ? '' : 'mt-1'}`}>
 							<Listbox.Button
-								className={`relative w-full cursor-default rounded-md py-2 pl-3 pr-10 text-left sm:text-sm ${
+								className={`relative w-full cursor-default rounded-md py-2 pl-3 text-left sm:text-sm ${
 									minimal
-										? 'h-12 bg-[#F4F6F8]'
-										: 'border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+										? 'pr-7 h-12 bg-[#F4F6F8]'
+										: 'pr-10 border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
 								}`}
 							>
 								<span className="flex items-center">
@@ -38,10 +38,20 @@ export default function Select({ label, options, selected, onSelect, error, mini
 											unoptimized
 										/>
 									)}
-									<span className="ml-3 block truncate">{selected?.name || 'Select'}</span>
+									<span className={`${minimal ? 'ml-1' : 'ml-3'} block truncate`}>
+										{selected?.name || 'Select'}
+									</span>
 								</span>
 								<span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-									<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+									{minimal ? (
+										open ? (
+											<ChevronUpIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+										) : (
+											<ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+										)
+									) : (
+										<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+									)}
 								</span>
 							</Listbox.Button>
 
@@ -78,14 +88,15 @@ export default function Select({ label, options, selected, onSelect, error, mini
 														<span
 															className={classNames(
 																selected ? 'font-semibold' : 'font-normal',
-																'ml-3 block truncate'
+																minimal ? 'ml-1' : 'ml-3',
+																'block truncate'
 															)}
 														>
 															{option.name}
 														</span>
 													</div>
 
-													{selected && (
+													{selected && !minimal && (
 														<span
 															className={classNames(
 																active ? 'text-white' : 'text-indigo-600',
