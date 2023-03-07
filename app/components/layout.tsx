@@ -38,7 +38,7 @@ const NavItems = ({ selected }: { selected: string | undefined }) => {
 	return (
 		<div>
 			{navigation.map((item) => (
-				<a
+				<Link
 					key={item.name}
 					href={item.href}
 					className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md"
@@ -48,7 +48,7 @@ const NavItems = ({ selected }: { selected: string | undefined }) => {
 						aria-hidden="true"
 					/>
 					{item.name}
-				</a>
+				</Link>
 			))}
 		</div>
 	);
