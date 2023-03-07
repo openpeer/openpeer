@@ -83,6 +83,7 @@ export default function Select({ label, options, selected, onSelect, error, mini
 															className="h-6 w-6 flex-shrink-0 rounded-full"
 															width={24}
 															height={24}
+															unoptimized
 														/>
 
 														<span
