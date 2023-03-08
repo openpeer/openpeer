@@ -2,20 +2,23 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { User } from 'models/types';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from 'public/logo.svg';
 import { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import {
-	Bars3BottomLeftIcon, ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import Avatar from './Avatar';
+import { CollapseButton } from './Navigation';
+import NotificationHeader from './Notifications/NotificationHeader';
 import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({
@@ -24,28 +27,29 @@ const manrope = Manrope({
 });
 
 const navigation = [
-	{ name: 'P2P', href: '/', icon: ChartBarSquareIcon },
+	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'Orders', href: '/orders', icon: ShoppingBagIcon }
+	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
 
-const NavItems = ({ selected }: { selected: string | undefined }) => {
+const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => {
 	return (
 		<div>
 			{navigation.map((item) => (
-				<a
+				<Link
 					key={item.name}
 					href={item.href}
-					className={`text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md ${
-						selected === item.name && 'marcos'
-					}`}
+					className={`${
+						selected === item.name ? 'bg-gray-700' : ''
+					} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium`}
+					onClick={onClick}
 				>
 					<item.icon
 						className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
 						aria-hidden="true"
 					/>
 					{item.name}
-				</a>
+				</Link>
 			))}
 		</div>
 	);
@@ -57,6 +61,8 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	const { address } = useAccount();
 	const { disconnect } = useDisconnect();
 	const { data: session } = useSession();
+	const user = session?.user as User;
+
 	useEffect(() => {
 		// @ts-ignore
 		if (session && session.address !== address) {
@@ -114,16 +120,18 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 										</div>
 									</Transition.Child>
 									<div className="flex flex-shrink-0 items-center px-4">
-										<Image
-											src={logo}
-											alt="openpeer logo"
-											className="h-8 w-auto"
-											width={104}
-											height={23}
-										/>
+										<Link href="/">
+											<Image
+												src={logo}
+												alt="openpeer logo"
+												className="h-8 w-auto"
+												width={104}
+												height={23}
+											/>
+										</Link>
 									</div>
 									<div className="mt-5 h-0 flex-1 overflow-y-auto">
-										<nav className="space-y-1 px-2">
+										<nav className="space-y-1">
 											<NavItems selected={title} />
 										</nav>
 									</div>
@@ -141,10 +149,12 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
-							<Image src={logo} alt="openpeer logo" className="h-8 w-auto" width={104} height={23} />
+							<Link href="/">
+								<Image src={logo} alt="openpeer logo" className="h-8 w-auto" width={104} height={23} />
+							</Link>
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
-							<nav className="flex-1 space-y-1 px-2 py-4">
+							<nav className="flex-1 space-y-1 py-4">
 								<NavItems selected={title} />
 							</nav>
 						</div>
@@ -152,14 +162,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 				</div>
 				<div className="flex flex-col md:pl-64">
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
-						<button
-							type="button"
-							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-							onClick={() => setSidebarOpen(true)}
-						>
-							<span className="sr-only">Open sidebar</span>
-							<Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
-						</button>
+						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
 						<div className="w-full flex items-center justify-between px-4">
 							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
@@ -167,8 +170,24 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 								<Notifications />
 
 								{/* Profile dropdown */}
-								<Menu as="div" className="relative ml-3">
-									<ConnectButton showBalance={false} />
+								<Menu as="div" className="relative">
+									<div className="flex flex-row items-center">
+										{!!user && (
+											<Link
+												className="pr-4 pl-2 text-gray-400 hover:text-gray-500"
+												href={`/${user.address}`}
+											>
+												<Avatar user={user} />
+											</Link>
+										)}
+										<ConnectButton
+											showBalance={false}
+											accountStatus={{
+												smallScreen: 'avatar',
+												largeScreen: 'full'
+											}}
+										/>
+									</div>
 								</Menu>
 							</div>
 						</div>

@@ -24,7 +24,11 @@ const SellPage = () => {
 	useEffect(() => {
 		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: 'fixed' } as UIList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, chain]);
+	}, [address]);
+
+	useEffect(() => {
+		setList({ step: SETUP_STEP, marginType: 'fixed' } as UIList);
+	}, [chain]);
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading') return <Loading />;

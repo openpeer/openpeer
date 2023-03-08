@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
+import { truncate } from 'utils';
 import { useAccount, useSignMessage } from 'wagmi';
 
 import { BuyStepProps, UIOrder } from './Buy.types';
@@ -15,8 +16,6 @@ import { BuyStepProps, UIOrder } from './Buy.types';
 interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
 }
-
-const truncate = (num: number, places: number) => Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
 
 const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 	<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">

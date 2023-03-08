@@ -8,11 +8,13 @@ import { SelectProps } from './Select.types';
 const CurrencySelect = ({
 	onSelect,
 	selected,
-	error
+	error,
+	minimal = false
 }: {
-	onSelect: SelectProps['onSelect'];
+	onSelect: (option: FiatCurrency | undefined) => void;
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
+	minimal?: SelectProps['minimal'];
 }) => {
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -22,7 +24,9 @@ const CurrencySelect = ({
 		fetch('/api/currencies')
 			.then((res) => res.json())
 			.then((data) => {
-				setCurrencies(data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } })));
+				const filtered = data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } }));
+				setCurrencies(filtered);
+				if (minimal && !selected && filtered[0]) onSelect(filtered[0]);
 				setLoading(false);
 			});
 	}, []);
@@ -35,8 +39,9 @@ const CurrencySelect = ({
 			label="Choose Fiat currency to receive"
 			options={currencies}
 			selected={selected}
-			onSelect={onSelect}
+			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
+			minimal={minimal}
 		/>
 	) : (
 		<></>

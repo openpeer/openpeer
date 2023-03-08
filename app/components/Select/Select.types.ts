@@ -11,4 +11,5 @@ export interface SelectProps {
 	selected: Option | undefined;
 	onSelect: (option: Option | undefined) => void;
 	error?: string;
+	minimal?: boolean;
 }

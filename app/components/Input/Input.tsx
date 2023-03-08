@@ -2,7 +2,7 @@ import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
 	label: string;
-	addOn?: string;
+	addOn?: JSX.Element;
 	id: string;
 	value?: number | string | undefined;
 	onChange?: (value: string) => void | undefined;
@@ -15,6 +15,7 @@ export interface InputProps {
 	decimalScale?: number;
 	error?: string;
 	disabled?: boolean;
+	style?: string;
 }
 
 const Input = ({
@@ -31,7 +32,8 @@ const Input = ({
 	onChangeNumber,
 	decimalScale = 2,
 	error,
-	disabled = false
+	disabled = false,
+	style = ''
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -53,7 +55,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
 							!!prefix && 'text-right'
 						}`}
 						allowedDecimalSeparators={[',', '.']}
@@ -68,7 +70,7 @@ const Input = ({
 					<input
 						type={type}
 						id={id}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
 							!!prefix && 'text-right'
 						}`}
 						value={value}
@@ -78,11 +80,7 @@ const Input = ({
 						disabled={disabled}
 					/>
 				)}
-				{!!addOn && (
-					<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-						<span className="text-gray-500 sm:text-sm">{addOn}</span>
-					</div>
-				)}
+				{!!addOn && <div className="absolute inset-y-0 right-0 flex items-center">{addOn}</div>}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>
