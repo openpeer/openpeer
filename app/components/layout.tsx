@@ -11,16 +11,11 @@ import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import {
-	Bars3BottomLeftIcon,
-	ChartBarSquareIcon,
-	PlusCircleIcon,
-	ShoppingBagIcon,
-	XMarkIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import { CollapseButton } from './Navigation';
 import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({
@@ -34,14 +29,17 @@ const navigation = [
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
 
-const NavItems = ({ selected }: { selected: string | undefined }) => {
+const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => {
 	return (
 		<div>
 			{navigation.map((item) => (
 				<Link
 					key={item.name}
 					href={item.href}
-					className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium rounded-md"
+					className={`${
+						selected === item.name ? 'bg-gray-700' : ''
+					} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium`}
+					onClick={onClick}
 				>
 					<item.icon
 						className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
@@ -129,7 +127,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 										</Link>
 									</div>
 									<div className="mt-5 h-0 flex-1 overflow-y-auto">
-										<nav className="space-y-1 px-2">
+										<nav className="space-y-1">
 											<NavItems selected={title} />
 										</nav>
 									</div>
@@ -152,7 +150,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 							</Link>
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
-							<nav className="flex-1 space-y-1 px-2 py-4">
+							<nav className="flex-1 space-y-1 py-4">
 								<NavItems selected={title} />
 							</nav>
 						</div>
@@ -160,14 +158,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 				</div>
 				<div className="flex flex-col md:pl-64">
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
-						<button
-							type="button"
-							className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-							onClick={() => setSidebarOpen(true)}
-						>
-							<span className="sr-only">Open sidebar</span>
-							<Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
-						</button>
+						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
 						<div className="w-full flex items-center justify-between px-4">
 							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
@@ -176,7 +167,13 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative ml-3">
-									<ConnectButton showBalance={false} />
+									<ConnectButton
+										showBalance={false}
+										accountStatus={{
+											smallScreen: 'avatar',
+											largeScreen: 'full'
+										}}
+									/>
 								</Menu>
 							</div>
 						</div>
