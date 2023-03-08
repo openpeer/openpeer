@@ -26,12 +26,12 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 	return (
 		<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 			<div className="flex flex-row justify-between mb-4">
-				<span className="text-[#6A6A6A]">Amount Paid</span>
+				<span className="text-neutral-500">Amount Paid</span>
 				<span className="flex flex-row justify-between">{selling ? tokenValue : fiatValue}</span>
 			</div>
 			{selling && !!fee && (
 				<div className="flex flex-row justify-between mb-4">
-					<span className="text-[#6A6A6A]">Fee Paid</span>
+					<span className="text-neutral-500">Fee Paid</span>
 					<span className="flex flex-row justify-between">{`${formatUnits(fee, token.decimals)} ${
 						token.symbol
 					}`}</span>
@@ -39,15 +39,15 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 			)}
 
 			<div className="flex flex-row justify-between mb-4">
-				<span className="text-[#6A6A6A]">Amount Received</span>
+				<span className="text-neutral-500">Amount Received</span>
 				<span className="flex flex-row justify-between">{selling ? fiatValue : tokenValue}</span>
 			</div>
 			<div className="flex flex-row justify-between mb-4 hidden">
-				<span className="text-[#6A6A6A]">Order Time</span>
+				<span className="text-neutral-500">Order Time</span>
 				<span className="flex flex-row justify-between">11:00am, 12/11/2022</span>
 			</div>
 			<div className="flex flex-row justify-between mb-4 hidden">
-				<span className="text-[#6A6A6A]">Reference No.</span>
+				<span className="text-neutral-500">Reference No.</span>
 				<span className="flex flex-row justify-between">
 					<ClipboardText itemValue="0112233322224" />
 				</span>
@@ -56,7 +56,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 				<>
 					<div className="border-bottom border border-color-gray-200 mb-4"></div>
 					<div className="flex flex-row items-center justify-between">
-						<span className="text-[#6A6A6A]">Rate {selling ? 'buyer' : 'merchant'}</span>
+						<span className="text-neutral-500">Rate {selling ? 'buyer' : 'merchant'}</span>
 						<span className="w-1/2">
 							<div className="flex flex-col flex-col-reverse md:flex-row items-center">
 								<span className="w-full md:pr-8">

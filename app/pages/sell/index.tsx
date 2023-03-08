@@ -3,6 +3,7 @@ import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listi
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -12,6 +13,9 @@ const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
 
 const SellPage = () => {
+	const router = useRouter();
+	const { token, currency, tokenAmount } = router.query;
+
 	const { address } = useAccount();
 	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
@@ -42,8 +46,10 @@ const SellPage = () => {
 						stepsCount={3}
 						onStepClick={(n) => setList({ ...list, ...{ step: n } })}
 					/>
-					{step === SETUP_STEP && <Setup list={list} updateList={setList} />}
-					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
+					{step === SETUP_STEP && (
+						<Setup list={list} updateList={setList} tokenId={token} currencyId={currency} />
+					)}
+					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} tokenAmount={tokenAmount} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
 				</div>

@@ -24,8 +24,8 @@ const Option = ({ label, selected, onSelect }: { label: string; selected: boolea
 const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => {
 	return (
 		<>
-			<div className="w-full flex flex-col rounded-full bg-[#F4F6F8]">
-				<div className="flex p-1.5 items-center text-[#6A6A6A] font-bold">
+			<div className="w-full flex flex-col rounded-full bg-gray-100">
+				<div className="flex p-1.5 items-center text-neutral-500 font-bold">
 					<Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
 					<Option label="Percentage" selected={selected === 'percentage'} onSelect={onSelect} />
 				</div>

@@ -26,7 +26,7 @@ const NotificationDetail = ({ notification, onOpen, onDismiss }: NotificationPar
 					{unread ? (
 						<InformationCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
 					) : (
-						<CheckCircleIcon className="h-6 w-6 text-[#3C9AAA]" aria-hidden="true" />
+						<CheckCircleIcon className="h-6 w-6 text-cyan-600" aria-hidden="true" />
 					)}
 				</div>
 				<div className="ml-3 w-0 flex-1 pt-0.5">

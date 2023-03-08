@@ -10,7 +10,15 @@ function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');
 }
 
-export default function Select({ label, options, selected, onSelect, error, minimal = false }: SelectProps) {
+export default function Select({
+	label,
+	options,
+	selected,
+	onSelect,
+	error,
+	minimal = false,
+	height = ''
+}: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
 			{({ open }) => (
@@ -23,8 +31,8 @@ export default function Select({ label, options, selected, onSelect, error, mini
 							<Listbox.Button
 								className={`relative w-full cursor-default rounded-md py-2 pl-3 text-left sm:text-sm ${
 									minimal
-										? 'pr-7 h-12 bg-[#F4F6F8]'
-										: 'pr-10 border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+										? 'pr-7 h-12 bg-gray-100'
+										: `${height} pr-10 border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`
 								}`}
 							>
 								<span className="flex items-center">

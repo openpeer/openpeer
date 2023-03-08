@@ -4,10 +4,10 @@ import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
 import { useEffect, useState } from 'react';
 
-import { ListStepProps } from './Listing.types';
+import { AmountStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
-const Amount = ({ list, updateList }: ListStepProps) => {
+const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 	const {
 		token,
 		currency,
@@ -92,6 +92,14 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fixedMargin, percentage, price]);
+
+	useEffect(() => {
+		const amount = Number(tokenAmount || '0');
+		if (amount && !totalAvailableAmount) {
+			updateValue({ totalAvailableAmount: amount });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [tokenAmount, totalAvailableAmount]);
 
 	return (
 		<StepLayout onProceed={onProceed}>

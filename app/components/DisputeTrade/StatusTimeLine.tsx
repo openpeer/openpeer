@@ -68,7 +68,7 @@ const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 									) : null}
 									<div className="group relative flex items-start">
 										<span className="flex h-9 items-center">
-											<span className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-cyan-600 group-hover:bg-cyan-800">
+											<span className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-cyan-600 group-hover:bg-cyan-900">
 												<CheckIcon className="h-4 w-4 text-white" aria-hidden="true" />
 											</span>
 										</span>

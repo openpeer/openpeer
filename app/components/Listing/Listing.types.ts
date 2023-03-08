@@ -27,3 +27,12 @@ export interface ListStepProps {
 	list: UIList;
 	updateList: (t: UIList) => void;
 }
+
+export interface SetupListStepProps extends ListStepProps {
+	tokenId: string | string[] | undefined;
+	currencyId: string | string[] | undefined;
+}
+
+export interface AmountStepProps extends ListStepProps {
+	tokenAmount: string | string[] | undefined;
+}

@@ -1,5 +1,6 @@
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import Switcher from './Button/Switcher';
 import Checkbox from './Checkbox/Checkbox';
 import Input from './Input/Input';
 import Label from './Label/Label';
@@ -35,5 +36,6 @@ export {
 	HeaderH3,
 	ListsTable,
 	WrongNetwork,
-	NotificationHeader
+	NotificationHeader,
+	Switcher
 };

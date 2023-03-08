@@ -1,11 +1,12 @@
 import { useState } from 'react';
+
 import { Switch } from '@headlessui/react';
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');
 }
 
-const Toogle = () => {
+const Toggle = () => {
 	const [enabled, setEnabled] = useState(false);
 	return (
 		<Switch
@@ -28,4 +29,4 @@ const Toogle = () => {
 	);
 };
 
-export default Toogle;
+export default Toggle;

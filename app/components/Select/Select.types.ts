@@ -12,4 +12,5 @@ export interface SelectProps {
 	onSelect: (option: Option | undefined) => void;
 	error?: string;
 	minimal?: boolean;
+	height?: string;
 }
