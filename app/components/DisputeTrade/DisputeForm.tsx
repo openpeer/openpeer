@@ -97,7 +97,7 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 					value={comments}
 					placeholder="Tell us more about the transaction"
 					onChange={onChangeComments}
-					errors={errors.comments}
+					error={errors.comments}
 				/>
 			</div>
 			<div>

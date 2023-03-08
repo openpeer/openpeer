@@ -5,10 +5,10 @@ interface TextareaProps {
 	placeholder?: string;
 	value: string | undefined;
 	onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-	errors?: string;
+	error?: string;
 }
 
-const Textarea = ({ label, rows, id, placeholder, value, onChange, errors }: TextareaProps) => {
+const Textarea = ({ label, rows, id, placeholder, value, onChange, error }: TextareaProps) => {
 	return (
 		<div className="mb-8">
 			<label htmlFor={id} className="block text-base font-medium text-gray-700">
@@ -24,7 +24,7 @@ const Textarea = ({ label, rows, id, placeholder, value, onChange, errors }: Tex
 					onChange={onChange}
 				/>
 			</div>
-			{!!errors && <p className="mt-2 text-sm text-red-600">{errors}</p>}
+			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>
 	);
 };

@@ -17,7 +17,7 @@ interface DisputeStatusParams {
 
 const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 	const {
-		uuid,
+		id,
 		token_amount: tokenAmount,
 		fiat_amount: fiatAmount,
 		dispute,
@@ -100,7 +100,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 					</div>
 					<div className="flex flex-row justify-between mb-2">
 						<span className="text-gray-500">Reference No.</span>
-						<span>{smallWalletAddress(uuid, 16)}</span>
+						<span>{Number(id) * 10000}</span>
 					</div>
 					<div className="flex flex-row justify-between mb-2">
 						<span className="text-gray-500">Payment Method</span>

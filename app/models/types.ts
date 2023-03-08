@@ -47,20 +47,31 @@ export interface List {
 	total_available_amount: string;
 }
 
+export interface AccountField {
+	type: 'text' | 'textarea';
+	id: string;
+	label: string;
+	placeholder: string;
+	required: boolean;
+}
+
+export interface AccountFieldValue {
+	[key: string]: string | undefined;
+}
+
 export interface Bank {
 	id: number;
 	name: string;
 	icon: string;
+	account_info_schema: AccountField[];
 }
 
 export interface PaymentMethod {
 	id: number;
-	account_name: string;
-	account_number: string;
-	details: string;
 	user: User;
 	bank: Bank;
 	bank_id: number;
+	values: AccountFieldValue;
 }
 
 export interface Escrow {

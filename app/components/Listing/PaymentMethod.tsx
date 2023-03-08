@@ -1,5 +1,7 @@
-import { BankSelect, Button, Input, Loading } from 'components';
-import { PaymentMethod } from 'models/types';
+import { BankSelect, Button, Input, Loading, Textarea } from 'components';
+import { useFormErrors } from 'hooks';
+import { Errors, Resolver } from 'models/errors';
+import { Bank, PaymentMethod } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -7,27 +9,25 @@ import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
-import { Errors, Resolver } from 'models/errors';
-import { useFormErrors } from 'hooks';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
 	const { currency, paymentMethod = {} as PaymentMethod } = list;
-	const { id, account_name: accountName, account_number: accountNumber, bank } = paymentMethod;
+	const { id, bank, values = {} } = paymentMethod;
+	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
 
 	const resolver: Resolver = () => {
 		const error: Errors = {};
 
-		if (!accountName) {
-			error.accountName = 'Should be present';
-		}
-
-		if (!accountNumber) {
-			error.accountNumber = 'Should be present';
-		}
 		if (!bank?.id) {
 			error.bankId = 'Should be present';
+		}
+
+		for (const field of schema) {
+			if (field.required && !values[field.id]) {
+				error[field.id] = `${field.label} should be present`;
+			}
 		}
 
 		return error;
@@ -49,7 +49,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		updateList({ ...list, ...{ paymentMethod: pm } });
-		clearErrors(['accountName', 'accountNumber', 'bankId']);
+		clearErrors([...schema.map(({ id }) => id), ...['bankId']]);
 	};
 
 	const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {
@@ -64,7 +64,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			.then((res) => res.json())
 			.then((data) => {
 				setPaymentMethods(data);
-				if (!paymentMethod.account_name) setPaymentMethod(data[0]);
+				if (!paymentMethod.bank?.id) setPaymentMethod(data[0]);
 				setLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,11 +91,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 						</div>
 					</div>
 					<div className="mb-4">
-						<div>{pm.account_name}</div>
+						<div>pm.account_name marcos</div>
 						<div></div>
 					</div>
 					<div className="w-full flex flex-row justify-between">
-						<div>{pm.account_number}</div>
+						<div>pm.account_number marcos</div>
 						<div>{pm.bank?.name}</div>
 					</div>
 				</div>
@@ -103,33 +103,6 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 			{!id || edit ? (
 				<>
-					<Input
-						label="Account Name"
-						type="text"
-						id="accountName"
-						placeholder="Josh Adam"
-						value={accountName}
-						onChange={(n) =>
-							updatePaymentMethod({
-								...paymentMethod,
-								...{ account_name: n }
-							})
-						}
-						error={errors.accountName}
-					/>
-					<Input
-						label="Account Number"
-						id="accountNumber"
-						placeholder="123456789"
-						value={accountNumber}
-						onChange={(n) =>
-							updatePaymentMethod({
-								...paymentMethod,
-								...{ account_number: n }
-							})
-						}
-						error={errors.accountNumber}
-					/>
 					<BankSelect
 						currencyId={currency!.id}
 						onSelect={(b) =>
@@ -141,6 +114,45 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 						selected={bank}
 						error={errors.bankId}
 					/>
+					{schema.map(({ id, label, placeholder, type = 'text', required }) => {
+						if (type === 'textarea') {
+							return (
+								<Textarea
+									rows={4}
+									key={id}
+									label={label}
+									id={id}
+									placeholder={placeholder}
+									onChange={(e) =>
+										updatePaymentMethod({
+											...paymentMethod,
+											...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
+										})
+									}
+									value={values[id]}
+									error={errors[id]}
+								/>
+							);
+						}
+						return (
+							<Input
+								key={id}
+								label={label}
+								type="text"
+								id={id}
+								placeholder={placeholder}
+								onChange={(value) =>
+									updatePaymentMethod({
+										...paymentMethod,
+										...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
+									})
+								}
+								error={errors[id]}
+								value={values[id]}
+								required
+							/>
+						);
+					})}
 				</>
 			) : (
 				<div>
