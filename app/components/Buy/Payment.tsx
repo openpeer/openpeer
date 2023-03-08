@@ -75,32 +75,32 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
-							<span className="text-[#6A6A6A]">Account Name</span>
+							<span className="text-neutral-500">Account Name</span>
 							<ClipboardText itemValue={paymentMethod.account_name} />
 						</div>
 						<div className="flex flex-row justify-between mb-4">
-							<span className="text-[#6A6A6A]">Account Number</span>
+							<span className="text-neutral-500">Account Number</span>
 							<span className="flex flex-row justify-between">
 								<ClipboardText itemValue={paymentMethod.account_number} />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between mb-4">
-							<span className="text-[#6A6A6A]">Bank Name</span>
+							<span className="text-neutral-500">Bank Name</span>
 							<span className="flex flex-row justify-between">
 								<ClipboardText itemValue={paymentMethod.bank.name} />
 							</span>
 						</div>
 						<div className="flex flex-row justify-between hidden">
-							<span className="text-[#6A6A6A]">Reference No.</span>
+							<span className="text-neutral-500">Reference No.</span>
 							<span className="flex flex-row justify-between">
 								<ClipboardText itemValue="011223332222" />
 							</span>
 						</div>
 						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden"></div>
 						<div className="flex flex-row justify-between hidden">
-							<span className="text-[#6A6A6A]">Payment will expire in </span>
+							<span className="text-neutral-500">Payment will expire in </span>
 							<span className="flex flex-row justify-between">
-								<span className="text-[#3C9AAA]">15m:20secs</span>
+								<span className="text-cyan-600">15m:20secs</span>
 							</span>
 						</div>
 					</div>

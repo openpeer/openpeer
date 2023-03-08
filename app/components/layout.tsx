@@ -132,7 +132,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 									</div>
 									<div className="mt-5 h-0 flex-1 overflow-y-auto">
 										<nav className="space-y-1">
-											<NavItems selected={title} />
+											<NavItems selected={title} onClick={() => setSidebarOpen(false)} />
 										</nav>
 									</div>
 								</Dialog.Panel>
@@ -155,7 +155,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
 							<nav className="flex-1 space-y-1 py-4">
-								<NavItems selected={title} />
+								<NavItems selected={title} onClick={() => setSidebarOpen(false)} />
 							</nav>
 						</div>
 					</div>

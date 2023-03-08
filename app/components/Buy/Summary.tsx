@@ -6,9 +6,7 @@ import Link from 'next/link';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import {
-	ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 
@@ -124,7 +122,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				</li> */}
 			</ul>
 			<div className="mt-6">
-				<span className="text-[#3C9AAA]">Please Note</span>
+				<span className="text-cyan-600">Please Note</span>
 				<p className="mt-2">
 					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
 					business with me.

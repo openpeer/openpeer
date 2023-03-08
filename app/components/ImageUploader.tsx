@@ -62,7 +62,7 @@ const ImageUploader = ({ address, onUploadFinished }: ImageUploaderParams) => {
 		<div>
 			<label
 				htmlFor="file-input"
-				className="w-full px-2 py-2.5 rounded border border-[#3C9AAA] text-base text-[#3C9AAA] hover:bg-[#3C9AAA] hover:text-white my-8 cursor-pointer"
+				className="w-full px-2 py-2.5 rounded border border-cyan-600 text-base text-cyan-600 hover:bg-cyan-600 hover:text-white my-8 cursor-pointer"
 			>
 				{isUploading ? 'Uploading...' : 'Upload'}
 			</label>

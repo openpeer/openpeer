@@ -22,7 +22,7 @@ const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
 				onClick={copyText}
 				title={
 					checked ? (
-						<ClipboardDocumentCheckIcon className="w-4 text-[#3C9AAA]" />
+						<ClipboardDocumentCheckIcon className="w-4 text-cyan-600" />
 					) : (
 						<ClipboardDocumentIcon className="w-4 text-gray-500" />
 					)

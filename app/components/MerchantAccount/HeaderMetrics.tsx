@@ -30,8 +30,8 @@ const Metric = ({
 				<span>{value ? value : 'Loading...'}</span>
 			</div>
 			<div>
-				<div className="bg-[#EBF5F7] p-4 rounded-full">
-					<Icon className="h-5 w-5 z-50 text-[#3C9AAA]" aria-hidden="true" />
+				<div className="bg-gray-50 p-4 rounded-full">
+					<Icon className="h-5 w-5 z-50 text-cyan-600" aria-hidden="true" />
 				</div>
 			</div>
 		</div>
@@ -87,7 +87,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 		<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8 px-6 pt-6 md:p-0">
 			<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
 				<div className="flex flex-col items-center">
-					<span className="m-auto flex items-center justify-center bg-[#EBF5F7] w-24 h-24 rounded-full">
+					<span className="m-auto flex items-center justify-center bg-gray-50 w-24 h-24 rounded-full">
 						<Avatar user={user} className="inline-block h-20 w-20" />
 					</span>
 					<div className="flex items-center pl-4 text-lg mb-2 mt-4">
