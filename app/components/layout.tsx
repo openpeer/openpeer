@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { User } from 'models/types';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +16,9 @@ import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import Avatar from './Avatar';
 import { CollapseButton } from './Navigation';
+import NotificationHeader from './Notifications/NotificationHeader';
 import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({
@@ -58,6 +61,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	const { address } = useAccount();
 	const { disconnect } = useDisconnect();
 	const { data: session } = useSession();
+	const user = session?.user as User;
 
 	useEffect(() => {
 		// @ts-ignore
@@ -166,14 +170,24 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 								<Notifications />
 
 								{/* Profile dropdown */}
-								<Menu as="div" className="relative ml-3">
-									<ConnectButton
-										showBalance={false}
-										accountStatus={{
-											smallScreen: 'avatar',
-											largeScreen: 'full'
-										}}
-									/>
+								<Menu as="div" className="relative">
+									<div className="flex flex-row items-center">
+										{!!user && (
+											<Link
+												className="pr-4 pl-2 text-gray-400 hover:text-gray-500"
+												href={`/${user.address}`}
+											>
+												<Avatar user={user} />
+											</Link>
+										)}
+										<ConnectButton
+											showBalance={false}
+											accountStatus={{
+												smallScreen: 'avatar',
+												largeScreen: 'full'
+											}}
+										/>
+									</div>
 								</Menu>
 							</div>
 						</div>
