@@ -21,6 +21,7 @@ export interface UIList {
 	limitMax: number | undefined;
 	paymentMethod: UIPaymentMethod | undefined;
 	terms?: string | undefined;
+	quickSellSetupDone: boolean;
 }
 
 export interface ListStepProps {

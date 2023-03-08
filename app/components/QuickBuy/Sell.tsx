@@ -2,6 +2,8 @@ import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import CurrencySelect from 'components/Select/CurrencySelect';
 import TokenSelect from 'components/Select/TokenSelect';
+import { formatUnits } from 'ethers/lib/utils.js';
+import { useEscrowFee } from 'hooks';
 import debounce from 'lodash.debounce';
 import { FiatCurrency, Token } from 'models/types';
 import { useRouter } from 'next/router';
@@ -11,6 +13,8 @@ const Sell = () => {
 	const [tokenAmount, setTokenAmount] = useState<number>();
 	const [currency, setCurrency] = useState<FiatCurrency>();
 	const [token, setToken] = useState<Token>();
+
+	const { fee } = useEscrowFee({ token, tokenAmount });
 
 	const router = useRouter();
 
@@ -51,6 +55,13 @@ const Sell = () => {
 			/>
 
 			<Button title="Post Ad" disabled={!(currency && token && tokenAmount)} onClick={onPostAd} />
+			<div className="text-center mt-4">
+				{!!fee && !!token && (
+					<span className="text-xs text-gray-600 text-center">
+						Fee: {formatUnits(fee, token.decimals)} {token.symbol}
+					</span>
+				)}
+			</div>
 		</>
 	);
 };

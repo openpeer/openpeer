@@ -34,14 +34,10 @@ const TokenSelect = ({
 			.then((data) => {
 				const source: Token[] = minimal ? data.map((t: Token) => ({ ...t, ...{ name: t.symbol } })) : data;
 				setTokens(source);
-				console.log('selectedIdOnLoad', selectedIdOnLoad);
 				if (selectedIdOnLoad) {
-					console.log('selected', selected);
 					if (!selected) {
 						const toSelect = source.find(({ id }) => String(id) === selectedIdOnLoad);
-						console.log('toSelect', toSelect);
 						if (toSelect && !selected) {
-							console.log('chamando on selected com ', toSelect);
 							onSelect(toSelect);
 						}
 					}

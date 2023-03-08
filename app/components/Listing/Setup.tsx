@@ -54,7 +54,6 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 			updateList({ ...list, ...{ step: list.step + 1 } });
 		}
 	};
-	console.log('list', list);
 	return (
 		<StepLayout onProceed={onProceed}>
 			<TokenSelect

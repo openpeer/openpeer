@@ -138,7 +138,7 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 				disabled={!(currency && token && fiatAmount && tokenAmount && !loading)}
 				onClick={onSeeOptions}
 			/>
-			<div className="text-center">
+			<div className="text-center mt-4">
 				<span className="text-xs text-gray-600 text-center">Always zero fees 🎉</span>
 			</div>
 		</>

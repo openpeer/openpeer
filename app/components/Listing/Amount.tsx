@@ -1,4 +1,4 @@
-import { Input, Label, MarginSwitcher } from 'components';
+import { Input, Label, Loading, MarginSwitcher } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
@@ -15,7 +15,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		limitMin,
 		limitMax,
 		marginType = 'fixed',
-		margin: savedMargin
+		margin: savedMargin,
+		quickSellSetupDone
 	} = list;
 
 	const percentage = marginType === 'percentage';
@@ -72,14 +73,16 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 	};
 
 	useEffect(() => {
+		if (!token || !currency) return;
+
 		fetch(
 			`https://api.coingecko.com/api/v3/simple/price?ids=${
-				token!.coingecko_id
-			}&vs_currencies=${currency!.name.toLowerCase()}`
+				token.coingecko_id
+			}&vs_currencies=${currency.name.toLowerCase()}`
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				setPrice(data[token!.coingecko_id!][currency!.name.toLowerCase()]);
+				setPrice(data[token.coingecko_id!][currency.name.toLowerCase()]);
 			});
 	}, [token, currency]);
 
@@ -95,17 +98,19 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 
 	useEffect(() => {
 		const amount = Number(tokenAmount || '0');
-		if (amount && !totalAvailableAmount) {
-			updateValue({ totalAvailableAmount: amount });
+		if (amount && !totalAvailableAmount && !quickSellSetupDone) {
+			updateValue({ totalAvailableAmount: amount, quickSellSetupDone: true });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, totalAvailableAmount]);
+
+	if (!token || !currency) return <Loading />;
 
 	return (
 		<StepLayout onProceed={onProceed}>
 			<Input
 				label="Enter total available crypto amount"
-				addOn={<span className="text-gray-500 sm:text-sm mr-3">{token!.name}</span>}
+				addOn={<span className="text-gray-500 sm:text-sm mr-3">{token.name}</span>}
 				id="totalAvailableAmount"
 				value={totalAvailableAmount}
 				onChangeNumber={(n) => updateValue({ totalAvailableAmount: n })}
@@ -120,7 +125,7 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 					<Input
 						placeholder="100"
 						label="Min:"
-						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency!.name}</span>}
+						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency.name}</span>}
 						id="limitMin"
 						type="decimal"
 						value={limitMin}
@@ -130,7 +135,7 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 					<Input
 						placeholder="1000"
 						label="Max:"
-						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency!.name}</span>}
+						addOn={<span className="text-gray-500 sm:text-sm mr-3">{currency.name}</span>}
 						id="limitMax"
 						type="decimal"
 						value={limitMax}
@@ -143,8 +148,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			<MarginSwitcher
 				selected={marginType}
 				onSelect={onSelectType}
-				currency={currency!.name}
-				token={token!.name}
+				currency={currency.name}
+				token={token.name}
 				margin={margin}
 				updateMargin={updateMargin}
 				error={errors.margin}
@@ -153,11 +158,11 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			<div className="w-full flex flex-row justify-between mb-8 hidden">
 				<div>
 					<div>Lowest price</div>
-					<div className="text-xl font-bold">25.9 {currency!.name}</div>
+					<div className="text-xl font-bold">25.9 {currency.name}</div>
 				</div>
 				<div>
 					<div>Highest price</div>
-					<div className="text-xl font-bold">25.9 {currency!.name}</div>
+					<div className="text-xl font-bold">25.9 {currency.name}</div>
 				</div>
 			</div>
 		</StepLayout>

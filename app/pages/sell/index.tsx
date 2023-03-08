@@ -15,11 +15,12 @@ const DETAILS_STEP = 4;
 const SellPage = () => {
 	const router = useRouter();
 	const { token, currency, tokenAmount } = router.query;
+	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
 
 	const { address } = useAccount();
 	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
-		step: SETUP_STEP,
+		step: quickSell ? AMOUNT_STEP : SETUP_STEP,
 		marginType: 'fixed'
 	} as UIList);
 	const step = list.step;
@@ -31,8 +32,21 @@ const SellPage = () => {
 	}, [address]);
 
 	useEffect(() => {
+		// need to reset the AD if the chain changed because the tokens will change
 		setList({ step: SETUP_STEP, marginType: 'fixed' } as UIList);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chain]);
+
+	useEffect(() => {
+		if (!!list && quickSell && step === SETUP_STEP) {
+			const { currency, token, totalAvailableAmount, quickSellSetupDone } = list;
+
+			if (!!currency && !!token && !totalAvailableAmount && !quickSellSetupDone) {
+				setList({ ...list, step: AMOUNT_STEP });
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [list]);
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading') return <Loading />;

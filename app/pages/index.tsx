@@ -40,7 +40,7 @@ const Quick = () => {
 					<div className="bg-white py-8 px-4 shadow rounded-lg sm:px-10">
 						<div className="space-y-6">
 							<div className="flex flex-row items-center justify-between">
-								<h1 className="text-2xl font-bold">{type}</h1>
+								<h1 className="text-2xl font-bold">{type} Crypto</h1>
 								<Switcher
 									leftLabel="Buy"
 									rightLabel="Sell"
