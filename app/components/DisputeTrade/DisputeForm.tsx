@@ -1,5 +1,7 @@
 import Button from 'components/Button/Button';
+import CancelOrderButton from 'components/Buy/CancelOrderButton/CancelOrderButton';
 import OpenDisputeButton from 'components/Buy/OpenDisputeButton';
+import ReleaseFundsButton from 'components/Buy/ReleaseFundsButton';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import Loading from 'components/Loading/Loading';
@@ -10,8 +12,9 @@ import { Order } from 'models/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
+import { useAccount } from 'wagmi';
 
-import { DocumentIcon } from '@heroicons/react/24/outline';
+import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import FilesUploader from './FilesUploader';
 
@@ -28,9 +31,12 @@ interface DisputeFormParams {
 }
 
 const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
-	const { uuid, dispute } = order;
-	const { user_dispute } = dispute || {};
+	const { uuid, dispute, buyer } = order;
+	const { user_dispute, resolved } = dispute || {};
 	const { comments: userComment, dispute_files: files = [] } = user_dispute || {};
+	const { address: connectedAddress } = useAccount();
+	const isBuyer = buyer.address === connectedAddress;
+
 	const [comments, setComments] = useState(userComment || '');
 	const orderUploads: Upload[] = files.map((file) => {
 		return {
@@ -109,48 +115,53 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 					</div>
 				)}
 				{uploads.length > 0 && (
-					<div className="flex flex-row items-center justify-center">
+					<div className="w-full flex flex-col md:flex-row space-x-2">
 						{uploads.map(({ key, signedURL, filename }) => {
 							const fileType = key.split('.').pop()?.toLowerCase();
-							if (fileType === 'pdf') {
-								return (
-									<div
-										className="rounded-md border flex flex-col items-center justify-center"
-										key={key}
-									>
-										<DocumentIcon className="text-cyan-600 w-10" />
-										<p className="text-xs text-gray-600 text-ellipsis overflow-hidden">
-											{filename}
-										</p>
+							return (
+								<div key={key} className="w-full md:w-1/3 mb-4 items-center justify-center relative">
+									<div className="bg-gray-200 flex w-full h-full items-center justify-center rounded">
+										{fileType === 'pdf' ? (
+											<div className="flex flex-col items-center relative">
+												<DocumentIcon className="text-cyan-600 w-10" />
+												<p className="text-xs text-gray-600 break-all p-2">{filename}</p>
+											</div>
+										) : ['jpg', 'jpeg', 'png', 'gif'].includes(fileType!) ? (
+											<Image
+												key={key}
+												unoptimized
+												priority
+												src={signedURL}
+												alt={`Uploaded file ${key}`}
+												width={143}
+												height={136}
+												className="rounded-md"
+											/>
+										) : (
+											<p key={key}>Unsupported file type</p>
+										)}
+										<button className="absolute -top-2 -right-2 h-4 w-4 rounded-full bg-cyan-600 ring-2 ring-white flex items-center justify-center cursor-pointer">
+											<XMarkIcon className="w-8 h-8 text-white" />
+										</button>
 									</div>
-								);
-							} else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType!)) {
-								return (
-									<Image
-										key={key}
-										unoptimized
-										priority
-										src={signedURL}
-										alt={`Uploaded file ${key}`}
-										width={143}
-										height={136}
-										className="rounded-md"
-									/>
-								);
-							}
-
-							return <p key={key}>Unsupported file type</p>;
+								</div>
+							);
 						})}
 					</div>
 				)}
 			</div>
 			{!paidForDispute && (
-				<div className="-mb-8">
+				<div className="">
 					<Input label="Pay" disabled id="pay" value="1 MATIC" />
 				</div>
 			)}
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">
-				<Button title="Cancel" outlined />
+				{!resolved &&
+					(isBuyer ? (
+						<CancelOrderButton order={order} title="Cancel" />
+					) : (
+						<ReleaseFundsButton escrow={order.escrow!.address} outlined title="Cancel" />
+					))}
 				{paidForDispute ? (
 					<Button title="Continue" onClick={onContinue} />
 				) : (

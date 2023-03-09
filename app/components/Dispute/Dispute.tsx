@@ -27,7 +27,7 @@ const Dispute = ({ order }: DisputeParams) => {
 
 	if ((!isSeller && !isBuyer) || paidForDispute === undefined) return <Loading />;
 
-	const { user_dispute: userDispute } = dispute || {};
+	const { user_dispute: userDispute, resolved } = dispute || {};
 	return (
 		<div className="p-4 md:p-6 w-full m-auto mb-16">
 			<div className="p-8 bg-white rounded-lg border border-slate-200 w-full flex flex-col md:flex-row md:gap-x-10">
@@ -45,7 +45,7 @@ const Dispute = ({ order }: DisputeParams) => {
 						</div>
 					</div>
 					<span>
-						{!!userDispute && paidForDispute ? (
+						{resolved || (!!userDispute && paidForDispute) ? (
 							<DisputeStatus address={address} order={order} />
 						) : (
 							<DisputeForm address={address} order={order} paidForDispute={paidForDispute} />

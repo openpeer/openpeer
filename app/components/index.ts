@@ -8,6 +8,7 @@ import ListsTable from './ListsTable';
 import Loading from './Loading/Loading';
 import MarginSwitcher from './MarginSwitcher';
 import HeaderMetrics from './MerchantAccount/HeaderMetrics';
+import Modal from './Modal/ModalWindow';
 import NotificationHeader from './Notifications/NotificationHeader';
 import HeaderH3 from './SectionHeading/h3';
 import BankSelect from './Select/BankSelect';
@@ -37,5 +38,6 @@ export {
 	ListsTable,
 	WrongNetwork,
 	NotificationHeader,
-	Switcher
+	Switcher,
+	Modal
 };

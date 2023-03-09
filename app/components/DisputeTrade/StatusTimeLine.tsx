@@ -37,7 +37,7 @@ const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 		{
 			name: `${counterpart} Responded`,
 			description: replied ? `${counterpart} has responded to the dispute` : `${counterpart} is yet to respond`,
-			status: replied ? 'complete' : 'current'
+			status: resolved || replied ? 'complete' : 'current'
 		},
 		{
 			name: 'Openpeer Arbitrary',

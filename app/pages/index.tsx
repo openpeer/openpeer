@@ -1,7 +1,5 @@
 import { ListsTable, Switcher } from 'components';
 import { Buy, Sell } from 'components/QuickBuy';
-import Toggle from 'components/SwitchToggle/Toggle';
-import debounce from 'lodash.debounce';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';

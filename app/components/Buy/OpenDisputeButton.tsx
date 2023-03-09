@@ -1,12 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
-import { Button } from 'components';
+import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
+import { formatUnits } from 'ethers/lib/utils.js';
 import { useOpenDispute, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useAccount, useContractReads } from 'wagmi';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAccount, useBalance, useContractReads } from 'wagmi';
 
 interface OpenDisputeButtonParams {
 	order: Order;
@@ -27,6 +29,8 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 	const router = useRouter();
 	const escrowAddress = escrow!.address;
 	const escrowContract = { address: escrowAddress, abi: OpenPeerEscrow };
+	const [modalOpen, setModalOpen] = useState(false);
+	const [disputeConfirmed, setDisputeConfirmed] = useState(false);
 
 	const { data: readData = [] } = useContractReads({
 		contracts: [
@@ -34,6 +38,10 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 			{ ...escrowContract, ...{ functionName: 'disputeFee' } },
 			{ ...escrowContract, ...{ functionName: 'paidForDispute', args: [connectedAddress] } }
 		]
+	});
+
+	const { data: balance } = useBalance({
+		address: connectedAddress
 	});
 	const [sellerCanCancelAfter, disputeFee, paidForDispute] = readData as [BigNumber, BigNumber, boolean];
 
@@ -52,7 +60,19 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, uuid]);
 
-	if (sellerCanCancelAfter === undefined || disputeFee === undefined || paidForDispute === undefined) {
+	useEffect(() => {
+		if (disputeConfirmed) {
+			onOpenDispute();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [disputeConfirmed]);
+
+	if (
+		sellerCanCancelAfter === undefined ||
+		disputeFee === undefined ||
+		paidForDispute === undefined ||
+		balance?.value == undefined
+	) {
 		return <p>Loading...</p>;
 	}
 
@@ -61,27 +81,56 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 	const onOpenDispute = () => {
 		if (!isConnected || !canOpenDispute) return;
 
-		openDispute?.();
+		if (!disputeConfirmed) {
+			setModalOpen(true);
+			return;
+		}
+
+		if (disputeFee.gt(balance.value)) {
+			toast.error(`You need ${formatUnits(disputeFee)} MATIC to open a dispute`, {
+				theme: 'dark',
+				position: 'top-right',
+				autoClose: 10000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: false,
+				progress: undefined
+			});
+		} else {
+			openDispute?.();
+		}
 	};
 
 	return (
-		<Button
-			title={
-				paidForDispute
-					? 'Already opened'
-					: !canOpenDispute
-					? 'You cannot dispute'
-					: isLoading
-					? 'Processing...'
-					: isSuccess
-					? 'Done'
-					: title
-			}
-			processing={isLoading}
-			disabled={isSuccess || !canOpenDispute || paidForDispute}
-			onClick={onOpenDispute}
-			outlined={outlined}
-		/>
+		<>
+			<Button
+				title={
+					paidForDispute
+						? 'Already opened'
+						: !canOpenDispute
+						? 'You cannot dispute'
+						: isLoading
+						? 'Processing...'
+						: isSuccess
+						? 'Done'
+						: title
+				}
+				processing={isLoading}
+				disabled={isSuccess || !canOpenDispute || paidForDispute}
+				onClick={onOpenDispute}
+				outlined={outlined}
+			/>
+			<Modal
+				actionButtonTitle="Yes, confirm"
+				title="Dispute Trade"
+				content="Once you dispute the trade the other party will have 24 hours to counter the dispute and send it to arbitration. A small fee of 1 MATIC is required to open a dispute. If you win the dispute the fee will be returned"
+				type="confirmation"
+				open={modalOpen}
+				onClose={() => setModalOpen(false)}
+				onAction={() => setDisputeConfirmed(true)}
+			/>
+		</>
 	);
 };
 

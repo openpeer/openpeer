@@ -6,9 +6,10 @@ import { useAccount } from 'wagmi';
 interface ReleaseFundsButtonParams {
 	escrow: `0x${string}`;
 	title?: string;
+	outlined?: boolean;
 }
 
-const ReleaseFundsButton = ({ escrow, title = 'Release funds' }: ReleaseFundsButtonParams) => {
+const ReleaseFundsButton = ({ escrow, outlined = false, title = 'Release funds' }: ReleaseFundsButtonParams) => {
 	const { isConnected } = useAccount();
 	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ escrow });
 
@@ -30,6 +31,7 @@ const ReleaseFundsButton = ({ escrow, title = 'Release funds' }: ReleaseFundsBut
 			processing={isLoading}
 			disabled={isSuccess}
 			onClick={onReleaseFunds}
+			outlined={outlined}
 		/>
 	);
 };

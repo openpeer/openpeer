@@ -119,7 +119,9 @@ const FilesUploader = ({ uuid, address, onUploadFinished }: FilesUploaderParams)
 								/>
 								<p className="pl-1">or drag and drop {isDragActive && 'the files here'}</p>
 							</div>
-							<p className="text-xs text-gray-500 py-2">Supported formats: JPEG, JPG, PNG, PDF</p>
+							<p className="text-xs text-gray-500 py-2">
+								Supported formats: JPEG, JPG, PNG, PDF. Maximum size 2MB
+							</p>
 						</>
 					</>
 				)}
