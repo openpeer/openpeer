@@ -1,59 +1,75 @@
-import { ListsTable, Loading } from 'components';
+import { ListsTable, Switcher } from 'components';
+import { Buy, Sell } from 'components/QuickBuy';
+import Toggle from 'components/SwitchToggle/Toggle';
+import debounce from 'lodash.debounce';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
-import { getToken } from 'next-auth/jwt';
-import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useState } from 'react';
 
-const HomePage = () => {
+import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
+
+type QuickBuyType = 'Buy' | 'Sell';
+
+const Quick = () => {
 	const [lists, setLists] = useState<List[]>([]);
-	const [isLoading, setLoading] = useState(false);
-	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
-	const { address } = useAccount();
-
-	useEffect(() => {
-		setLoading(true);
-		fetch(`/api/lists?chain_id=${chainId}`)
-			.then((res) => res.json())
-			.then((data) => {
-				setLists(data);
-				setLoading(false);
-			});
-	}, [chainId, address]);
-
-	if (isLoading) return <Loading />;
-	if (!lists) return <p>No lists data</p>;
-
+	const [seeLists, setSeeLists] = useState(false);
+	const [type, setType] = useState<QuickBuyType>('Buy');
+	const showLists = lists.length > 0 && seeLists;
 	return (
-		<div className="py-6">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-				<div className="py-4">
-					<ListsTable lists={lists} />
+		<>
+			{showLists && (
+				<div className="py-6">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+						<div className="flex">
+							<div
+								className="flex flex-row items-center cursor-pointer"
+								onClick={() => setSeeLists(false)}
+							>
+								<ArrowLongLeftIcon width={24} />
+								<span className="pl-2">{type}</span>
+							</div>
+						</div>
+						<div className="py-4">
+							<ListsTable lists={lists} />
+						</div>
+					</div>
+				</div>
+			)}
+			<div className={`flex flex-col justify-center sm:py-12 sm:px-6 lg:px-8 ${showLists ? 'hidden' : ''}`}>
+				<div className="mt-8 mx-4 sm:mx-auto sm:w-full sm:max-w-md ">
+					<div className="bg-white py-8 px-4 shadow rounded-lg sm:px-10">
+						<div className="space-y-6">
+							<div className="flex flex-row items-center justify-between">
+								<h1 className="text-2xl font-bold">{type} Crypto</h1>
+								<Switcher
+									leftLabel="Buy"
+									rightLabel="Sell"
+									selected={type}
+									onToggle={(t) => setType(t as QuickBuyType)}
+								/>
+							</div>
+							<div className={`${type === 'Sell' ? 'hidden' : ''}`}>
+								<Buy lists={lists} updateLists={setLists} onSeeOptions={() => setSeeLists(true)} />
+							</div>
+
+							<div className={`${type === 'Buy' ? 'hidden' : ''}`}>
+								<Sell />
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const session = await getSession(context);
-	const token = await getToken({ req: context.req });
-	const address = token?.sub ?? null;
-	// If you have a value for "address" here, your
-	// server knows the user is authenticated.
-
-	// You can then pass any data you want
-	// to the page component here.
 	return {
 		props: {
-			token,
-			address,
-			session,
-			title: 'P2P'
+			disableAuthentication: true,
+			blankLayout: true
 		}
 	};
 };
 
-export default HomePage;
+export default Quick;

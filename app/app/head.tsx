@@ -9,7 +9,7 @@ export default function Header() {
 				name="description"
 				content="Trade crypto on our decentralized P2P platform. Select your token and fiat, set your margin, and start trading today."
 			/>
-			<link rel="icon" href="/favicon.png" />
+			<link rel="icon" href="/favicon.png?v=2" />
 		</Head>
 	);
 }

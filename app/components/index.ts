@@ -1,5 +1,6 @@
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import Switcher from './Button/Switcher';
 import Checkbox from './Checkbox/Checkbox';
 import Input from './Input/Input';
 import Label from './Label/Label';
@@ -7,6 +8,7 @@ import ListsTable from './ListsTable';
 import Loading from './Loading/Loading';
 import MarginSwitcher from './MarginSwitcher';
 import HeaderMetrics from './MerchantAccount/HeaderMetrics';
+import NotificationHeader from './Notifications/NotificationHeader';
 import HeaderH3 from './SectionHeading/h3';
 import BankSelect from './Select/BankSelect';
 import CurrencySelect from './Select/CurrencySelect';
@@ -33,5 +35,7 @@ export {
 	HeaderMetrics,
 	HeaderH3,
 	ListsTable,
-	WrongNetwork
+	WrongNetwork,
+	NotificationHeader,
+	Switcher
 };

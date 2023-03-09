@@ -3,6 +3,7 @@ import { verifyMessage } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
@@ -12,7 +13,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
 	const router = useRouter();
-	const chainId = chain?.id || chains[0]?.id;
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {

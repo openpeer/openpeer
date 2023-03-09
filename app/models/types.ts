@@ -45,6 +45,7 @@ export interface List {
 	token: Token;
 	payment_method: PaymentMethod;
 	total_available_amount: string;
+	price: number;
 }
 
 export interface AccountField {

@@ -1,13 +1,12 @@
 import Avatar from 'components/Avatar';
 import Button from 'components/Button/Button';
 import Loading from 'components/Loading/Loading';
+import Image from 'next/image';
 import Link from 'next/link';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import {
-	ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 
@@ -60,7 +59,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				<li className="w-full flex flex-row justify-between mb-4">
 					<div>Price</div>
 					<div className="font-bold text-right">
-						{currency.symbol} {price}
+						{currency.symbol} {Number(price).toFixed(2)}
 					</div>
 				</li>
 				{!!fiatAmount && (
@@ -95,10 +94,22 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						</div>
 					</li>
 				)}
-				<li className="w-full flex flex-row justify-between mb-4">
-					<div>Payment channel</div>
-					<div className="font-bold">{paymentMethod?.bank?.name}</div>
-				</li>
+				{paymentMethod.bank && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Payment method</div>
+						<div className="flex flex-row items-center font-bold">
+							<Image
+								src={paymentMethod.bank.icon}
+								alt={paymentMethod.bank.name}
+								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+								width={24}
+								height={24}
+								unoptimized
+							/>
+							{paymentMethod?.bank?.name}
+						</div>
+					</li>
+				)}
 				{!!terms && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Terms</div>
@@ -111,7 +122,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				</li> */}
 			</ul>
 			<div className="mt-6">
-				<span className="text-[#3C9AAA]">Please Note</span>
+				<span className="text-cyan-600">Please Note</span>
 				<p className="mt-2">
 					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
 					business with me.

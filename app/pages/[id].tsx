@@ -1,15 +1,18 @@
 import { HeaderMetrics, ListsTable, Loading } from 'components';
+import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 const Profile = ({ id }: { id: number }) => {
 	const [user, setUser] = useState<User | null>();
 	const [lists, setLists] = useState<List[]>([]);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const { address } = useAccount();
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
 		fetch(`/api/users/${id}`)
@@ -40,15 +43,24 @@ const Profile = ({ id }: { id: number }) => {
 		return <ErrorPage statusCode={404} />;
 	}
 
+	const isLoggedUser = address === user.address;
+	const hasEmail = !!user.email;
+
 	return (
 		<>
-			<HeaderMetrics user={user} />;
-			{!!user && lists && lists.length > 0 && (
-				<div className="py-6">
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-						<div className="py-4">
-							<ListsTable lists={lists} />
-						</div>
+			{isLoggedUser && !hasEmail && (
+				<NotificationHeader
+					type="error"
+					message="Update your email address to receive the sales notifications"
+					detailsLink={`/${user.address}/edit`}
+				/>
+			)}
+
+			<HeaderMetrics user={user} />
+			{lists && lists.length > 0 && (
+				<div className="flex px-6">
+					<div className="w-full md:w-5/6 m-auto">
+						<ListsTable lists={lists} />
 					</div>
 				</div>
 			)}

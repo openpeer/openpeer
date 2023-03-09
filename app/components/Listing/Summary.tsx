@@ -10,7 +10,6 @@ interface SummaryProps {
 const Summary = ({ list }: SummaryProps) => {
 	const { token, currency, totalAvailableAmount, limitMin, limitMax, marginType, margin, paymentMethod, terms } =
 		list;
-	//@ts-ignore
 	const currencySymbol = currency?.symbol;
 
 	if (!token && !currency) {
@@ -96,7 +95,7 @@ const Summary = ({ list }: SummaryProps) => {
 				{!!paymentMethod && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Payment Method</div>
-						<div className="w-2/4 flex flex-col bg-[#F7FBFC] border-cyan-200 rounded p-4">
+						<div className="w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
 							{!!paymentMethod.bank && (
 								<>
 									<div className="flex flex-row items-center text-gray-500 text-sm mb-2">

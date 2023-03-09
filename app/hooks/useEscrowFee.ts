@@ -8,8 +8,8 @@ import { DEPLOYER_CONTRACTS } from './useCreateContract';
 
 interface UseEscrowFeeParams {
 	address?: `0x${string}`;
-	token: Token;
-	tokenAmount: number;
+	token: Token | undefined;
+	tokenAmount: number | undefined;
 }
 
 const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
@@ -24,7 +24,7 @@ const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
 		functionName: 'fee'
 	});
 
-	if (isFetching) return { isFetching };
+	if (isFetching || !token || !tokenAmount) return { isFetching };
 
 	const rawTokenAmount = toBn(String(tokenAmount), token.decimals);
 	const fee = fetchFeeFromDeployer

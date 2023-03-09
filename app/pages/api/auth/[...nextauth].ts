@@ -4,6 +4,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
 import { SiweMessage } from 'siwe';
 
+import { minkeApi } from '../utils/utils';
+
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default async function auth(req: any, res: any) {
@@ -64,6 +66,12 @@ export default async function auth(req: any, res: any) {
 				session.address = token.sub;
 				session.token = token;
 				session.jwt = encodedToken;
+				try {
+					const { data: user } = await minkeApi.get(`/users/${session.address}`);
+					session.user = user;
+				} catch (error) {
+					console.error('Fetching user error', error);
+				}
 				return session;
 			}
 		}

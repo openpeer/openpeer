@@ -85,7 +85,9 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 					{!isBuyer && !!fee && (
 						<div className="flex flex-row justify-between mb-2">
 							<span className="text-gray-500">Fee</span>
-							<span>{formatUnits(fee)} MATIC</span>
+							<span>
+								{formatUnits(fee)} {token.symbol}
+							</span>
 						</div>
 					)}
 					<div className="flex flex-row justify-between mb-2">
@@ -111,6 +113,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
 								width={24}
 								height={24}
+								unoptimized
 							/>
 							{bank.name}
 						</span>
