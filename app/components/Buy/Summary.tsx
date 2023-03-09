@@ -26,7 +26,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const { address } = useAccount();
 	const selling = seller.address === address;
 	const chatAddress = selling ? seller.address : buyer?.address;
-	const user = !selling && !!buyer ? buyer : seller;
+	const user = !!selling && !!buyer ? buyer : seller;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
@@ -40,7 +40,9 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				<div className="flex flex-row">
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />
-						<span>{user.trades} Trades</span>
+						<span>
+							{user.trades} {user.trades > 1 ? 'Trades' : 'Trade'}
+						</span>
 					</div>
 					<div className="flex flex-row ml-4 hidden">
 						<StarIcon className="w-6 mr-2 text-yellow-400" />

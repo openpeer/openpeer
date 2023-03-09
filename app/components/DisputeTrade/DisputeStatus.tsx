@@ -126,7 +126,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 					{isBuyer ? (
 						<CancelOrderButton order={order} title="Close Dispute" outlined={false} />
 					) : (
-						<ReleaseFundsButton escrow={order.escrow!.address} title="Close Dispute" />
+						<ReleaseFundsButton escrow={order.escrow!.address} title="Close Dispute" dispute />
 					)}
 				</div>
 			)}

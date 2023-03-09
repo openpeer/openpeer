@@ -135,7 +135,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					{status === 'escrowed' &&
 						!!escrow &&
 						(seller ? (
-							<ReleaseFundsButton escrow={escrow.address} />
+							<ReleaseFundsButton escrow={escrow.address} dispute={false} />
 						) : (
 							<MarkAsPaidButton escrowAddress={escrow.address} />
 						))}
