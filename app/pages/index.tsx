@@ -14,6 +14,8 @@ const Quick = () => {
 	const [lists, setLists] = useState<List[]>([]);
 	const [seeLists, setSeeLists] = useState(false);
 	const [type, setType] = useState<QuickBuyType>('Buy');
+	const [loading, setLoading] = useState(false);
+
 	const showLists = lists.length > 0 && seeLists;
 	return (
 		<>
@@ -36,7 +38,7 @@ const Quick = () => {
 				</div>
 			)}
 			<div className={`flex flex-col justify-center sm:py-12 sm:px-6 lg:px-8 ${showLists ? 'hidden' : ''}`}>
-				<div className="mt-8 mx-4 sm:mx-auto sm:w-full sm:max-w-md ">
+				<div className="mt-8 mx-4 sm:mx-auto sm:w-full sm:max-w-md">
 					<div className="bg-white py-8 px-4 shadow rounded-lg sm:px-10">
 						<div className="space-y-6">
 							<div className="flex flex-row items-center justify-between">
@@ -48,12 +50,19 @@ const Quick = () => {
 									onToggle={(t) => setType(t as QuickBuyType)}
 								/>
 							</div>
-							<div className={`${type === 'Sell' ? 'hidden' : ''}`}>
-								<Buy lists={lists} updateLists={setLists} onSeeOptions={() => setSeeLists(true)} />
-							</div>
+							<div className={`${loading ? 'animate-pulse' : ''}`}>
+								<div className={`${type === 'Sell' ? 'hidden' : ''}`}>
+									<Buy
+										lists={lists}
+										updateLists={setLists}
+										onSeeOptions={() => setSeeLists(true)}
+										onLoading={setLoading}
+									/>
+								</div>
 
-							<div className={`${type === 'Buy' ? 'hidden' : ''}`}>
-								<Sell />
+								<div className={`${type === 'Buy' ? 'hidden' : ''}`}>
+									<Sell onLoading={setLoading} />
+								</div>
 							</div>
 						</div>
 					</div>

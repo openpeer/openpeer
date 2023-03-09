@@ -1,13 +1,18 @@
 interface LoadingParams {
 	big?: boolean;
 	message?: string;
+	row?: boolean;
 }
 
-const Loading = ({ big = true, message = 'Loading...' }: LoadingParams) => {
+const Loading = ({ big = true, message = 'Loading...', row = true }: LoadingParams) => {
 	return (
 		<div className={`flex mb-2 ${big && 'h-screen'}`}>
-			<div className="m-auto flex flex-row justify-center justify-items-center content-center text-center">
-				<svg className="animate-spin h-7 w-5 mr-3" viewBox="0 0 55 61">
+			<div
+				className={`${
+					row ? 'flex-row' : 'flex-col'
+				} m-auto flex justify-center justify-items-center content-center text-center`}
+			>
+				<svg className={`${row ? 'mr-3' : 'm-auto'} animate-spin h-7 w-5`} viewBox="0 0 55 61">
 					<path
 						fillRule="evenodd"
 						clipRule="evenodd"
@@ -15,7 +20,13 @@ const Loading = ({ big = true, message = 'Loading...' }: LoadingParams) => {
 						fill="#3C9AAA"
 					/>
 				</svg>
-				<span className={`${big && 'text-xl'}`}>{message}</span>
+				{row ? (
+					<span className={`${big && 'text-xl'}`}>{message}</span>
+				) : (
+					<div className={`${big && 'text-xl'} mt-2`}>
+						<span>{message}</span>
+					</div>
+				)}
 			</div>
 		</div>
 	);

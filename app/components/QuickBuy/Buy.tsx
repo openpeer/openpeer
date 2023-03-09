@@ -6,13 +6,16 @@ import { truncate } from 'utils';
 import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
+import { CheckIcon } from '@heroicons/react/24/outline';
+
 interface BuyProps {
 	lists: List[];
 	updateLists: (lists: List[]) => void;
 	onSeeOptions: () => void;
+	onLoading: (loading: boolean) => void;
 }
 
-const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
+const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 	const [fiatAmount, setFiatAmount] = useState<number>();
 	const [tokenAmount, setTokenAmount] = useState<number>();
 	const [currency, setCurrency] = useState<FiatCurrency>();
@@ -21,6 +24,11 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
+
+	const updateLoading = (l: boolean) => {
+		setLoading(l);
+		onLoading(l);
+	};
 
 	useEffect(() => {
 		if (token) {
@@ -38,6 +46,7 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 		fiatValue: number | undefined;
 	}) => {
 		if (!chainId || !token || !currency || (!tokenValue && !fiatValue)) return;
+		updateLoading(true);
 		try {
 			const params = {
 				chain_id: String(chainId),
@@ -68,7 +77,7 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 		} catch (error) {
 			console.error(error);
 		}
-		setLoading(false);
+		updateLoading(false);
 	};
 
 	useEffect(() => {
@@ -109,7 +118,6 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 					value={fiatAmount}
 				/>
 			</div>
-			<hr />
 			<div>
 				<Input
 					label="Crypto to Receive"
@@ -123,13 +131,23 @@ const Buy = ({ lists, updateLists, onSeeOptions }: BuyProps) => {
 					value={tokenAmount}
 				/>
 			</div>
-			{lists.length > 0 && (
-				<div className="mb-2">
-					<span>
+			{lists.length > 0 ? (
+				<div className="mb-2 flex flex-row items-center">
+					<CheckIcon width={20} height={20} className="text-green-500 stroke-2 mr-1" />
+					<span className="text-sm text-gray-700">
 						{lists.length} {lists.length > 1 ? 'options' : 'option'} available from {currency?.symbol}{' '}
-						{lists[0].price} per {token?.symbol}
+						{Number(lists[0].price).toFixed(2)} per {token?.symbol}
 					</span>
 				</div>
+			) : (
+				!!token &&
+				!!currency &&
+				(!!fiatAmount || !!tokenAmount) &&
+				!loading && (
+					<div className="mb-2 text-sm text-gray-700">
+						<span>We could not find ads for these settings</span>
+					</div>
+				)
 			)}
 
 			<Button
