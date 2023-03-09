@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 import { toBn } from 'evm-bn';
 import { Token } from 'models/types';
 import { useContractRead, useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 import { DEPLOYER_CONTRACTS } from './useCreateContract';
 
@@ -13,8 +14,8 @@ interface UseEscrowFeeParams {
 }
 
 const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
-	const { chain } = useNetwork();
-	const deployer = DEPLOYER_CONTRACTS[chain!.id];
+	const { chain, chains } = useNetwork();
+	const deployer = DEPLOYER_CONTRACTS[(chain || chains[0] || polygon).id];
 	const contract = address || deployer;
 	const fetchFeeFromDeployer = contract == deployer;
 

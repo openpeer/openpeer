@@ -49,7 +49,7 @@ export interface List {
 }
 
 export interface AccountField {
-	type: 'text' | 'textarea';
+	type: 'text' | 'textarea' | 'message';
 	id: string;
 	label: string;
 	placeholder: string;
