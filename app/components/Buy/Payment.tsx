@@ -1,6 +1,7 @@
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import Image from 'next/image';
 import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
@@ -13,9 +14,10 @@ import MarkAsPaidButton from './MarkAsPaidButton';
 import FeeDisplay from './Payment/FeeDisplay';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
-const Payment = ({ order, updateOrder }: BuyStepProps) => {
-	const { list, fiat_amount: fiatAmount, token_amount: tokenAmount, price, uuid, buyer, status, escrow } = order;
+const Payment = ({ order }: BuyStepProps) => {
+	const { list, fiat_amount: fiatAmount, token_amount: tokenAmount, price, uuid, buyer, escrow, id, status } = order;
 	const { token, fiat_currency: currency, payment_method: paymentMethod } = list!;
+	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const seller = list?.seller.address === address;
 
@@ -75,25 +77,38 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
-							<span className="text-neutral-500">Account Name</span>
-							<ClipboardText itemValue={paymentMethod.account_name} />
-						</div>
-						<div className="flex flex-row justify-between mb-4">
-							<span className="text-neutral-500">Account Number</span>
+							<span className="text-neutral-500">Payment Method</span>
 							<span className="flex flex-row justify-between">
-								<ClipboardText itemValue={paymentMethod.account_number} />
+								<Image
+									src={bank.icon}
+									alt={bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+								/>
+								<ClipboardText itemValue={bank.name} />
 							</span>
 						</div>
-						<div className="flex flex-row justify-between mb-4">
-							<span className="text-neutral-500">Bank Name</span>
-							<span className="flex flex-row justify-between">
-								<ClipboardText itemValue={paymentMethod.bank.name} />
-							</span>
-						</div>
-						<div className="flex flex-row justify-between hidden">
+
+						{Object.keys(values || {}).map((key) => {
+							const {
+								bank: { account_info_schema: schema }
+							} = paymentMethod;
+							const field = schema.find(({ id }) => id === key);
+							const value = (values || {})[key];
+							if (!value) return <></>;
+
+							return (
+								<div className="flex flex-row justify-between mb-4" key={key}>
+									<span className="text-neutral-500">{field?.label}</span>
+									<ClipboardText itemValue={value} />
+								</div>
+							);
+						})}
+						<div className="flex flex-row justify-between">
 							<span className="text-neutral-500">Reference No.</span>
 							<span className="flex flex-row justify-between">
-								<ClipboardText itemValue="011223332222" />
+								<ClipboardText itemValue={String(Number(id) * 10000)} />
 							</span>
 						</div>
 						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden"></div>
@@ -117,10 +132,13 @@ const Payment = ({ order, updateOrder }: BuyStepProps) => {
 							uuid={uuid!}
 						/>
 					)}
-					{status === 'escrowed' && seller && !!escrow && <ReleaseFundsButton escrow={escrow.address} />}
-					{status === 'escrowed' && !seller && !!escrow && (
-						<MarkAsPaidButton escrowAddress={escrow.address} />
-					)}
+					{status === 'escrowed' &&
+						!!escrow &&
+						(seller ? (
+							<ReleaseFundsButton escrow={escrow.address} />
+						) : (
+							<MarkAsPaidButton escrowAddress={escrow.address} />
+						))}
 				</div>
 			</div>
 		</StepLayout>

@@ -14,7 +14,7 @@ interface OrderResumeParams {
 }
 
 const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
-	const { list, token_amount: tokenAmount, fiat_amount: fiatAmount, escrow } = order;
+	const { list, token_amount: tokenAmount, fiat_amount: fiatAmount, escrow, id, created_at: createdAt } = order;
 	const { token, seller, fiat_currency: currency } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
@@ -22,6 +22,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 	const tokenValue = `${tokenAmount} ${token.symbol}`;
 	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
 	const { fee } = useEscrowFee({ address: escrow?.address, token, tokenAmount });
+	const date = new Date(createdAt);
 
 	return (
 		<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
@@ -42,14 +43,16 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 				<span className="text-neutral-500">Amount Received</span>
 				<span className="flex flex-row justify-between">{selling ? fiatValue : tokenValue}</span>
 			</div>
-			<div className="flex flex-row justify-between mb-4 hidden">
+			<div className="flex flex-row justify-between mb-4">
 				<span className="text-neutral-500">Order Time</span>
-				<span className="flex flex-row justify-between">11:00am, 12/11/2022</span>
+				<span className="flex flex-row justify-between">
+					{date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+				</span>
 			</div>
-			<div className="flex flex-row justify-between mb-4 hidden">
+			<div className="flex flex-row justify-between mb-4">
 				<span className="text-neutral-500">Reference No.</span>
 				<span className="flex flex-row justify-between">
-					<ClipboardText itemValue="0112233322224" />
+					<ClipboardText itemValue={String(Number(id) * 10000)} />
 				</span>
 			</div>
 			{showRating && false && (

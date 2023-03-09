@@ -34,7 +34,7 @@ const BankSelect = ({
 	}
 
 	return banks ? (
-		<Select label="Bank Name" options={banks} selected={selected} onSelect={onSelect} error={error} />
+		<Select label="Payment Method" options={banks} selected={selected} onSelect={onSelect} error={error} />
 	) : (
 		<></>
 	);

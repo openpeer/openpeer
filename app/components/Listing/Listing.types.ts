@@ -1,11 +1,10 @@
 import { Option } from 'components/Select/Select.types';
-import { List } from 'models/types';
+import { List, PaymentMethod } from 'models/types';
 
 export interface UIPaymentMethod {
 	id: number | undefined;
-	account_name: string;
-	account_number: string;
 	bank: Option | undefined;
+	values: PaymentMethod['values'];
 }
 
 export interface UIList {
