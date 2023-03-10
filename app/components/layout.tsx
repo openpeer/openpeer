@@ -174,10 +174,10 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 									<div className="flex flex-row items-center">
 										{!!user && (
 											<Link
-												className="pr-4 pl-2 text-gray-400 hover:text-gray-500"
+												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
 												href={`/${user.address}`}
 											>
-												<Avatar user={user} />
+												<Avatar user={user} className="w-full" />
 											</Link>
 										)}
 										<ConnectButton

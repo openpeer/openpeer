@@ -101,10 +101,10 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 
 	return (
 		<div className="w-full m-auto flex flex-col sm:flex-row px-8 py-4 gap-x-16 justify-center mt-8">
-			<div className="w-full md:w-1/4 mb-8">
+			<div className="w-full md:w-80 mb-8">
 				<div className="flex items-start">
 					<div className="w-48">
-						<Avatar user={user} className="inline-block h-20 w-20" />
+						<Avatar user={user} className="w-20 h-20" />
 					</div>
 					<div className="ml-3">
 						<div className="font-medium text-gray-600 group-hover:text-gray-900 mb-6">
@@ -115,7 +115,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					</div>
 				</div>
 			</div>
-			<div className="w-full md:w-1/2">
+			<div className="w-full md:w-80">
 				<div className="mb-2">
 					<HeaderH3 title="Account info" />
 					<Input label="Username" id="username" value={username} onChange={setUsername} error={errors.name} />
