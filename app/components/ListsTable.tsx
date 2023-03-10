@@ -7,11 +7,28 @@ import { useAccount } from 'wagmi';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 
-interface ListsTableParams {
+interface ListsTableProps {
 	lists: List[];
+	fiatAmount?: number;
+	tokenAmount?: number;
 }
 
-const ListsTable = ({ lists }: ListsTableParams) => {
+interface BuyButtonProps {
+	id: number;
+	fiatAmount: number | undefined;
+	tokenAmount: number | undefined;
+}
+
+const BuyButton = ({ id, fiatAmount, tokenAmount }: BuyButtonProps) => (
+	<Link
+		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
+		as={`/buy/${encodeURIComponent(id)}`}
+	>
+		<Button title="Buy" />
+	</Link>
+);
+
+const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
 
 	return (
@@ -92,12 +109,10 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 									</div>
 									<div className="w-2/5 flex flex-col lg:hidden px-4">
 										<span className="font-bold mb-2">
-											{fiatSymbol} {price} per {symbol}
+											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 										</span>
 										{canBuy && (
-											<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-												<Button title="Buy" />
-											</Link>
+											<BuyButton id={list.id} fiatAmount={fiatAmount} tokenAmount={tokenAmount} />
 										)}
 									</div>
 								</div>
@@ -106,7 +121,7 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 								{amount} {symbol}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{fiatSymbol} {price} per {symbol}
+								{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
@@ -125,11 +140,7 @@ const ListsTable = ({ lists }: ListsTableParams) => {
 								</div>
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
-								{canBuy && (
-									<Link href={`/buy/${encodeURIComponent(list.id)}`}>
-										<Button title="Buy" />
-									</Link>
-								)}
+								{canBuy && <BuyButton id={list.id} fiatAmount={fiatAmount} tokenAmount={tokenAmount} />}
 							</td>
 						</tr>
 					);

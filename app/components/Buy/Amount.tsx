@@ -35,16 +35,16 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
+	const router = useRouter();
+	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || Number(quickBuyFiat));
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || Number(quickBuyToken));
 
 	const { errors, clearErrors, validate } = useFormErrors();
-
-	const router = useRouter();
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
@@ -127,6 +127,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		setFiatAmount(val);
 		if (price && val) setTokenAmount(truncate(val / price, token.decimals));
 	}
+
 	function onChangeToken(val: number | undefined) {
 		clearErrors(['tokenAmount']);
 

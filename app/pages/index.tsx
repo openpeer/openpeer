@@ -13,8 +13,16 @@ const Quick = () => {
 	const [seeLists, setSeeLists] = useState(false);
 	const [type, setType] = useState<QuickBuyType>('Buy');
 	const [loading, setLoading] = useState(false);
+	const [buyFiatAmount, setBuyFiatAmount] = useState<number>();
+	const [buyTokenAmount, setBuyTokenAmount] = useState<number>();
 
-	const showLists = lists.length > 0 && seeLists;
+	const onBuyClick = (fiatAmount: number, tokenAmount: number) => {
+		setBuyFiatAmount(fiatAmount);
+		setBuyTokenAmount(tokenAmount);
+		setSeeLists(true);
+	};
+
+	const showLists = lists.length > 0 && seeLists && !!buyFiatAmount && !!buyTokenAmount;
 	return (
 		<>
 			{showLists && (
@@ -30,7 +38,7 @@ const Quick = () => {
 							</div>
 						</div>
 						<div className="py-4">
-							<ListsTable lists={lists} />
+							<ListsTable lists={lists} fiatAmount={buyFiatAmount} tokenAmount={buyTokenAmount} />
 						</div>
 					</div>
 				</div>
@@ -53,7 +61,7 @@ const Quick = () => {
 									<Buy
 										lists={lists}
 										updateLists={setLists}
-										onSeeOptions={() => setSeeLists(true)}
+										onSeeOptions={onBuyClick}
 										onLoading={setLoading}
 									/>
 								</div>

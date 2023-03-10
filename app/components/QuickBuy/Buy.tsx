@@ -11,7 +11,7 @@ import { CheckIcon } from '@heroicons/react/24/outline';
 interface BuyProps {
 	lists: List[];
 	updateLists: (lists: List[]) => void;
-	onSeeOptions: () => void;
+	onSeeOptions: (fiatAmount: number, tokenAmount: number) => void;
 	onLoading: (loading: boolean) => void;
 }
 
@@ -104,6 +104,12 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 		}
 	};
 
+	const onButtonClick = () => {
+		if (!!fiatAmount && !!tokenAmount && !!currency && !!token) {
+			onSeeOptions(fiatAmount, tokenAmount);
+		}
+	};
+
 	return (
 		<>
 			<div>
@@ -154,7 +160,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 				title="See Buy Options"
 				processing={loading}
 				disabled={!(currency && token && fiatAmount && tokenAmount && !loading)}
-				onClick={onSeeOptions}
+				onClick={onButtonClick}
 			/>
 			<div className="text-center mt-4">
 				<span className="text-xs text-gray-600 text-center">Always zero fees 🎉</span>
