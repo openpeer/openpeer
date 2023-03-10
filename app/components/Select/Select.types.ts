@@ -13,4 +13,5 @@ export interface SelectProps {
 	error?: string;
 	minimal?: boolean;
 	height?: string;
+	rounded?: boolean;
 }

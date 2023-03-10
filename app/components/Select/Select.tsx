@@ -17,7 +17,8 @@ export default function Select({
 	onSelect,
 	error,
 	minimal = false,
-	height = ''
+	height = '',
+	rounded = true
 }: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
@@ -40,7 +41,7 @@ export default function Select({
 										<Image
 											src={selected.icon}
 											alt={selected.name}
-											className="h-6 w-6 flex-shrink-0 rounded-full "
+											className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
 											width={24}
 											height={24}
 											unoptimized
@@ -88,7 +89,9 @@ export default function Select({
 														<Image
 															src={option.icon}
 															alt={option.name}
-															className="h-6 w-6 flex-shrink-0 rounded-full"
+															className={`${
+																rounded ? 'rounded-full' : ''
+															} h-6 w-6 flex-shrink-0`}
 															width={24}
 															height={24}
 															unoptimized
