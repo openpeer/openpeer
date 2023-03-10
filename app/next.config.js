@@ -18,6 +18,10 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
+				hostname: 'cryptologos.cc'
+			},
+			{
+				protocol: 'https',
 				hostname: 'openpeerimages.s3.us-west-1.amazonaws.com'
 			}
 		]

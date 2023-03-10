@@ -17,16 +17,17 @@ interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
 }
 
-const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
+const Prefix = ({ label, imageSRC, rounded = true }: { label: string; imageSRC: string; rounded?: boolean }) => (
 	<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 		<div className="flex flex-row">
 			<span className="mr-2">
 				<Image
 					src={imageSRC}
 					alt={label}
-					className="h-6 w-6 flex-shrink-0 rounded-full"
+					className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
 					width={24}
 					height={24}
+					unoptimized
 				/>
 			</span>
 			<span className="text-gray-500">{label}</span>
@@ -36,13 +37,17 @@ const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
-	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
+	let { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || Number(quickBuyFiat));
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || Number(quickBuyToken));
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
+		orderFiatAmount || quickBuyFiat ? Number(quickBuyFiat) : undefined
+	);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(
+		orderTokenAmount || quickBuyToken ? Number(quickBuyToken) : undefined
+	);
 
 	const { errors, clearErrors, validate } = useFormErrors();
 
@@ -154,7 +159,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				/>
 				<Input
 					label="Amount you'll receive"
-					prefix={<Prefix label={token!.name} imageSRC={token!.icon} />}
+					prefix={<Prefix label={token!.name} imageSRC={token!.icon} rounded={false} />}
 					id="amountToReceive"
 					value={tokenAmount}
 					onChangeNumber={onChangeToken}
