@@ -3,6 +3,7 @@ import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listi
 import { UIList } from 'components/Listing/Listing.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
+import { List } from 'models/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
@@ -12,6 +13,7 @@ const AMOUNT_STEP = 2;
 const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
 
+const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const SellPage = () => {
 	const router = useRouter();
 	const { token, currency, tokenAmount } = router.query;
@@ -21,19 +23,19 @@ const SellPage = () => {
 	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
 		step: quickSell ? AMOUNT_STEP : SETUP_STEP,
-		marginType: 'fixed'
+		marginType: DEFAULT_MARGIN_TYPE
 	} as UIList);
 	const step = list.step;
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: 'fixed' } as UIList);
+		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: DEFAULT_MARGIN_TYPE } as UIList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
-		setList({ step: SETUP_STEP, marginType: 'fixed' } as UIList);
+		setList({ step: SETUP_STEP, marginType: DEFAULT_MARGIN_TYPE } as UIList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chain]);
 

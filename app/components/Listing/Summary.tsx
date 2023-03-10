@@ -1,4 +1,4 @@
-import { PaymentMethod } from 'models/types';
+import { FiatCurrency, PaymentMethod } from 'models/types';
 import Image from 'next/image';
 
 import { UIList } from './Listing.types';
@@ -10,7 +10,7 @@ interface SummaryProps {
 const Summary = ({ list }: SummaryProps) => {
 	const { token, currency, totalAvailableAmount, limitMin, limitMax, marginType, margin, paymentMethod, terms } =
 		list;
-	const currencySymbol = currency?.symbol;
+	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
 	if (!token && !currency) {
 		return <></>;
@@ -87,7 +87,7 @@ const Summary = ({ list }: SummaryProps) => {
 						<div className="font-bold">
 							{marginType === 'fixed'
 								? `${currencySymbol} ${margin.toFixed(2)} per ${token?.name}`
-								: `Spot price + ${margin.toFixed(2)}%`}
+								: `Spot price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`}
 						</div>
 					</li>
 				)}

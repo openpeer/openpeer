@@ -145,6 +145,11 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			</div>
 
 			<Label title="Set Price Margin" />
+			<div className="mb-4">
+				<span className="text-sm text-gray-600">
+					Set how you want to price your crypto. Above or below the spot price or at a fixed price.
+				</span>
+			</div>
 			<MarginSwitcher
 				selected={marginType}
 				onSelect={onSelectType}

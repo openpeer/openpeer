@@ -8,9 +8,10 @@ interface SelectorProps {
 	underValue?: string;
 	updateValue: (n: number) => void;
 	error?: string;
+	allowNegative?: boolean;
 }
 
-const Selector = ({ value, suffix, underValue, updateValue, error }: SelectorProps) => {
+const Selector = ({ value, suffix, underValue, updateValue, error, allowNegative = false }: SelectorProps) => {
 	return (
 		<div className="flex flex-row justify-between items-center bg-gray-100 my-8 py-4 p-8 border-2 border-slate-200 rounded-md">
 			<Button title="-" minimal onClick={() => updateValue(value - 0.01)} />
@@ -23,7 +24,7 @@ const Selector = ({ value, suffix, underValue, updateValue, error }: SelectorPro
 						allowedDecimalSeparators={[',', '.']}
 						decimalScale={2}
 						inputMode="decimal"
-						allowNegative={false}
+						allowNegative={allowNegative}
 					/>
 					{suffix}
 				</div>
