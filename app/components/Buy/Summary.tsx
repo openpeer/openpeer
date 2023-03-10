@@ -55,7 +55,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<div>Total available amount</div>
 					<div className="font-bold text-right">
 						{totalAvailableAmount} {token.symbol}{' '}
-						{!!price && `(${currency.symbol} ${Number(totalAvailableAmount) * price})`}
+						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
 				</li>
 				<li className="w-full flex flex-row justify-between mb-4">
