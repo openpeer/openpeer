@@ -2,6 +2,7 @@ import Avatar from './Avatar';
 import Button from './Button/Button';
 import Switcher from './Button/Switcher';
 import Checkbox from './Checkbox/Checkbox';
+import Flag from './Flag/Flag';
 import Input from './Input/Input';
 import Label from './Label/Label';
 import ListsTable from './ListsTable';
@@ -39,5 +40,6 @@ export {
 	WrongNetwork,
 	NotificationHeader,
 	Switcher,
-	Modal
+	Modal,
+	Flag
 };

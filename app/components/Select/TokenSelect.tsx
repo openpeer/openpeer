@@ -60,7 +60,7 @@ const TokenSelect = ({
 			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
 			minimal={minimal}
-			rounded={false}
+			token
 		/>
 	) : (
 		<></>

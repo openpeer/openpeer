@@ -2,7 +2,6 @@ export interface Option {
 	id: number;
 	name: string;
 	icon: string;
-	coingecko_id?: string;
 }
 
 export interface SelectProps {
@@ -14,4 +13,6 @@ export interface SelectProps {
 	minimal?: boolean;
 	height?: string;
 	rounded?: boolean;
+	flag?: boolean;
+	token?: boolean;
 }

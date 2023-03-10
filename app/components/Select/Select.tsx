@@ -1,3 +1,7 @@
+import Flag from 'components/Flag/Flag';
+import Token from 'components/Token/Token';
+import { countries } from 'models/countries';
+import { Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 import { Fragment } from 'react';
 
@@ -18,7 +22,9 @@ export default function Select({
 	error,
 	minimal = false,
 	height = '',
-	rounded = true
+	rounded = false,
+	flag = false,
+	token = false
 }: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
@@ -37,16 +43,21 @@ export default function Select({
 								}`}
 							>
 								<span className="flex items-center">
-									{!!selected && (
-										<Image
-											src={selected.icon}
-											alt={selected.name}
-											className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
-											width={24}
-											height={24}
-											unoptimized
-										/>
-									)}
+									{!!selected &&
+										(token ? (
+											<Token token={selected as TokenModel} size={24} />
+										) : flag ? (
+											<Flag name={countries[selected.icon]} size={24} />
+										) : (
+											<Image
+												src={selected.icon}
+												alt={selected.name}
+												className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
+												width={24}
+												height={24}
+												unoptimized
+											/>
+										))}
 									<span className={`${minimal ? 'ml-1' : 'ml-3'} block truncate`}>
 										{selected?.name || 'Select'}
 									</span>
@@ -86,16 +97,22 @@ export default function Select({
 											{({ selected, active }) => (
 												<>
 													<div className="flex items-center">
-														<Image
-															src={option.icon}
-															alt={option.name}
-															className={`${
-																rounded ? 'rounded-full' : ''
-															} h-6 w-6 flex-shrink-0`}
-															width={24}
-															height={24}
-															unoptimized
-														/>
+														{token ? (
+															<Token token={option as TokenModel} size={24} />
+														) : flag ? (
+															<Flag name={countries[option.icon]} size={24} />
+														) : (
+															<Image
+																src={option.icon}
+																alt={option.name}
+																className={`${
+																	rounded ? 'rounded-full' : ''
+																} h-6 w-6 flex-shrink-0`}
+																width={24}
+																height={24}
+																unoptimized
+															/>
+														)}
 
 														<span
 															className={classNames(

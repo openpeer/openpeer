@@ -52,6 +52,7 @@ const CurrencySelect = ({
 	if (isLoading) {
 		return <Loading />;
 	}
+
 	return currencies ? (
 		<Select
 			label={label}
@@ -61,6 +62,7 @@ const CurrencySelect = ({
 			error={error}
 			minimal={minimal}
 			height={height}
+			flag
 		/>
 	) : (
 		<></>

@@ -1,9 +1,11 @@
+import { CountriesType } from './countries';
+
 export interface FiatCurrency {
 	id: number;
 	code: string;
 	name: string;
 	icon: string;
-	country_code: string;
+	country_code: CountriesType;
 	symbol: string;
 }
 
