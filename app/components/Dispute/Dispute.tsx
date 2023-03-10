@@ -1,6 +1,7 @@
 import { OpenPeerEscrow } from 'abis';
 import { DisputeForm, DisputeNotes, DisputeStatus } from 'components/DisputeTrade/';
 import Loading from 'components/Loading/Loading';
+import Token from 'components/Token/Token';
 import { Order } from 'models/types';
 import Image from 'next/image';
 import { useAccount, useContractRead } from 'wagmi';
@@ -33,13 +34,7 @@ const Dispute = ({ order }: DisputeParams) => {
 			<div className="p-8 bg-white rounded-lg border border-slate-200 w-full flex flex-col md:flex-row md:gap-x-10">
 				<div className="w-full md:w-1/2">
 					<div className="flex flex-row pb-1 mb-4 text-cyan-600 text-xl">
-						<Image
-							src={token.icon}
-							alt={token.symbol}
-							className="h-6 w-6 flex-shrink-0 rounded-full"
-							width={24}
-							height={24}
-						/>
+						<Token token={token} size={24} />
 						<div className="pl-2">
 							{isBuyer ? 'Buy' : 'Sell'} {tokenAmount} {token.symbol}
 						</div>

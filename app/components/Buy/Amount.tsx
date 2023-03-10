@@ -1,5 +1,7 @@
+import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import StepLayout from 'components/Listing/StepLayout';
+import Token from 'components/Token/Token';
 import { verifyMessage } from 'ethers/lib/utils.js';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
@@ -17,19 +19,10 @@ interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
 }
 
-const Prefix = ({ label, imageSRC, rounded = true }: { label: string; imageSRC: string; rounded?: boolean }) => (
+const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => (
 	<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 		<div className="flex flex-row">
-			<span className="mr-2">
-				<Image
-					src={imageSRC}
-					alt={label}
-					className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
-					width={24}
-					height={24}
-					unoptimized
-				/>
-			</span>
+			<span className="mr-2">{image}</span>
 			<span className="text-gray-500">{label}</span>
 		</div>
 	</div>
@@ -150,7 +143,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			<div className="my-8">
 				<Input
 					label="Amount to buy"
-					prefix={<Prefix label={currency!.symbol} imageSRC={currency!.icon} />}
+					prefix={<Prefix label={currency!.symbol} image={<Flag name={currency.country_code} size={24} />} />}
 					id="amountBuy"
 					value={fiatAmount}
 					onChangeNumber={onChangeFiat}
@@ -159,7 +152,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				/>
 				<Input
 					label="Amount you'll receive"
-					prefix={<Prefix label={token!.name} imageSRC={token!.icon} rounded={false} />}
+					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
 					id="amountToReceive"
 					value={tokenAmount}
 					onChangeNumber={onChangeToken}

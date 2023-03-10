@@ -25,7 +25,7 @@ const TokenImage = ({ name, size, tokenColor }: TokenImageContentProps) => {
 	);
 };
 
-const Token = ({ token, size = 96 }: TokenProps) => {
+const Token = ({ token, size = 24 }: TokenProps) => {
 	const { symbol = '', name, icon } = token || {};
 	const formattedName = symbol!.toLowerCase() as TokenImageType;
 

@@ -8,7 +8,7 @@ export interface FlagProps {
 	size: number;
 }
 
-const Flag = ({ name = '', size = 96 }: FlagProps) => {
+const Flag = ({ name = '', size = 24 }: FlagProps) => {
 	const dArr = flags[name];
 
 	if (!dArr) return <></>;

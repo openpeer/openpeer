@@ -1,4 +1,7 @@
-import { FiatCurrency, PaymentMethod } from 'models/types';
+import Flag from 'components/Flag/Flag';
+import Token from 'components/Token/Token';
+import { countries } from 'models/countries';
+import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 
 import { UIList } from './Listing.types';
@@ -25,13 +28,7 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>
 							<div className="flex flex-row">
 								<span>
-									<Image
-										src={token.icon}
-										alt={token.name}
-										className="h-6 w-6 rounded-full "
-										width={24}
-										height={24}
-									/>
+									<Token token={token as TokenModel} size={24} />
 								</span>
 								<span className="font-bold ml-2"> {token.name}</span>
 							</div>
@@ -44,13 +41,7 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>
 							<div className="flex flex-row">
 								<span>
-									<Image
-										src={currency.icon}
-										alt={currency.name}
-										className="w-6 h-6 rounded-full"
-										width={24}
-										height={24}
-									/>
+									<Flag name={countries[currency.icon]} size={24} />
 								</span>
 								<span className="font-bold ml-2"> {currency.name}</span>
 							</div>
