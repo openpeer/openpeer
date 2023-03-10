@@ -142,7 +142,7 @@ const OrdersPage = () => {
 												<div className="w-3/5 mr-6">
 													<Link href={`/${seller.address}`}>
 														<div className="flex flex-col lg:flex-row lg:items-center cursor-pointer">
-															<div className="w-1/3 flex flex-row mb-2">
+															<div className="w-16 flex flex-row mb-2">
 																<Avatar user={seller} />
 															</div>
 															<div className="text-sm text-gray-900 break-all">
