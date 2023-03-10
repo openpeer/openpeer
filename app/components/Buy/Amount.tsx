@@ -4,6 +4,7 @@ import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
 import { verifyMessage } from 'ethers/lib/utils.js';
 import { useFormErrors } from 'hooks';
+import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
 import Image from 'next/image';
@@ -143,7 +144,12 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			<div className="my-8">
 				<Input
 					label="Amount to buy"
-					prefix={<Prefix label={currency!.symbol} image={<Flag name={currency.country_code} size={24} />} />}
+					prefix={
+						<Prefix
+							label={currency!.symbol}
+							image={<Flag name={countries[currency.country_code]} size={24} />}
+						/>
+					}
 					id="amountBuy"
 					value={fiatAmount}
 					onChangeNumber={onChangeFiat}
