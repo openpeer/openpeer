@@ -52,16 +52,16 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			</div>
 			<div className="flex flex-col bg-gray-100 rounded-lg p-6">
 				<div className="w-full flex flex-row justify-between mb-4">
-					<div>Total available amount</div>
-					<div className="font-bold text-right">
+					<div className="text-sm">Total available amount</div>
+					<div className="text-sm font-bold text-right">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
 				</div>
 				<div className="flex flex-row justify-between mb-4">
 					<div className="flex flex-row items-center space-x-2">
-						<div>Price</div>
-						<div className="font-bold text-right">
+						<div className="text-sm">Price</div>
+						<div className="text-sm font-bold text-right">
 							{currency.symbol} {Number(price).toFixed(2)}
 						</div>
 					</div>
@@ -74,50 +74,57 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						</div>
 					)}
 				</div>
-				{!!tokenAmount && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Amount to receive</div>
-						<div className="font-bold">
-							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+				<div className="flex flex-row justify-between mb-4">
+					{!!tokenAmount && (
+						<div className="flex flex-row items-center space-x-2">
+							<div className="text-sm">Amount to receive</div>
+							<div className="text-sm font-bold">
+								{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+							</div>
 						</div>
-					</div>
-				)}
-				{!!limitMin && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Min order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMin}
+					)}
+					{paymentMethod.bank && (
+						<div className="flex flex-row items-center space-x-2">
+							<div className="text-sm">Payment method</div>
+							<div className="flex flex-row items-center font-bold">
+								<Image
+									src={paymentMethod.bank.icon}
+									alt={paymentMethod.bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+								<span className="text-sm">{paymentMethod?.bank?.name}</span>
+							</div>
 						</div>
-					</div>
-				)}
-				{!!limitMax && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Max order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMax}
+					)}
+				</div>
+				{!!limitMin ||
+					(limitMax && (
+						<div className="flex flex-row justify-between mb-4">
+							{!!limitMin && (
+								<div className="flex flex-row items-center space-x-2">
+									<div>Min order</div>
+									<div className="font-bold text-right">
+										{currency.symbol} {limitMin}
+									</div>
+								</div>
+							)}
+							{!!limitMax && (
+								<div className="w-full flex flex-row justify-between mb-4">
+									<div>Max order</div>
+									<div className="font-bold text-right">
+										{currency.symbol} {limitMax}
+									</div>
+								</div>
+							)}
 						</div>
-					</div>
-				)}
-				{paymentMethod.bank && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Payment method</div>
-						<div className="flex flex-row items-center font-bold">
-							<Image
-								src={paymentMethod.bank.icon}
-								alt={paymentMethod.bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
-							{paymentMethod?.bank?.name}
-						</div>
-					</div>
-				)}
+					))}
 				{!!terms && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Terms</div>
-						<div className="font-bold">{terms}</div>
+					<div className="w-full flex flex-row space-x-2">
+						<div className="text-sm">Terms</div>
+						<div className="text-sm font-bold">{terms}</div>
 					</div>
 				)}
 				{/* <li className="w-full flex flex-row justify-between mb-4">
