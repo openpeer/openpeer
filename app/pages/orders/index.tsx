@@ -1,4 +1,5 @@
 import { Avatar, Button, Loading } from 'components';
+import Accordion from 'components/Accordion/Accordion';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { Order } from 'models/types';
@@ -185,6 +186,9 @@ const OrdersPage = () => {
 							})}
 						</tbody>
 					</table>
+
+					<Accordion title={'My orders'} content={'content'} />
+					<Accordion title={'Buy orders'} content={'content'} />
 				</div>
 			</div>
 		</div>
