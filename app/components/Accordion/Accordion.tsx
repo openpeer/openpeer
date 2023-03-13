@@ -5,10 +5,11 @@ import { MinusIcon } from '@heroicons/react/20/solid';
 interface AccordionProps {
 	title: string;
 	content: string;
+	active?: boolean;
 }
 
-const Accordion = ({ title, content }: AccordionProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+const Accordion = ({ title, content, active = false }: AccordionProps) => {
+	const [isOpen, setIsOpen] = useState(active || false);
 	return (
 		<div className="border-b border-slate-200 overflow-hidden">
 			<button
