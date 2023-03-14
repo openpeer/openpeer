@@ -66,7 +66,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			.then((res) => res.json())
 			.then((data) => {
 				setPaymentMethods(data);
-				if (!paymentMethod.bank?.id) setPaymentMethod(data[0]);
+				if (!paymentMethod.bank?.id) {
+					setPaymentMethod(data[0]);
+				} else {
+					setPaymentMethod(undefined);
+				}
 				setLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
