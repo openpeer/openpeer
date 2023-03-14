@@ -1,14 +1,15 @@
+import 'react-wallet-chat/dist/index.css';
+
 import Avatar from 'components/Avatar';
-import Button from 'components/Button/Button';
-import Loading from 'components/Loading/Loading';
 import Image from 'next/image';
 import Link from 'next/link';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
+import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer } = order;
@@ -25,7 +26,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 
 	const { address } = useAccount();
 	const selling = seller.address === address;
-	const chatAddress = selling ? seller.address : buyer?.address;
+	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
 
 	return (
@@ -129,24 +130,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
 					business with me.
 				</p>
-				{!!chatAddress && (
-					<Button
-						onClick={() =>
-							window.open(
-								`https://chat.blockscan.com/index?a=${selling ? seller.address : buyer?.address}`,
-								'_blank',
-								'noreferrer'
-							)
-						}
-						title={
-							<span className="flex flex-row items-center justify-center">
-								<span className="mr-2">Chat with {selling ? 'buyer' : 'merchant'}</span>
-								<ChatBubbleLeftEllipsisIcon className="w-8" />
-							</span>
-						}
-						outlined
-					/>
-				)}
+				{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}
 			</div>
 		</div>
 	);
