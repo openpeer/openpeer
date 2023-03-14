@@ -41,7 +41,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />
 						<span>
-							{user.trades} {user.trades > 1 ? 'Trades' : 'Trade'}
+							{user.trades} {user.trades === 1 ? 'Trade' : 'Trades'}
 						</span>
 					</div>
 					<div className="flex flex-row ml-4 hidden">
