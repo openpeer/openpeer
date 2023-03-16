@@ -30,7 +30,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const user = !!selling && !!buyer ? buyer : seller;
 
 	return (
-		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
+		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
 				<Link href={`/${user.address}`} target="_blank">
 					<div className="flex flex-row items-center">

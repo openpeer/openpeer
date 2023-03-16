@@ -25,16 +25,16 @@ const Button = ({
 				minimal
 					? 'text-xl font-bold w-8'
 					: outlined
-					? 'w-full px-2 py-2.5 rounded border border-cyan-600 text-base text-cyan-600 my-8'
+					? 'w-full px-2 py-3 rounded border border-cyan-600 text-base text-cyan-600 my-8'
 					: processing
 					? 'flex flex-row items-center justify-center w-full px-5 py-2.5 rounded bg-cyan-600 text-base text-white'
 					: disabled
-					? 'w-full px-5 py-2.5 rounded bg-gray-400 text-base text-white opacity-50 cursor-not-allowed'
+					? 'w-full px-5 py-3 rounded bg-gray-400 text-base text-white opacity-50 cursor-not-allowed'
 					: rounded
-					? 'w-full px-4 py-2 rounded-full bg-cyan-600 text-sm md:text-base text-white'
+					? 'w-full px-4 py-2.5 rounded-full bg-cyan-600 text-sm md:text-base text-white'
 					: link
 					? 'w-auto'
-					: 'w-full px-5 py-2.5 rounded bg-cyan-600 text-base text-white'
+					: 'w-full px-5 py-3 rounded bg-cyan-600 text-base text-white'
 			}
 			onClick={onClick}
 			disabled={disabled || processing}

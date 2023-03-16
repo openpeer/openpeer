@@ -55,9 +55,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
-							!!prefix && 'text-right'
-						}`}
+						className={`${style} h-16 block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 pl-16 ${!!prefix}`}
 						allowedDecimalSeparators={[',', '.']}
 						decimalScale={decimalScale}
 						inputMode="decimal"
@@ -70,9 +68,7 @@ const Input = ({
 					<input
 						type={type}
 						id={id}
-						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
-							!!prefix && 'text-right'
-						}`}
+						className={`${style} h-16 block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 pl-16 ${!!prefix}`}
 						value={value}
 						onChange={onInputChange}
 						placeholder={placeholder}
