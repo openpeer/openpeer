@@ -51,54 +51,54 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					</div>
 				</div>
 			</div>
-			<ul className="flex flex-col bg-gray-100 rounded-lg p-6">
-				<li className="w-full flex flex-row justify-between mb-4">
+			<div className="flex flex-col bg-gray-100 rounded-lg p-6">
+				<div className="w-full flex flex-row justify-between mb-4">
 					<div>Total available amount</div>
 					<div className="font-bold text-right">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
-				</li>
-				<li className="w-full flex flex-row justify-between mb-4">
+				</div>
+				<div className="w-full flex flex-row justify-between mb-4">
 					<div>Price</div>
 					<div className="font-bold text-right">
 						{currency.symbol} {Number(price).toFixed(2)}
 					</div>
-				</li>
+				</div>
 				{!!fiatAmount && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<div className="w-full flex flex-row justify-between mb-4">
 						<div>Amount to pay</div>
 						<div className="font-bold">
 							{currency.symbol} {Number(fiatAmount).toFixed(2)}
 						</div>
-					</li>
+					</div>
 				)}
 				{!!tokenAmount && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<div className="w-full flex flex-row justify-between mb-4">
 						<div>Amount to receive</div>
 						<div className="font-bold">
 							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
 						</div>
-					</li>
+					</div>
 				)}
 				{!!limitMin && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<div className="w-full flex flex-row justify-between mb-4">
 						<div>Min order</div>
 						<div className="font-bold text-right">
 							{currency.symbol} {limitMin}
 						</div>
-					</li>
+					</div>
 				)}
 				{!!limitMax && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<div className="w-full flex flex-row justify-between mb-4">
 						<div>Max order</div>
 						<div className="font-bold text-right">
 							{currency.symbol} {limitMax}
 						</div>
-					</li>
+					</div>
 				)}
 				{paymentMethod.bank && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<div className="w-full flex flex-row justify-between mb-4">
 						<div>Payment method</div>
 						<div className="flex flex-row items-center font-bold">
 							<Image
@@ -111,7 +111,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							/>
 							{paymentMethod?.bank?.name}
 						</div>
-					</li>
+					</div>
 				)}
 				{!!terms && (
 					<li className="w-full flex flex-row justify-between mb-4">
@@ -123,14 +123,21 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<div>Payment Limit</div>
 					<div className="font-bold">10 minutes</div>
 				</li> */}
-			</ul>
+			</div>
 			<div className="mt-6">
-				<span className="text-cyan-600">Please Note</span>
-				<p className="mt-2">
-					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
-					business with me.
+				<span className="text-gray-800">Merchant's Note</span>
+				<p className="mt-2 text-gray-500">
+					Please do not include any crypto related keywords like USDT or OpenPeer. Thanks for doing business
+					with me.
 				</p>
-				{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}
+			</div>
+			{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}
+			<div className="bg-[#FEFAF5] text-[#E37A00] p-4 rounded">
+				<p className="text-sm font-bold mb-2">Disclaimer</p>
+				<p className="text-sm">
+					Trades settled outside of OpenPeer cannot have funds escrowed and can't be disputed. You should only
+					trade with merchants through OpenPeer.
+				</p>
 			</div>
 		</div>
 	);
