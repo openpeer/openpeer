@@ -53,53 +53,64 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			</div>
 			<div className="flex flex-col bg-gray-100 rounded-lg p-6">
 				<div className="w-full flex flex-row justify-between mb-4">
-					<div>Total available amount</div>
-					<div className="font-bold text-right">
+					<div className="text-sm">Total available amount</div>
+					<div className="font-bold text-right text-sm">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
 				</div>
-				<div className="w-full flex flex-row justify-between mb-4">
-					<div>Price</div>
-					<div className="font-bold text-right">
-						{currency.symbol} {Number(price).toFixed(2)}
+				<div className="w-full flex flex-row justify-between">
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Price</div>
+						<div className="font-bold text-right text-sm">
+							{currency.symbol} {Number(price).toFixed(2)}
+						</div>
 					</div>
+					{/*<div className="w-full flex flex-row mb-4">
+						<div className="text-sm">Payment Limit</div>
+						<div className="text-sm font-bold">10 minutes</div>
+					</div> */}
 				</div>
-				{!!fiatAmount && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Amount to pay</div>
-						<div className="font-bold">
-							{currency.symbol} {Number(fiatAmount).toFixed(2)}
+
+				<div className="w-full flex flex-row justify-between">
+					{!!fiatAmount && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Amount to pay</div>
+							<div className="font-bold text-sm">
+								{currency.symbol} {Number(fiatAmount).toFixed(2)}
+							</div>
 						</div>
-					</div>
-				)}
-				{!!tokenAmount && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Amount to receive</div>
-						<div className="font-bold">
-							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+					)}
+					{!!tokenAmount && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Amount to receive</div>
+							<div className="font-bold text-sm">
+								{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+							</div>
 						</div>
-					</div>
-				)}
-				{!!limitMin && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Min order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMin}
+					)}
+				</div>
+				<div className="w-full flex flex-row justify-between">
+					{!!limitMin && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Min order</div>
+							<div className="font-bold text-right text-sm">
+								{currency.symbol} {limitMin}
+							</div>
 						</div>
-					</div>
-				)}
-				{!!limitMax && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Max order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMax}
+					)}
+					{!!limitMax && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Max order</div>
+							<div className="font-bold text-right text-sm">
+								{currency.symbol} {limitMax}
+							</div>
 						</div>
-					</div>
-				)}
+					)}
+				</div>
 				{paymentMethod.bank && (
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div>Payment method</div>
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Payment method</div>
 						<div className="flex flex-row items-center font-bold">
 							<Image
 								src={paymentMethod.bank.icon}
@@ -114,19 +125,16 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					</div>
 				)}
 				{!!terms && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Terms</div>
-						<div className="font-bold">{terms}</div>
-					</li>
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Terms</div>
+						<div className="text-sm font-bold">{terms}</div>
+					</div>
 				)}
-				{/* <li className="w-full flex flex-row justify-between mb-4">
-					<div>Payment Limit</div>
-					<div className="font-bold">10 minutes</div>
-				</li> */}
 			</div>
+
 			<div className="mt-6">
-				<span className="text-gray-800">Merchant's Note</span>
-				<p className="mt-2 text-gray-500">
+				<span className="text-gray-800 text-sm font-bold">Merchant's Note</span>
+				<p className="mt-2 text-sm text-gray-500">
 					Please do not include any crypto related keywords like USDT or OpenPeer. Thanks for doing business
 					with me.
 				</p>
