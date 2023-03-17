@@ -1,14 +1,15 @@
+import 'react-wallet-chat/dist/index.css';
+
 import Avatar from 'components/Avatar';
-import Button from 'components/Button/Button';
-import Loading from 'components/Loading/Loading';
 import Image from 'next/image';
 import Link from 'next/link';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
+import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer } = order;
@@ -25,7 +26,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 
 	const { address } = useAccount();
 	const selling = seller.address === address;
-	const chatAddress = selling ? seller.address : buyer?.address;
+	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
 
 	return (
@@ -41,7 +42,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />
 						<span>
-							{user.trades} {user.trades > 1 ? 'Trades' : 'Trade'}
+							{user.trades} {user.trades === 1 ? 'Trade' : 'Trades'}
 						</span>
 					</div>
 					<div className="flex flex-row ml-4 hidden">
@@ -163,6 +164,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						only trade with merchants through OpenPeer.
 					</p>
 				</div>
+				{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}
 			</div>
 		</div>
 	);

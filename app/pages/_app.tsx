@@ -16,14 +16,17 @@ import { Manrope } from '@next/font/google';
 import { getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 
-const { chains, provider } = configureChains(
-	[polygon, polygonMumbai],
-	[
-		alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
-		alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
-		publicProvider()
-	]
-);
+const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
+const enabledProviders =
+	process.env.NODE_ENV === 'development'
+		? [
+				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
+				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
+				publicProvider()
+		  ]
+		: [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }), publicProvider()];
+
+const { chains, provider } = configureChains(enabledChains, enabledProviders);
 
 const { connectors } = getDefaultWallets({
 	appName: 'OpenPeer',

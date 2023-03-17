@@ -60,7 +60,7 @@ const ReleaseFundsButton = ({
 				actionButtonTitle="Yes, confirm"
 				title="Are you sure you have received this payment in your account?"
 				content="Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds."
-				type="alert"
+				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
 				onAction={() => setReleaseConfirmed(true)}

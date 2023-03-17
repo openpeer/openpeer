@@ -56,7 +56,7 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 				actionButtonTitle="Yes, confirm"
 				title="Escrow funds?"
 				content="The funds will be sent to a new escrow contract."
-				type="alert"
+				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
 				onAction={() => setEscrowConfirmed(true)}

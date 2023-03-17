@@ -4883,6 +4883,11 @@ react-toastify@^9.1.1:
   dependencies:
     clsx "^1.1.1"
 
+react-wallet-chat@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-wallet-chat/-/react-wallet-chat-1.4.0.tgz#fae90b31d6a4e3f24b88d021b688e9c4c1e38803"
+  integrity sha512-8RF288Rhqx9lk+mHYWQ+5+xO5VRIhWNlDJ4TVNrnhHHdkRlJREHuh8Yk8m5ZSTK95PfrKn4qltM0/dexogOjuw==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
