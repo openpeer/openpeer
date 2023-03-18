@@ -82,14 +82,14 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	return (
 		<StepLayout onProceed={onProceed}>
-			<h2 className="text-xl mt-8">Payment Method</h2>
+			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
 			<p>Choose how you want to receive your money</p>
 			{(paymentMethods || []).map((pm) => (
 				<div
 					key={pm.id}
 					className={`${
 						pm.id === paymentMethod?.id ? 'border-2 border-cyan-600' : 'border-2 border-slate-200'
-					} w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 rounded-md`}
+					} w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 rounded-md cursor-pointer`}
 					onClick={() => setPaymentMethod(pm)}
 				>
 					<div className="w-full flex flex-row justify-between mb-4">
