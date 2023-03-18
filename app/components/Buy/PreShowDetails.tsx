@@ -21,9 +21,9 @@ const PreShowDetails = () => {
 			</div>
 			<div className="border-b-2 border-dashed border-color-gray-400 mb-4 mt-4"></div>
 			<div className="flex flex-row justify-between">
-				<span className="text-neutral-500">Payment will expire in </span>
+				<span className="text-neutral-500 text-sm">Payment will expire in </span>
 				<span className="flex flex-row justify-between">
-					<span className="text-cyan-600">15m:20secs</span>
+					<span className="text-cyan-600 text-sm">15m:20secs</span>
 				</span>
 			</div>
 		</div>
