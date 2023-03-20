@@ -1,6 +1,7 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useMarkAsPaid, useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import { useMarkAsPaid } from 'hooks/transactions';
 import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {
@@ -10,7 +11,7 @@ interface MarkAsPaidButtonParams {
 const MarkAsPaidButton = ({ escrowAddress }: MarkAsPaidButtonParams) => {
 	const { isConnected } = useAccount();
 
-	const { isLoading, isSuccess, data, markAsPaid } = useMarkAsPaid({ address: escrowAddress });
+	const { isLoading, isSuccess, data, markAsPaid } = useMarkAsPaid({ contract: escrowAddress });
 
 	const onPaymentDone = () => {
 		if (!isConnected) return;

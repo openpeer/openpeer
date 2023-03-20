@@ -1,11 +1,10 @@
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { BigNumber } from 'ethers';
 import { toBn } from 'evm-bn';
+import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { Token } from 'models/types';
 import { useContractRead, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
-
-import { DEPLOYER_CONTRACTS } from './useCreateContract';
 
 interface UseEscrowFeeParams {
 	address?: `0x${string}`;

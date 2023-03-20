@@ -1,6 +1,6 @@
 import { BigNumber, constants } from 'ethers';
 import { useEscrowFee } from 'hooks';
-import { DEPLOYER_CONTRACTS } from 'hooks/useCreateContract';
+import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { useState } from 'react';
 import { useNetwork } from 'wagmi';
 
@@ -31,7 +31,7 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 			) : (
 				<ApproveTokenButton
 					token={token}
-					amount={totalAmount}
+					amount={totalAmount!}
 					spender={spender}
 					onTokenApproved={() => setApproved(true)}
 				/>

@@ -1,15 +1,16 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber, constants } from 'ethers';
-import { useTokenApproval, useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import { useApproval } from 'hooks/transactions';
 import { Token } from 'models/types';
 import { useEffect } from 'react';
 import { erc20ABI, useAccount, useContractRead } from 'wagmi';
 
 const ApproveTokenButton = ({
 	token,
-	amount,
 	spender,
+	amount,
 	onTokenApproved
 }: {
 	token: Token;
@@ -18,17 +19,17 @@ const ApproveTokenButton = ({
 	onTokenApproved: () => void;
 }) => {
 	const { address, isConnected } = useAccount();
-
-	const { isLoading, isSuccess, data, approve } = useTokenApproval({
-		address: token.address,
+	const { isLoading, isSuccess, data, approve } = useApproval({
+		token,
 		spender,
 		amount
 	});
 
 	useTransactionFeedback({ hash: data?.hash, isSuccess, Link: <TransactionLink hash={data?.hash} /> });
 
-	const approveToken = () => {
+	const approveToken = async () => {
 		if (!isConnected) return;
+
 		approve?.();
 	};
 

@@ -30,6 +30,7 @@ export interface Token {
 	name: string;
 	coingecko_id: string;
 	icon: string;
+	gasless: boolean;
 }
 
 export interface List {
