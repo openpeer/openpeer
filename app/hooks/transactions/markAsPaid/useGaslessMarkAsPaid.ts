@@ -39,7 +39,7 @@ const useGaslessMarkAsPaid = ({ contract }: UseGaslessMarkAsPaidProps) => {
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 200000
+				gasLimit: 80000
 			};
 			// @ts-ignore
 			const tx = await provider.send('eth_sendTransaction', [txParams]);

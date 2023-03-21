@@ -29,7 +29,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 							<HeaderH2 title="Awaiting Release" />
 						</span>
 						<p className="text-base">
-							This payment has been marked as paid.{' '}
+							This order has been marked as paid.{' '}
 							{selling
 								? `Please, confirm the payment of ${currency?.symbol} ${Number(fiatAmount).toFixed(
 										2
