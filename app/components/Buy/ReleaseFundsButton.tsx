@@ -1,6 +1,7 @@
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useReleaseFunds, useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import { useReleaseFunds } from 'hooks/transactions';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -18,7 +19,7 @@ const ReleaseFundsButton = ({
 	title = 'Release funds'
 }: ReleaseFundsButtonParams) => {
 	const { isConnected } = useAccount();
-	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ escrow });
+	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ contract: escrow });
 	const [modalOpen, setModalOpen] = useState(false);
 	const [releaseConfirmed, setReleaseConfirmed] = useState(dispute);
 
@@ -60,7 +61,7 @@ const ReleaseFundsButton = ({
 				actionButtonTitle="Yes, confirm"
 				title="Are you sure you have received this payment in your account?"
 				content="Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds."
-				type="alert"
+				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
 				onAction={() => setReleaseConfirmed(true)}

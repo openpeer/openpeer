@@ -2,7 +2,8 @@ import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
-import { useBlockchainCancel, useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
@@ -31,7 +32,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		functionName: 'sellerCanCancelAfter'
 	});
 
-	const { isLoading, isSuccess, cancelOrder, data } = useBlockchainCancel({ contract: escrow!.address, isBuyer });
+	const { isLoading, isSuccess, cancelOrder, data } = useEscrowCancel({ contract: escrow!.address, isBuyer });
 
 	useTransactionFeedback({
 		hash: data?.hash,

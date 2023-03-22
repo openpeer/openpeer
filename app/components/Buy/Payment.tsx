@@ -12,8 +12,8 @@ import ClipboardText from './ClipboardText';
 import EscrowButton from './EscrowButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
 import FeeDisplay from './Payment/FeeDisplay';
-import ReleaseFundsButton from './ReleaseFundsButton';
 import PreShowDetails from './PreShowDetails';
+import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order }: BuyStepProps) => {
 	const { list, fiat_amount: fiatAmount, token_amount: tokenAmount, price, uuid, buyer, escrow, id, status } = order;
@@ -63,7 +63,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div className="flex flex-col">
 						<span className="text-sm">Price</span>
 						<span className="text-lg font-medium">
-							{currency.symbol} {price}
+							{currency.symbol} {Number(price).toFixed(2)}
 						</span>
 					</div>
 					<div className="flex flex-col">

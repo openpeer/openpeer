@@ -12,7 +12,6 @@ interface ChatParams {
 
 const Chat = ({ address, label }: ChatParams) => {
 	const [widgetState, setWidgetState] = useState({});
-	console.log(widgetState);
 	return (
 		<>
 			<Button
@@ -32,7 +31,7 @@ const Chat = ({ address, label }: ChatParams) => {
 				outlined
 			/>
 
-			<WalletChatWidget widgetState={widgetState} />
+			{process.env.NODE_ENV !== 'development' && <WalletChatWidget widgetState={widgetState} />}
 		</>
 	);
 };

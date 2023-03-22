@@ -31,7 +31,7 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 				fiatCurrencyId: lastCurrency?.id,
 				token: lastToken,
 				tokenId: lastToken?.id,
-				margin: undefined
+				margin: list.marginType === 'fixed' ? undefined : list.margin
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

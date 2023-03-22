@@ -14,6 +14,8 @@ const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
 
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
+const DEFAULT_MARGIN_VALUE = 1;
+
 const SellPage = () => {
 	const router = useRouter();
 	const { token, currency, tokenAmount } = router.query;
@@ -23,19 +25,25 @@ const SellPage = () => {
 	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
 		step: quickSell ? AMOUNT_STEP : SETUP_STEP,
-		marginType: DEFAULT_MARGIN_TYPE
+		marginType: DEFAULT_MARGIN_TYPE,
+		margin: DEFAULT_MARGIN_VALUE
 	} as UIList);
 	const step = list.step;
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (list.step > 3) setList({ step: PAYMENT_METHOD_STEP, marginType: DEFAULT_MARGIN_TYPE } as UIList);
+		if (list.step > 3)
+			setList({
+				step: PAYMENT_METHOD_STEP,
+				marginType: DEFAULT_MARGIN_TYPE,
+				margin: DEFAULT_MARGIN_VALUE
+			} as UIList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
-		setList({ step: SETUP_STEP, marginType: DEFAULT_MARGIN_TYPE } as UIList);
+		setList({ step: SETUP_STEP, marginType: DEFAULT_MARGIN_TYPE, margin: DEFAULT_MARGIN_VALUE } as UIList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chain]);
 
