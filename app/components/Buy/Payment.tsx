@@ -12,6 +12,7 @@ import ClipboardText from './ClipboardText';
 import EscrowButton from './EscrowButton';
 import MarkAsPaidButton from './MarkAsPaidButton';
 import FeeDisplay from './Payment/FeeDisplay';
+import PreShowDetails from './PreShowDetails';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order }: BuyStepProps) => {
@@ -52,7 +53,7 @@ const Payment = ({ order }: BuyStepProps) => {
 				<div className="flex flex-row justify-around bg-gray-100 rounded-lg p-6 my-4">
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to pay</span>
-						<span className="text-xl">
+						<span className="text-lg font-medium">
 							{seller
 								? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
 								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
@@ -61,13 +62,13 @@ const Payment = ({ order }: BuyStepProps) => {
 					{seller && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
 					<div className="flex flex-col">
 						<span className="text-sm">Price</span>
-						<span className="text-xl">
+						<span className="text-lg font-medium">
 							{currency.symbol} {Number(price).toFixed(2)}
 						</span>
 					</div>
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to receive</span>
-						<span className="text-xl">
+						<span className="text-lg font-medium">
 							{seller
 								? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
 								: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
@@ -120,6 +121,9 @@ const Payment = ({ order }: BuyStepProps) => {
 						</div>
 					</div>
 				)}
+
+				<PreShowDetails />
+
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
