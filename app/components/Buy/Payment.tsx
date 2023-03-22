@@ -62,7 +62,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div className="flex flex-col">
 						<span className="text-sm">Price</span>
 						<span className="text-xl">
-							{currency.symbol} {price}
+							{currency.symbol} {Number(price).toFixed(2)}
 						</span>
 					</div>
 					<div className="flex flex-col">

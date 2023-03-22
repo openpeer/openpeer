@@ -211,6 +211,11 @@
 				"internalType": "uint32",
 				"name": "_sellerWaitingTime",
 				"type": "uint32"
+			},
+			{
+				"internalType": "address",
+				"name": "trustedForwarder",
+				"type": "address"
 			}
 		],
 		"name": "initialize",

@@ -1,30 +1,23 @@
 import { OpenPeerDeployer } from 'abis';
 import { BigNumber, constants } from 'ethers';
 import { Token } from 'models/types';
-import {
-	useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction
-} from 'wagmi';
-
-export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
-	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
-	80001: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
-};
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 interface UseCreateContractParams {
 	orderID: `0x${string}`;
+	contract: `0x${string}`;
 	buyer: `0x${string}`;
 	amount: BigNumber;
 	fee: BigNumber;
 	token: Token;
 }
 
-const useCreateContract = ({ orderID, buyer, amount, token, fee }: UseCreateContractParams) => {
-	const { chain } = useNetwork();
+const useCreateContract = ({ orderID, buyer, amount, token, fee, contract }: UseCreateContractParams) => {
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 
 	const { config } = usePrepareContractWrite({
-		address: DEPLOYER_CONTRACTS[chain?.id!],
+		address: contract,
 		abi: OpenPeerDeployer,
 		functionName: nativeToken ? 'deployNativeEscrow' : 'deployERC20Escrow',
 		args: nativeToken ? [orderID, buyer, amount] : [orderID, buyer, address, amount],
@@ -40,7 +33,7 @@ const useCreateContract = ({ orderID, buyer, amount, token, fee }: UseCreateCont
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, createContract: write, data };
+	return { isLoading, isSuccess, escrowFunds: write, data };
 };
 
 export default useCreateContract;

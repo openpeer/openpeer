@@ -18,7 +18,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		margin: savedMargin,
 		quickSellSetupDone
 	} = list;
-
 	const percentage = marginType === 'percentage';
 	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 1 : 1);
 	const [fixedMargin, setFixedMargin] = useState<number | undefined>(percentage ? undefined : savedMargin);

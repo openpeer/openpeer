@@ -28,7 +28,9 @@ const Cancelled = ({ order }: BuyStepProps) => {
 					</span>
 					<p className="text-base">
 						{selling
-							? `Your sale of ${tokenValue} to ${buyer?.name || buyer?.address} has been cancelled.`
+							? `Your sale of ${tokenValue} to ${
+									buyer?.name || smallWalletAddress(buyer?.address)
+							  } has been cancelled.`
 							: `Your purchase of ${tokenValue} from ${
 									seller?.name || smallWalletAddress(seller.address)
 							  } has been cancelled.`}
