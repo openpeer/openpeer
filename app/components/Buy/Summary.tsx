@@ -133,18 +133,18 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			</div>
 
 			<div className="mt-6">
-				<span className="text-gray-800 text-sm font-bold">Merchant's Note</span>
+				<span className="text-gray-800 text-sm font-bold">Merchant&apos;s Note</span>
 				<p className="mt-2 text-sm text-gray-500">
-					Please do not include any crypto related keywords like USDT or OpenPeer. Thanks for doing business
-					with me.
+					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
+					business with me.
 				</p>
 			</div>
 			{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}
 			<div className="bg-[#FEFAF5] text-[#E37A00] p-4 rounded">
 				<p className="text-sm font-bold mb-2">Disclaimer</p>
 				<p className="text-sm">
-					Trades settled outside of OpenPeer cannot have funds escrowed and can't be disputed. You should only
-					trade with merchants through OpenPeer.
+					Trades settled outside of OpenPeer cannot have funds escrowed and can&apos;t be disputed. You should
+					only trade with merchants through OpenPeer.
 				</p>
 			</div>
 		</div>
