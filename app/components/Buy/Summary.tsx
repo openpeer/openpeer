@@ -12,7 +12,7 @@ import { UIOrder } from './Buy.types';
 import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
-	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer } = order;
+	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer, id } = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
@@ -77,7 +77,9 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						<div className="flex flex-row space-x-2 mb-4">
 							<div className="text-sm">Amount to pay</div>
 							<div className="font-bold text-sm">
-								{currency.symbol} {Number(fiatAmount).toFixed(2)}
+								{selling
+									? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
+									: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 							</div>
 						</div>
 					)}
@@ -85,7 +87,9 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						<div className="flex flex-row space-x-2 mb-4">
 							<div className="text-sm">Amount to receive</div>
 							<div className="font-bold text-sm">
-								{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+								{selling
+									? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
+									: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
 							</div>
 						</div>
 					)}
@@ -135,8 +139,9 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			<div className="mt-6">
 				<span className="text-gray-800 text-sm font-bold">Merchant&apos;s Note</span>
 				<p className="mt-2 text-sm text-gray-500">
-					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
-					business with me.
+					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Ensure
+					you&apos;re including the reference number ({String(Number(id) * 10000)}) on your transfer. Thanks
+					for trading with me.
 				</p>
 			</div>
 			{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}

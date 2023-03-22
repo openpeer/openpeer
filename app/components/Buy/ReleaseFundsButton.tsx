@@ -21,7 +21,7 @@ const ReleaseFundsButton = ({
 	const { isConnected } = useAccount();
 	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ contract: escrow });
 	const [modalOpen, setModalOpen] = useState(false);
-	const [releaseConfirmed, setReleaseConfirmed] = useState(dispute);
+	const [releaseConfirmed, setReleaseConfirmed] = useState(false);
 
 	const onReleaseFunds = () => {
 		if (!isConnected) return;
@@ -59,8 +59,12 @@ const ReleaseFundsButton = ({
 
 			<Modal
 				actionButtonTitle="Yes, confirm"
-				title="Are you sure you have received this payment in your account?"
-				content="Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds."
+				title={dispute ? 'Are you sure?' : 'Are you sure you have received this payment in your account?'}
+				content={
+					dispute
+						? 'This will send the funds escrowed to the buyer!'
+						: 'Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds.'
+				}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
