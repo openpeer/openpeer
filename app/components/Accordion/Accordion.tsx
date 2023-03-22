@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { PlusIcon } from '@heroicons/react/24/solid';
+
 import { MinusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon } from '@heroicons/react/24/solid';
 
 interface AccordionProps {
 	title: string;
-	content: string;
-	active?: boolean;
+	content: React.ReactNode;
+	open?: boolean;
 }
 
-const Accordion = ({ title, content, active = false }: AccordionProps) => {
-	const [isOpen, setIsOpen] = useState(active || false);
+const Accordion = ({ title, content, open = false }: AccordionProps) => {
+	const [isOpen, setIsOpen] = useState(open || false);
 	return (
 		<div className="border-b border-slate-200 overflow-hidden">
 			<button

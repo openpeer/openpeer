@@ -75,6 +75,8 @@ const Payment = ({ order }: BuyStepProps) => {
 						</span>
 					</div>
 				</div>
+
+				{status === 'created' && !seller && <PreShowDetails />}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
@@ -121,8 +123,6 @@ const Payment = ({ order }: BuyStepProps) => {
 						</div>
 					</div>
 				)}
-
-				<PreShowDetails />
 
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">

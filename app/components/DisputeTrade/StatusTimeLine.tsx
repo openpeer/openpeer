@@ -40,7 +40,7 @@ const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 			status: resolved || replied ? 'complete' : 'current'
 		},
 		{
-			name: 'Openpeer Arbitrary',
+			name: 'Openpeer Arbitration',
 			description: `Openpeer ${resolved ? 'arbitraded' : 'is arbitrating'} the dispute`,
 			status: resolved ? 'complete' : replied ? 'current' : 'upcoming'
 		}

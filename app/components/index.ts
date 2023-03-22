@@ -1,3 +1,4 @@
+import Accordion from './Accordion/Accordion';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import Switcher from './Button/Switcher';
@@ -41,5 +42,6 @@ export {
 	NotificationHeader,
 	Switcher,
 	Modal,
-	Flag
+	Flag,
+	Accordion
 };

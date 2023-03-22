@@ -52,12 +52,12 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 				) : !!winner && winner.address === address ? (
 					<div className="text-cyan-600">
 						<div className="font-bold">Dispute Ended</div>
-						Congratulations. You won the dispute. {tokenValue} and the fee has been credited to your account
+						You won the dispute. {tokenValue} and the fee has been credited to your account
 					</div>
 				) : (
 					<div className="text-red-600">
 						<div className="font-bold">Dispute Ended</div>
-						Unfortunately, You lost the dispute. {tokenValue} has been credited back to the {counterpart}
+						Unfortunately, you lost the dispute. {tokenValue} has been credited back to the {counterpart}
 						&apos;s account
 					</div>
 				)}
