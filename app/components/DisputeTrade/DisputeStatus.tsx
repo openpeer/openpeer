@@ -86,7 +86,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 						<div className="flex flex-row justify-between mb-2">
 							<span className="text-gray-500">Fee</span>
 							<span>
-								{formatUnits(fee)} {token.symbol}
+								{formatUnits(fee, token.decimals)} {token.symbol}
 							</span>
 						</div>
 					)}

@@ -3,7 +3,6 @@ import { DisputeForm, DisputeNotes, DisputeStatus } from 'components/DisputeTrad
 import Loading from 'components/Loading/Loading';
 import Token from 'components/Token/Token';
 import { Order } from 'models/types';
-import Image from 'next/image';
 import { useAccount, useContractRead } from 'wagmi';
 
 interface DisputeParams {
@@ -18,7 +17,8 @@ const Dispute = ({ order }: DisputeParams) => {
 		abi: OpenPeerEscrow,
 		functionName: 'paidForDispute',
 		args: [address],
-		watch: true
+		watch: true,
+		enabled: !!escrowAddress
 	});
 
 	const { token_amount: tokenAmount, list, buyer, dispute } = order;
@@ -27,8 +27,8 @@ const Dispute = ({ order }: DisputeParams) => {
 	const isBuyer = address === buyer.address;
 
 	if ((!isSeller && !isBuyer) || paidForDispute === undefined) return <Loading />;
-
 	const { user_dispute: userDispute, resolved } = dispute || {};
+
 	return (
 		<div className="p-4 md:p-6 w-full m-auto mb-16">
 			<div className="p-8 bg-white rounded-lg border border-slate-200 w-full flex flex-col md:flex-row md:gap-x-10">
