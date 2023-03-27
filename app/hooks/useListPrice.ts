@@ -17,7 +17,7 @@ const useListPrice = (list: List | undefined) => {
 		if (!list) return;
 
 		if (marginType === 'percentage') {
-			fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${uuid}&vs_currencies=${code.toLowerCase()}`)
+			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}`)
 				.then((res) => res.json())
 				.then((data) => {
 					const apiPrice: number = data[uuid!][code.toLowerCase()];

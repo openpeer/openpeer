@@ -1,7 +1,7 @@
 import { Input, Label, Loading, MarginSwitcher } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
-import { List } from 'models/types';
+import { List, Token } from 'models/types';
 import { useEffect, useState } from 'react';
 
 import { AmountStepProps } from './Listing.types';
@@ -73,15 +73,11 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 
 	useEffect(() => {
 		if (!token || !currency) return;
-
-		fetch(
-			`https://api.coingecko.com/api/v3/simple/price?ids=${
-				token.coingecko_id
-			}&vs_currencies=${currency.name.toLowerCase()}`
-		)
+		const coingeckoId = (token as Token).coingecko_id;
+		fetch(`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setPrice(data[token.coingecko_id!][currency.name.toLowerCase()]);
+				setPrice(data[coingeckoId][currency.name.toLowerCase()]);
 			});
 	}, [token, currency]);
 
