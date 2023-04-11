@@ -18,6 +18,7 @@
 		"@rails/actioncable": "^7.0.4-2",
 		"@rainbow-me/rainbowkit": "^0.8.1",
 		"@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.5",
+		"@synaps-io/react-verify": "^1.0.3",
 		"@tailwindcss/forms": "^0.5.3",
 		"@types/node": "18.11.11",
 		"@types/react": "18.0.26",

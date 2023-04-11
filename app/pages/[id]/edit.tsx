@@ -87,7 +87,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 
 	const onUpdateProfile = () => {
 		setErrors({});
-		const newUser = { ...user, ...{ name: username, email, twitter } };
+		const newUser = { ...user, ...{ name: username || null, email: email || null, twitter: twitter || null } };
 		updateUserProfile(newUser as User);
 	};
 
