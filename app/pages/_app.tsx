@@ -13,8 +13,19 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Manrope } from '@next/font/google';
-import { getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
+import {
+	argentWallet,
+	braveWallet,
+	coinbaseWallet,
+	injectedWallet,
+	ledgerWallet,
+	metaMaskWallet,
+	rainbowWallet,
+	trustWallet,
+	walletConnectWallet
+} from '@rainbow-me/rainbowkit/wallets';
 
 const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
 const enabledProviders =
@@ -28,10 +39,27 @@ const enabledProviders =
 
 const { chains, provider } = configureChains(enabledChains, enabledProviders);
 
-const { connectors } = getDefaultWallets({
-	appName: 'OpenPeer',
-	chains
-});
+const connectors = connectorsForWallets([
+	{
+		groupName: 'Recommended',
+		wallets: [
+			metaMaskWallet({ chains }),
+			rainbowWallet({ chains }),
+			braveWallet({ chains }),
+			argentWallet({ chains }),
+			trustWallet({ chains })
+		]
+	},
+	{
+		groupName: 'Others',
+		wallets: [
+			walletConnectWallet({ chains }),
+			ledgerWallet({ chains }),
+			coinbaseWallet({ appName: 'OpenPeer', chains }),
+			injectedWallet({ chains })
+		]
+	}
+]);
 
 const wagmiClient = createClient({
 	autoConnect: true,
