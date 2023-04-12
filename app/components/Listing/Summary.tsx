@@ -17,7 +17,7 @@ const Summary = ({ list }: SummaryProps) => {
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
 	if (!token && !currency) {
-		return <Image src={coins} alt="coins image" width={441} height={385} />;
+		return <Image src={coins} alt="coins image" width={441} height={385} className="p-8 md:p-4" />;
 	}
 
 	return (

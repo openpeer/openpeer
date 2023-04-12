@@ -14,11 +14,10 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 
 	return (
 		<StepLayout onProceed={onProceed}>
-			<h2 className="text-xl mt-8 mb-2">Choose the order type</h2>
-			<p>Choose if you want to sell or buy crypto</p>
+			<h2 className="text-xl mt-8 mb-8">Choose the order type to sell or buy crypto</h2>
 			<fieldset className="border-t border-b border-gray-200">
 				<div className="divide-y divide-gray-200">
-					<div className="relative flex items-center py-4">
+					<div className="relative flex items-center p-4 border border-red-500 rounded-lg">
 						<ArrowTrendingUpIcon className="h-5 w-" aria-hidden="true" />
 						<div className="min-w-0 flex-1 text-sm pl-4">
 							<label htmlFor="buyOrder" className="font-medium text-gray-700">
@@ -40,7 +39,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 							/>
 						</div>
 					</div>
-					<div className="relative flex items-center py-4">
+					<div className="relative flex items-center p-4">
 						<ArrowTrendingDownIcon className="h-5 w-" aria-hidden="true" />
 						<div className="min-w-0 flex-1 text-sm pl-4">
 							<label htmlFor="sellOrder" className="font-medium text-gray-700">
