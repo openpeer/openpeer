@@ -4,6 +4,7 @@ import { countries } from 'models/countries';
 import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 
+import coins from './coins.svg';
 import { UIList } from './Listing.types';
 
 interface SummaryProps {
@@ -16,7 +17,7 @@ const Summary = ({ list }: SummaryProps) => {
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
 	if (!token && !currency) {
-		return <></>;
+		return <Image src={coins} alt="coins image" width={441} height={385} />;
 	}
 
 	return (

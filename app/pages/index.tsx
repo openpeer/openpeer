@@ -1,5 +1,4 @@
 import { ListsTable, Switcher } from 'components';
-import Flag from 'components/Flag/Flag';
 import { Buy, Sell } from 'components/QuickBuy';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
