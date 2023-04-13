@@ -21,11 +21,11 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 			}`}
 			onClick={() => onClick(type)}
 		>
-			<div className="rounded bw-2">
+			<div className={`rounded-full border p-2 ${type === 'SellList' ? 'border-red-600' : 'border-cyan-600'}`}>
 				{type === 'SellList' ? (
-					<ArrowTrendingDownIcon className="h-5 w-" aria-hidden="true" />
+					<ArrowTrendingDownIcon className="h-5 w- text-red-600" aria-hidden="true" />
 				) : (
-					<ArrowTrendingUpIcon className="h-5 w-" aria-hidden="true" />
+					<ArrowTrendingUpIcon className="h-5 w- text-cyan-600" aria-hidden="true" />
 				)}
 			</div>
 			<div className="min-w-0 flex-1 text-sm pl-4">
