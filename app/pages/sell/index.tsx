@@ -65,7 +65,7 @@ const SellPage = () => {
 
 	return (
 		<div className="py-6">
-			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16">
+			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16 2xl:w-3/4 2xl:m-auto">
 				<div className="w-full lg:w-2/4">
 					{step === ORDER_TYPE_STEP ? (
 						<ListType list={list} updateList={setList} />
@@ -87,7 +87,9 @@ const SellPage = () => {
 						</>
 					)}
 				</div>
-				<Summary list={list} />
+				<div className="m-auto">
+					<Summary list={list} />
+				</div>
 			</div>
 		</div>
 	);
