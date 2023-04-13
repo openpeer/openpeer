@@ -48,6 +48,7 @@ export interface List {
 	payment_method: PaymentMethod;
 	total_available_amount: string;
 	price: number;
+	type: 'SellList' | 'BuyList';
 }
 
 export interface AccountField {

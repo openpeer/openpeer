@@ -8,7 +8,7 @@ import { SetupListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) => {
-	const { token, currency } = list;
+	const { token, currency, type } = list;
 	const [lastToken, setLastToken] = useState<Option | undefined>(token);
 	const [lastCurrency, setLastCurrency] = useState<Option | undefined>(currency);
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -61,12 +61,14 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 				selected={token}
 				error={errors.token}
 				selectedIdOnLoad={tokenId as string}
+				label={type === 'BuyList' ? 'Choose token to receive' : undefined}
 			/>
 			<CurrencySelect
 				onSelect={updateCurrency}
 				selected={currency}
 				error={errors.currency}
 				selectedIdOnLoad={currencyId as string}
+				label={type === 'BuyList' ? 'Choose Fiat currency to pay with' : undefined}
 			/>
 		</StepLayout>
 	);

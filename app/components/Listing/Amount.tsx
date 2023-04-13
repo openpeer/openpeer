@@ -16,7 +16,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		limitMax,
 		marginType = 'fixed',
 		margin: savedMargin,
-		quickSellSetupDone
+		quickSellSetupDone,
+		type
 	} = list;
 	const percentage = marginType === 'percentage';
 	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 1 : 1);
@@ -104,7 +105,9 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed}>
 			<Input
-				label="Enter total available crypto amount"
+				label={
+					type === 'BuyList' ? 'Enter total amount of crypto to buy' : 'Enter total available crypto amount'
+				}
 				addOn={<span className="text-gray-500 sm:text-sm mr-3">{token.name}</span>}
 				id="totalAvailableAmount"
 				value={totalAvailableAmount}
@@ -142,7 +145,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			<Label title="Set Price Margin" />
 			<div className="mb-4">
 				<span className="text-sm text-gray-600">
-					Set how you want to price your crypto. Above or below the spot price or at a fixed price.
+					Set how you want to price {type === 'BuyList' ? 'the' : 'your'} crypto. Above or below the spot
+					price or at a fixed price.
 				</span>
 			</div>
 			<MarginSwitcher

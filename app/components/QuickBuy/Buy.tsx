@@ -151,7 +151,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 				(!!fiatAmount || !!tokenAmount) &&
 				!loading && (
 					<div className="mb-2 text-sm text-gray-700">
-						<span>We could not find ads for these settings</span>
+						<span>We could not find any available sellers. Post a buy ad instead.</span>
 					</div>
 				)
 			)}

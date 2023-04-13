@@ -13,7 +13,7 @@ import StepLayout from './StepLayout';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
-	const { currency, paymentMethod = {} as PaymentMethod } = list;
+	const { currency, paymentMethod = {} as PaymentMethod, type } = list;
 	const { id, bank, values = {} } = paymentMethod;
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -25,9 +25,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			error.bankId = 'Should be present';
 		}
 
-		for (const field of schema) {
-			if (field.required && !values[field.id]) {
-				error[field.id] = `${field.label} should be present`;
+		if (type === 'SellList') {
+			for (const field of schema) {
+				if (field.required && !values[field.id]) {
+					error[field.id] = `${field.label} should be present`;
+				}
 			}
 		}
 
@@ -62,6 +64,13 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	useEffect(() => {
 		setLoading(true);
+		if (type === 'BuyList') {
+			setPaymentMethod(undefined);
+			setPaymentMethods([]);
+			setLoading(false);
+			return;
+		}
+
 		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`)
 			.then((res) => res.json())
 			.then((data) => {
@@ -74,7 +83,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				setLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, currency]);
+	}, [address, currency, type]);
 
 	if (isLoading) {
 		return <Loading />;
@@ -83,7 +92,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed}>
 			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
-			<p>Choose how you want to receive your money</p>
+			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
 			{(paymentMethods || []).map((pm) => (
 				<div
 					key={pm.id}
@@ -142,53 +151,54 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 						selected={bank}
 						error={errors.bankId}
 					/>
-					{schema.map(({ id, label, placeholder, type = 'text', required }) => {
-						if (type === 'message') {
-							return (
-								<div className="mb-4" key={id}>
-									<span className="text-sm">{label}</span>
-								</div>
-							);
-						}
+					{type === 'SellList' &&
+						schema.map(({ id, label, placeholder, type = 'text', required }) => {
+							if (type === 'message') {
+								return (
+									<div className="mb-4" key={id}>
+										<span className="text-sm">{label}</span>
+									</div>
+								);
+							}
 
-						if (type === 'textarea') {
+							if (type === 'textarea') {
+								return (
+									<Textarea
+										rows={4}
+										key={id}
+										label={label}
+										id={id}
+										placeholder={placeholder}
+										onChange={(e) =>
+											updatePaymentMethod({
+												...paymentMethod,
+												...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
+											})
+										}
+										value={values[id]}
+										error={errors[id]}
+									/>
+								);
+							}
 							return (
-								<Textarea
-									rows={4}
+								<Input
 									key={id}
 									label={label}
+									type="text"
 									id={id}
 									placeholder={placeholder}
-									onChange={(e) =>
+									onChange={(value) =>
 										updatePaymentMethod({
 											...paymentMethod,
-											...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
+											...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
 										})
 									}
-									value={values[id]}
 									error={errors[id]}
+									value={values[id]}
+									required={required}
 								/>
 							);
-						}
-						return (
-							<Input
-								key={id}
-								label={label}
-								type="text"
-								id={id}
-								placeholder={placeholder}
-								onChange={(value) =>
-									updatePaymentMethod({
-										...paymentMethod,
-										...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
-									})
-								}
-								error={errors[id]}
-								value={values[id]}
-								required={required}
-							/>
-						);
-					})}
+						})}
 				</>
 			) : (
 				<div>

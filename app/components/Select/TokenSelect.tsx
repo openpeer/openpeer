@@ -5,21 +5,16 @@ import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import Select from './Select';
-import { SelectProps } from './Select.types';
+import { SelectProps, TokenSelect } from './Select.types';
 
 const TokenSelect = ({
 	onSelect,
 	selected,
 	error,
 	minimal,
-	selectedIdOnLoad
-}: {
-	onSelect: (option: Token | undefined) => void;
-	selected: SelectProps['selected'];
-	error?: SelectProps['error'];
-	minimal?: SelectProps['minimal'];
-	selectedIdOnLoad?: string;
-}) => {
+	selectedIdOnLoad,
+	label = 'Choose token to list'
+}: TokenSelect) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
@@ -54,7 +49,7 @@ const TokenSelect = ({
 	}
 	return tokens ? (
 		<Select
-			label="Choose token to list"
+			label={label}
 			options={tokens}
 			selected={selected}
 			onSelect={onSelect as SelectProps['onSelect']}

@@ -3,7 +3,7 @@ import { FiatCurrency } from 'models/types';
 import { useEffect, useState } from 'react';
 
 import Select from './Select';
-import { SelectProps } from './Select.types';
+import { FiatCurrencySelect, SelectProps } from './Select.types';
 
 const CurrencySelect = ({
 	onSelect,
@@ -14,16 +14,7 @@ const CurrencySelect = ({
 	label = 'Choose Fiat currency to receive',
 	minimal = false,
 	selectTheFirst = false
-}: {
-	label?: string;
-	onSelect: (option: FiatCurrency | undefined) => void;
-	selected: SelectProps['selected'];
-	error?: SelectProps['error'];
-	minimal?: SelectProps['minimal'];
-	height?: SelectProps['height'];
-	selectedIdOnLoad?: string;
-	selectTheFirst?: boolean;
-}) => {
+}: FiatCurrencySelect) => {
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
 	const [isLoading, setLoading] = useState(false);
 

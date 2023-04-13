@@ -12,8 +12,18 @@ interface SummaryProps {
 }
 
 const Summary = ({ list }: SummaryProps) => {
-	const { token, currency, totalAvailableAmount, limitMin, limitMax, marginType, margin, paymentMethod, terms } =
-		list;
+	const {
+		token,
+		currency,
+		totalAvailableAmount,
+		limitMin,
+		limitMax,
+		marginType,
+		margin,
+		paymentMethod,
+		terms,
+		type
+	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
 	if (!token && !currency) {
@@ -59,7 +69,7 @@ const Summary = ({ list }: SummaryProps) => {
 				)}
 				{!!totalAvailableAmount && (
 					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Total Available</div>
+						<div>Total Available {type === 'BuyList' && 'To Buy'} </div>
 						<div className="font-bold">
 							{totalAvailableAmount} {token?.name}
 						</div>
