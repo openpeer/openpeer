@@ -52,12 +52,10 @@ const HomePage = () => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	return {
-		props: {
-			title: 'Trade P2P'
-		}
-	};
-};
+export const getServerSideProps: GetServerSideProps = async (context) => ({
+	props: {
+		title: 'Trade P2P'
+	}
+});
 
 export default HomePage;

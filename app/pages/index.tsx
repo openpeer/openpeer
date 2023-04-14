@@ -78,13 +78,11 @@ const Quick = () => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	return {
-		props: {
-			disableAuthentication: true,
-			blankLayout: true
-		}
-	};
-};
+export const getServerSideProps: GetServerSideProps = async (context) => ({
+	props: {
+		disableAuthentication: true,
+		blankLayout: true
+	}
+});
 
 export default Quick;

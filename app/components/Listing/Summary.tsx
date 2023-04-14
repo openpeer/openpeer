@@ -101,7 +101,7 @@ const Summary = ({ list }: SummaryProps) => {
 						</div>
 					</li>
 				)}
-				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400"></div>
+				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400" />
 				{!!paymentMethod && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Payment Method</div>

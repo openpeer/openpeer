@@ -32,28 +32,26 @@ const navigation = [
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
 
-const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => {
-	return (
-		<div>
-			{navigation.map((item) => (
-				<Link
-					key={item.name}
-					href={item.href}
-					className={`${
-						selected === item.name ? 'bg-gray-700' : ''
-					} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium`}
-					onClick={onClick}
-				>
-					<item.icon
-						className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
-						aria-hidden="true"
-					/>
-					{item.name}
-				</Link>
-			))}
-		</div>
-	);
-};
+const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => (
+	<div>
+		{navigation.map((item) => (
+			<Link
+				key={item.name}
+				href={item.href}
+				className={`${
+					selected === item.name ? 'bg-gray-700' : ''
+				} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium`}
+				onClick={onClick}
+			>
+				<item.icon
+					className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+					aria-hidden="true"
+				/>
+				{item.name}
+			</Link>
+		))}
+	</div>
+);
 
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);

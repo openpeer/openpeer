@@ -38,13 +38,11 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 	const isBuyer = buyer.address === connectedAddress;
 
 	const [comments, setComments] = useState(userComment || '');
-	const orderUploads: Upload[] = files.map((file) => {
-		return {
-			signedURL: file.upload_url,
-			key: file.key,
-			filename: file.filename
-		};
-	});
+	const orderUploads: Upload[] = files.map((file) => ({
+		signedURL: file.upload_url,
+		key: file.key,
+		filename: file.filename
+	}));
 
 	const [uploads, setUploads] = useState<Upload[]>(orderUploads);
 	const { errors, clearErrors, validate } = useFormErrors();

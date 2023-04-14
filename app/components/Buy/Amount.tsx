@@ -31,7 +31,7 @@ const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => 
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
-	let { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
+	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
@@ -56,8 +56,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 							{
 								order: {
 									listId: order.list.id,
-									fiatAmount: fiatAmount,
-									tokenAmount: tokenAmount,
+									fiatAmount,
+									tokenAmount,
 									price
 								},
 								data,
@@ -117,7 +117,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				undefined,
 				4
 			);
-			signMessage({ message: message });
+			signMessage({ message });
 		}
 	};
 

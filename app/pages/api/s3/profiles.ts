@@ -36,10 +36,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 
 			const uploadData = await s3.upload(params).promise();
 			return res.status(200).json({ data: uploadData });
-		} else {
-			// Handle any other HTTP method
-			res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
 		}
+		// Handle any other HTTP method
+		res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
 	} catch (err) {
 		console.error(err);
 		return res.status(500).json({ error: 'Error uploading the selected image' });

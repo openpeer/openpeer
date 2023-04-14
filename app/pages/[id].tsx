@@ -68,10 +68,8 @@ const Profile = ({ id }: { id: number }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
-	return {
-		props: { title: 'Profile', id: String(context.params?.id) } // will be passed to the page component as props
-	};
-};
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
+	props: { title: 'Profile', id: String(context.params?.id) } // will be passed to the page component as props
+});
 
 export default Profile;

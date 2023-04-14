@@ -24,7 +24,6 @@ const useTransactionFeedback = ({ isSuccess, hash, Link }: Params) => {
 				progress: undefined
 			});
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, hash, chain]);
 };
 

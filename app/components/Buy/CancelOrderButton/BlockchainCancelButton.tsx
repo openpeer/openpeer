@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
 
 interface BlockchainCancelButtonParams {
@@ -40,7 +40,6 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		if (cancelConfirmed) {
 			onBlockchainCancel();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cancelConfirmed]);
 
 	if (sellerCanCancelAfter === undefined) {

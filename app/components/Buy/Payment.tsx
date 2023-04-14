@@ -125,7 +125,7 @@ const Payment = ({ order }: BuyStepProps) => {
 								<ClipboardText itemValue={String(Number(id) * 10000)} />
 							</span>
 						</div>
-						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden"></div>
+						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden" />
 						<div className="flex flex-row justify-between hidden">
 							<span className="text-neutral-500">Payment will expire in </span>
 							<span className="flex flex-row justify-between">

@@ -68,7 +68,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							{currency.symbol} {Number(price).toFixed(2)}
 						</div>
 					</div>
-					{/*<div className="w-full flex flex-row mb-4">
+					{/* <div className="w-full flex flex-row mb-4">
 						<div className="text-sm">Payment Limit</div>
 						<div className="text-sm font-bold">10 minutes</div>
 					</div> */}

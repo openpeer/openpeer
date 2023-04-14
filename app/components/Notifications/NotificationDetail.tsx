@@ -31,7 +31,7 @@ const NotificationDetail = ({ notification, onOpen, onDismiss }: NotificationPar
 				</div>
 				<div className="ml-3 w-0 flex-1 pt-0.5">
 					<p className="text-left text-sm font-medium text-gray-900">{title}</p>
-					<p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: description! }}></p>
+					<p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: description! }} />
 					<div className="mt-3 flex space-x-7">
 						<button
 							type="button"

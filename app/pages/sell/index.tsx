@@ -31,15 +31,16 @@ const SellPage = () => {
 		...{ step: quickSell ? AMOUNT_STEP : ORDER_TYPE_STEP },
 		...defaultList
 	} as UIList);
-	const step = list.step;
+	const { step } = list;
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (list.step > 3)
+		if (list.step > 3) {
 			setList({
 				...{ step: PAYMENT_METHOD_STEP },
 				...defaultList
 			} as UIList);
+		}
 	}, [address]);
 
 	useEffect(() => {

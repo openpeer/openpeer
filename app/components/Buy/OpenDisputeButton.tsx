@@ -102,12 +102,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 					paidForDispute
 						? 'Already opened'
 						: !canOpenDispute
-						? 'You cannot dispute'
-						: isLoading
-						? 'Processing...'
-						: isSuccess
-						? 'Done'
-						: title
+							? 'You cannot dispute'
+							: isLoading
+								? 'Processing...'
+								: isSuccess
+									? 'Done'
+									: title
 				}
 				processing={isLoading}
 				disabled={isSuccess || !canOpenDispute || paidForDispute}

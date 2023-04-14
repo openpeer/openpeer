@@ -21,20 +21,19 @@ const Option = ({ label, selected, onSelect }: { label: string; selected: boolea
 	</button>
 );
 
-const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => {
-	return (
-		<>
-			<div className="w-full flex flex-col rounded-full bg-gray-100">
-				<div className="flex p-1.5 items-center text-neutral-500 font-bold">
-					<Option label="Percentage" selected={selected === 'percentage'} onSelect={onSelect} />
-					<Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
-				</div>
+const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => (
+	<>
+		<div className="w-full flex flex-col rounded-full bg-gray-100">
+			<div className="flex p-1.5 items-center text-neutral-500 font-bold">
+				<Option label="Percentage" selected={selected === 'percentage'} onSelect={onSelect} />
+				<Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
 			</div>
-			<>
-				{selected === 'percentage' && (
-					<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
-				)}
-				{selected === 'fixed' &&
+		</div>
+		<>
+			{selected === 'percentage' && (
+				<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
+			)}
+			{selected === 'fixed' &&
 					(margin == undefined ? (
 						<Loading big={false} />
 					) : (
@@ -46,9 +45,8 @@ const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMar
 							error={error}
 						/>
 					))}
-			</>
 		</>
-	);
-};
+	</>
+);
 
 export default MarginSwitcher;

@@ -34,7 +34,6 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 				margin: list.marginType === 'fixed' ? undefined : list.margin
 			}
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lastToken, lastCurrency]);
 
 	const resolver = () => {

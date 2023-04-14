@@ -50,8 +50,7 @@ const BuyPage = ({ id }: { id: number }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
 	// Pass data to the page via props
-	return { props: { title: 'Trade', id: String(context.params?.id) } };
-};
+	 ({ props: { title: 'Trade', id: String(context.params?.id) } });
 export default BuyPage;

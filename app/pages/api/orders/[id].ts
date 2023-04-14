@@ -2,9 +2,8 @@
 import { Order } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import { minkeApi } from '../utils/utils';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { minkeApi } from '../utils/utils';
 
 const fetchOrder = async (id: string, token: string): Promise<Order> => {
 	const { data } = await minkeApi.get(`/orders/${id}`, {
