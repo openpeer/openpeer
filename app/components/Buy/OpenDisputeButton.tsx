@@ -17,12 +17,7 @@ interface OpenDisputeButtonParams {
 }
 
 const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }: OpenDisputeButtonParams) => {
-	const {
-		uuid,
-		escrow,
-		buyer,
-		list: { seller }
-	} = order;
+	const { uuid, escrow, buyer, seller } = order;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
@@ -57,14 +52,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		if (isSuccess) {
 			router.push(`/orders/${uuid}`);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, uuid]);
 
 	useEffect(() => {
 		if (disputeConfirmed) {
 			onOpenDispute();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [disputeConfirmed]);
 
 	if (
@@ -109,12 +102,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 					paidForDispute
 						? 'Already opened'
 						: !canOpenDispute
-						? 'You cannot dispute'
-						: isLoading
-						? 'Processing...'
-						: isSuccess
-						? 'Done'
-						: title
+							? 'You cannot dispute'
+							: isLoading
+								? 'Processing...'
+								: isSuccess
+									? 'Done'
+									: title
 				}
 				processing={isLoading}
 				disabled={isSuccess || !canOpenDispute || paidForDispute}

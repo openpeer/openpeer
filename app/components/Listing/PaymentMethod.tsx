@@ -1,9 +1,9 @@
 import { BankSelect, Button, Input, Loading, Textarea } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
-import { Bank, PaymentMethod } from 'models/types';
+import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
@@ -13,7 +13,7 @@ import StepLayout from './StepLayout';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
-	const { currency, paymentMethod = {} as PaymentMethod, type } = list;
+	const { currency, paymentMethod = {} as PaymentMethodType, type } = list;
 	const { id, bank, values = {} } = paymentMethod;
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -42,18 +42,18 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 		}
 	};
 
-	const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>();
+	const [paymentMethods, setPaymentMethods] = useState<PaymentMethodType[]>();
 	const [isLoading, setLoading] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const setPaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		setEdit(false);
 		clearErrors([...schema.map(({ id }) => id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm } });
+		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		clearErrors([...schema.map(({ id }) => id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm } });
+		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {
@@ -82,7 +82,6 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				}
 				setLoading(false);
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, currency, type]);
 
 	if (isLoading) {

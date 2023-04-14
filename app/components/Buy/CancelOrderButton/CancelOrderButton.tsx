@@ -14,11 +14,7 @@ interface CancelOrderButtonParams {
 }
 
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
-	const {
-		list: { seller },
-		buyer,
-		uuid
-	} = order;
+	const { seller, buyer, uuid } = order;
 
 	const { address } = useAccount();
 
@@ -74,7 +70,6 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 		if (cancelConfirmed) {
 			onCancelOrder();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cancelConfirmed]);
 
 	if ((!isBuyer && !isSeller) || cancelIsNotAvailable) return <></>;

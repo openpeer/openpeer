@@ -14,8 +14,16 @@ interface OrderResumeParams {
 }
 
 const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
-	const { list, token_amount: tokenAmount, fiat_amount: fiatAmount, escrow, id, created_at: createdAt } = order;
-	const { token, seller, fiat_currency: currency } = list!;
+	const {
+		list,
+		token_amount: tokenAmount,
+		fiat_amount: fiatAmount,
+		escrow,
+		id,
+		created_at: createdAt,
+		seller
+	} = order;
+	const { token, fiat_currency: currency } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 
@@ -35,7 +43,8 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 					<span className="text-neutral-500">Fee Paid</span>
 					<span className="flex flex-row justify-between">{`${formatUnits(fee, token.decimals)} ${
 						token.symbol
-					}`}</span>
+					}`}
+					</span>
 				</div>
 			)}
 
@@ -57,7 +66,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 			</div>
 			{showRating && false && (
 				<>
-					<div className="border-bottom border border-color-gray-200 mb-4"></div>
+					<div className="border-bottom border border-color-gray-200 mb-4" />
 					<div className="flex flex-row items-center justify-between">
 						<span className="text-neutral-500">Rate {selling ? 'buyer' : 'merchant'}</span>
 						<span className="w-1/2">

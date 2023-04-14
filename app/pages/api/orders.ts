@@ -1,9 +1,8 @@
 import { Order } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import { minkeApi } from './utils/utils';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { minkeApi } from './utils/utils';
 
 const createOrder = async (body: NextApiRequest['body'], token: string): Promise<Order> => {
 	const { data } = await minkeApi.post('/orders', body, {

@@ -90,7 +90,6 @@ const FilesUploader = ({ uuid, address, onUploadFinished }: FilesUploaderParams)
 					}
 				});
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files]);
 
 	return (

@@ -44,7 +44,6 @@ const ApproveTokenButton = ({
 
 	useEffect(() => {
 		if (isSuccess || approved) onTokenApproved();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, approved]);
 
 	return (

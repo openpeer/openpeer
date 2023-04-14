@@ -41,7 +41,6 @@ const TokenSelect = ({
 				}
 				setLoading(false);
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chainId]);
 
 	if (isLoading) {

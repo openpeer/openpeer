@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { List } from '../../models/types';
 import { minkeApi } from './utils/utils';
-
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 const fetchLists = async (params: NextApiRequest['query']): Promise<List[]> => {
 	const { data } = await minkeApi.get('/lists', { params });

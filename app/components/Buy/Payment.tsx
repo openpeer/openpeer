@@ -16,11 +16,22 @@ import PreShowDetails from './PreShowDetails';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
 const Payment = ({ order }: BuyStepProps) => {
-	const { list, fiat_amount: fiatAmount, token_amount: tokenAmount, price, uuid, buyer, escrow, id, status } = order;
+	const {
+		list,
+		fiat_amount: fiatAmount,
+		token_amount: tokenAmount,
+		price,
+		uuid,
+		buyer,
+		escrow,
+		id,
+		status,
+		seller
+	} = order;
 	const { token, fiat_currency: currency, payment_method: paymentMethod } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
-	const seller = list?.seller.address === address;
+	const selling = seller.address === address;
 
 	return (
 		<StepLayout>
@@ -32,7 +43,7 @@ const Payment = ({ order }: BuyStepProps) => {
 							<HeaderH2 title="Awaiting Merchant Deposit" />
 						</span>
 						<p className="text-base">
-							{seller
+							{selling
 								? 'Please deposit funds to escrow in order to confirm and complete this transaction.'
 								: 'Kindly wait for the merchant to accept the order and escrow their funds. Payments details will become visible as soon as merchant escrow the funds. '}
 						</p>
@@ -40,11 +51,11 @@ const Payment = ({ order }: BuyStepProps) => {
 				)}
 				{status === 'escrowed' && (
 					<div>
-						<span className={`flex flex-row mb-2 ${!!seller && 'text-yellow-600'}`}>
-							<HeaderH2 title={seller ? 'Awaiting Buyer Payment' : 'Pay Merchant'} />
+						<span className={`flex flex-row mb-2 ${!!selling && 'text-yellow-600'}`}>
+							<HeaderH2 title={selling ? 'Awaiting Buyer Payment' : 'Pay Merchant'} />
 						</span>
 						<p className="text-base">
-							{seller
+							{selling
 								? 'Kindly wait for the buyer to pay. If the buyer already paid you can release the funds. Be careful.'
 								: 'Proceed to your bank app or payment platform and send the required amount to the bank account details below.'}
 						</p>
@@ -54,12 +65,12 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to pay</span>
 						<span className="text-lg font-medium">
-							{seller
+							{selling
 								? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
 								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 						</span>
 					</div>
-					{seller && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
+					{selling && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
 					<div className="flex flex-col">
 						<span className="text-sm">Price</span>
 						<span className="text-lg font-medium">
@@ -69,14 +80,14 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to receive</span>
 						<span className="text-lg font-medium">
-							{seller
+							{selling
 								? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
 								: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
 						</span>
 					</div>
 				</div>
 
-				{status === 'created' && !seller && <PreShowDetails />}
+				{status === 'created' && !selling && <PreShowDetails />}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
@@ -114,7 +125,7 @@ const Payment = ({ order }: BuyStepProps) => {
 								<ClipboardText itemValue={String(Number(id) * 10000)} />
 							</span>
 						</div>
-						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden"></div>
+						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden" />
 						<div className="flex flex-row justify-between hidden">
 							<span className="text-neutral-500">Payment will expire in </span>
 							<span className="flex flex-row justify-between">
@@ -128,7 +139,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>
-					{status === 'created' && seller && (
+					{status === 'created' && selling && (
 						<EscrowButton
 							buyer={buyer!.address}
 							token={token}
@@ -138,7 +149,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					)}
 					{status === 'escrowed' &&
 						!!escrow &&
-						(seller ? (
+						(selling ? (
 							<ReleaseFundsButton escrow={escrow.address} dispute={false} />
 						) : (
 							<MarkAsPaidButton escrowAddress={escrow.address} />

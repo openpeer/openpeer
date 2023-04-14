@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
 
 interface BlockchainCancelButtonParams {
@@ -15,11 +15,7 @@ interface BlockchainCancelButtonParams {
 }
 
 const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: BlockchainCancelButtonParams) => {
-	const {
-		escrow,
-		buyer,
-		list: { seller }
-	} = order;
+	const { escrow, buyer, seller } = order;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
@@ -44,7 +40,6 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		if (cancelConfirmed) {
 			onBlockchainCancel();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cancelConfirmed]);
 
 	if (sellerCanCancelAfter === undefined) {

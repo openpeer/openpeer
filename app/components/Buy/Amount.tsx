@@ -31,7 +31,7 @@ const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => 
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
-	let { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
+	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token } = list;
@@ -56,8 +56,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 							{
 								order: {
 									listId: order.list.id,
-									fiatAmount: fiatAmount,
-									tokenAmount: tokenAmount,
+									fiatAmount,
+									tokenAmount,
 									price
 								},
 								data,
@@ -117,7 +117,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				undefined,
 				4
 			);
-			signMessage({ message: message });
+			signMessage({ message });
 		}
 	};
 
@@ -136,14 +136,14 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	useEffect(() => {
 		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, fiatAmount]);
 
+	const buyCrypto = list.type === 'BuyList';
 	return (
 		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
 			<div className="my-8">
 				<Input
-					label="Amount to buy"
+					label={buyCrypto ? "Amount you'll receive" : 'Amount to buy'}
 					prefix={
 						<Prefix
 							label={currency!.symbol}
@@ -157,7 +157,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					error={errors.fiatAmount}
 				/>
 				<Input
-					label="Amount you'll receive"
+					label={buyCrypto ? 'Amount to sell' : "Amount you'll receive"}
 					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
 					id="amountToReceive"
 					value={tokenAmount}

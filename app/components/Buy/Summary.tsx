@@ -18,16 +18,18 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		limit_min: limitMin,
 		limit_max: limitMax,
 		payment_method: paymentMethod,
-		seller,
 		token,
 		total_available_amount: totalAvailableAmount,
-		terms
+		terms,
+		type
 	} = list!;
 
 	const { address } = useAccount();
+	const seller = order.seller || list.seller;
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
+	const bank = type == 'BuyList' ? list.bank : paymentMethod.bank;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
@@ -66,7 +68,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							{currency.symbol} {Number(price).toFixed(2)}
 						</div>
 					</div>
-					{/*<div className="w-full flex flex-row mb-4">
+					{/* <div className="w-full flex flex-row mb-4">
 						<div className="text-sm">Payment Limit</div>
 						<div className="text-sm font-bold">10 minutes</div>
 					</div> */}
@@ -112,19 +114,19 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						</div>
 					)}
 				</div>
-				{paymentMethod.bank && (
+				{bank && (
 					<div className="w-full flex flex-row mb-4 space-x-2">
 						<div className="text-sm">Payment method</div>
 						<div className="flex flex-row items-center font-bold">
 							<Image
-								src={paymentMethod.bank.icon}
-								alt={paymentMethod.bank.name}
+								src={bank.icon}
+								alt={bank.name}
 								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
 								width={24}
 								height={24}
 								unoptimized
 							/>
-							{paymentMethod?.bank?.name}
+							{bank?.name}
 						</div>
 					</div>
 				)}
@@ -140,8 +142,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				<span className="text-gray-800 text-sm font-bold">Merchant&apos;s Note</span>
 				<p className="mt-2 text-sm text-gray-500">
 					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Ensure
-					you&apos;re including the reference number ({String(Number(id) * 10000)}) on your transfer. Thanks
-					for trading with me.
+					you&apos;re including the reference number {id ? `(${String(Number(id) * 10000)})` : ''} on your
+					transfer. Thanks for trading with me.
 				</p>
 			</div>
 			{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'merchant'} />}

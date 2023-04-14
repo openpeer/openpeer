@@ -11,8 +11,8 @@ import ClipboardText from './ClipboardText';
 import OrderResume from './OrderResume';
 
 const Completed = ({ order }: BuyStepProps) => {
-	const { list, token_amount: tokenAmount, buyer, fiat_amount: fiatAmount } = order;
-	const { token, seller } = list!;
+	const { list, token_amount: tokenAmount, buyer, seller } = order;
+	const { token } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 
@@ -29,10 +29,10 @@ const Completed = ({ order }: BuyStepProps) => {
 						<p className="text-base">
 							{selling
 								? `You have successfully sold ${tokenValue} to ${
-										buyer?.name || smallWalletAddress(buyer?.address)
+									buyer?.name || smallWalletAddress(buyer?.address)
 								  }.`
 								: `You have successfully purchased ${tokenValue} from ${
-										seller?.name || smallWalletAddress(seller.address)
+									seller?.name || smallWalletAddress(seller.address)
 								  }.`}
 						</p>
 					</div>

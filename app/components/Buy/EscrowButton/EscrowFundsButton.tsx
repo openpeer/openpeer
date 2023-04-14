@@ -36,7 +36,6 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 		if (escrowConfirmed) {
 			escrow();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [escrowConfirmed]);
 
 	useTransactionFeedback({

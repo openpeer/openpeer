@@ -41,7 +41,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	}, [id, session]);
 
 	useEffect(() => {
-		if (!!user) {
+		if (user) {
 			setUsername(user.name || '');
 			setEmail(user.email || '');
 			setTwitter(user.twitter || '');
@@ -133,10 +133,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
-	return {
-		props: { title: 'Edit Profile', id: String(context.params?.id) } // will be passed to the page component as props
-	};
-};
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
+	props: { title: 'Edit Profile', id: String(context.params?.id) } // will be passed to the page component as props
+});
 
 export default EditProfile;

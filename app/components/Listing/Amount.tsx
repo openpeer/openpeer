@@ -89,7 +89,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 				if (!percentage) updateMargin(price);
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fixedMargin, percentage, price]);
 
 	useEffect(() => {
@@ -97,7 +96,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		if (amount && !totalAvailableAmount && !quickSellSetupDone) {
 			updateValue({ totalAvailableAmount: amount, quickSellSetupDone: true });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, totalAvailableAmount]);
 
 	if (!token || !currency) return <Loading />;

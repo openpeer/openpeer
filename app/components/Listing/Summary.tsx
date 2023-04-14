@@ -28,13 +28,15 @@ const Summary = ({ list }: SummaryProps) => {
 
 	if (!token && !currency) {
 		return (
-			<Image
-				src={coins}
-				alt="coins image"
-				width={441}
-				height={385}
-				className="bg-gray-100 rounded-xl overflow-hidden md:ml-8 my-8 md:p-4 m-auto"
-			/>
+			<div className="m-auto">
+				<Image
+					src={coins}
+					alt="coins image"
+					width={441}
+					height={385}
+					className="bg-gray-100 rounded-xl overflow-hidden md:ml-8 my-8 md:p-4 m-auto"
+				/>
+			</div>
 		);
 	}
 
@@ -101,7 +103,7 @@ const Summary = ({ list }: SummaryProps) => {
 						</div>
 					</li>
 				)}
-				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400"></div>
+				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400" />
 				{!!paymentMethod && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Payment Method</div>

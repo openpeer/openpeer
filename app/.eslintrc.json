@@ -1,3 +1,65 @@
 {
-  "extends": "next/core-web-vitals"
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": ["next/core-web-vitals", "plugin:react/recommended", "airbnb", "airbnb-typescript"],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": "latest",
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"plugins": ["react", "@typescript-eslint"],
+	"rules": {
+		"react/jsx-filename-extension": [
+			"error",
+			{
+				"extensions": [".js", ".jsx", ".tsx"]
+			}
+		],
+		"global-require": "off",
+		"import/prefer-default-export": "off",
+		"react/jsx-one-expression-per-line": "off",
+		"no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
+		"import/extensions": [
+			"error",
+			"ignorePackages",
+			{
+				"js": "never",
+				"jsx": "never",
+				"ts": "never",
+				"tsx": "never"
+			}
+		],
+		"indent": "off",
+		"@typescript-eslint/indent": ["error", "tab"],
+		"no-tabs": ["error", { "allowIndentationTabs": true }],
+		"@typescript-eslint/comma-dangle": ["error", "never"],
+		"max-len": ["error", { "code": 120 }],
+		"react/function-component-definition": "off",
+		"react/jsx-indent": [2, "tab"],
+		"react/jsx-indent-props": [2, "tab"],
+		"object-curly-newline": [
+			"error",
+			{
+				"ExportDeclaration": {
+					"multiline": true,
+					"minProperties": 5
+				}
+			}
+		],
+		"react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
+		"implicit-arrow-linebreak": "off",
+		"react/require-default-props": "off",
+		"operator-linebreak": ["off"],
+		"react/jsx-wrap-multilines": "off",
+		"react/jsx-no-useless-fragment": "off",
+		"no-nested-ternary": "off",
+		"react/jsx-props-no-spreading": "off",
+		"react-hooks/exhaustive-deps": "off"
+	}
 }

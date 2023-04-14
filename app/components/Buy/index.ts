@@ -6,4 +6,6 @@ import Payment from './Payment';
 import Release from './Release';
 import Summary from './Summary';
 
-export { Amount, Completed, Payment, Release, Summary, Cancelled, Chat };
+export {
+	Amount, Completed, Payment, Release, Summary, Cancelled, Chat
+};

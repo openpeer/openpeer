@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers';
-import { isHexString } from 'ethers/lib/utils.js';
+import { isHexString } from 'ethers/lib/utils';
 import utf8 from 'utf8';
 
 import { Web3Provider } from '@ethersproject/providers';
@@ -61,7 +61,7 @@ const getDomain = (name: string, token: `0x${string}` | Domain, chainId: number)
 
 	const tokenAddress = token as `0x${string}`;
 
-	const salt = ('0x' + chainId.toString(16).padStart(64, '0')) as `0x${string}`;
+	const salt = `0x${chainId.toString(16).padStart(64, '0')}` as `0x${string}`;
 	const domain: Domain = { name, version: '1', salt, verifyingContract: tokenAddress };
 	return domain;
 };

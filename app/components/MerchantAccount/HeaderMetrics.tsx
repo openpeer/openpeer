@@ -8,7 +8,12 @@ import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {
-	ArrowLongLeftIcon, CalendarDaysIcon, CalendarIcon, ChartBarIcon, ChartBarSquareIcon, StarIcon
+	ArrowLongLeftIcon,
+	CalendarDaysIcon,
+	CalendarIcon,
+	ChartBarIcon,
+	ChartBarSquareIcon,
+	StarIcon
 } from '@heroicons/react/24/outline';
 import Synaps from '@synaps-io/react-verify';
 
@@ -20,21 +25,19 @@ const Metric = ({
 	label: string;
 	value: string | number | undefined | null;
 	Icon: (props: any) => JSX.Element;
-}) => {
-	return (
-		<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
-			<div className="flex flex-col">
-				<span className="text-sm text-gray-500">{label}</span>
-				<span>{value ? value : 'Loading...'}</span>
-			</div>
-			<div>
-				<div className="bg-gray-50 p-4 rounded-full">
-					<Icon className="h-5 w-5 z-50 text-cyan-600" aria-hidden="true" />
-				</div>
+}) => (
+	<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
+		<div className="flex flex-col">
+			<span className="text-sm text-gray-500">{label}</span>
+			<span>{value || 'Loading...'}</span>
+		</div>
+		<div>
+			<div className="bg-gray-50 p-4 rounded-full">
+				<Icon className="h-5 w-5 z-50 text-cyan-600" aria-hidden="true" />
 			</div>
 		</div>
-	);
-};
+	</div>
+);
 
 interface HeaderMetricsParams {
 	user: User;
@@ -50,14 +53,13 @@ const getTimePassed = (timestamp: number): string => {
 
 	if (yearsPassed >= 1) {
 		return `${Math.floor(yearsPassed)} years`;
-	} else if (daysPassed >= 30) {
+	} if (daysPassed >= 30) {
 		const monthsPassed = daysPassed / 30;
 		return `${Math.floor(monthsPassed)} months`;
-	} else if (daysPassed >= 1) {
+	} if (daysPassed >= 1) {
 		return `${Math.floor(daysPassed)} days`;
-	} else {
-		return 'less than a day';
 	}
+	return 'less than a day';
 };
 
 const VerifiedIcon = () => (
@@ -82,7 +84,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 	const verified = verification && verification.status === 'VERIFIED';
 
 	const fetchVerificationStatus = async () => {
-		const request = await fetch('/api/verifications?alias=' + address);
+		const request = await fetch(`/api/verifications?alias=${address}`);
 		const verification: Verification = await request.json();
 		setVerification(verification);
 	};
@@ -98,11 +100,10 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 			}
 		};
 
-		if (!!address) {
+		if (address) {
 			fetchWalletAge();
 			fetchVerificationStatus();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	if (verificationModal && !!verification) {
@@ -203,7 +204,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 					<Metric label="Reviews" value="Coming soon..." Icon={StarIcon} />
 					<Metric
 						label="Completion Rate"
-						value={!!completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}
+						value={completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}
 						Icon={ChartBarSquareIcon}
 					/>
 					{/* <Metric label="Avg Trade Completion" value="5 minutes" Icon={ClockIcon} /> */}

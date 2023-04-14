@@ -15,9 +15,9 @@ import ReleaseFundsButton from './ReleaseFundsButton';
 const Release = ({ order, updateOrder }: BuyStepProps) => {
 	const { address } = useAccount();
 
-	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow } = order;
+	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow, seller } = order;
 	const { token, fiat_currency: currency } = list || {};
-	const selling = list?.seller.address === address;
+	const selling = seller.address === address;
 
 	return (
 		<>
@@ -32,7 +32,7 @@ const Release = ({ order, updateOrder }: BuyStepProps) => {
 							This order has been marked as paid.{' '}
 							{selling
 								? `Please, confirm the payment of ${currency?.symbol} ${Number(fiatAmount).toFixed(
-										2
+									2
 								  )} in your bank and release the funds to the buyer. You can also dispute the transaction.`
 								: `Awaiting confirmation from the merchant and the release of ${tokenAmount} ${token?.name}.`}
 						</p>

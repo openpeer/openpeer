@@ -1,12 +1,10 @@
 interface SectionHeadingProps {
-  title: string
+	title: string
 }
-const HeaderH2 = ({ title }: SectionHeadingProps) => {
-  return (
-    <>
-      <h2 className="text-2xl">{title}</h2>
-    </>
-  )
-}
+const HeaderH2 = ({ title }: SectionHeadingProps) => (
+	<>
+		<h2 className="text-2xl">{title}</h2>
+	</>
+);
 
-export default HeaderH2
+export default HeaderH2;

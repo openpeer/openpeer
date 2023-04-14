@@ -31,22 +31,21 @@ const SellPage = () => {
 		...{ step: quickSell ? AMOUNT_STEP : ORDER_TYPE_STEP },
 		...defaultList
 	} as UIList);
-	const step = list.step;
+	const { step } = list;
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (list.step > 3)
+		if (list.step > 3) {
 			setList({
 				...{ step: PAYMENT_METHOD_STEP },
 				...defaultList
 			} as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		}
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
 		setList({ ...{ step: ORDER_TYPE_STEP }, ...defaultList } as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chain]);
 
 	useEffect(() => {
@@ -57,7 +56,6 @@ const SellPage = () => {
 				setList({ ...list, step: AMOUNT_STEP });
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
 	if (wrongNetwork) return <WrongNetwork />;
@@ -87,9 +85,7 @@ const SellPage = () => {
 						</>
 					)}
 				</div>
-				<div className="m-auto">
-					<Summary list={list} />
-				</div>
+				<Summary list={list} />
 			</div>
 		</div>
 	);

@@ -25,15 +25,14 @@ const BuyPage = ({ id }: { id: number }) => {
 					...{ list: data, listId: data.id }
 				});
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
 	useEffect(() => {
 		setOrder({ ...order, ...{ price } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
-	const canBuy = order.list?.seller && order.list.seller.address !== address;
+	const seller = order.seller || order.list?.seller;
+	const canBuy = seller && seller.address !== address;
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !list || !canBuy) return <Loading />;
@@ -51,8 +50,7 @@ const BuyPage = ({ id }: { id: number }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
 	// Pass data to the page via props
-	return { props: { title: 'Buy', id: String(context.params?.id) } };
-};
+	 ({ props: { title: 'Trade', id: String(context.params?.id) } });
 export default BuyPage;

@@ -90,8 +90,7 @@ export default function Select({
 												classNames(
 													active ? 'text-white bg-indigo-600' : 'text-gray-900',
 													'relative cursor-default select-none py-2 pl-3'
-												)
-											}
+												)}
 											value={option}
 										>
 											{({ selected, active }) => (

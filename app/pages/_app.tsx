@@ -31,9 +31,9 @@ const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygon
 const enabledProviders =
 	process.env.NODE_ENV === 'development'
 		? [
-				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
-				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
-				publicProvider()
+			alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
+			alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
+			publicProvider()
 		  ]
 		: [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }), publicProvider()];
 

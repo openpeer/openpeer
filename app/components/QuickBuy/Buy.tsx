@@ -35,7 +35,6 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 			setToken(undefined);
 			updateLists([]);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chainId]);
 
 	const search = async ({
@@ -82,12 +81,10 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 
 	useEffect(() => {
 		search({ fiatValue: fiatAmount, tokenValue: undefined });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currency]);
 
 	useEffect(() => {
 		search({ fiatValue: undefined, tokenValue: tokenAmount });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [token]);
 
 	const onChangeFiat = (val: number | undefined) => {

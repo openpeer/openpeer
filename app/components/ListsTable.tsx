@@ -81,10 +81,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_min: min,
 						limit_max: max,
 						price,
-						payment_method: { bank }
+						payment_method
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
+					const bank = payment_method?.bank || list.bank;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">

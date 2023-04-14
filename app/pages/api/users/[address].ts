@@ -1,9 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { User } from 'models/types';
 
-import { minkeApi } from '../utils/utils';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { minkeApi } from '../utils/utils';
 
 const fetchUser = async (address: string): Promise<User> => {
 	const { data } = await minkeApi.get(`/users/${address}`);

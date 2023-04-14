@@ -10,8 +10,15 @@ import { XCircleIcon } from '@heroicons/react/24/outline';
 import { BuyStepProps } from './Buy.types';
 
 const Cancelled = ({ order }: BuyStepProps) => {
-	const { list, token_amount: tokenAmount, buyer, fiat_amount: fiatAmount, cancelled_at: cancelledAt } = order;
-	const { token, seller, fiat_currency: currency } = list!;
+	const {
+		list,
+		token_amount: tokenAmount,
+		buyer,
+		fiat_amount: fiatAmount,
+		cancelled_at: cancelledAt,
+		seller
+	} = order;
+	const { token } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 	const router = useRouter();
@@ -29,16 +36,16 @@ const Cancelled = ({ order }: BuyStepProps) => {
 					<p className="text-base">
 						{selling
 							? `Your sale of ${tokenValue} to ${
-									buyer?.name || smallWalletAddress(buyer?.address)
+								buyer?.name || smallWalletAddress(buyer?.address)
 							  } has been cancelled.`
 							: `Your purchase of ${tokenValue} from ${
-									seller?.name || smallWalletAddress(seller.address)
+								seller?.name || smallWalletAddress(seller.address)
 							  } has been cancelled.`}
 					</p>
 					<p className="text-base">Cancelled at: {new Date(cancelledAt).toLocaleString()}</p>
 				</div>
 
-				<div className="border-b border-gray-200 my-4"></div>
+				<div className="border-b border-gray-200 my-4" />
 
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
 					<span className="w-full">
