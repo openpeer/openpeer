@@ -14,8 +14,16 @@ interface OrderResumeParams {
 }
 
 const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
-	const { list, token_amount: tokenAmount, fiat_amount: fiatAmount, escrow, id, created_at: createdAt } = order;
-	const { token, seller, fiat_currency: currency } = list!;
+	const {
+		list,
+		token_amount: tokenAmount,
+		fiat_amount: fiatAmount,
+		escrow,
+		id,
+		created_at: createdAt,
+		seller
+	} = order;
+	const { token, fiat_currency: currency } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 

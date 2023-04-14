@@ -15,11 +15,7 @@ interface BlockchainCancelButtonParams {
 }
 
 const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: BlockchainCancelButtonParams) => {
-	const {
-		escrow,
-		buyer,
-		list: { seller }
-	} = order;
+	const { escrow, buyer, seller } = order;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;

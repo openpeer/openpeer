@@ -10,8 +10,15 @@ import { XCircleIcon } from '@heroicons/react/24/outline';
 import { BuyStepProps } from './Buy.types';
 
 const Cancelled = ({ order }: BuyStepProps) => {
-	const { list, token_amount: tokenAmount, buyer, fiat_amount: fiatAmount, cancelled_at: cancelledAt } = order;
-	const { token, seller, fiat_currency: currency } = list!;
+	const {
+		list,
+		token_amount: tokenAmount,
+		buyer,
+		fiat_amount: fiatAmount,
+		cancelled_at: cancelledAt,
+		seller
+	} = order;
+	const { token } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 	const router = useRouter();

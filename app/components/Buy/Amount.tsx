@@ -139,11 +139,12 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, fiatAmount]);
 
+	const buyCrypto = list.type === 'BuyList';
 	return (
 		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
 			<div className="my-8">
 				<Input
-					label="Amount to buy"
+					label={buyCrypto ? "Amount you'll receive" : 'Amount to buy'}
 					prefix={
 						<Prefix
 							label={currency!.symbol}
@@ -157,7 +158,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					error={errors.fiatAmount}
 				/>
 				<Input
-					label="Amount you'll receive"
+					label={buyCrypto ? 'Amount to sell' : "Amount you'll receive"}
 					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
 					id="amountToReceive"
 					value={tokenAmount}

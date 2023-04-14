@@ -17,12 +17,7 @@ interface OpenDisputeButtonParams {
 }
 
 const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }: OpenDisputeButtonParams) => {
-	const {
-		uuid,
-		escrow,
-		buyer,
-		list: { seller }
-	} = order;
+	const { uuid, escrow, buyer, seller } = order;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;

@@ -48,12 +48,12 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const setPaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		setEdit(false);
 		clearErrors([...schema.map(({ id }) => id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm } });
+		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		clearErrors([...schema.map(({ id }) => id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm } });
+		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {

@@ -21,8 +21,8 @@ const Dispute = ({ order }: DisputeParams) => {
 		enabled: !!escrowAddress
 	});
 
-	const { token_amount: tokenAmount, list, buyer, dispute } = order;
-	const { token, seller } = list;
+	const { token_amount: tokenAmount, list, buyer, dispute, seller } = order;
+	const { token } = list;
 	const isSeller = address === seller.address;
 	const isBuyer = address === buyer.address;
 

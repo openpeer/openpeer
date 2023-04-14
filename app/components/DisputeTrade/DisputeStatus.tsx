@@ -23,8 +23,8 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 		dispute,
 		buyer,
 		created_at: createdAt,
+		seller,
 		list: {
-			seller,
 			token,
 			fiat_currency: currency,
 			payment_method: { bank }

@@ -14,11 +14,7 @@ interface CancelOrderButtonParams {
 }
 
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
-	const {
-		list: { seller },
-		buyer,
-		uuid
-	} = order;
+	const { seller, buyer, uuid } = order;
 
 	const { address } = useAccount();
 

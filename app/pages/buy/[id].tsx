@@ -33,7 +33,8 @@ const BuyPage = ({ id }: { id: number }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
-	const canBuy = order.list?.seller && order.list.seller.address !== address;
+	const seller = order.seller || order.list?.seller;
+	const canBuy = seller && seller.address !== address;
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !list || !canBuy) return <Loading />;
@@ -53,6 +54,6 @@ const BuyPage = ({ id }: { id: number }) => {
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
 	// Pass data to the page via props
-	return { props: { title: 'Buy', id: String(context.params?.id) } };
+	return { props: { title: 'Trade', id: String(context.params?.id) } };
 };
 export default BuyPage;
