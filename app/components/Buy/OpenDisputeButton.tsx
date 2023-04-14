@@ -52,14 +52,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		if (isSuccess) {
 			router.push(`/orders/${uuid}`);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, uuid]);
 
 	useEffect(() => {
 		if (disputeConfirmed) {
 			onOpenDispute();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [disputeConfirmed]);
 
 	if (

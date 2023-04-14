@@ -55,7 +55,6 @@ const ImageUploader = ({ address, onUploadFinished }: ImageUploaderParams) => {
 					}
 				});
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [file]);
 
 	return (

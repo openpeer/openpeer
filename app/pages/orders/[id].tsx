@@ -68,7 +68,6 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		};
 
 		setupChannel();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [jwt]);
 
 	if (wrongNetwork) return <WrongNetwork />;

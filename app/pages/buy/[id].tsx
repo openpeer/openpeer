@@ -25,12 +25,10 @@ const BuyPage = ({ id }: { id: number }) => {
 					...{ list: data, listId: data.id }
 				});
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
 	useEffect(() => {
 		setOrder({ ...order, ...{ price } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
 	const seller = order.seller || order.list?.seller;

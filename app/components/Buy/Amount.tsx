@@ -136,7 +136,6 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	useEffect(() => {
 		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, fiatAmount]);
 
 	const buyCrypto = list.type === 'BuyList';

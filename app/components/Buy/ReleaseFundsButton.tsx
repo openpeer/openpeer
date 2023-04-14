@@ -44,7 +44,6 @@ const ReleaseFundsButton = ({
 		if (releaseConfirmed) {
 			onReleaseFunds();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [releaseConfirmed]);
 
 	return (

@@ -8,7 +8,12 @@ import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {
-	ArrowLongLeftIcon, CalendarDaysIcon, CalendarIcon, ChartBarIcon, ChartBarSquareIcon, StarIcon
+	ArrowLongLeftIcon,
+	CalendarDaysIcon,
+	CalendarIcon,
+	ChartBarIcon,
+	ChartBarSquareIcon,
+	StarIcon
 } from '@heroicons/react/24/outline';
 import Synaps from '@synaps-io/react-verify';
 
@@ -102,7 +107,6 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 			fetchWalletAge();
 			fetchVerificationStatus();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	if (verificationModal && !!verification) {

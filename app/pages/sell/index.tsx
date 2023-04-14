@@ -40,13 +40,11 @@ const SellPage = () => {
 				...{ step: PAYMENT_METHOD_STEP },
 				...defaultList
 			} as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
 		setList({ ...{ step: ORDER_TYPE_STEP }, ...defaultList } as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chain]);
 
 	useEffect(() => {
@@ -57,7 +55,6 @@ const SellPage = () => {
 				setList({ ...list, step: AMOUNT_STEP });
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
 	if (wrongNetwork) return <WrongNetwork />;

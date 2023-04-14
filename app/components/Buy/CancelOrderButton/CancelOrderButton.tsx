@@ -70,7 +70,6 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 		if (cancelConfirmed) {
 			onCancelOrder();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cancelConfirmed]);
 
 	if ((!isBuyer && !isSeller) || cancelIsNotAvailable) return <></>;
