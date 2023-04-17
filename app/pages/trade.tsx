@@ -1,4 +1,5 @@
 import { ListsTable, Loading } from 'components';
+import SearchBar from 'components/SearchBar/SearchBar';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ const HomePage = () => {
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
 				<div className="py-4">
+					<SearchBar label={''} id={''} />
 					<ListsTable lists={lists} />
 				</div>
 			</div>

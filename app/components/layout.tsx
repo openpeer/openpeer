@@ -20,6 +20,7 @@ import Avatar from './Avatar';
 import { CollapseButton } from './Navigation';
 import NotificationHeader from './Notifications/NotificationHeader';
 import Notifications from './Notifications/Notifications';
+import SearchBar from './SearchBar/SearchBar';
 
 const manrope = Manrope({
 	subsets: ['latin'],
