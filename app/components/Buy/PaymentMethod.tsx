@@ -1,22 +1,28 @@
-import { BankSelect, Button, Input, Loading, Textarea } from 'components';
+import { Button, Input, Loading, Textarea } from 'components';
+import { UIPaymentMethod } from 'components/Listing/Listing.types';
+import StepLayout from 'components/Listing/StepLayout';
+import { verifyMessage } from 'ethers/lib/utils';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import snakecaseKeys from 'snakecase-keys';
+import { useAccount, useSignMessage } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { ListStepProps, UIPaymentMethod } from './Listing.types';
-import StepLayout from './StepLayout';
+import { BuyStepProps } from './Buy.types';
 
-const PaymentMethod = ({ list, updateList }: ListStepProps) => {
+const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	const { address } = useAccount();
-	const { currency, paymentMethod = {} as PaymentMethodType, type } = list;
+	const { list, paymentMethod = { bank: order.list.bank } as PaymentMethodType } = order;
+	const { fiat_currency: currency, type } = list;
 	const { id, bank, values = {} } = paymentMethod;
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
+	const router = useRouter();
 
 	const resolver: Resolver = () => {
 		const error: Errors = {};
@@ -25,20 +31,64 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			error.bankId = 'Should be present';
 		}
 
-		if (type === 'SellList') {
-			for (const field of schema) {
-				if (field.required && !values[field.id]) {
-					error[field.id] = `${field.label} should be present`;
-				}
+		schema.forEach((field) => {
+			if (field.required && !values[field.id]) {
+				error[field.id] = `${field.label} should be present`;
 			}
-		}
+		});
 
 		return error;
 	};
 
+	const { signMessage } = useSignMessage({
+		onSuccess: async (data, variables) => {
+			const signingAddress = verifyMessage(variables.message, data);
+			if (signingAddress === address) {
+				const result = await fetch('/api/orders/', {
+					method: 'POST',
+					body: JSON.stringify(
+						snakecaseKeys(
+							{
+								order: {
+									listId: order.list.id,
+									fiatAmount: order.fiat_amount,
+									tokenAmount: order.token_amount,
+									price: order.price,
+									paymentMethod
+								},
+								data,
+								address,
+								message: variables.message
+							},
+							{ deep: true }
+						)
+					)
+				});
+				const { uuid } = await result.json();
+				if (uuid) {
+					router.push(`/orders/${uuid}`);
+				}
+			}
+		}
+	});
+
 	const onProceed = () => {
 		if (validate(resolver)) {
-			updateList({ ...list, ...{ step: list.step + 1 } });
+			const message = JSON.stringify(
+				snakecaseKeys(
+					{
+						listId: order.list.id,
+						fiatAmount: order.fiat_amount,
+						tokenAmount: order.token_amount,
+						price: order.price,
+						paymentMethod
+					},
+					{ deep: true }
+				),
+				undefined,
+				4
+			);
+			signMessage({ message });
 		}
 	};
 
@@ -48,12 +98,12 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const setPaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		setEdit(false);
 		clearErrors([...schema.map((field) => field.id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
+		updateOrder({ ...order, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const updatePaymentMethod = (pm: UIPaymentMethod | undefined) => {
 		clearErrors([...schema.map((field) => field.id), ...['bankId']]);
-		updateList({ ...list, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
+		updateOrder({ ...order, ...{ paymentMethod: pm, bankId: pm?.bank?.id } });
 	};
 
 	const enableEdit = (e: React.MouseEvent<HTMLElement>, pm: UIPaymentMethod) => {
@@ -64,19 +114,14 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	useEffect(() => {
 		setLoading(true);
-		if (type === 'BuyList') {
-			setPaymentMethod(undefined);
-			setPaymentMethods([]);
-			setLoading(false);
-			return;
-		}
 
 		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`)
 			.then((res) => res.json())
-			.then((data) => {
-				setPaymentMethods(data);
-				if (!paymentMethod.bank?.id) {
-					setPaymentMethod(data[0]);
+			.then((data: PaymentMethodType[]) => {
+				const filtered = data.filter((pm) => pm.bank.id === list.bank.id);
+				setPaymentMethods(filtered);
+				if (!paymentMethod.values) {
+					setPaymentMethod(filtered[0]);
 				} else {
 					setPaymentMethod(undefined);
 				}
@@ -89,7 +134,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	}
 
 	return (
-		<StepLayout onProceed={onProceed}>
+		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
 			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
 			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
 			{(paymentMethods || []).map((pm) => (
@@ -121,7 +166,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 							const {
 								bank: { account_info_schema: schema }
 							} = pm;
-							const field = schema.find(({ id }) => id === key);
+							const field = schema.find((field) => field.id === key);
 							const value = (pm.values || {})[key];
 							if (!value) return <></>;
 
@@ -139,65 +184,64 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 			{!id || edit ? (
 				<>
-					<BankSelect
-						currencyId={currency!.id}
-						onSelect={(b) =>
-							updatePaymentMethod({
-								...paymentMethod,
-								...{ bank: b, bankId: b?.id }
-							})
-						}
-						selected={bank}
-						error={errors.bankId}
-					/>
-					{type === 'SellList' &&
-						schema.map(({ id, label, placeholder, type = 'text', required }) => {
-							if (type === 'message') {
-								return (
-									<div className="mb-4" key={id}>
-										<span className="text-sm">{label}</span>
-									</div>
-								);
-							}
-
-							if (type === 'textarea') {
-								return (
-									<Textarea
-										rows={4}
-										key={id}
-										label={label}
-										id={id}
-										placeholder={placeholder}
-										onChange={(e) =>
-											updatePaymentMethod({
-												...paymentMethod,
-												...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
-											})
-										}
-										value={values[id]}
-										error={errors[id]}
-									/>
-								);
-							}
+					<div className="flex flex-row items-center mt-8">
+						<Image
+							src={list.bank.icon}
+							alt={list.bank.name}
+							className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+							width={24}
+							height={24}
+							unoptimized
+						/>
+						<span>{list.bank.name}</span>
+					</div>
+					{schema.map(({ id, label, placeholder, type = 'text', required }) => {
+						if (type === 'message') {
 							return (
-								<Input
+								<div className="mb-4" key={id}>
+									<span className="text-sm">{label}</span>
+								</div>
+							);
+						}
+
+						if (type === 'textarea') {
+							return (
+								<Textarea
+									rows={4}
 									key={id}
 									label={label}
-									type="text"
 									id={id}
 									placeholder={placeholder}
-									onChange={(value) =>
+									onChange={(e) =>
 										updatePaymentMethod({
 											...paymentMethod,
-											...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
+											...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
 										})
 									}
-									error={errors[id]}
 									value={values[id]}
-									required={required}
+									error={errors[id]}
 								/>
 							);
-						})}
+						}
+						return (
+							<Input
+								key={id}
+								label={label}
+								type="text"
+								id={id}
+								placeholder={placeholder}
+								onChange={(value) =>
+									updatePaymentMethod({
+										...paymentMethod,
+										...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
+									})
+								}
+								error={errors[id]}
+								value={values[id]}
+								required={required}
+							/>
+						);
+					})}
 				</>
 			) : (
 				<div>

@@ -2,14 +2,13 @@ import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { verifyMessage } from 'ethers/lib/utils.js';
+import { verifyMessage } from 'ethers/lib/utils';
 import { useFormErrors } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { List } from 'models/types';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { truncate } from 'utils';
 import { useAccount, useSignMessage } from 'wagmi';
@@ -34,7 +33,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
-	const { fiat_currency: currency, token } = list;
+	const { fiat_currency: currency, token, type } = list;
 
 	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
 		orderFiatAmount || quickBuyFiat ? Number(quickBuyFiat) : undefined
@@ -82,7 +81,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
 		const max = Number(limitMax) || Number(totalAvailableAmount) * (price || 0);
 
-		if (!fiatAmount || fiatAmount < (Number(limitMin) || 0)) {
+		if (!fiatAmount) {
+			error.fiatAmount = 'Should be bigger than 0';
+		} else if (fiatAmount < (Number(limitMin) || 0)) {
 			error.fiatAmount = `Should be more or equal ${limitMin}`;
 		} else if (fiatAmount > max) {
 			error.fiatAmount = `Should be less or equal ${max}`;
@@ -103,21 +104,27 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				...order,
 				...{ fiat_amount: fiatAmount!, token_amount: tokenAmount!, price }
 			};
-			updateOrder(newOrder);
-			const message = JSON.stringify(
-				snakecaseKeys(
-					{
-						listId: newOrder.list.id,
-						fiatAmount: newOrder.fiat_amount,
-						tokenAmount: newOrder.token_amount,
-						price
-					},
-					{ deep: true }
-				),
-				undefined,
-				4
-			);
-			signMessage({ message });
+
+			if (type === 'SellList') {
+				updateOrder(newOrder);
+
+				const message = JSON.stringify(
+					snakecaseKeys(
+						{
+							listId: newOrder.list.id,
+							fiatAmount: newOrder.fiat_amount,
+							tokenAmount: newOrder.token_amount,
+							price
+						},
+						{ deep: true }
+					),
+					undefined,
+					4
+				);
+				signMessage({ message });
+			} else {
+				updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
+			}
 		}
 	};
 
@@ -139,8 +146,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	}, [tokenAmount, fiatAmount]);
 
 	const buyCrypto = list.type === 'BuyList';
+	const buttonText = buyCrypto ? '' : 'Sign and Continue';
 	return (
-		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
+		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
 				<Input
 					label={buyCrypto ? "Amount you'll receive" : 'Amount to buy'}
@@ -152,7 +160,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					}
 					id="amountBuy"
 					value={fiatAmount}
-					onChangeNumber={onChangeFiat}
+					onChangeNumber={(f) => onChangeFiat(f)}
 					type="decimal"
 					error={errors.fiatAmount}
 				/>
@@ -161,7 +169,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
 					id="amountToReceive"
 					value={tokenAmount}
-					onChangeNumber={onChangeToken}
+					onChangeNumber={(t) => onChangeToken(t)}
 					type="decimal"
 					decimalScale={token.decimals}
 					error={errors.tokenAmount}

@@ -122,4 +122,5 @@ export interface Order {
 	escrow?: Escrow;
 	dispute?: Dispute;
 	created_at: string;
+	payment_method: PaymentMethod;
 }

@@ -24,11 +24,8 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 		buyer,
 		created_at: createdAt,
 		seller,
-		list: {
-			token,
-			fiat_currency: currency,
-			payment_method: { bank }
-		}
+		payment_method: { bank },
+		list: { token, fiat_currency: currency }
 	} = order;
 	const { resolved, winner } = dispute!;
 

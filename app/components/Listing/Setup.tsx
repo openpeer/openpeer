@@ -2,9 +2,10 @@ import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { SetupListStepProps } from './Listing.types';
+import ListType from './ListType';
 import StepLayout from './StepLayout';
 
 const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) => {
@@ -53,6 +54,11 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 			updateList({ ...list, ...{ step: list.step + 1 } });
 		}
 	};
+
+	if (!list.type) {
+		return <ListType list={list} updateList={updateList} />;
+	}
+
 	return (
 		<StepLayout onProceed={onProceed}>
 			<TokenSelect

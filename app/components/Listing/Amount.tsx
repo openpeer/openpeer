@@ -2,7 +2,7 @@ import { Input, Label, Loading, MarginSwitcher } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { List, Token } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { AmountStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
@@ -35,7 +35,11 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 
 	const updateMargin = (m: number) => {
 		clearErrors(['margin']);
-		percentage ? setPercentageMargin(m) : setFixedMargin(m);
+		if (percentage) {
+			setPercentageMargin(m);
+		} else {
+			setFixedMargin(m);
+		}
 		updateValue({ margin: m });
 	};
 
@@ -95,6 +99,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		const amount = Number(tokenAmount || '0');
 		if (amount && !totalAvailableAmount && !quickSellSetupDone) {
 			updateValue({ totalAvailableAmount: amount, quickSellSetupDone: true });
+		} else {
+			updateValue({ quickSellSetupDone: true });
 		}
 	}, [tokenAmount, totalAvailableAmount]);
 

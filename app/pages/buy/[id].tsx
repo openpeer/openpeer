@@ -1,13 +1,14 @@
 import { Loading, Steps } from 'components';
-import { Amount, Summary } from 'components/Buy';
+import { Amount, PaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection, useListPrice } from 'hooks';
 import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 const AMOUNT_STEP = 1;
+const PAYMENT_METHOD_STEP = 2;
 
 const BuyPage = ({ id }: { id: number }) => {
 	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP } as UIOrder);
@@ -41,8 +42,13 @@ const BuyPage = ({ id }: { id: number }) => {
 		<div className="pt-6">
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
-					<Steps currentStep={step} stepsCount={3} />
+					<Steps
+						currentStep={step}
+						stepsCount={3}
+						onStepClick={(n) => setOrder({ ...order, ...{ step: n } })}
+					/>
 					{step === AMOUNT_STEP && <Amount order={order} updateOrder={setOrder} price={price} />}
+					{step === PAYMENT_METHOD_STEP && <PaymentMethod order={order} updateOrder={setOrder} />}
 				</div>
 				{!!order.list && <Summary order={order} />}
 			</div>
@@ -52,5 +58,5 @@ const BuyPage = ({ id }: { id: number }) => {
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
 	// Pass data to the page via props
-	 ({ props: { title: 'Trade', id: String(context.params?.id) } });
+	({ props: { title: 'Trade', id: String(context.params?.id) } });
 export default BuyPage;

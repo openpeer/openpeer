@@ -1,7 +1,7 @@
 import { Avatar, Button } from 'components';
-import WrongNetwork from 'components/WrongNetwork';
 import { Order } from 'models/types';
 import Link from 'next/link';
+import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
@@ -58,6 +58,8 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 			case 'cancelled': {
 				return 'Cancelled';
 			}
+			default:
+				return 'Waiting';
 		}
 	};
 

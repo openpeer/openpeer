@@ -1,7 +1,7 @@
-import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
 import Image from 'next/image';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
@@ -26,9 +26,10 @@ const Payment = ({ order }: BuyStepProps) => {
 		escrow,
 		id,
 		status,
-		seller
+		seller,
+		payment_method: paymentMethod
 	} = order;
-	const { token, fiat_currency: currency, payment_method: paymentMethod } = list!;
+	const { token, fiat_currency: currency } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;

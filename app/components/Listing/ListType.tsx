@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { ArrowTrendingDownIcon, ArrowTrendingUpIcon } from '@heroicons/react/20/solid';
 
@@ -49,10 +49,10 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 );
 
 const ListType = ({ updateList, list }: ListStepProps) => {
-	const [type, setType] = useState<UIList['type']>(list.type);
+	const [type, setType] = useState<UIList['type']>(list.type || 'SellList');
 
 	const onProceed = () => {
-		updateList({ ...list, ...{ type, step: list.step + 1 } });
+		updateList({ ...list, ...{ type } });
 	};
 
 	return (

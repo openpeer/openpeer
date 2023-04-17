@@ -1,7 +1,7 @@
 import { ListsTable, Loading, Switcher } from 'components';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
@@ -52,7 +52,7 @@ const HomePage = () => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => ({
+export const getServerSideProps: GetServerSideProps = async () => ({
 	props: {
 		title: 'Trade P2P'
 	}
