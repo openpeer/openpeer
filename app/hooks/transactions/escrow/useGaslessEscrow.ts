@@ -48,7 +48,7 @@ const useGaslessEscrow = ({ contract, orderID, buyer, tokenAddress, amount }: Us
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 420000
+				gasLimit: 800000
 			};
 			// @ts-ignore
 			const tx = await provider.send('eth_sendTransaction', [txParams]);
