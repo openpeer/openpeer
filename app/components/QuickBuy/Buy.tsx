@@ -51,6 +51,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 		updateLoading(true);
 		try {
 			const params = {
+				type: 'SellList',
 				chain_id: String(chainId),
 				fiat_currency_code: currency.code,
 				token_address: token.address,
@@ -115,7 +116,6 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 		} else if (presentSearchParams && lists.length === 0) {
 			setCreatingAd(true);
 			await new Promise((resolve) => setTimeout(resolve, 1500));
-			setCreatingAd(false);
 			router.push(
 				{
 					pathname: '/sell',
@@ -174,7 +174,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 				)}
 
 				<Button
-					title={!presentSearchParams || lists.length > 0 ? 'See Buy Options' : 'Post a buy ad'}
+					title={!presentSearchParams || lists.length > 0 ? 'See Buy Options' : 'Post a Buy Ad'}
 					processing={loading}
 					disabled={disabled}
 					onClick={onButtonClick}

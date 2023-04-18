@@ -9,20 +9,25 @@ import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 type QuickBuyType = 'Buy' | 'Sell';
 
 const Quick = () => {
-	const [lists, setLists] = useState<List[]>([]);
+	const [buyLists, setBuyLists] = useState<List[]>([]);
+	const [sellLists, setSellLists] = useState<List[]>([]);
 	const [seeLists, setSeeLists] = useState(false);
 	const [type, setType] = useState<QuickBuyType>('Buy');
 	const [loading, setLoading] = useState(false);
 	const [buyFiatAmount, setBuyFiatAmount] = useState<number>();
 	const [buyTokenAmount, setBuyTokenAmount] = useState<number>();
 
-	const onBuyClick = (fiatAmount: number, tokenAmount: number) => {
+	const onBuySellClick = (fiatAmount: number | undefined, tokenAmount: number) => {
 		setBuyFiatAmount(fiatAmount);
 		setBuyTokenAmount(tokenAmount);
 		setSeeLists(true);
 	};
 
-	const showLists = lists.length > 0 && seeLists && !!buyFiatAmount && !!buyTokenAmount;
+	const selectedLists = type === 'Buy' ? buyLists : sellLists;
+	const showLists = selectedLists.length > 0 && seeLists && (type === 'Sell' || !!buyFiatAmount) && !!buyTokenAmount;
+	console.log('seeLists', seeLists);
+	console.log('selectedLists', selectedLists);
+	console.log('showLists', showLists);
 	return (
 		<>
 			{showLists && (
@@ -38,7 +43,7 @@ const Quick = () => {
 							</div>
 						</div>
 						<div className="py-4">
-							<ListsTable lists={lists} fiatAmount={buyFiatAmount} tokenAmount={buyTokenAmount} />
+							<ListsTable lists={selectedLists} fiatAmount={buyFiatAmount} tokenAmount={buyTokenAmount} />
 						</div>
 					</div>
 				</div>
@@ -59,15 +64,20 @@ const Quick = () => {
 							<div className={`${loading ? 'animate-pulse' : ''}`}>
 								<div className={`${type === 'Sell' ? 'hidden' : ''}`}>
 									<Buy
-										lists={lists}
-										updateLists={setLists}
-										onSeeOptions={onBuyClick}
+										lists={buyLists}
+										updateLists={setBuyLists}
+										onSeeOptions={onBuySellClick}
 										onLoading={setLoading}
 									/>
 								</div>
 
 								<div className={`${type === 'Buy' ? 'hidden' : ''}`}>
-									<Sell onLoading={setLoading} />
+									<Sell
+										lists={sellLists}
+										updateLists={setSellLists}
+										onLoading={setLoading}
+										onSeeOptions={onBuySellClick}
+									/>
 								</div>
 							</div>
 						</div>
@@ -78,7 +88,7 @@ const Quick = () => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => ({
+export const getServerSideProps: GetServerSideProps = async () => ({
 	props: {
 		disableAuthentication: true,
 		blankLayout: true
