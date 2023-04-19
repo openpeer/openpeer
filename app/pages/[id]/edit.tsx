@@ -7,7 +7,7 @@ import { User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import ErrorPage from 'next/error';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
@@ -41,7 +41,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	}, [id, session]);
 
 	useEffect(() => {
-		if (!!user) {
+		if (user) {
 			setUsername(user.name || '');
 			setEmail(user.email || '');
 			setTwitter(user.twitter || '');
@@ -77,6 +77,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				);
 
 				setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
+				return formattedMessages;
 			});
 		}
 	};
@@ -133,10 +134,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
-	return {
-		props: { title: 'Edit Profile', id: String(context.params?.id) } // will be passed to the page component as props
-	};
-};
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
+	props: { title: 'Edit Profile', id: String(context.params?.id) } // will be passed to the page component as props
+});
 
 export default EditProfile;

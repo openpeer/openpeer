@@ -1,7 +1,7 @@
 import { Button, Modal } from 'components';
-import { verifyMessage } from 'ethers/lib/utils.js';
+import { verifyMessage } from 'ethers/lib/utils';
 import { Order } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useSignMessage } from 'wagmi';
 
@@ -14,11 +14,7 @@ interface CancelOrderButtonParams {
 }
 
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
-	const {
-		list: { seller },
-		buyer,
-		uuid
-	} = order;
+	const { seller, buyer, uuid } = order;
 
 	const { address } = useAccount();
 
@@ -37,8 +33,8 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 					method: 'PATCH',
 					body: message
 				});
-				const order = await result.json();
-				if (!order.uuid) {
+				const savedOrder = await result.json();
+				if (!savedOrder.uuid) {
 					toast.error('Error cancelling the order', {
 						theme: 'dark',
 						position: 'top-right',
@@ -74,7 +70,6 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 		if (cancelConfirmed) {
 			onCancelOrder();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cancelConfirmed]);
 
 	if ((!isBuyer && !isSeller) || cancelIsNotAvailable) return <></>;

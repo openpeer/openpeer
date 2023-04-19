@@ -4,13 +4,12 @@ import OpenDisputeButton from 'components/Buy/OpenDisputeButton';
 import ReleaseFundsButton from 'components/Buy/ReleaseFundsButton';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
-import Loading from 'components/Loading/Loading';
 import Textarea from 'components/Textarea/Textarea';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
 import { Order } from 'models/types';
 import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount } from 'wagmi';
 
@@ -32,19 +31,17 @@ interface DisputeFormParams {
 
 const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 	const { uuid, dispute, buyer } = order;
-	const { user_dispute, resolved } = dispute || {};
-	const { comments: userComment, dispute_files: files = [] } = user_dispute || {};
+	const { user_dispute: userDispute, resolved } = dispute || {};
+	const { comments: userComment, dispute_files: files = [] } = userDispute || {};
 	const { address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 
 	const [comments, setComments] = useState(userComment || '');
-	const orderUploads: Upload[] = files.map((file) => {
-		return {
-			signedURL: file.upload_url,
-			key: file.key,
-			filename: file.filename
-		};
-	});
+	const orderUploads: Upload[] = files.map((file) => ({
+		signedURL: file.upload_url,
+		key: file.key,
+		filename: file.filename
+	}));
 
 	const [uploads, setUploads] = useState<Upload[]>(orderUploads);
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -88,8 +85,7 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 					)
 				)
 			});
-			const response = await result.json();
-			console.log('response', response);
+			await result.json();
 		}
 	};
 
@@ -140,7 +136,10 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 										) : (
 											<p key={key}>Unsupported file type</p>
 										)}
-										<button className="absolute -top-2 -right-2 h-4 w-4 rounded-full bg-cyan-600 ring-2 ring-white flex items-center justify-center cursor-pointer">
+										<button
+											type="button"
+											className="absolute -top-2 -right-2 h-4 w-4 rounded-full bg-cyan-600 ring-2 ring-white flex items-center justify-center cursor-pointer"
+										>
 											<XMarkIcon className="w-8 h-8 text-white" />
 										</button>
 									</div>

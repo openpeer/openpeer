@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { List } from '../models/types';
 import Loading from './Loading/Loading';
 import Selector from './Selector';
@@ -14,6 +16,7 @@ interface Props {
 
 const Option = ({ label, selected, onSelect }: { label: string; selected: boolean; onSelect: Props['onSelect'] }) => (
 	<button
+		type="button"
 		className={`w-full flex justify-center rounded-full py-2 ${selected && 'bg-white text-black'}`}
 		onClick={() => onSelect(label.toLowerCase() as List['margin_type'])}
 	>
@@ -21,34 +24,32 @@ const Option = ({ label, selected, onSelect }: { label: string; selected: boolea
 	</button>
 );
 
-const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => {
-	return (
-		<>
-			<div className="w-full flex flex-col rounded-full bg-gray-100">
-				<div className="flex p-1.5 items-center text-neutral-500 font-bold">
-					<Option label="Percentage" selected={selected === 'percentage'} onSelect={onSelect} />
-					<Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
-				</div>
+const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMargin, error }: Props) => (
+	<>
+		<div className="w-full flex flex-col rounded-full bg-gray-100">
+			<div className="flex p-1.5 items-center text-neutral-500 font-bold">
+				<Option label="Percentage" selected={selected === 'percentage'} onSelect={onSelect} />
+				<Option label="Fixed" selected={selected === 'fixed'} onSelect={onSelect} />
 			</div>
-			<>
-				{selected === 'percentage' && (
-					<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
-				)}
-				{selected === 'fixed' &&
-					(margin == undefined ? (
-						<Loading big={false} />
-					) : (
-						<Selector
-							value={margin}
-							suffix={` ${currency} per ${token}`}
-							underValue="Spot Price"
-							updateValue={updateMargin}
-							error={error}
-						/>
-					))}
-			</>
+		</div>
+		<>
+			{selected === 'percentage' && (
+				<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
+			)}
+			{selected === 'fixed' &&
+				(margin === undefined ? (
+					<Loading big={false} />
+				) : (
+					<Selector
+						value={margin}
+						suffix={` ${currency} per ${token}`}
+						underValue="Spot Price"
+						updateValue={updateMargin}
+						error={error}
+					/>
+				))}
 		</>
-	);
-};
+	</>
+);
 
 export default MarginSwitcher;

@@ -57,7 +57,6 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 
 	useEffect(() => {
 		canSubmitGaslessTransaction();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address]);
 
 	return { biconomy, gaslessEnabled };

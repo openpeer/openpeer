@@ -42,9 +42,9 @@ const useNotifications = () => {
 				} else {
 					// Extract the properties we need from the item
 					const [block] = item.blocks;
-					const title = item?.data?.['title'];
+					const title = item?.data?.title;
 					const description = block.rendered;
-					const url = item?.data?.['url'];
+					const url = item?.data?.url;
 
 					// Create the notification object
 					const notification: Notification = {
@@ -100,16 +100,16 @@ const useNotifications = () => {
 
 	useEffect(() => {
 		const fetchToken = async () => {
-			const response = await fetch(`/api/knock`);
+			const response = await fetch('/api/knock');
 			const { token: apiToken } = await response.json();
 			setToken(apiToken);
 		};
 
-		if (!!session) fetchToken();
+		if (session) fetchToken();
 	}, [session]);
 
 	const markAsRead = async (id: FeedItem['id']) => {
-		let item = feedItems.find((item) => item.id === id);
+		const item = feedItems.find((i) => i.id === id);
 
 		if (!!client && item) {
 			await client.markAsRead(item);
@@ -120,7 +120,7 @@ const useNotifications = () => {
 	};
 
 	const markAsArchived = async (id: FeedItem['id']) => {
-		let item = feedItems.find((item) => item.id === id);
+		const item = feedItems.find((i) => i.id === id);
 
 		if (!!client && item) {
 			await client.markAsArchived(item);
@@ -130,7 +130,7 @@ const useNotifications = () => {
 	};
 
 	const markAllAsSeen = () => {
-		if (!!client) {
+		if (client) {
 			client.markAllAsSeen();
 			setNotifications((n) => n.map((notification) => ({ ...notification, ...{ unseen: false } })));
 		}

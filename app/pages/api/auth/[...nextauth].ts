@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import jwt from 'jsonwebtoken';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -40,7 +41,6 @@ export default async function auth(req: any, res: any) {
 					}
 					return null;
 				} catch (e) {
-					console.error(e);
 					return null;
 				}
 			}
@@ -53,7 +53,7 @@ export default async function auth(req: any, res: any) {
 	if (isDefaultSigninPage) {
 		providers.pop();
 	}
-	return await NextAuth(req, res, {
+	const result = await NextAuth(req, res, {
 		// https://next-auth.js.org/configuration/providers/oauth
 		providers,
 		session: {
@@ -66,14 +66,12 @@ export default async function auth(req: any, res: any) {
 				session.address = token.sub;
 				session.token = token;
 				session.jwt = encodedToken;
-				try {
-					const { data: user } = await minkeApi.get(`/users/${session.address}`);
-					session.user = user;
-				} catch (error) {
-					console.error('Fetching user error', error);
-				}
+				const { data: user } = await minkeApi.get(`/users/${session.address}`);
+				session.user = user;
 				return session;
 			}
 		}
 	});
+
+	return result;
 }

@@ -2,9 +2,9 @@
 import { User } from 'models/types';
 import { getSession } from 'next-auth/react';
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../utils/utils';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 const fetchUser = async (address: string, token: string): Promise<User> => {
 	const { data } = await minkeApi.get(`/user_profiles/${address}`, {
 		headers: {

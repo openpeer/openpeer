@@ -46,8 +46,10 @@ export interface List {
 	terms: string | undefined | null;
 	token: Token;
 	payment_method: PaymentMethod;
+	bank: Bank;
 	total_available_amount: string;
 	price: number;
+	type: 'SellList' | 'BuyList';
 }
 
 export interface AccountField {
@@ -111,6 +113,7 @@ export interface Order {
 	token_amount: number;
 	price: number | undefined;
 	list: List;
+	seller: User;
 	buyer: User;
 	status: 'created' | 'escrowed' | 'release' | 'cancelled' | 'dispute' | 'closed';
 	tx_hash: string | null | undefined;
@@ -119,4 +122,5 @@ export interface Order {
 	escrow?: Escrow;
 	dispute?: Dispute;
 	created_at: string;
+	payment_method: PaymentMethod;
 }

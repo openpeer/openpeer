@@ -16,7 +16,7 @@ const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
 	const { chain, chains } = useNetwork();
 	const deployer = DEPLOYER_CONTRACTS[(chain || chains[0] || polygon).id];
 	const contract = address || deployer;
-	const fetchFeeFromDeployer = contract == deployer;
+	const fetchFeeFromDeployer = contract === deployer;
 
 	const { data: feeBps, isFetching } = useContractRead({
 		address: contract,

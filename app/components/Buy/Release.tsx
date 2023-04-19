@@ -1,23 +1,24 @@
-import Button from 'components/Button/Button';
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
-import ClipboardText from './ClipboardText';
 import OpenDisputeButton from './OpenDisputeButton';
 import OrderResume from './OrderResume';
 import ReleaseFundsButton from './ReleaseFundsButton';
 
-const Release = ({ order, updateOrder }: BuyStepProps) => {
+const Release = ({ order }: BuyStepProps) => {
 	const { address } = useAccount();
 
-	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow } = order;
+	const { token_amount: tokenAmount, list, fiat_amount: fiatAmount, escrow, seller } = order;
 	const { token, fiat_currency: currency } = list || {};
-	const selling = list?.seller.address === address;
+	const selling = seller.address === address;
 
 	return (
 		<>

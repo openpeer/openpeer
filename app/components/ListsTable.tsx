@@ -1,6 +1,7 @@
 import { List } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
@@ -17,14 +18,15 @@ interface BuyButtonProps {
 	id: number;
 	fiatAmount: number | undefined;
 	tokenAmount: number | undefined;
+	sellList: boolean;
 }
 
-const BuyButton = ({ id, fiatAmount, tokenAmount }: BuyButtonProps) => (
+const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) => (
 	<Link
 		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
 		as={`/buy/${encodeURIComponent(id)}`}
 	>
-		<Button title="Buy" />
+		<Button title={sellList ? 'Buy' : 'Sell'} />
 	</Link>
 );
 
@@ -81,10 +83,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_min: min,
 						limit_max: max,
 						price,
-						payment_method: { bank }
+						payment_method: paymentMethod
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
+					const bank = paymentMethod?.bank || list.bank;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -112,7 +115,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 										</span>
 										{canBuy && (
-											<BuyButton id={list.id} fiatAmount={fiatAmount} tokenAmount={tokenAmount} />
+											<BuyButton
+												id={list.id}
+												fiatAmount={fiatAmount}
+												tokenAmount={tokenAmount}
+												sellList={list.type === 'SellList'}
+											/>
 										)}
 									</div>
 								</div>
@@ -140,7 +148,14 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
-								{canBuy && <BuyButton id={list.id} fiatAmount={fiatAmount} tokenAmount={tokenAmount} />}
+								{canBuy && (
+									<BuyButton
+										id={list.id}
+										fiatAmount={fiatAmount}
+										tokenAmount={tokenAmount}
+										sellList={list.type === 'SellList'}
+									/>
+								)}
 							</td>
 						</tr>
 					);

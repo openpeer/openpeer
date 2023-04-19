@@ -1,25 +1,20 @@
-import { Loading } from 'components';
+import Loading from 'components/Loading/Loading';
 import { Token } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import Select from './Select';
-import { SelectProps } from './Select.types';
+import { SelectProps, TokenSelectProps } from './Select.types';
 
 const TokenSelect = ({
 	onSelect,
 	selected,
 	error,
 	minimal,
-	selectedIdOnLoad
-}: {
-	onSelect: (option: Token | undefined) => void;
-	selected: SelectProps['selected'];
-	error?: SelectProps['error'];
-	minimal?: SelectProps['minimal'];
-	selectedIdOnLoad?: string;
-}) => {
+	selectedIdOnLoad,
+	label = 'Choose token to list'
+}: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
@@ -46,7 +41,6 @@ const TokenSelect = ({
 				}
 				setLoading(false);
 			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chainId]);
 
 	if (isLoading) {
@@ -54,7 +48,7 @@ const TokenSelect = ({
 	}
 	return tokens ? (
 		<Select
-			label="Choose token to list"
+			label={label}
 			options={tokens}
 			selected={selected}
 			onSelect={onSelect as SelectProps['onSelect']}

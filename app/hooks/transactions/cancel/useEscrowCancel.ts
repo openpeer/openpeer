@@ -1,4 +1,3 @@
-import useGaslessMarkAsPaid from '../markAsPaid/useGaslessMarkAsPaid';
 import useGasEscrowCancel from './useGasEscrowCancel';
 import useGaslessEscrowCancel from './useGaslessEscrowCancel';
 

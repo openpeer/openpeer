@@ -1,8 +1,9 @@
 import { OpenPeerEscrow } from 'abis';
 import Label from 'components/Label/Label';
 import { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { Dispute } from 'models/types';
+import React from 'react';
 import { useContractRead } from 'wagmi';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
@@ -52,7 +53,7 @@ const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 		<>
 			<Label title="Dispute progress" />
 			<nav aria-label="Progress" className="mt-4">
-				<ol role="list" className="overflow-hidden">
+				<ol className="overflow-hidden">
 					{steps.map((step, stepIdx) => (
 						<li
 							key={step.name}

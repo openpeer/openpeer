@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers';
-import { Interface } from 'ethers/lib/utils.js';
+import { Interface } from 'ethers/lib/utils';
 import useBiconomy from 'hooks/useBiconomy';
 import { sendSignedTransaction } from 'models/transactions';
 import { useState } from 'react';
@@ -50,13 +50,13 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };
 	}
 
-	const [name, getNonce, _nonces, nonces] = reads as [
+	const [name, getNonce, noncesResult, nonces] = reads as [
 		string | undefined,
 		BigNumber | undefined,
 		BigNumber | undefined,
 		BigNumber | undefined
 	];
-	const nonce = getNonce || _nonces || nonces;
+	const nonce = getNonce || noncesResult || nonces;
 
 	if (biconomy === null || !gaslessEnabled || (dataReadSuccess && (!name || !nonce))) {
 		return { isFetching, gaslessEnabled: false, isSuccess, isLoading, data };
@@ -77,14 +77,14 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 
 		try {
 			setIsLoading(true);
-			biconomy.on('txMined', (data: any) => {
+			biconomy.on('txMined', (minedData) => {
 				setIsLoading(false);
 				setIsSuccess(true);
-				updateData(data);
+				updateData(minedData);
 			});
 
-			biconomy.on('onError', (data: any) => {
-				console.error('error', data);
+			biconomy.on('onError', (minedData) => {
+				console.error('error', minedData);
 				setIsLoading(false);
 				setIsSuccess(false);
 			});

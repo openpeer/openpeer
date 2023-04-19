@@ -1,7 +1,8 @@
 import Button from 'components/Button/Button';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import { Order } from 'models/types';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
@@ -14,8 +15,16 @@ interface OrderResumeParams {
 }
 
 const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
-	const { list, token_amount: tokenAmount, fiat_amount: fiatAmount, escrow, id, created_at: createdAt } = order;
-	const { token, seller, fiat_currency: currency } = list!;
+	const {
+		list,
+		token_amount: tokenAmount,
+		fiat_amount: fiatAmount,
+		escrow,
+		id,
+		created_at: createdAt,
+		seller
+	} = order;
+	const { token, fiat_currency: currency } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
 
@@ -33,9 +42,9 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 			{selling && !!fee && (
 				<div className="flex flex-row justify-between mb-4">
 					<span className="text-neutral-500">Fee Paid</span>
-					<span className="flex flex-row justify-between">{`${formatUnits(fee, token.decimals)} ${
-						token.symbol
-					}`}</span>
+					<span className="flex flex-row justify-between">
+						{`${formatUnits(fee, token.decimals)} ${token.symbol}`}
+					</span>
 				</div>
 			)}
 
@@ -57,7 +66,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 			</div>
 			{showRating && false && (
 				<>
-					<div className="border-bottom border border-color-gray-200 mb-4"></div>
+					<div className="border-bottom border border-color-gray-200 mb-4" />
 					<div className="flex flex-row items-center justify-between">
 						<span className="text-neutral-500">Rate {selling ? 'buyer' : 'merchant'}</span>
 						<span className="w-1/2">

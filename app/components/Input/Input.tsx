@@ -1,3 +1,4 @@
+import React from 'react';
 import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
@@ -15,7 +16,7 @@ export interface InputProps {
 	decimalScale?: number;
 	error?: string;
 	disabled?: boolean;
-	style?: string;
+	extraStyle?: string;
 }
 
 const Input = ({
@@ -33,7 +34,7 @@ const Input = ({
 	decimalScale = 2,
 	error,
 	disabled = false,
-	style = ''
+	extraStyle = ''
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -55,7 +56,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`${extraStyle} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
 							!!prefix && 'text-right'
 						}`}
 						allowedDecimalSeparators={[',', '.']}
@@ -70,7 +71,7 @@ const Input = ({
 					<input
 						type={type}
 						id={id}
-						className={`${style} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`${extraStyle} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
 							!!prefix && 'text-right'
 						}`}
 						value={value}

@@ -4,7 +4,7 @@ import { BigNumber, constants } from 'ethers';
 import { useTransactionFeedback } from 'hooks';
 import { useApproval } from 'hooks/transactions';
 import { Token } from 'models/types';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { erc20ABI, useAccount, useContractRead } from 'wagmi';
 
 const ApproveTokenButton = ({
@@ -44,7 +44,6 @@ const ApproveTokenButton = ({
 
 	useEffect(() => {
 		if (isSuccess || approved) onTokenApproved();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, approved]);
 
 	return (

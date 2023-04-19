@@ -1,7 +1,9 @@
-import { Button, CurrencySelect, Input, TokenSelect } from 'components';
+/* eslint-disable no-promise-executor-return */
+import { Button, CurrencySelect, Input, Loading, TokenSelect } from 'components';
 import debounce from 'lodash.debounce';
 import { FiatCurrency, List, Token } from 'models/types';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { truncate } from 'utils';
 import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
@@ -21,6 +23,8 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 	const [currency, setCurrency] = useState<FiatCurrency>();
 	const [token, setToken] = useState<Token>();
 	const [loading, setLoading] = useState(false);
+	const [creatingAd, setCreatingAd] = useState(false);
+	const router = useRouter();
 
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
@@ -35,7 +39,6 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 			setToken(undefined);
 			updateLists([]);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chainId]);
 
 	const search = async ({
@@ -49,6 +52,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 		updateLoading(true);
 		try {
 			const params = {
+				type: 'SellList',
 				chain_id: String(chainId),
 				fiat_currency_code: currency.code,
 				token_address: token.address,
@@ -57,13 +61,13 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 			};
 
 			const filteredParams = Object.fromEntries(
-				Object.entries(params).filter(([_, value]) => value !== undefined)
+				Object.entries(params).filter(([, value]) => value !== undefined)
 			);
 			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
-			const lists: List[] = await response.json();
-			updateLists(lists);
+			const searchLists: List[] = await response.json();
+			updateLists(searchLists);
 
-			const [list] = lists;
+			const [list] = searchLists;
 			const { price } = list || {};
 			if (price) {
 				if (tokenValue) setFiatAmount(tokenValue * price);
@@ -82,12 +86,10 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 
 	useEffect(() => {
 		search({ fiatValue: fiatAmount, tokenValue: undefined });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currency]);
 
 	useEffect(() => {
 		search({ fiatValue: undefined, tokenValue: tokenAmount });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [token]);
 
 	const onChangeFiat = (val: number | undefined) => {
@@ -104,66 +106,88 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 		}
 	};
 
-	const onButtonClick = () => {
+	const presentSearchParams = currency && token && (fiatAmount || tokenAmount);
+	const disabled = loading || !presentSearchParams;
+
+	const onButtonClick = async () => {
+		if (disabled) return;
+
 		if (!!fiatAmount && !!tokenAmount && !!currency && !!token) {
 			onSeeOptions(fiatAmount, tokenAmount);
+		} else if (presentSearchParams && lists.length === 0) {
+			setCreatingAd(true);
+			await new Promise((resolve) => setTimeout(resolve, 1500));
+			router.push(
+				{
+					pathname: '/sell',
+					query: { currency: currency.id, token: token.id, fiatAmount, tokenAmount }
+				},
+				'/sell'
+			);
 		}
 	};
 
 	return (
 		<>
-			<div>
-				<Input
-					label="Fiat Amount"
-					id="fiat"
-					placeholder="Enter Amount"
-					style="h-16"
-					addOn={<CurrencySelect onSelect={setCurrency} selected={currency} minimal selectTheFirst />}
-					type="decimal"
-					onChangeNumber={debounce(onChangeFiat, 1000)}
-					value={fiatAmount}
-				/>
-			</div>
-			<div>
-				<Input
-					label="Crypto to Receive"
-					id="crypto"
-					placeholder="Enter Amount"
-					style="h-16"
-					addOn={<TokenSelect onSelect={setToken} selected={token} minimal />}
-					type="decimal"
-					decimalScale={token?.decimals}
-					onChangeNumber={debounce(onChangeToken, 1000)}
-					value={tokenAmount}
-				/>
-			</div>
-			{lists.length > 0 ? (
-				<div className="mb-2 flex flex-row items-center">
-					<CheckIcon width={20} height={20} className="text-green-500 stroke-2 mr-1" />
-					<span className="text-sm text-gray-700">
-						{lists.length} {lists.length > 1 ? 'options' : 'option'} available from {currency?.symbol}{' '}
-						{Number(lists[0].price).toFixed(2)} per {token?.symbol}
-					</span>
+			<div className={`${creatingAd ? 'hidden' : ''}`}>
+				<div>
+					<Input
+						label="Fiat Amount"
+						id="fiat"
+						placeholder="Enter Amount"
+						extraStyle="h-16"
+						addOn={<CurrencySelect onSelect={setCurrency} selected={currency} minimal selectTheFirst />}
+						type="decimal"
+						onChangeNumber={debounce(onChangeFiat, 1000)}
+						value={fiatAmount}
+					/>
 				</div>
-			) : (
-				!!token &&
-				!!currency &&
-				(!!fiatAmount || !!tokenAmount) &&
-				!loading && (
-					<div className="mb-2 text-sm text-gray-700">
-						<span>We could not find ads for these settings</span>
+				<div>
+					<Input
+						label="Crypto to Receive"
+						id="crypto"
+						placeholder="Enter Amount"
+						extraStyle="h-16"
+						addOn={<TokenSelect onSelect={setToken} selected={token} minimal />}
+						type="decimal"
+						decimalScale={token?.decimals}
+						onChangeNumber={debounce(onChangeToken, 1000)}
+						value={tokenAmount}
+					/>
+				</div>
+				{lists.length > 0 ? (
+					<div className="mb-2 flex flex-row items-center">
+						<CheckIcon width={20} height={20} className="text-green-500 stroke-2 mr-1" />
+						<span className="text-sm text-gray-700">
+							{lists.length} {lists.length > 1 ? 'options' : 'option'} available from {currency?.symbol}{' '}
+							{Number(lists[0].price).toFixed(2)} per {token?.symbol}
+						</span>
 					</div>
-				)
-			)}
+				) : (
+					!!token &&
+					!!currency &&
+					(!!fiatAmount || !!tokenAmount) &&
+					!loading && (
+						<div className="mb-2 text-sm text-gray-700">
+							<span>We could not find any available sellers. Post a buy ad instead.</span>
+						</div>
+					)
+				)}
 
-			<Button
-				title="See Buy Options"
-				processing={loading}
-				disabled={!(currency && token && fiatAmount && tokenAmount && !loading)}
-				onClick={onButtonClick}
-			/>
-			<div className="text-center mt-4">
-				<span className="text-xs text-gray-600 text-center">Always zero fees 🎉</span>
+				<Button
+					title={!presentSearchParams || lists.length > 0 ? 'See Buy Options' : 'Post a Buy Ad'}
+					processing={loading}
+					disabled={disabled}
+					onClick={onButtonClick}
+				/>
+				<div className="text-center mt-4">
+					<span className="text-xs text-gray-600 text-center">Always zero fees 🎉</span>
+				</div>
+			</div>
+			<div className={`${!creatingAd ? 'hidden' : ''}`}>
+				<div className="">
+					<Loading message="We are redirecting you to your ad 🚀" big={false} row={false} />
+				</div>
 			</div>
 		</>
 	);

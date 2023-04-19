@@ -1,5 +1,5 @@
 import Button from 'components/Button/Button';
-import { useState } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore
 import { WalletChatWidget } from 'react-wallet-chat';
 

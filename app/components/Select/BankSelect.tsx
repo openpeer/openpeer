@@ -1,6 +1,6 @@
-import { Loading } from 'components';
+import Loading from 'components/Loading/Loading';
 import { Bank } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Select from './Select';
 import { SelectProps } from './Select.types';

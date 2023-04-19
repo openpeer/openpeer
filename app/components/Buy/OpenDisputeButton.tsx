@@ -2,11 +2,11 @@ import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { useOpenDispute, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useBalance, useContractReads } from 'wagmi';
 
@@ -17,12 +17,7 @@ interface OpenDisputeButtonParams {
 }
 
 const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }: OpenDisputeButtonParams) => {
-	const {
-		uuid,
-		escrow,
-		buyer,
-		list: { seller }
-	} = order;
+	const { uuid, escrow, buyer, seller } = order;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
@@ -57,26 +52,24 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		if (isSuccess) {
 			router.push(`/orders/${uuid}`);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, uuid]);
 
 	useEffect(() => {
 		if (disputeConfirmed) {
 			onOpenDispute();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [disputeConfirmed]);
 
 	if (
 		sellerCanCancelAfter === undefined ||
 		disputeFee === undefined ||
 		paidForDispute === undefined ||
-		balance?.value == undefined
+		balance?.value === undefined
 	) {
 		return <p>Loading...</p>;
 	}
 
-	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString()) == 1;
+	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString(), 10) === 1;
 
 	const onOpenDispute = () => {
 		if (!isConnected || !canOpenDispute) return;
@@ -109,12 +102,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 					paidForDispute
 						? 'Already opened'
 						: !canOpenDispute
-						? 'You cannot dispute'
-						: isLoading
-						? 'Processing...'
-						: isSuccess
-						? 'Done'
-						: title
+							? 'You cannot dispute'
+							: isLoading
+								? 'Processing...'
+								: isSuccess
+									? 'Done'
+									: title
 				}
 				processing={isLoading}
 				disabled={isSuccess || !canOpenDispute || paidForDispute}

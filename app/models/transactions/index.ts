@@ -29,15 +29,15 @@ export const sendSignedTransaction = async ({
 	console.log('Sending transaction via Biconomy');
 	const provider = await biconomy.provider;
 	const contractInstance = new Contract(tokenAddress, metaTransactionAbi, biconomy.ethersProvider);
-	let { data } = await contractInstance.populateTransaction.executeMetaTransaction(
+	const { data } = await contractInstance.populateTransaction.executeMetaTransaction(
 		userAddress,
 		functionSignature,
 		r,
 		s,
 		v
 	);
-	let txParams = {
-		data: data,
+	const txParams = {
+		data,
 		to: tokenAddress,
 		from: userAddress,
 		signatureType: 'EIP712_SIGN'

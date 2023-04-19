@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import darkLogo from 'public/logo-dark.svg';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';

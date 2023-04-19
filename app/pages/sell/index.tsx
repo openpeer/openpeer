@@ -5,7 +5,7 @@ import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { List } from 'models/types';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 const SETUP_STEP = 1;
@@ -16,46 +16,54 @@ const DETAILS_STEP = 4;
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const DEFAULT_MARGIN_VALUE = 1;
 
+const defaultList = { marginType: DEFAULT_MARGIN_TYPE, margin: DEFAULT_MARGIN_VALUE };
+
 const SellPage = () => {
 	const router = useRouter();
-	const { token, currency, tokenAmount } = router.query;
+	const { token, currency, tokenAmount, fiatAmount } = router.query;
+	const quickBuy = !!token && !!currency && !!Number(fiatAmount || '0');
 	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
 
 	const { address } = useAccount();
 	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
-		step: quickSell ? AMOUNT_STEP : SETUP_STEP,
-		marginType: DEFAULT_MARGIN_TYPE,
-		margin: DEFAULT_MARGIN_VALUE
+		...{
+			step: quickSell || quickBuy ? AMOUNT_STEP : SETUP_STEP,
+			type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined
+		},
+		...defaultList
 	} as UIList);
-	const step = list.step;
+	const { step } = list;
 	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (list.step > 3)
+		if (list.step > 3) {
 			setList({
 				step: PAYMENT_METHOD_STEP,
 				marginType: DEFAULT_MARGIN_TYPE,
 				margin: DEFAULT_MARGIN_VALUE
 			} as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		}
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
-		setList({ step: SETUP_STEP, marginType: DEFAULT_MARGIN_TYPE, margin: DEFAULT_MARGIN_VALUE } as UIList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		setList({
+			step: SETUP_STEP,
+			marginType: DEFAULT_MARGIN_TYPE,
+			margin: DEFAULT_MARGIN_VALUE,
+			type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined
+		} as UIList);
 	}, [chain]);
 
 	useEffect(() => {
-		if (!!list && quickSell && step === SETUP_STEP) {
-			const { currency, token, totalAvailableAmount, quickSellSetupDone } = list;
+		if (!!list && (quickSell || quickBuy) && step === SETUP_STEP) {
+			const { totalAvailableAmount, quickSellSetupDone } = list;
 
-			if (!!currency && !!token && !totalAvailableAmount && !quickSellSetupDone) {
-				setList({ ...list, step: AMOUNT_STEP });
+			if (!!list.currency && !!list.token && !totalAvailableAmount && !quickSellSetupDone) {
+				setList({ ...list, type: quickSell ? 'SellList' : 'BuyList', step: AMOUNT_STEP });
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
 	if (wrongNetwork) return <WrongNetwork />;
@@ -63,7 +71,7 @@ const SellPage = () => {
 
 	return (
 		<div className="py-6">
-			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
+			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16 2xl:w-3/4 2xl:m-auto">
 				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}

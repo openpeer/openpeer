@@ -3,7 +3,7 @@ import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
@@ -68,10 +68,8 @@ const Profile = ({ id }: { id: number }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => {
-	return {
-		props: { title: 'Profile', id: String(context.params?.id) } // will be passed to the page component as props
-	};
-};
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
+	props: { title: 'Profile', id: String(context.params?.id) } // will be passed to the page component as props
+});
 
 export default Profile;

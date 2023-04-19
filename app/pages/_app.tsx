@@ -7,6 +7,7 @@ import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
+import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
@@ -28,13 +29,14 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 
 const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
+const developmentProviders = [
+	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
+	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
+	publicProvider()
+];
 const enabledProviders =
 	process.env.NODE_ENV === 'development'
-		? [
-				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
-				alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
-				publicProvider()
-		  ]
+		? developmentProviders
 		: [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }), publicProvider()];
 
 const { chains, provider } = configureChains(enabledChains, enabledProviders);

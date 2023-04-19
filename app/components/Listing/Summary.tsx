@@ -3,7 +3,9 @@ import Token from 'components/Token/Token';
 import { countries } from 'models/countries';
 import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
+import React from 'react';
 
+import coins from './coins.svg';
 import { UIList } from './Listing.types';
 
 interface SummaryProps {
@@ -11,12 +13,32 @@ interface SummaryProps {
 }
 
 const Summary = ({ list }: SummaryProps) => {
-	const { token, currency, totalAvailableAmount, limitMin, limitMax, marginType, margin, paymentMethod, terms } =
-		list;
+	const {
+		token,
+		currency,
+		totalAvailableAmount,
+		limitMin,
+		limitMax,
+		marginType,
+		margin,
+		paymentMethod,
+		terms,
+		type
+	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
 	if (!token && !currency) {
-		return <></>;
+		return (
+			<div className="m-auto">
+				<Image
+					src={coins}
+					alt="coins image"
+					width={441}
+					height={385}
+					className="bg-gray-100 rounded-xl overflow-hidden md:ml-8 my-8 md:p-4 m-auto"
+				/>
+			</div>
+		);
 	}
 
 	return (
@@ -50,7 +72,7 @@ const Summary = ({ list }: SummaryProps) => {
 				)}
 				{!!totalAvailableAmount && (
 					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Total Available</div>
+						<div>Total Available {type === 'BuyList' && 'To Buy'} </div>
 						<div className="font-bold">
 							{totalAvailableAmount} {token?.name}
 						</div>
@@ -82,7 +104,7 @@ const Summary = ({ list }: SummaryProps) => {
 						</div>
 					</li>
 				)}
-				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400"></div>
+				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400" />
 				{!!paymentMethod && (
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Payment Method</div>

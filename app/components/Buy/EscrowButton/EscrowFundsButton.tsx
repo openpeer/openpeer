@@ -3,12 +3,12 @@ import TransactionLink from 'components/TransactionLink';
 import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowFunds } from 'hooks/transactions';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { EscrowFundsButton } from './EscrowButton.types';
+import { EscrowFundsButtonProps } from './EscrowButton.types';
 
-const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButton) => {
+const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = toBn(String(tokenAmount), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -36,7 +36,6 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 		if (escrowConfirmed) {
 			escrow();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [escrowConfirmed]);
 
 	useTransactionFeedback({

@@ -2,7 +2,7 @@ import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {
@@ -44,7 +44,6 @@ const ReleaseFundsButton = ({
 		if (releaseConfirmed) {
 			onReleaseFunds();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [releaseConfirmed]);
 
 	return (
@@ -63,7 +62,7 @@ const ReleaseFundsButton = ({
 				content={
 					dispute
 						? 'This will send the funds escrowed to the buyer!'
-						: 'Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds.'
+						: 'Ensure you have received the exact amount before confirming this payment. Failure to do so may result in permanent loss of funds.'
 				}
 				type="confirmation"
 				open={modalOpen}
