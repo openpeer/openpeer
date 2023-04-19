@@ -1,6 +1,6 @@
-import { Loading } from 'components';
+import Loading from 'components/Loading/Loading';
 import { Token } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 

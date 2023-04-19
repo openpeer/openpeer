@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@biconomy/mexa": "^3.0.6",
 		"@coingecko/cryptoformat": "^0.5.4",
+		"@ethersproject/providers": "^5.7.2",
 		"@headlessui/react": "^1.7.5",
 		"@heroicons/react": "^2.0.13",
 		"@knocklabs/client": "^0.8.6",

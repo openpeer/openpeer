@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { MinusIcon } from '@heroicons/react/20/solid';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -14,6 +14,7 @@ const Accordion = ({ title, content, open = false }: AccordionProps) => {
 	return (
 		<div className="border-b border-slate-200 overflow-hidden">
 			<button
+				type="button"
 				className="flex items-center justify-between w-full p-4 focus:outline-none"
 				onClick={() => setIsOpen(!isOpen)}
 			>

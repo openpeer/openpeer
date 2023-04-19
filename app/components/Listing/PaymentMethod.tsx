@@ -145,8 +145,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 							updatePaymentMethod({
 								...paymentMethod,
 								...{ bank: b, bankId: b?.id }
-							})
-						}
+							})}
 						selected={bank}
 						error={errors.bankId}
 					/>
@@ -172,8 +171,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 											updatePaymentMethod({
 												...paymentMethod,
 												...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
-											})
-										}
+											})}
 										value={values[id]}
 										error={errors[id]}
 									/>
@@ -190,8 +188,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 										updatePaymentMethod({
 											...paymentMethod,
 											...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
-										})
-									}
+										})}
 									error={errors[id]}
 									value={values[id]}
 									required={required}

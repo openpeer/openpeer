@@ -216,8 +216,7 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 										updatePaymentMethod({
 											...paymentMethod,
 											...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
-										})
-									}
+										})}
 									value={values[id]}
 									error={errors[id]}
 								/>
@@ -234,8 +233,7 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 									updatePaymentMethod({
 										...paymentMethod,
 										...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
-									})
-								}
+									})}
 								error={errors[id]}
 								value={values[id]}
 								required={required}

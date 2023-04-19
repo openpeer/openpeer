@@ -7,7 +7,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo.svg';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
@@ -18,7 +18,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import Avatar from './Avatar';
 import { CollapseButton } from './Navigation';
-import NotificationHeader from './Notifications/NotificationHeader';
 import Notifications from './Notifications/Notifications';
 
 const manrope = Manrope({

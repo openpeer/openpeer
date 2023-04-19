@@ -2,11 +2,11 @@ import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { useOpenDispute, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useBalance, useContractReads } from 'wagmi';
 
@@ -64,7 +64,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		sellerCanCancelAfter === undefined ||
 		disputeFee === undefined ||
 		paidForDispute === undefined ||
-		balance?.value == undefined
+		balance?.value === undefined
 	) {
 		return <p>Loading...</p>;
 	}

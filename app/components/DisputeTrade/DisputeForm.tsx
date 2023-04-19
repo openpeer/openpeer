@@ -4,13 +4,12 @@ import OpenDisputeButton from 'components/Buy/OpenDisputeButton';
 import ReleaseFundsButton from 'components/Buy/ReleaseFundsButton';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
-import Loading from 'components/Loading/Loading';
 import Textarea from 'components/Textarea/Textarea';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
 import { Order } from 'models/types';
 import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount } from 'wagmi';
 

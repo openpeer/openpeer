@@ -1,7 +1,7 @@
 import { BigNumber, constants } from 'ethers';
 import { useEscrowFee } from 'hooks';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 import ApproveTokenButton from './ApproveTokenButton';

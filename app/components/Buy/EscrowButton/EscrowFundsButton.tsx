@@ -3,7 +3,7 @@ import TransactionLink from 'components/TransactionLink';
 import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowFunds } from 'hooks/transactions';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { EscrowFundsButton } from './EscrowButton.types';

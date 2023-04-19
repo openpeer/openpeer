@@ -3,7 +3,7 @@ import Token from 'components/Token/Token';
 import { countries } from 'models/countries';
 import { Token as TokenModel } from 'models/types';
 import Image from 'next/image';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';

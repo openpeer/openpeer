@@ -1,5 +1,5 @@
 import { useNotifications } from 'hooks';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import { Transition } from '@headlessui/react';
 import { BellIcon, BellSnoozeIcon } from '@heroicons/react/24/outline';

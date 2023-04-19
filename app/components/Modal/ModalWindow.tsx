@@ -1,5 +1,5 @@
 import Button from 'components/Button/Button';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';

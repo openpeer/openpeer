@@ -2,7 +2,7 @@ import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {

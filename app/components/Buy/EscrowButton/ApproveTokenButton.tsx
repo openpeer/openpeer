@@ -4,7 +4,7 @@ import { BigNumber, constants } from 'ethers';
 import { useTransactionFeedback } from 'hooks';
 import { useApproval } from 'hooks/transactions';
 import { Token } from 'models/types';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { erc20ABI, useAccount, useContractRead } from 'wagmi';
 
 const ApproveTokenButton = ({

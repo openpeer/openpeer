@@ -1,4 +1,4 @@
-import { Loading } from 'components';
+import Loading from 'components/Loading/Loading';
 import { FiatCurrency } from 'models/types';
 import { useEffect, useState } from 'react';
 

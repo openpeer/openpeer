@@ -1,9 +1,9 @@
-import { Avatar } from 'components';
+import Avatar from 'components/Avatar';
 import { providers } from 'ethers';
 import { User } from 'models/types';
 import { Verification } from 'models/verification';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -53,10 +53,12 @@ const getTimePassed = (timestamp: number): string => {
 
 	if (yearsPassed >= 1) {
 		return `${Math.floor(yearsPassed)} years`;
-	} if (daysPassed >= 30) {
+	}
+	if (daysPassed >= 30) {
 		const monthsPassed = daysPassed / 30;
 		return `${Math.floor(monthsPassed)} months`;
-	} if (daysPassed >= 1) {
+	}
+	if (daysPassed >= 1) {
 		return `${Math.floor(daysPassed)} days`;
 	}
 	return 'less than a day';

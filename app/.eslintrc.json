@@ -39,7 +39,7 @@
 		"@typescript-eslint/indent": ["error", "tab"],
 		"no-tabs": ["error", { "allowIndentationTabs": true }],
 		"@typescript-eslint/comma-dangle": ["error", "never"],
-		"max-len": ["error", { "code": 120, "ignoreStrings": true }],
+		"max-len": ["error", { "code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
 		"react/function-component-definition": "off",
 		"react/jsx-indent": [2, "tab"],
 		"react/jsx-indent-props": [2, "tab"],
