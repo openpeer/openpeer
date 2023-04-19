@@ -3,6 +3,7 @@ import Token from 'components/Token/Token';
 import { countries } from 'models/countries';
 import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
+import React from 'react';
 
 import coins from './coins.svg';
 import { UIList } from './Listing.types';

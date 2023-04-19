@@ -2,6 +2,7 @@ import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback } from 'hooks';
 import { useMarkAsPaid } from 'hooks/transactions';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {

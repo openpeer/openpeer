@@ -33,25 +33,25 @@ const useGaslessMarkAsPaid = ({ contract }: UseGaslessMarkAsPaidProps) => {
 		try {
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
-			const { data } = await contractInstance.populateTransaction.markAsPaid();
+			const { data: transactionData } = await contractInstance.populateTransaction.markAsPaid();
 			const txParams = {
-				data,
+				data: transactionData,
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
 				gasLimit: 80000
 			};
 			// @ts-ignore
-			const tx = await provider.send('eth_sendTransaction', [txParams]);
+			await provider.send('eth_sendTransaction', [txParams]);
 			setIsLoading(true);
-			biconomy.on('txMined', (data: any) => {
+			biconomy.on('txMined', (minedData) => {
 				setIsLoading(false);
 				setIsSuccess(true);
-				updateData(data);
+				updateData(minedData);
 			});
 
-			biconomy.on('onError', (data: any) => {
-				console.error('error', data);
+			biconomy.on('onError', (minedData) => {
+				console.error('error', minedData);
 				setIsLoading(false);
 				setIsSuccess(false);
 			});

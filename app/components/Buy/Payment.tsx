@@ -109,7 +109,7 @@ const Payment = ({ order }: BuyStepProps) => {
 							const {
 								bank: { account_info_schema: schema }
 							} = paymentMethod;
-							const field = schema.find(({ id }) => id === key);
+							const field = schema.find((f) => f.id === key);
 							const value = (values || {})[key];
 							if (!value) return <></>;
 

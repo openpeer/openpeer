@@ -86,14 +86,17 @@ export default function Select({
 									{options.map((option) => (
 										<Listbox.Option
 											key={option.id}
-											className={({ active }) =>
-												classNames(
-													active ? 'text-white bg-indigo-600' : 'text-gray-900',
-													'relative cursor-default select-none py-2 pl-3'
-												)}
+											className={
+												({ active }) =>
+													classNames(
+														active ? 'text-white bg-indigo-600' : 'text-gray-900',
+														'relative cursor-default select-none py-2 pl-3'
+													)
+												// eslint-disable-next-line react/jsx-curly-newline
+											}
 											value={option}
 										>
-											{({ selected, active }) => (
+											{({ selected: selectedOption, active }) => (
 												<>
 													<div className="flex items-center">
 														{token ? (
@@ -115,7 +118,7 @@ export default function Select({
 
 														<span
 															className={classNames(
-																selected ? 'font-semibold' : 'font-normal',
+																selectedOption ? 'font-semibold' : 'font-normal',
 																minimal ? 'ml-1' : 'ml-3',
 																'block truncate'
 															)}
@@ -124,7 +127,7 @@ export default function Select({
 														</span>
 													</div>
 
-													{selected && !minimal && (
+													{selectedOption && !minimal && (
 														<span
 															className={classNames(
 																active ? 'text-white' : 'text-indigo-600',

@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface LoadingParams {
 	big?: boolean;
 	message?: string;

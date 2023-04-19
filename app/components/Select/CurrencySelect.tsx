@@ -1,6 +1,6 @@
 import Loading from 'components/Loading/Loading';
 import { FiatCurrency } from 'models/types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Select from './Select';
 import { FiatCurrencySelect, SelectProps } from './Select.types';

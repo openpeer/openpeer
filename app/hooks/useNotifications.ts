@@ -109,7 +109,7 @@ const useNotifications = () => {
 	}, [session]);
 
 	const markAsRead = async (id: FeedItem['id']) => {
-		const item = feedItems.find((item) => item.id === id);
+		const item = feedItems.find((i) => i.id === id);
 
 		if (!!client && item) {
 			await client.markAsRead(item);
@@ -120,7 +120,7 @@ const useNotifications = () => {
 	};
 
 	const markAsArchived = async (id: FeedItem['id']) => {
-		const item = feedItems.find((item) => item.id === id);
+		const item = feedItems.find((i) => i.id === id);
 
 		if (!!client && item) {
 			await client.markAsArchived(item);

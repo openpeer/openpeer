@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Bars3BottomLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface CollapseButtonParams {

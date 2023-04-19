@@ -30,7 +30,7 @@ export interface FiatCurrencySelect {
 	selectTheFirst?: boolean;
 }
 
-export interface TokenSelect {
+export interface TokenSelectProps {
 	onSelect: (option: Token | undefined) => void;
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];

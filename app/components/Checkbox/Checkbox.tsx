@@ -1,7 +1,9 @@
+import React from 'react';
+
 interface CheckboxProps {
-	content: string
-	id: string
-	name: string
+	content: string;
+	id: string;
+	name: string;
 }
 
 const Checkbox = ({ content, id, name }: CheckboxProps) => (

@@ -5,7 +5,7 @@ import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import Select from './Select';
-import { SelectProps, TokenSelect } from './Select.types';
+import { SelectProps, TokenSelectProps } from './Select.types';
 
 const TokenSelect = ({
 	onSelect,
@@ -14,7 +14,7 @@ const TokenSelect = ({
 	minimal,
 	selectedIdOnLoad,
 	label = 'Choose token to list'
-}: TokenSelect) => {
+}: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();

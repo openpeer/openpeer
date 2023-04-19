@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/indent */
 import Link from 'next/link';
+import React from 'react';
 
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
@@ -14,8 +16,8 @@ const NotificationHeader = ({ message, detailsLink, type = 'info' }: Notificatio
 			type === 'error'
 				? 'rounded-md bg-red-50 p-4 my-4 mx-8 text-red-700'
 				: type === 'success'
-					? 'rounded-md bg-green-50 p-4 my-4 mx-8 text-green-800'
-					: 'rounded-md bg-blue-50 p-4 my-4 mx-8 text-blue-700' // info
+				? 'rounded-md bg-green-50 p-4 my-4 mx-8 text-green-800'
+				: 'rounded-md bg-blue-50 p-4 my-4 mx-8 text-blue-700' // info
 		}
 	>
 		<div className="flex">

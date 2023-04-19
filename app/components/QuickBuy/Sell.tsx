@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Loading from 'components/Loading/Loading';
@@ -59,7 +60,7 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 			};
 
 			const filteredParams = Object.fromEntries(
-				Object.entries(params).filter(([_, value]) => value !== undefined)
+				Object.entries(params).filter(([, value]) => value !== undefined)
 			);
 			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
 			const searchLists: List[] = await response.json();
@@ -117,7 +118,7 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 						label="Crypto to Sell"
 						id="cryptoSell"
 						placeholder="Enter Amount"
-						style="h-16"
+						extraStyle="h-16"
 						addOn={<TokenSelect onSelect={setToken} selected={token} minimal />}
 						type="decimal"
 						decimalScale={token?.decimals}

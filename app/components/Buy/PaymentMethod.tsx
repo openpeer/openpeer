@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 import { Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
@@ -164,9 +165,9 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 					<div className="mb-4">
 						{Object.keys(pm.values || {}).map((key) => {
 							const {
-								bank: { account_info_schema: schema }
+								bank: { account_info_schema: schemaInfo }
 							} = pm;
-							const field = schema.find((field) => field.id === key);
+							const field = schemaInfo.find((f) => f.id === key);
 							const value = (pm.values || {})[key];
 							if (!value) return <></>;
 
@@ -195,47 +196,51 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 						/>
 						<span>{list.bank.name}</span>
 					</div>
-					{schema.map(({ id, label, placeholder, type = 'text', required }) => {
-						if (type === 'message') {
+					{schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
+						if (schemaType === 'message') {
 							return (
-								<div className="mb-4" key={id}>
+								<div className="mb-4" key={schemaId}>
 									<span className="text-sm">{label}</span>
 								</div>
 							);
 						}
 
-						if (type === 'textarea') {
+						if (schemaType === 'textarea') {
 							return (
 								<Textarea
 									rows={4}
-									key={id}
+									key={schemaId}
 									label={label}
-									id={id}
+									id={schemaId}
 									placeholder={placeholder}
 									onChange={(e) =>
 										updatePaymentMethod({
 											...paymentMethod,
-											...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
-										})}
-									value={values[id]}
-									error={errors[id]}
+											...{
+												values: { ...paymentMethod.values, ...{ [schemaId]: e.target.value } }
+											}
+										})
+									}
+									value={values[schemaId]}
+									error={errors[schemaId]}
 								/>
 							);
 						}
 						return (
 							<Input
-								key={id}
+								key={schemaId}
 								label={label}
 								type="text"
-								id={id}
+								id={schemaId}
 								placeholder={placeholder}
 								onChange={(value) =>
 									updatePaymentMethod({
 										...paymentMethod,
-										...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
-									})}
-								error={errors[id]}
-								value={values[id]}
+										...{ values: { ...paymentMethod.values, ...{ [schemaId]: value } } }
+									})
+								}
+								error={errors[schemaId]}
+								value={values[schemaId]}
 								required={required}
 							/>
 						);

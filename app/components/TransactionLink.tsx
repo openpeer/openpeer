@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNetwork } from 'wagmi';
 
 const TransactionLink = ({ hash }: { hash: `0x${string}` | undefined }) => {

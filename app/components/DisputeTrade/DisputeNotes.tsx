@@ -1,3 +1,5 @@
+import React from 'react';
+
 const DisputeNotes = () => (
 	<div className="w-full mt-16 md:mt-0 md:w-1/2 md:border-l-2 md:border-gray-200 md:pl-8">
 		<h3 className="text-xl pb-4">Points to note about Disputing Trade</h3>

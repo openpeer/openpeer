@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 import { Button, CurrencySelect, Input, Loading, TokenSelect } from 'components';
 import debounce from 'lodash.debounce';
 import { FiatCurrency, List, Token } from 'models/types';
@@ -60,7 +61,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 			};
 
 			const filteredParams = Object.fromEntries(
-				Object.entries(params).filter(([_, value]) => value !== undefined)
+				Object.entries(params).filter(([, value]) => value !== undefined)
 			);
 			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
 			const searchLists: List[] = await response.json();
@@ -134,7 +135,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 						label="Fiat Amount"
 						id="fiat"
 						placeholder="Enter Amount"
-						style="h-16"
+						extraStyle="h-16"
 						addOn={<CurrencySelect onSelect={setCurrency} selected={currency} minimal selectTheFirst />}
 						type="decimal"
 						onChangeNumber={debounce(onChangeFiat, 1000)}
@@ -146,7 +147,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 						label="Crypto to Receive"
 						id="crypto"
 						placeholder="Enter Amount"
-						style="h-16"
+						extraStyle="h-16"
 						addOn={<TokenSelect onSelect={setToken} selected={token} minimal />}
 						type="decimal"
 						decimalScale={token?.decimals}

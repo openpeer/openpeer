@@ -33,8 +33,8 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 					method: 'PATCH',
 					body: message
 				});
-				const order = await result.json();
-				if (!order.uuid) {
+				const savedOrder = await result.json();
+				if (!savedOrder.uuid) {
 					toast.error('Error cancelling the order', {
 						theme: 'dark',
 						position: 'top-right',

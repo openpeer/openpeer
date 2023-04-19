@@ -1,5 +1,7 @@
+/* eslint-disable react/no-danger */
 import { NotificationParams } from 'models/notification';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';

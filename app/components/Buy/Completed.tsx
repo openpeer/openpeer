@@ -1,13 +1,14 @@
-import Button from 'components/Button/Button';
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
-import ClipboardText from './ClipboardText';
 import OrderResume from './OrderResume';
 
 const Completed = ({ order }: BuyStepProps) => {
@@ -29,10 +30,10 @@ const Completed = ({ order }: BuyStepProps) => {
 						<p className="text-base">
 							{selling
 								? `You have successfully sold ${tokenValue} to ${
-									buyer?.name || smallWalletAddress(buyer?.address)
+										buyer?.name || smallWalletAddress(buyer?.address)
 								  }.`
 								: `You have successfully purchased ${tokenValue} from ${
-									seller?.name || smallWalletAddress(seller.address)
+										seller?.name || smallWalletAddress(seller.address)
 								  }.`}
 						</p>
 					</div>

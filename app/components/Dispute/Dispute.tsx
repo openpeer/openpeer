@@ -3,6 +3,7 @@ import { DisputeForm, DisputeNotes, DisputeStatus } from 'components/DisputeTrad
 import Loading from 'components/Loading/Loading';
 import Token from 'components/Token/Token';
 import { Order } from 'models/types';
+import React from 'react';
 import { useAccount, useContractRead } from 'wagmi';
 
 interface DisputeParams {

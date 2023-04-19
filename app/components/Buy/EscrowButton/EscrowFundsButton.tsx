@@ -6,9 +6,9 @@ import { useEscrowFunds } from 'hooks/transactions';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { EscrowFundsButton } from './EscrowButton.types';
+import { EscrowFundsButtonProps } from './EscrowButton.types';
 
-const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButton) => {
+const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = toBn(String(tokenAmount), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);

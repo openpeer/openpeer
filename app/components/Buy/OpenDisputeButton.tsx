@@ -69,7 +69,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		return <p>Loading...</p>;
 	}
 
-	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString()) == 1;
+	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString(), 10) === 1;
 
 	const onOpenDispute = () => {
 		if (!isConnected || !canOpenDispute) return;

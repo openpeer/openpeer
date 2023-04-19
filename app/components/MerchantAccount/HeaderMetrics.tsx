@@ -87,8 +87,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 
 	const fetchVerificationStatus = async () => {
 		const request = await fetch(`/api/verifications?alias=${address}`);
-		const verification: Verification = await request.json();
-		setVerification(verification);
+		setVerification(await request.json());
 	};
 
 	useEffect(() => {
@@ -163,7 +162,8 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 										Edit profile
 									</Link>
 									{!verified && (
-										<a
+										<button
+											type="button"
 											className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
 											onClick={() => setVerificationModal(true)}
 										>
@@ -171,7 +171,7 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 											<span className="ml-2">
 												<VerifiedIcon />
 											</span>
-										</a>
+										</button>
 									)}
 								</>
 							) : (

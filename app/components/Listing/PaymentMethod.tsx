@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 import { BankSelect, Button, Input, Loading, Textarea } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
@@ -26,6 +27,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 		}
 
 		if (type === 'SellList') {
+			// eslint-disable-next-line no-restricted-syntax
 			for (const field of schema) {
 				if (field.required && !values[field.id]) {
 					error[field.id] = `${field.label} should be present`;
@@ -119,9 +121,9 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 					<div className="mb-4">
 						{Object.keys(pm.values || {}).map((key) => {
 							const {
-								bank: { account_info_schema: schema }
+								bank: { account_info_schema: schemaInfo }
 							} = pm;
-							const field = schema.find(({ id }) => id === key);
+							const field = schemaInfo.find((f) => f.id === key);
 							const value = (pm.values || {})[key];
 							if (!value) return <></>;
 
@@ -145,52 +147,60 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 							updatePaymentMethod({
 								...paymentMethod,
 								...{ bank: b, bankId: b?.id }
-							})}
+							})
+						}
 						selected={bank}
 						error={errors.bankId}
 					/>
 					{type === 'SellList' &&
-						schema.map(({ id, label, placeholder, type = 'text', required }) => {
-							if (type === 'message') {
+						schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
+							if (schemaType === 'message') {
 								return (
-									<div className="mb-4" key={id}>
+									<div className="mb-4" key={schemaId}>
 										<span className="text-sm">{label}</span>
 									</div>
 								);
 							}
 
-							if (type === 'textarea') {
+							if (schemaType === 'textarea') {
 								return (
 									<Textarea
 										rows={4}
-										key={id}
+										key={schemaId}
 										label={label}
-										id={id}
+										id={schemaId}
 										placeholder={placeholder}
 										onChange={(e) =>
 											updatePaymentMethod({
 												...paymentMethod,
-												...{ values: { ...paymentMethod.values, ...{ [id]: e.target.value } } }
-											})}
-										value={values[id]}
-										error={errors[id]}
+												...{
+													values: {
+														...paymentMethod.values,
+														...{ [schemaId]: e.target.value }
+													}
+												}
+											})
+										}
+										value={values[schemaId]}
+										error={errors[schemaId]}
 									/>
 								);
 							}
 							return (
 								<Input
-									key={id}
+									key={schemaId}
 									label={label}
 									type="text"
-									id={id}
+									id={schemaId}
 									placeholder={placeholder}
 									onChange={(value) =>
 										updatePaymentMethod({
 											...paymentMethod,
-											...{ values: { ...paymentMethod.values, ...{ [id]: value } } }
-										})}
-									error={errors[id]}
-									value={values[id]}
+											...{ values: { ...paymentMethod.values, ...{ [schemaId]: value } } }
+										})
+									}
+									error={errors[schemaId]}
+									value={values[schemaId]}
 									required={required}
 								/>
 							);

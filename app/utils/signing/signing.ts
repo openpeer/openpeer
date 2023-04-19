@@ -90,7 +90,7 @@ export const signGaslessTransaction = async ({
 	chainId,
 	functionSignature
 }: GetTransactionDataProps) => {
-	const message: TransactionMessage = { nonce: parseInt(nonce.toString()), from: userAddress, functionSignature };
+	const message: TransactionMessage = { nonce: parseInt(nonce.toString(), 10), from: userAddress, functionSignature };
 
 	const domainData = getDomain(name, contract, chainId);
 

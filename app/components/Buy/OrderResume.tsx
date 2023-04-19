@@ -1,7 +1,8 @@
 import Button from 'components/Button/Button';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import { Order } from 'models/types';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
@@ -41,9 +42,8 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 			{selling && !!fee && (
 				<div className="flex flex-row justify-between mb-4">
 					<span className="text-neutral-500">Fee Paid</span>
-					<span className="flex flex-row justify-between">{`${formatUnits(fee, token.decimals)} ${
-						token.symbol
-					}`}
+					<span className="flex flex-row justify-between">
+						{`${formatUnits(fee, token.decimals)} ${token.symbol}`}
 					</span>
 				</div>
 			)}

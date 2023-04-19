@@ -1,3 +1,5 @@
+import React from 'react';
+
 const PreShowDetails = () => (
 	<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 		<div className="blur-sm">

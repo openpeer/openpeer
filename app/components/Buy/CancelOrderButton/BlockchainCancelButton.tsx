@@ -47,7 +47,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	}
 
 	const now = Date.now() / 1000;
-	const sellerCanCancelAfterSeconds = parseInt(sellerCanCancelAfter.toString());
+	const sellerCanCancelAfterSeconds = parseInt(sellerCanCancelAfter.toString(), 10);
 	const sellerCantCancel = isSeller && (sellerCanCancelAfterSeconds <= 1 || sellerCanCancelAfterSeconds > now);
 
 	const onBlockchainCancel = () => {

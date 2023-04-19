@@ -1,7 +1,10 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
 import { useRouter } from 'next/router';
+import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
@@ -10,14 +13,7 @@ import { XCircleIcon } from '@heroicons/react/24/outline';
 import { BuyStepProps } from './Buy.types';
 
 const Cancelled = ({ order }: BuyStepProps) => {
-	const {
-		list,
-		token_amount: tokenAmount,
-		buyer,
-		fiat_amount: fiatAmount,
-		cancelled_at: cancelledAt,
-		seller
-	} = order;
+	const { list, token_amount: tokenAmount, buyer, cancelled_at: cancelledAt, seller } = order;
 	const { token } = list!;
 	const { address } = useAccount();
 	const selling = seller.address === address;
@@ -36,10 +32,10 @@ const Cancelled = ({ order }: BuyStepProps) => {
 					<p className="text-base">
 						{selling
 							? `Your sale of ${tokenValue} to ${
-								buyer?.name || smallWalletAddress(buyer?.address)
+									buyer?.name || smallWalletAddress(buyer?.address)
 							  } has been cancelled.`
 							: `Your purchase of ${tokenValue} from ${
-								seller?.name || smallWalletAddress(seller.address)
+									seller?.name || smallWalletAddress(seller.address)
 							  } has been cancelled.`}
 					</p>
 					<p className="text-base">Cancelled at: {new Date(cancelledAt).toLocaleString()}</p>

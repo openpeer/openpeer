@@ -1,11 +1,11 @@
-import Button from 'components/Button/Button';
 import CancelOrderButton from 'components/Buy/CancelOrderButton/CancelOrderButton';
 import ReleaseFundsButton from 'components/Buy/ReleaseFundsButton';
 import Label from 'components/Label/Label';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import { Order } from 'models/types';
 import Image from 'next/image';
+import React from 'react';
 import { smallWalletAddress } from 'utils';
 
 import StatusTimeLine from './StatusTimeLine';

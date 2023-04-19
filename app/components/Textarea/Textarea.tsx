@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface TextareaProps {
 	label?: string;
 	rows: number;

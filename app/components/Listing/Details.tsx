@@ -1,6 +1,7 @@
 import { Textarea } from 'components';
-import { verifyMessage } from 'ethers/lib/utils.js';
+import { verifyMessage } from 'ethers/lib/utils';
 import { useRouter } from 'next/router';
+import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 import { polygon } from 'wagmi/chains';

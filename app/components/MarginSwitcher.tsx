@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { List } from '../models/types';
 import Loading from './Loading/Loading';
 import Selector from './Selector';
@@ -14,6 +16,7 @@ interface Props {
 
 const Option = ({ label, selected, onSelect }: { label: string; selected: boolean; onSelect: Props['onSelect'] }) => (
 	<button
+		type="button"
 		className={`w-full flex justify-center rounded-full py-2 ${selected && 'bg-white text-black'}`}
 		onClick={() => onSelect(label.toLowerCase() as List['margin_type'])}
 	>
@@ -34,17 +37,17 @@ const MarginSwitcher = ({ selected, onSelect, margin, currency, token, updateMar
 				<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
 			)}
 			{selected === 'fixed' &&
-					(margin == undefined ? (
-						<Loading big={false} />
-					) : (
-						<Selector
-							value={margin}
-							suffix={` ${currency} per ${token}`}
-							underValue="Spot Price"
-							updateValue={updateMargin}
-							error={error}
-						/>
-					))}
+				(margin === undefined ? (
+					<Loading big={false} />
+				) : (
+					<Selector
+						value={margin}
+						suffix={` ${currency} per ${token}`}
+						underValue="Spot Price"
+						updateValue={updateMargin}
+						error={error}
+					/>
+				))}
 		</>
 	</>
 );
