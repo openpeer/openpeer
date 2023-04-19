@@ -1,38 +1,12 @@
-import { Accordion, Button, Loading } from 'components';
+import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { Order } from 'models/types';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
-const NextButton = ({
-	order: { buyer: buyerUser, uuid, status },
-	address
-}: {
-	order: Order;
-	address: string | undefined;
-}) => {
-	const buyer = address === buyerUser.address;
-	if (buyer) {
-		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
-			return <></>;
-		}
-	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
-		// seller
-		return <></>;
-	}
-
-	const url = `/orders/${encodeURIComponent(uuid)}`;
-
-	return (
-		<Link href={url}>
-			<Button title="Continue" />
-		</Link>
-	);
-};
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);

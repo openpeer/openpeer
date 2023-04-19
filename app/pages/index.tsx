@@ -25,9 +25,6 @@ const Quick = () => {
 
 	const selectedLists = type === 'Buy' ? buyLists : sellLists;
 	const showLists = selectedLists.length > 0 && seeLists && (type === 'Sell' || !!buyFiatAmount) && !!buyTokenAmount;
-	console.log('seeLists', seeLists);
-	console.log('selectedLists', selectedLists);
-	console.log('showLists', showLists);
 	return (
 		<>
 			{showLists && (

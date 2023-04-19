@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 				const form = new formidable.IncomingForm();
 
 				form.parse(req, (err: any, fields: any, files: any) => {
-					if (err) reject({ err });
+					if (err) reject(err);
 					resolve({ fields, files });
 				});
 			});
@@ -38,9 +38,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 			return res.status(200).json({ data: uploadData });
 		}
 		// Handle any other HTTP method
-		res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+		return res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
 	} catch (err) {
-		console.error(err);
 		return res.status(500).json({ error: 'Error uploading the selected image' });
 	}
 };

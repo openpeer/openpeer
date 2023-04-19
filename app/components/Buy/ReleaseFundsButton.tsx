@@ -62,7 +62,7 @@ const ReleaseFundsButton = ({
 				content={
 					dispute
 						? 'This will send the funds escrowed to the buyer!'
-						: 'Ensure you have received the exact amount before confirming this payment. failure to do so may result in permanent loss of funds.'
+						: 'Ensure you have received the exact amount before confirming this payment. Failure to do so may result in permanent loss of funds.'
 				}
 				type="confirmation"
 				open={modalOpen}

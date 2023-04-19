@@ -19,8 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	try {
 		switch (method) {
 			case 'GET':
-				const result = await fetchLists(query);
-				res.status(200).json(result);
+				res.status(200).json(await fetchLists(query));
 				break;
 			case 'POST':
 				res.status(200).json(await createList(body));

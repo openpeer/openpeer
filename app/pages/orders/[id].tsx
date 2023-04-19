@@ -6,8 +6,7 @@ import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ERROR_STEP = 0;
 const PAYMENT_METHOD_STEP = 2;
@@ -31,7 +30,6 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const { data: session } = useSession();
 	// @ts-ignore
 	const { jwt } = session || {};
-	const router = useRouter();
 
 	useEffect(() => {
 		if (!session) return;
@@ -55,12 +53,8 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 					order_id: id
 				},
 				{
-					connected() {
-						console.log('Connected');
-					},
 					received(data: string) {
 						const updatedOrder = JSON.parse(data);
-						console.log('Order', updatedOrder);
 						setOrder({ ...updatedOrder, ...{ step: steps[updatedOrder.status] } });
 					}
 				}
@@ -98,5 +92,5 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
 	// Pass data to the page via props
-	 ({ props: { title: 'Buy', id: String(context.params?.id) } });
+	({ props: { title: 'Buy', id: String(context.params?.id) } });
 export default OrderPage;

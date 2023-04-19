@@ -7,7 +7,7 @@ import { User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import ErrorPage from 'next/error';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
@@ -77,6 +77,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				);
 
 				setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
+				return formattedMessages;
 			});
 		}
 	};

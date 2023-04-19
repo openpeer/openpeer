@@ -20,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		const result = existingSession || (await createVerification(alias as string));
 		res.status(200).json(result);
 	} catch (err) {
-		console.error(err);
 		res.status(500);
 	}
 }

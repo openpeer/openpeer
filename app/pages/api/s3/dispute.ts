@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import S3 from 'aws-sdk/clients/s3';
 // @ts-ignore
 import formidable from 'formidable';
@@ -38,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 			const data: { fields: any; files: Record<string, formidable.File[]> } = await new Promise(
 				(resolve, reject) => {
 					form.parse(req, (err: any, fields: any, files: any) => {
-						if (err) reject({ err });
+						if (err) reject(err);
 						resolve({ files, fields });
 					});
 				}
@@ -64,13 +66,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AWSSignedUrlPar
 				signedUrls.push({ key, signedURL, filename: file.originalFilename });
 			}
 
-			const uploadData = await Promise.all(uploads);
+			await Promise.all(uploads);
 			return res.status(200).json({ data: signedUrls });
 		}
 		// Handle any other HTTP method
-		res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+		return res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
 	} catch (err) {
-		console.error(err);
 		return res.status(500).json({ error: 'Error uploading the selected files' });
 	}
 };
