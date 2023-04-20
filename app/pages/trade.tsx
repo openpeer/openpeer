@@ -6,36 +6,36 @@ import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 const HomePage = () => {
-	const [buyLists, setBuyLists] = useState<List[]>([]);
-	const [sellLists, setSellLists] = useState<List[]>([]);
+	const [buySideLists, setBuySideLists] = useState<List[]>([]);
+	const [sellSideLists, setSellSideLists] = useState<List[]>([]);
 	const [lists, setLists] = useState<List[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
-	const [type, setType] = useState<string>('Sell');
+	const [type, setType] = useState<string>('Buy');
 
 	useEffect(() => {
 		setLoading(true);
 		fetch(`/api/lists?chain_id=${chainId}`)
 			.then((res) => res.json())
 			.then((data: List[]) => {
-				const sell = data.filter((list) => list.type === 'SellList');
-				const buy = data.filter((list) => list.type === 'BuyList');
-				setSellLists(sell);
-				setBuyLists(buy);
-				setLists(sell);
+				const toBuyers = data.filter((list) => list.type === 'SellList');
+				const toSellers = data.filter((list) => list.type === 'BuyList');
+				setSellSideLists(toSellers);
+				setBuySideLists(toBuyers);
+				setLists(toBuyers);
 				setLoading(false);
 			});
 	}, [chainId, address]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
-			setLists(buyLists);
+			setLists(buySideLists);
 		} else {
-			setLists(sellLists);
+			setLists(sellSideLists);
 		}
-	}, [type, buyLists, sellLists]);
+	}, [type, buySideLists, sellSideLists]);
 
 	if (isLoading) return <Loading />;
 	if (!lists) return <p>No lists data</p>;
