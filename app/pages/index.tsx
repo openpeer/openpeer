@@ -1,7 +1,6 @@
 import { ListsTable, Switcher } from 'components';
 import { Buy, Sell } from 'components/QuickBuy';
 import { List } from 'models/types';
-import { GetServerSideProps } from 'next';
 import React, { useState } from 'react';
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
@@ -85,11 +84,6 @@ const Quick = () => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async () => ({
-	props: {
-		disableAuthentication: true,
-		blankLayout: true
-	}
-});
+Quick.getInitialProps = async () => ({ disableAuthentication: true });
 
 export default Quick;
