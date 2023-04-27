@@ -28,35 +28,32 @@ import {
 	walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
-const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
-const developmentProviders = [
-	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
-	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
-	publicProvider()
-];
-const enabledProviders =
-	process.env.NODE_ENV === 'development'
-		? developmentProviders
-		: [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }), publicProvider()];
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
-const { chains, provider } = configureChains(enabledChains, enabledProviders);
+const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
+
+const { chains, provider } = configureChains(enabledChains, [
+	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
+	publicProvider()
+]);
 
 const connectors = connectorsForWallets([
 	{
 		groupName: 'Recommended',
 		wallets: [
-			metaMaskWallet({ chains }),
-			rainbowWallet({ chains }),
+			// minkeWallet({ chains, projectId, name: 'Minke' }),
+			metaMaskWallet({ chains, projectId }),
+			rainbowWallet({ chains, projectId }),
 			braveWallet({ chains }),
-			argentWallet({ chains }),
-			trustWallet({ chains })
+			argentWallet({ chains, projectId }),
+			trustWallet({ chains, projectId })
 		]
 	},
 	{
 		groupName: 'Others',
 		wallets: [
-			walletConnectWallet({ chains }),
-			ledgerWallet({ chains }),
+			walletConnectWallet({ chains, projectId }),
+			ledgerWallet({ chains, projectId }),
 			coinbaseWallet({ appName: 'OpenPeer', chains }),
 			injectedWallet({ chains })
 		]
