@@ -1,6 +1,7 @@
 import Accordion from './Accordion/Accordion';
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import BuyButton from './Button/BuyButton';
 import Switcher from './Button/Switcher';
 import Checkbox from './Checkbox/Checkbox';
 import Flag from './Flag/Flag';
@@ -43,5 +44,6 @@ export {
 	Switcher,
 	Modal,
 	Flag,
-	Accordion
+	Accordion,
+	BuyButton
 };

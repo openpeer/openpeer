@@ -1,5 +1,6 @@
 import useBiconomy from './useBiconomy';
 import useConnection from './useConnection';
+import useCreateOrder from './useCreateOrder';
 import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
@@ -15,5 +16,6 @@ export {
 	useNotifications,
 	useOpenDispute,
 	useEscrowFee,
-	useBiconomy
+	useBiconomy,
+	useCreateOrder
 };

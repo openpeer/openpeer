@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { List } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,31 +7,16 @@ import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
-import Button from './Button/Button';
+import BuyButton from './Button/BuyButton';
 
 interface ListsTableProps {
 	lists: List[];
 	fiatAmount?: number;
 	tokenAmount?: number;
+	skipAmount?: boolean;
 }
 
-interface BuyButtonProps {
-	id: number;
-	fiatAmount: number | undefined;
-	tokenAmount: number | undefined;
-	sellList: boolean;
-}
-
-const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) => (
-	<Link
-		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
-		as={`/buy/${encodeURIComponent(id)}`}
-	>
-		<Button title={sellList ? 'Buy' : 'Sell'} />
-	</Link>
-);
-
-const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
+const ListsTable = ({ lists, fiatAmount, tokenAmount, skipAmount }: ListsTableProps) => {
 	const { address } = useAccount();
 
 	return (
@@ -94,7 +80,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							<td className="pl-4 py-4">
 								<div className="w-full flex flex-row justify-around md:justify-start items-center">
 									<div className="w-3/5 mr-6">
-										<Link href={`/${sellerAddress}`}>
+										<Link href={skipAmount ? '#' : `/${sellerAddress}`}>
 											<div className="flex flex-col lg:flex-row lg:items-center cursor-pointer">
 												<div className="w-16 flex flex-row mb-2">
 													<Avatar user={seller} />
@@ -116,10 +102,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										</span>
 										{canBuy && (
 											<BuyButton
-												id={list.id}
+												list={list}
 												fiatAmount={fiatAmount}
 												tokenAmount={tokenAmount}
 												sellList={list.type === 'SellList'}
+												skipAmount={skipAmount}
 											/>
 										)}
 									</div>
@@ -150,10 +137,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
 								{canBuy && (
 									<BuyButton
-										id={list.id}
+										list={list}
 										fiatAmount={fiatAmount}
 										tokenAmount={tokenAmount}
 										sellList={list.type === 'SellList'}
+										skipAmount={skipAmount}
 									/>
 								)}
 							</td>

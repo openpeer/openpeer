@@ -5,37 +5,31 @@ import 'tailwindcss/tailwind.css';
 import Head from 'app/head';
 import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
+import WidgetLayout from 'components/WidgetLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import { createClient, WagmiConfig } from 'wagmi';
 
 import { Manrope } from '@next/font/google';
-import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
-import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import {
-	argentWallet,
-	braveWallet,
-	coinbaseWallet,
-	injectedWallet,
-	ledgerWallet,
-	metaMaskWallet,
-	rainbowWallet,
-	trustWallet,
-	walletConnectWallet
+	connectorsForWallets, lightTheme, RainbowKitProvider, Theme
+} from '@rainbow-me/rainbowkit';
+import {
+	GetSiweMessageOptions, RainbowKitSiweNextAuthProvider
+} from '@rainbow-me/rainbowkit-siwe-next-auth';
+import {
+	argentWallet, braveWallet, coinbaseWallet, injectedWallet, ledgerWallet, metaMaskWallet,
+	rainbowWallet, trustWallet, walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
+
+import { chains, provider } from '../models/chains';
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
-const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
-
-const { chains, provider } = configureChains(enabledChains, [
-	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
-	publicProvider()
-]);
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+	statement: 'Sign in to the OpenPeer app'
+});
 
 const connectors = connectorsForWallets([
 	{
@@ -78,7 +72,7 @@ const myTheme = merge(lightTheme(), {
 }) as Theme;
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const { disableAuthentication } = pageProps;
+	const { disableAuthentication, widget } = pageProps;
 	return (
 		<WagmiConfig client={wagmiClient}>
 			{disableAuthentication ? (
@@ -87,9 +81,19 @@ const App = ({ Component, pageProps }: AppProps) => {
 					{/* @ts-ignore */}
 					<NoAuthLayout pageProps={pageProps} Component={Component} />
 				</RainbowKitProvider>
+			) : widget ? (
+				<SessionProvider refetchInterval={0} session={pageProps.session}>
+					<RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+						<RainbowKitProvider chains={chains} theme={myTheme}>
+							<Head />
+							{/* @ts-ignore */}
+							<WidgetLayout pageProps={pageProps} Component={Component} />
+						</RainbowKitProvider>
+					</RainbowKitSiweNextAuthProvider>
+				</SessionProvider>
 			) : (
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
-					<RainbowKitSiweNextAuthProvider>
+					<RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
 						<RainbowKitProvider chains={chains} theme={myTheme}>
 							<Head />
 							{/* @ts-ignore */}
