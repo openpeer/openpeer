@@ -517,6 +517,89 @@ export default function TermsPage() {
 				</ul>
 
 				<h3 className="mt-8 text-lg font-bold mb-4">Release of Claims</h3>
+				<p className="mb-4">
+					Under no circumstances shall we or any of our officers, directors, employees, contractors, agents,
+					affiliates, or subsidiaries be liable to you for any indirect, punitive, incidental, special,
+					consequential, or exemplary damages, including (but not limited to) damages for loss of profits,
+					goodwill, use, data, or other intangible property, arising out of or relating to any access or use
+					of the Interface, nor will we be responsible for any damage, loss, or injury resulting from hacking,
+					tampering, or other unauthorized access or use of the Interface or the information contained within
+					it. We assume no liability or responsibility for any: (a) errors, mistakes, or inaccuracies of
+					content; (b) personal injury or property damage, of any nature whatsoever, resulting from any access
+					or use of the Interface; (c) unauthorized access or use of any secure server or database in our
+					control, or the use of any information or data stored therein; (d) interruption or cessation of
+					function related to the Interface; (e) bugs, viruses, trojan horses, or the like that may be
+					transmitted to or through the Interface; (f) errors or omissions in, or loss or damage incurred as a
+					result of the use of, any content made available through the Interface; and (g) the defamatory,
+					offensive, or illegal conduct of any third party. Under no circumstances shall we or any of our
+					officers, directors, employees, contractors, agents, affiliates, or subsidiaries be liable to you
+					for any claims, proceedings, liabilities, obligations, damages, losses, or costs in an amount
+					exceeding the amount you paid to us in exchange for access to and use of the Interface, or
+					USD$100.00, whichever is greater. This limitation of liability applies regardless of whether the
+					alleged liability is based on contract, tort, negligence, strict liability, or any other basis, and
+					even if we have been advised of the possibility of such liability. Some jurisdictions do not allow
+					the exclusion of certain warranties or the limitation or exclusion of certain liabilities and
+					damages. Accordingly, some of the disclaimers and limitations set forth in this Agreement may not
+					apply to you. This limitation of liability shall apply to the fullest extent permitted by law.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Dispute Resolution</h3>
+				<p className="mb-4">
+					For the avoidance of doubt, this dispute resolution clause only applies to disputes that arise
+					between You and OpenPeer Protocol. Disputes that arise between You and other parties involved in
+					transactions are governed by the Trade Terms in Appendix 1.
+				</p>
+				<p className="mb-4">
+					We will use our best efforts to resolve any potential disputes through informal, good faith
+					negotiations. If a potential dispute arises, you must contact us by sending an email to
+					contact@openpeer.xyz, so that we can attempt to resolve it without resorting to formal dispute
+					resolution. If we aren't able to reach an informal resolution within eighty days of your email, then
+					you and we both agree to resolve the potential dispute according to the process set forth below.
+				</p>
+				<p className="mb-4">
+					Any dispute arising out of or in connection with this Agreement (“Dispute”), including questions
+					regarding its existence, validity, or termination, or any other dispute arising out of the use of
+					the protocol and interface shall initially be negotiated between the Parties in good faith a remedy
+					to the specified breach. In the event no amicable negotiation is possible between the contracting
+					parties and the effectiveness of negotiation is in doubt, it is agreed that all claims shall be
+					subject first to mediation under the International Chamber of Commerce ("ICC") Mediation Rules. In
+					the event that neither negotiation in good faith nor remedy is able to solve the Dispute, the
+					Dispute will then be referred to and finally resolved by arbitration in London, United Kingdom. The
+					tribunal shall consist of one (1) arbitrator to be nominated by the Governance Token Issuer. The
+					language of the arbitration shall be in English and governed by the laws of the United Kingdom.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Class Action and Jury Trial Waiver</h3>
+				<p className="mb-4">
+					You must bring any and all Disputes against us in your individual capacity and not as a plaintiff in
+					or member of any purported class action, collective action, private attorney general action, or
+					other representative proceeding. This provision applies to class arbitration. You and we both agree
+					to waive the right to demand a trial by jury.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Governing Law</h3>
+				<p className="mb-4">
+					This Agreement shall be governed by and construed in accordance with the laws in force in Panama,
+					and You unconditionally submit to the exclusive jurisdiction of the courts of Panama.{' '}
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Entire Agreement</h3>
+				<p className="mb-4">
+					These terms constitute the entire agreement between you and us with respect to the subject matter
+					hereof and in addition to the OpenPeer Protocol Disclaimer and OpenPeer Privacy Policy sets out all
+					terms of the relationship, including rights due, rights waived, obligations owed and obligations
+					waived between you and us. This Agreement supersedes any and all prior or contemporaneous written
+					and oral agreements, communications and other understandings (if any) relating to the subject matter
+					of the terms.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">LAW ENFORCEMENT INQUIRIES</h3>
+				<p className="mb-4">
+					Law enforcement should direct inquiries, including requests for information in relation to a
+					suspected crime by an OpenPeer account holder, via email to legal@openpeer.xyz.{' '}
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Limitation of Liability</h3>
 				<p className="mb-4"></p>
 
 				<ul className="list-disc pl-6">
