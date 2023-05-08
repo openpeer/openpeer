@@ -22,21 +22,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								OpenPeer is a completely decentralized P2P on/off ramp for emerging markets.
 							</p>
 						</div>
-						<div className="flex content-center mt-8 md:mt-0 justify-center md:justify-start">
-							<a href="" className="px-2 hidden">
-								Docs
-							</a>
-							<a href="" className="px-2 hidden">
-								FAQ
-							</a>
-							<a
-								href="https://twitter.com/openpeer_xyz"
-								target="_blank"
-								rel="noreferrer"
-								className="px-2"
-							>
-								<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
-							</a>
+						<div className="flex mt-8 content-center md:mt-0 justify-center md:justify-start">
+							<div className="flex flex-row items-center">
+								<a href="" className="px-2 hidden">
+									Docs
+								</a>
+								<a href="/terms" className="px-2">
+									Terms
+								</a>
+								<a
+									href="https://twitter.com/openpeer_xyz"
+									target="_blank"
+									rel="noreferrer"
+									className="px-2"
+								>
+									<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

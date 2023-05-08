@@ -93,124 +93,132 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed}>
 			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
-			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
-			{(paymentMethods || []).map((pm) => (
-				<div
-					key={pm.id}
-					className={`${
-						pm.id === paymentMethod?.id ? 'border-2 border-cyan-600' : 'border-2 border-slate-200'
-					} w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 rounded-md cursor-pointer`}
-					onClick={() => setPaymentMethod(pm)}
-				>
-					<div className="w-full flex flex-row justify-between mb-4">
-						<div className="flex flex-row items-center">
-							<Image
-								src={pm.bank.icon}
-								alt={pm.bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
-							<span>{pm.bank.name}</span>
+			<p className="mb-4">
+				{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}
+			</p>
+			<div className="bg-white p-4 mb-4 border-2 border-slate-100 rounded-xl shadow-sm">
+				{(paymentMethods || []).map((pm) => (
+					<div
+						key={pm.id}
+						className={`${
+							pm.id === paymentMethod?.id ? 'border-2 border-cyan-600' : 'border-2 border-transparent'
+						} w-full flex flex-col bg-gray-100 mb-4 py-4 p-8 rounded-md cursor-pointer`}
+						onClick={() => setPaymentMethod(pm)}
+					>
+						<div className="w-full flex flex-row justify-between mb-4">
+							<div className="flex flex-row items-center">
+								<Image
+									src={pm.bank.icon}
+									alt={pm.bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+								<span>{pm.bank.name}</span>
+							</div>
+							<div onClick={(e) => enableEdit(e, pm)}>
+								<PencilSquareIcon className="h-5 w-" aria-hidden="true" />
+							</div>
 						</div>
-						<div onClick={(e) => enableEdit(e, pm)}>
-							<PencilSquareIcon className="h-5 w-" aria-hidden="true" />
-						</div>
-					</div>
-					<div className="mb-4">
-						{Object.keys(pm.values || {}).map((key) => {
-							const {
-								bank: { account_info_schema: schemaInfo }
-							} = pm;
-							const field = schemaInfo.find((f) => f.id === key);
-							const value = (pm.values || {})[key];
-							if (!value) return <></>;
+						<div className="mb-4">
+							{Object.keys(pm.values || {}).map((key) => {
+								const {
+									bank: { account_info_schema: schemaInfo }
+								} = pm;
+								const field = schemaInfo.find((f) => f.id === key);
+								const value = (pm.values || {})[key];
+								if (!value) return <></>;
 
-							return (
-								<div className="mb-2" key={key}>
-									<span>
-										{field?.label}: {value}
-									</span>
-								</div>
-							);
-						})}
-					</div>
-				</div>
-			))}
-
-			{!id || edit ? (
-				<>
-					<BankSelect
-						currencyId={currency!.id}
-						onSelect={(b) =>
-							updatePaymentMethod({
-								...paymentMethod,
-								...{ bank: b, bankId: b?.id }
-							})
-						}
-						selected={bank}
-						error={errors.bankId}
-					/>
-					{type === 'SellList' &&
-						schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
-							if (schemaType === 'message') {
 								return (
-									<div className="mb-4" key={schemaId}>
-										<span className="text-sm">{label}</span>
+									<div className="mb-2" key={key}>
+										<span>
+											{field?.label}: {value}
+										</span>
 									</div>
 								);
-							}
+							})}
+						</div>
+					</div>
+				))}
 
-							if (schemaType === 'textarea') {
+				{!id || edit ? (
+					<>
+						<BankSelect
+							currencyId={currency!.id}
+							onSelect={(b) =>
+								updatePaymentMethod({
+									...paymentMethod,
+									...{ bank: b, bankId: b?.id }
+								})
+							}
+							selected={bank}
+							error={errors.bankId}
+						/>
+						{type === 'SellList' &&
+							schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
+								if (schemaType === 'message') {
+									return (
+										<div className="mb-4" key={schemaId}>
+											<span className="text-sm">{label}</span>
+										</div>
+									);
+								}
+
+								if (schemaType === 'textarea') {
+									return (
+										<Textarea
+											rows={4}
+											key={schemaId}
+											label={label}
+											id={schemaId}
+											placeholder={placeholder}
+											onChange={(e) =>
+												updatePaymentMethod({
+													...paymentMethod,
+													...{
+														values: {
+															...paymentMethod.values,
+															...{ [schemaId]: e.target.value }
+														}
+													}
+												})
+											}
+											value={values[schemaId]}
+											error={errors[schemaId]}
+										/>
+									);
+								}
 								return (
-									<Textarea
-										rows={4}
+									<Input
 										key={schemaId}
 										label={label}
+										type="text"
 										id={schemaId}
 										placeholder={placeholder}
-										onChange={(e) =>
+										onChange={(value) =>
 											updatePaymentMethod({
 												...paymentMethod,
-												...{
-													values: {
-														...paymentMethod.values,
-														...{ [schemaId]: e.target.value }
-													}
-												}
+												...{ values: { ...paymentMethod.values, ...{ [schemaId]: value } } }
 											})
 										}
-										value={values[schemaId]}
 										error={errors[schemaId]}
+										value={values[schemaId]}
+										required={required}
 									/>
 								);
-							}
-							return (
-								<Input
-									key={schemaId}
-									label={label}
-									type="text"
-									id={schemaId}
-									placeholder={placeholder}
-									onChange={(value) =>
-										updatePaymentMethod({
-											...paymentMethod,
-											...{ values: { ...paymentMethod.values, ...{ [schemaId]: value } } }
-										})
-									}
-									error={errors[schemaId]}
-									value={values[schemaId]}
-									required={required}
-								/>
-							);
-						})}
-				</>
-			) : (
-				<div>
-					<Button title="Add New Payment Method +" outlined onClick={() => updatePaymentMethod(undefined)} />
-				</div>
-			)}
+							})}
+					</>
+				) : (
+					<div>
+						<Button
+							title="Add New Payment Method +"
+							outlined
+							onClick={() => updatePaymentMethod(undefined)}
+						/>
+					</div>
+				)}
+			</div>
 		</StepLayout>
 	);
 };
