@@ -1,7 +1,11 @@
 import { ListsTable, Loading } from 'components';
-import { List } from 'models/types';
+import OrdersTable from 'components/OrdersTable';
+import { useConnection } from 'hooks';
+import { List, Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useChainId } from 'wagmi';
+
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 interface WidgetProps {
 	currency: string;
@@ -12,8 +16,17 @@ interface WidgetProps {
 
 const Widget = ({ currency, token, fiatAmount, tokenAmount }: WidgetProps) => {
 	const [lists, setLists] = useState<List[]>([]);
+	const [orders, setOrders] = useState<Order[]>([]);
 	const [loading, setLoading] = useState(false);
 	const chainId = useChainId();
+	const { openConnectModal } = useConnectModal();
+	const { status } = useConnection();
+
+	useEffect(() => {
+		if (status !== 'authenticated') {
+			openConnectModal?.();
+		}
+	}, [openConnectModal, status]);
 
 	useEffect(() => {
 		const search = async () => {
@@ -44,14 +57,34 @@ const Widget = ({ currency, token, fiatAmount, tokenAmount }: WidgetProps) => {
 		search();
 	}, [currency, token]);
 
+	useEffect(() => {
+		if (status !== 'authenticated') return;
+
+		setLoading(true);
+		fetch(`/api/orders?chain_id=${chainId}`)
+			.then((res) => res.json())
+			.then((data: Order[]) => {
+				setOrders(data.filter((o) => !['cancelled', 'closed'].includes(o.status)));
+				setLoading(false);
+			});
+	}, [chainId, status]);
+
 	if (loading) return <Loading />;
 
 	return (
-		<div className="p-2">
+		<>
+			{orders.length > 0 && (
+				<>
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-2">
+						<span className="font-semibold text-lg">Your pending orders</span>
+					</div>
+					<OrdersTable orders={orders} />
+				</>
+			)}
 			{lists.length > 0 && (
 				<ListsTable lists={lists} fiatAmount={fiatAmount} tokenAmount={tokenAmount} skipAmount />
 			)}
-		</div>
+		</>
 	);
 };
 

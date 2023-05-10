@@ -25,7 +25,7 @@ const Release = ({ order }: BuyStepProps) => {
 			<StepLayout>
 				<div className="my-8">
 					<div className="mb-4">
-						<span className="flex flex-row text-yellow-600 mb-2">
+						<span className="flex flex-row text-yellow-600 mb-2 items-center">
 							<ClockIcon className="w-8 mr-2" />
 							<HeaderH2 title="Awaiting Release" />
 						</span>

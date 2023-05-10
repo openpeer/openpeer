@@ -9,18 +9,22 @@ import WidgetLayout from 'components/WidgetLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
+import { isBrowser } from 'utils';
 import { createClient, WagmiConfig } from 'wagmi';
 
 import { Manrope } from '@next/font/google';
+import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
+import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import {
-	connectorsForWallets, lightTheme, RainbowKitProvider, Theme
-} from '@rainbow-me/rainbowkit';
-import {
-	GetSiweMessageOptions, RainbowKitSiweNextAuthProvider
-} from '@rainbow-me/rainbowkit-siwe-next-auth';
-import {
-	argentWallet, braveWallet, coinbaseWallet, injectedWallet, ledgerWallet, metaMaskWallet,
-	rainbowWallet, trustWallet, walletConnectWallet
+	argentWallet,
+	braveWallet,
+	coinbaseWallet,
+	injectedWallet,
+	ledgerWallet,
+	metaMaskWallet,
+	rainbowWallet,
+	trustWallet,
+	walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
 import { chains, provider } from '../models/chains';
@@ -73,31 +77,28 @@ const myTheme = merge(lightTheme(), {
 
 const App = ({ Component, pageProps }: AppProps) => {
 	const { disableAuthentication, widget } = pageProps;
+	// @ts-expect-error
+	const minkeWallet = isBrowser() && window.ethereum?.isMinkeWallet;
 	return (
 		<WagmiConfig client={wagmiClient}>
 			{disableAuthentication ? (
 				<RainbowKitProvider chains={chains} theme={myTheme}>
 					<Head />
-					{/* @ts-ignore */}
+					{/* @ts-expect-error */}
 					<NoAuthLayout pageProps={pageProps} Component={Component} />
 				</RainbowKitProvider>
-			) : widget ? (
-				<SessionProvider refetchInterval={0} session={pageProps.session}>
-					<RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
-						<RainbowKitProvider chains={chains} theme={myTheme}>
-							<Head />
-							{/* @ts-ignore */}
-							<WidgetLayout pageProps={pageProps} Component={Component} />
-						</RainbowKitProvider>
-					</RainbowKitSiweNextAuthProvider>
-				</SessionProvider>
 			) : (
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
 					<RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
 						<RainbowKitProvider chains={chains} theme={myTheme}>
 							<Head />
-							{/* @ts-ignore */}
-							<Layout pageProps={pageProps} Component={Component} />
+							{widget || minkeWallet ? (
+								/* @ts-expect-error */
+								<WidgetLayout pageProps={pageProps} Component={Component} />
+							) : (
+								/* @ts-expect-error */
+								<Layout pageProps={pageProps} Component={Component} />
+							)}
 						</RainbowKitProvider>
 					</RainbowKitSiweNextAuthProvider>
 				</SessionProvider>

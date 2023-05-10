@@ -10,27 +10,33 @@ interface OrdersTableProps {
 }
 
 const NextButton = ({
-	order: { buyer: buyerUser, uuid, status },
+	order: { buyer: buyerUser, uuid, status, seller },
 	address
 }: {
 	order: Order;
 	address: string | undefined;
 }) => {
 	const buyer = address === buyerUser.address;
+
+	if (!buyer && seller.address !== address) {
+		return <></>;
+	}
+
+	let label = 'Continue';
 	if (buyer) {
 		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
-			return <></>;
+			label = 'See Order';
 		}
 	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
 		// seller
-		return <></>;
+		label = 'See Order';
 	}
 
 	const url = `/orders/${encodeURIComponent(uuid)}`;
 
 	return (
 		<Link href={url}>
-			<Button title="Continue" />
+			<Button title={label} />
 		</Link>
 	);
 };
@@ -66,7 +72,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 	if (orders.length === 0) return <></>;
 
 	return (
-		<div className="py-6">
+		<div>
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
 				<div className="py-4">
 					<table className="w-full md:rounded-lg overflow-hidden">
@@ -128,7 +134,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 									<tr key={id} className="hover:bg-gray-50">
 										<td className="pl-4 py-4">
 											<div className="w-full flex flex-row justify-around md:justify-start items-center">
-												<div className="w-3/5 mr-6">
+												<div className="w-1/2 mr-6">
 													<Link href={`/${user.address}`}>
 														<div className="flex flex-col lg:flex-row lg:items-center cursor-pointer">
 															<div className="w-16 flex flex-row mb-2">
@@ -143,10 +149,10 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 														<span>
 															{currency.symbol} {Number(fiatAmount).toFixed(2)}
 														</span>
-														<span>{orderStatus(status)}</span>
+														<span className="font-semibold">{orderStatus(status)}</span>
 													</div>
 												</div>
-												<div className="w-2/5 flex flex-col lg:hidden px-4">
+												<div className="w-1/2 flex flex-col lg:hidden">
 													<span className="font-bold mb-2">
 														{Number(tokenAmount).toFixed(2)} {token.symbol}
 													</span>

@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/indent */
+import VerificationButton from 'components/Button/VerificationButton';
+/* eslint-disable no-mixed-spaces-and-tabs */
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import { useVerification } from 'hooks';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { useAccount } from 'wagmi';
 
-import { ClockIcon } from '@heroicons/react/24/outline';
+import { ArrowLongRightIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
@@ -29,25 +34,57 @@ const Payment = ({ order }: BuyStepProps) => {
 		seller,
 		payment_method: paymentMethod
 	} = order;
-	const { token, fiat_currency: currency } = list!;
+	const { token, fiat_currency: currency, type } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
+	const { verified } = useVerification();
 
 	return (
 		<StepLayout>
-			<div className="my-8">
+			<div className="md:hidden">
+				<p className="font-semibold text-center text-lg">
+					{type === 'SellList' ? 'Buy' : 'Sell'} {token.symbol}
+				</p>
+			</div>
+			<div className="my-4">
 				{status === 'created' && (
 					<div>
-						<span className="flex flex-row mb-2 text-yellow-600">
+						<span className="flex flex-row mb-2 text-yellow-600 items-center">
 							<ClockIcon className="w-8 mr-2" />
 							<HeaderH2 title="Awaiting Merchant Deposit" />
 						</span>
 						<p className="text-base">
 							{selling
 								? 'Please deposit funds to escrow in order to confirm and complete this transaction.'
-								: 'Kindly wait for the merchant to accept the order and escrow their funds. Payments details will become visible as soon as merchant escrow the funds. '}
+								: `Kindly wait for the merchant to accept the order and escrow their funds. ${
+										!verified
+											? 'Your order is more likely to be successful if you create a profile and verify your identity.'
+											: ''
+								  }`}
 						</p>
+						<div className="flex flex-row my-4 items-center w-full md:hidden">
+							<div className="w-1/2">
+								<Link href={`/${address}/edit`}>
+									<button
+										type="button"
+										className="flex items-center py-2 px-6 border rounded cursor-pointer border border-gray-600"
+									>
+										Set up profile
+										<span className="ml-2">
+											<ArrowLongRightIcon width={24} />
+										</span>
+									</button>
+								</Link>
+							</div>
+							{!verified && (
+								<div className="w-1/2">
+									<Link href="/widget/verification">
+										<VerificationButton color="cyan" />
+									</Link>
+								</div>
+							)}
+						</div>
 					</div>
 				)}
 				{status === 'escrowed' && (
@@ -58,11 +95,11 @@ const Payment = ({ order }: BuyStepProps) => {
 						<p className="text-base">
 							{selling
 								? 'Kindly wait for the buyer to pay. If the buyer already paid you can release the funds. Be careful.'
-								: 'Proceed to your bank app or payment platform and send the required amount to the bank account details below.'}
+								: 'Proceed to your bank app or payment platform and send the required amount to the bank account details below. '}
 						</p>
 					</div>
 				)}
-				<div className="flex flex-row justify-around bg-gray-100 rounded-lg p-6 my-4">
+				<div className="flex flex-row justify-around bg-gray-100 rounded-lg py-6 md:p-6 my-4">
 					<div className="flex flex-col">
 						<span className="text-sm">Amount to pay</span>
 						<span className="text-lg font-medium">
@@ -88,7 +125,11 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				</div>
 
-				{status === 'created' && !selling && <PreShowDetails />}
+				{status === 'created' && !selling && (
+					<div className="hidden md:block">
+						<PreShowDetails />
+					</div>
+				)}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
