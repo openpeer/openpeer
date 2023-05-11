@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<div className="container mx-auto px-4">{children}</div>
 				{/* Footer */}
 				<div className="bg-black text-white">
-					<div className="container mx-auto p-12 flex flex-col md:flex-row md:justify-between">
+					<div className="container mx-auto p-12 flex flex-col justify-center md:flex-row md:justify-between">
 						<div className="flex flex-col items-center md:items-start">
 							<a className="text-3xl font-bold leading-none" href="#">
 								<Image src={logo} alt="openpeer logo" width={132} height={51} />
@@ -22,13 +22,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								OpenPeer is a completely decentralized P2P on/off ramp for emerging markets.
 							</p>
 						</div>
-						<div className="flex mt-8 content-center md:mt-0 justify-center md:justify-start">
+						<div className="flex mt-8 content-center md:mt-0 md:self-start justify-center md:justify-start">
 							<div className="flex flex-row items-center">
-								<a href="" className="px-2 hidden">
-									Docs
+								<a href="/disclamer" className="px-2 hover:underline">
+									Disclamer
 								</a>
-								<a href="/terms" className="px-2">
+								<a href="/terms" className="px-2 hover:underline">
 									Terms
+								</a>
+								<a href="/privacy-policy" className="px-2 hover:underline">
+									Policy Privacy
 								</a>
 								<a
 									href="https://twitter.com/openpeer_xyz"

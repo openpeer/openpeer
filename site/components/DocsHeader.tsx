@@ -27,20 +27,20 @@ const DocsHeader = () => {
 
 				<div className="hidden sm:block">
 					<div className="flex flex-row items-center justify-between space-x-8 text-sm">
-						<a className="hover:underline" href="disclamer.html">
+						<a className="hover:underline" href="disclamer">
 							Disclamer
 						</a>
-						<a className="hover:underline" href="faq.html">
+						<a className="hover:underline" href="terms">
 							Terms
 						</a>
-						<a className="hover:underline" href="privacy-policy.html">
+						<a className="hover:underline" href="privacy-policy">
 							Privacy Policy
 						</a>
 						<a
 							href="https://twitter.com/openpeer_xyz"
 							target="_blank"
 							rel="noreferrer"
-							className="px-2 mt-1"
+							className="px-2 mt-1 hover:opacity-50"
 						>
 							<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
 						</a>
@@ -49,13 +49,22 @@ const DocsHeader = () => {
 			</nav>
 
 			<div className={`navbar-menu ${navbar ? '' : 'hidden'}`}>
-				<div className="flex flex-column items-center space-x-8 text-xl">
-					<ul className="text-center flex-1">
-						<li className="hidden">
-							<a href="faq.html">FAQ</a>
+				<div className="flex flex-column items-center justify-center text-default bg-gray-100 mt-4 rounded-lg">
+					<ul className="text-center flex-1 p-8">
+						<li className="mb-4">
+							<a className="hover:underline" href="disclamer">
+								Disclamer
+							</a>
 						</li>
-						<li className="hidden">
-							<a href="docs.html">Docs</a>
+						<li className="mb-4">
+							<a className="hover:underline" href="terms">
+								Terms
+							</a>
+						</li>
+						<li className="mb-4">
+							<a className="hover:underline" href="privacy-policy">
+								Privacy Policy
+							</a>
 						</li>
 						<li>
 							<a
