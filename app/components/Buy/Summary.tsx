@@ -13,6 +13,7 @@ import { UIOrder } from './Buy.types';
 import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
+	console.log('order', order);
 	const {
 		list,
 		price,
@@ -22,6 +23,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		id,
 		payment_method: paymentMethod
 	} = order;
+	console.log('list', list);
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
