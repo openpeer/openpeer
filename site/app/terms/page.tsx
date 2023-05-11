@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import DocsHeader from '../../components/DocsHeader';
 
 export default function TermsPage() {
-	const [navbar, setNavbar] = useState(false);
 	return (
 		<>
-			<div className="container mx-auto py-16 px-4 w-full md:w-1/2">
+			<DocsHeader />
+			<div className="mx-auto py-16 px-4 w-full md:w-2/3">
 				<h2 className="text-2xl font-bold py-4">TERMS OF SERVICE AGREEMENT</h2>
 				<span className="text-gray-400"> Last Modified: 13 April 2023 </span>
 
@@ -60,7 +60,9 @@ export default function TermsPage() {
 				<p className="mb-4">
 					We reserve the right, in our sole discretion, to modify this Agreement from time to time. If we make
 					any modifications, we will notify you by reuploading a current version of the Agreement at:
-					https://docs.google.com/document/d/e/2PACX-1vTbrZiFIdODPBupwSGhtn-gOcOkNxdoXhtQHJfZzSkhVSPPCRCQmMHo1CRtJuf_7eoC8q4iyLXtAmyO/pub.
+					<span className="break-words">
+						https://docs.google.com/document/d/e/2PACX-1vTbrZiFIdODPBupwSGhtn-gOcOkNxdoXhtQHJfZzSkhVSPPCRCQmMHo1CRtJuf_7eoC8q4iyLXtAmyO/pub.
+					</span>
 				</p>
 
 				<p className="mb-4">
@@ -593,18 +595,349 @@ export default function TermsPage() {
 					of the terms.
 				</p>
 
-				<h3 className="mt-8 text-lg font-bold mb-4">LAW ENFORCEMENT INQUIRIES</h3>
+				<h3 className="mt-16 text-lg font-bold mb-4">LAW ENFORCEMENT INQUIRIES</h3>
 				<p className="mb-4">
 					Law enforcement should direct inquiries, including requests for information in relation to a
 					suspected crime by an OpenPeer account holder, via email to legal@openpeer.xyz.{' '}
 				</p>
 
-				<h3 className="mt-8 text-lg font-bold mb-4">Limitation of Liability</h3>
-				<p className="mb-4"></p>
+				<span className="break-before-all"></span>
 
+				<h3 className="mt-16 text-lg font-bold mb-4 text-center">APPENDIX 1 - TRADE TERMS</h3>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">POSTING OFFERS</h3>
+				<p className="mb-4">
+					OpenPeer users (the “Users”) may post offers to buy or sell cryptocurrencies in exchange for local
+					FIAT currencies of their choice. Offers made on the Protocol are publicly available to everyone and
+					can be viewed by all website visitors.
+				</p>
+				<p className="mb-4">
+					The Protocol may display certain symbols next to a Users’ username which indicates certain
+					information about a User such as their trade activity, response rate or standard hours of activity.
+				</p>
+				<p className="mb-4">
+					Offerors are allowed to write their own terms and conditions of sale, which may be published with
+					the offer or negotiated with the offeree. The offeror must include the mandatory terms below in
+					their terms and conditions.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">Limitation of Liability</h3>
+				<p className="mb-4 italic">Dispute Resolution</p>
+				<p className="mb-4">
+					Any dispute arising between both the seller and the buyer shall initially be negotiated between both
+					parties in good faith to reach a resolution. In the event that the dispute is not resolved, either
+					party may refer the dispute to OpenPeer.
+				</p>
+				<p className="mb-4">Examples of disputes that may arise would be:</p>
 				<ul className="list-disc pl-6">
-					<li className="mb-4"></li>
+					<li className="mb-4">a party to a trade transfers local currency but the escrow isn’t released;</li>
+					<li className="mb-4">
+						local currency payment isn’t received and the cryptocurrency remains in escrow; or
+					</li>
+					<li className="mb-4">local currency is only part paid.</li>
 				</ul>
+				<p className="mb-4">
+					In the event that the dispute is referred to OpenPeer, the Protocol reserves the right to request a
+					reasonable fee in order to resolve the issue. When the dispute is referred, both parties agree to
+					waive confidentiality to their conversation history and all other information required by OpenPeer
+					to resolve the dispute, including evidence of payment.
+				</p>
+				<p className="mb-4">
+					OpenPeer will review the evidence and upon making a decision, transfer the cryptocurrency to the
+					party who, in OpenPeer’s reasonable judgement, is entitled to it under the terms of sale.
+				</p>
+				<p className="mb-4">
+					Both parties acknowledge and agree that disputes may be arbitrated by third-parties including
+					parties who stake $P2P, OpenPeer’s governance token.
+				</p>
+				<p className="mb-4">
+					Where OpenPeer requests further information from either party, the respective party must respond to
+					the request for information promptly within 24 hours of that request. The inability to respond to
+					the request for information within that timeframe may result in OpenPeer resolving the dispute in
+					favour of the other party.
+				</p>
+				<p className="mb-4">
+					Both parties agree that the decision made by OpenPeer is final and binding, save for circumstances
+					where gross negligence or fraud exists.
+				</p>
+				<p className="mb-4">
+					OpenPeer reserves the right to refuse a referral to resolve a dispute where OpenPeer, in its sole
+					and absolute discretion, considers that:
+				</p>
+				<ul className="list-disc pl-6">
+					<li className="mb-4">the issue is best resolved through other methods;</li>
+					<li className="mb-4">
+						one or both parties have not provided all required or requested information;
+					</li>
+					<li className="mb-4">
+						the ownership of cryptocurrency is not clear from the information provided;
+					</li>
+					<li className="mb-4">the contract between the parties is unlawful;</li>
+					<li className="mb-4">a party is acting unlawfully or fraudulently;</li>
+					<li className="mb-4">OpenPeer has a legal obligation to do so; or</li>
+					<li className="mb-4">
+						directing cryptocurrency to a party would cause OpenPeer to breach any law.
+					</li>
+				</ul>
+				<p className="mb-4">
+					Where OpenPeer exercises its right to refuse to resolve a dispute, both parties will be duly
+					notified of this decision. Either party may choose to continue negotiating a resolution or refer the
+					matter to the Courts.
+				</p>
+				<p className="mb-4">
+					Where a party provides a Court order to OpenPeer and access to a digital signature that allows
+					OpenPeer limited control of the escrow, the dispute will be resolved in accordance with the Court
+					order.
+				</p>
+				<p className="mb-4 italic">OpenPeer Fees</p>
+				<p className="mb-4">
+					The Protocol charges a 0.3% transaction fee (the “Fee”) which is incurred by the offeror. The fee is
+					charged in the cryptocurrency of exchange.
+				</p>
+				<p className="mb-4">
+					The Fee is incorporated in all contracts between buyers and sellers that transact through the
+					Protocol. The offer publicly displayed to Users is the amount expected to be received from the
+					transaction. For the avoidance of doubt, this would mean that the Fee has already been priced in.{' '}
+					<span className="underline underline-offset-1">
+						This is not inclusive of network transaction fees.
+					</span>
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">PROHIBITIONS</h3>
+				<p className="mb-4">
+					You must not use OpenPeer to advertise other products or services, such as gift cards, non-fungible
+					tokens, precious metals, securities, real property or other real or virtual items. You must not
+					advertise a cryptocurrency for sale that is not currently supported by the OpenPeer platform. You
+					must not use OpenPeer to advertise buying or selling cryptocurrencies with a payment method that is
+					not specified on the OpenPeer website.
+				</p>
+				<p className="mb-4">
+					OpenPeer reserves the right to delete or suppress offers from the marketplace at its discretion.
+					Generally, it will delete offers if they appear to be forbidden, unlawful, non-genuine, fraudulent,
+					spam or are otherwise misleading or incorrect.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">COMMUNICATIONS BETWEEN TRANSACTORS</h3>
+				<p className="mb-4">
+					OpenPeer allows users to communicate over the OpenPeer Platform through end-to-end encrypted
+					communications. This is provided through a third party tool.
+				</p>
+				<p className="mb-4">
+					It is the Users’ sole responsibility to ensure that adequate records of communications, details of
+					transactions and financial history are kept to the extent that they are required to do so by their
+					respective laws in their respective jurisdictions.
+				</p>
+				<p className="mb-4">
+					OpenPeer users shall respect other users and shall not engage in communication which is offensive,
+					abusive, unlawful, defamatory, indecent or inappropriate.{' '}
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">TRADE OF CRYPTOCURRENCIES</h3>
+				<p className="mb-4">
+					When You transact on the OpenPeer Protocol, payment instructions can only be communicated directly
+					between both parties. The Protocol does not hold funds on account for users, nor does it facilitate
+					or escrow any local currency payments between both the buyer and seller.
+				</p>
+				<p className="mb-4 font-bold">
+					For the avoidance of doubt, except for transaction fees, at no point during the course of a
+					transaction does the buyer’s or seller’s cryptocurrency enter the Protocol’s possession.
+				</p>
+				<p className="mb-4">
+					Transactions occur on the blockchain and are regulated by smart contracts that negate the need for
+					traditional escrow. An illustration of how the smart contract works as follows:{' '}
+				</p>
+				<ul className="list-disc pl-6">
+					<li className="mb-4">
+						ERC20 token trades are conducted via the Ethereum distributed computing network and other
+						EMV-compatible networks, which we cannot and do not control. When a seller sends tokens to a
+						buyer during the course of a trade, the seller transfers tokens directly to an escrow smart
+						contract on the Ethereum blockchain. OpenPeer cannot access tokens held in escrow without
+						explicit digital permission from the buyer or seller, and it is impossible for us to have tokens
+						directed to anyone other than the seller or the buyer as per the code of the open source smart
+						contract.
+					</li>
+				</ul>
+				<p className="mb-4">
+					More information regarding the technical workings of the non-custodial escrow mechanism can be found
+					here.
+				</p>
+				<p className="mb-4">
+					The Protocol reserves the right to update the code of the smart contract mechanisms from time to
+					time, primarily for the purposes such as, but not limited to, improving cost efficiency,
+					computational efficiency, bug fixes and security improvement works.{' '}
+				</p>
+				<p className="mb-4">
+					Please contact the Protocol at contact@openpeer.xyz if You have a query regarding the non-custodial
+					escrow mechanism.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">TERMS OF THE TRANSACTION</h3>
+				<p className="mb-4">
+					Once cryptocurrency is transferred into escrow, the trade should proceed in accordance with the
+					terms agreed between the buyer and the seller. This will ordinarily require:
+				</p>
+				<ol className="list-decimal pl-6">
+					<li className="mb-4">
+						the buyer to transfer local currency to the seller using an agreed-upon payment method or
+						service; and
+					</li>
+					<li className="mb-4">
+						The release of cryptocurrency held in escrow once the payment has been received in full by the
+						seller once local currency payment.
+					</li>
+				</ol>
+				<p className="mb-4">
+					If the buyer does not confirm the sending of the payment within a defined period of time, the escrow
+					may be cancelled by the seller. The buyer may cancel the escrow at any time.{' '}
+				</p>
+				<p className="mb-4">
+					If you are the party selling cryptocurrency, it’s important to make sure you and the other party
+					have agreed all relevant terms of the trade before you fund the escrow, as you will be charged a fee
+					by the relevant cryptocurrency network to fund an escrow even if it ends up being cancelled.
+				</p>
+				<p className="mb-4">Sales between buyers and sellers are subject to:</p>
+				<ul className="list-disc pl-6">
+					<li className="mb-2">the payment of OpenPeer’s fee;</li>
+					<li className="mb-2">the process for resolving disputes set out in this Appendix; and</li>
+					<li className="mb-2">
+						the seller’s terms and conditions, or any other terms and conditions agreed between the buyer
+						and the seller.
+					</li>
+				</ul>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">SECURITY</h3>
+				<p className="mb-4">
+					In the event that OpenPeer requires You to comply with reasonable security requirements, You must
+					comply with best efforts.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">TAX OBLIGATIONS</h3>
+				<p className="mb-4">
+					By using OpenPeer, You are solely responsible for determining what taxes apply to any trades you
+					conduct with other OpenPeer users. If taxes do apply to You, You must report and/or remit the
+					correct tax to the appropriate tax authority.
+				</p>
+				<p className="mb-4">
+					By opening an account with OpenPeer, You represent and warrant that You will ensure compliance with
+					your respective tax obligations in your respective jurisdictions.
+				</p>
+				<p className="mb-4">
+					You agree to hold harmless, release and defend, and indemnify OpenPeer for any claim, loss or damage
+					arising from your failure to pay the applicable taxes.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-16">APPENDIX 2 - ACCOUNT OPENING TERMS</h3>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">YOUR ACCOUNT</h3>
+				<p className="mb-4">
+					You will require a third-party wallet application (the “Wallet”) in order to register yourself and
+					create an account with the Protocol. You will be required to provide us with a contact method and a
+					username for profile creation purposes.
+				</p>
+				<p className="mb-4">
+					You must log in using your Wallet to access the services. You are not allowed to change your
+					usernames once the first trade has been made.
+				</p>
+				<p className="mb-4 text-center undeline">
+					Under no circumstances will OpenPeer request for you to share personal information such as private
+					keys or seed phrases.
+				</p>
+				<p className="mb-4">
+					You are responsible for all activities that are conducted through your account. You are responsible
+					for keeping your Wallet secure at all times. OpenPeer does not take responsibility for any
+					compromise of your personal Wallet.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">ELIGIBILITY</h3>
+				<p className="mb-4">
+					You must be at least 18 years old to sign up for an OpenPeer account. You represent that you are at
+					least the age of majority in your jurisdiction (e.g. eighteen years old) and have the full right,
+					power, capacity and authority to enter into and comply with the terms and conditions of this
+					Agreement on behalf of yourself and any company or legal entity for which you may access or use the
+					Interface.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">SUBMISSION OF PERSONAL DETAILS</h3>
+				<p className="mb-4">
+					If you are prompted to submit personal information and other information such as, but not limited
+					to, tax status and residency, You represent that all information submitted to OpenPeer is accurate
+					and complete.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">SALES OR TRANSFER OF ACCOUNT</h3>
+				<p className="mb-4">
+					You are prohibited from selling or transferring your OpenPeer account. If You are caught attempting
+					to sell or transfer your account, your account will be flagged and banned by OpenPeer.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">IDENTITY VERIFICATION</h3>
+				<p className="mb-4">
+					In accordance with the OpenPeer Privacy Policy, the Protocol cannot provide Users with any
+					information about the identity of another OpenPeer user other than what is already made publicly
+					available on the Protocol.
+				</p>
+				<p className="mb-4">
+					OpenPeer provides access to third-party identity verification tools that encrypt a verified
+					non-transferrable, non-fungible token on a user’s wallet. OpenPeer verifies and displays the
+					existence of these tokens. It is the responsibility of a user to trade with verified users to the
+					extent that they are required to do so in their jurisdiction.{' '}
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">ACCOUNT SUSPENSION AND DELETION</h3>
+				<p className="mb-4">OpenPeer reserves the right to suspend and delete your account if:</p>
+				<ul className="list-disc pl-6">
+					<li className="mb-4">
+						we consider that You are using the OpenPeer platform for fraudulent purposes or for any other
+						unlawful purpose;
+					</li>
+					<li className="mb-4">
+						we receive reports that you are communicating offensive, abusive, unlawful, defamatory, indecent
+						or inappropriate messages to other users;
+					</li>
+					<li className="mb-4">
+						we know or suspect that you have completed the residency declaration dishonestly;
+					</li>
+					<li className="mb-4">OpenPeer is required by law to do so;</li>
+					<li className="mb-4">
+						there is any change in law that adversely affects OpenPeer’s operating model or would make it
+						unlawful to continue the service without materially changing the OpenPeer platform or regulatory
+						licence required to operate; and
+					</li>
+					<li className="mb-4">for any other reason at our absolute discretion.</li>
+				</ul>
+				<p className="mb-4">
+					Once your account is deleted, we may destroy any information we hold in relation to it after any
+					legal requirement imposed on OpenPeer to retain it has expired. However we may retain some
+					information for up to 5 years following the date of your account deletion (see our Privacy Policy
+					for more information).
+				</p>
+				<p className="mb-4">
+					After suspension of your account, You are entitled to limited access for the purpose of managing
+					existing trades. However You may not open new trades or post to the marketplace. If Your account has
+					been suspended, You are forbidden from creating or using any other account.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">MODIFICATION OF ACCOUNT OPENING TERMS</h3>
+				<p className="mb-4">
+					We reserve the right, at our sole discretion, to update, change or replace any part of these Service
+					Terms by posting updates and changes to our website. If there is a change which has a material
+					adverse impact on you, we will notify you by emailing you and providing 30 days’ notice. If you do
+					not agree to the changes, your only remedy is to discontinue using the services.
+				</p>
+				<p className="mb-4">
+					It is your responsibility to check our website periodically for changes. Your continued use of or
+					access to our website or the services following the posting of any changes to these Service Terms
+					constitutes acceptance of those changes.
+				</p>
+
+				<h3 className="mt-8 text-lg font-bold mb-4">SURVIVAL OF TERMS</h3>
+				<p className="mb-4">
+					In the event that Your account is closed in accordance to the terms of this Agreement, Appendix 2
+					will cease to apply. For the avoidance of doubt, the general Terms of Service will still apply to
+					You if you continue utilising the Protocol.
+				</p>
+
+				<hr className="block my-16" />
 			</div>
 		</>
 	);

@@ -11,6 +11,8 @@ import people from '../public/people.png';
 import polygonLogoWhite from '../public/polygon-logo-white.png';
 import twitterLogo from '../public/twitter.svg';
 
+import './background.css';
+
 interface FeatureParams {
 	title: string;
 	description: string;
