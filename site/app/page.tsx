@@ -10,6 +10,7 @@ import passport from '../public/passport.png';
 import people from '../public/people.png';
 import polygonLogoWhite from '../public/polygon-logo-white.png';
 import twitterLogo from '../public/twitter.svg';
+import discord from '../public/discord.svg';
 
 import './background.css';
 
@@ -37,8 +38,8 @@ export default function Home() {
 	return (
 		<>
 			<div>
-				<nav className="mt-10 relative flex justify-between w-full">
-					<a className="text-3xl font-bold leading-none" href="#">
+				<nav className="mt-10 relative flex justify-between w-full items-center">
+					<a className="text-3xl font-bold leading-none" href="/">
 						<Image src={logo} alt="openpeer logo" width={200} height={51} />
 					</a>
 					<div className="sm:hidden" onClick={() => setNavbar(!navbar)}>
@@ -54,16 +55,21 @@ export default function Home() {
 						</button>
 					</div>
 
-					<div className="flex flex-row justify-between space-x-8 text-xl hidden sm:block">
-						<a className="hidden" href="faq.html">
-							FAQ
-						</a>
-						<a className="hidden" href="docs.html">
-							Docs
-						</a>
-						<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer" className="px-2">
-							<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
-						</a>
+					<div className="hidden md:block">
+						<div className="flex flex-row items-center justify-between space-x-8 text-xl">
+							<a className="hidden" href="faq.html">
+								FAQ
+							</a>
+							<a href="https://docs.openpeer.xyz" target="_blank" rel="noreferrer">
+								Docs
+							</a>
+							<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
+								<Image src={twitterLogo} alt="twitter logo" width={20} height={20} />
+							</a>
+							<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer">
+								<Image src={discord} alt="discord logo" width={20} height={20} />
+							</a>
+						</div>
 					</div>
 				</nav>
 
@@ -73,20 +79,30 @@ export default function Home() {
 							<li className="hidden">
 								<a href="faq.html">FAQ</a>
 							</li>
-							<li className="hidden">
-								<a href="docs.html">Docs</a>
+							<li>
+								<a href="https://docs.openpeer.xyz" target="_blank" rel="noreferrer">
+									Docs
+								</a>
 							</li>
 							<li>
-								<a
-									href="https://twitter.com/openpeer_xyz"
-									target="_blank"
-									rel="noreferrer"
-									className="px-2"
-								>
+								<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
 									<div>
 										<Image
 											src={twitterLogo}
-											alt="openpeer logo"
+											alt="twitter logo"
+											width={20}
+											height={20}
+											className="inline-block"
+										/>
+									</div>
+								</a>
+							</li>
+							<li>
+								<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer">
+									<div>
+										<Image
+											src={discord}
+											alt="discord logo"
 											width={20}
 											height={20}
 											className="inline-block"

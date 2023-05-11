@@ -37,7 +37,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
-	const bank = type === 'BuyList' ? list.bank : paymentMethod.bank;
+	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
