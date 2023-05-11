@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import darkLogo from 'public/logo-dark.svg';
+import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
