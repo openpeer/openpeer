@@ -13,7 +13,15 @@ import { UIOrder } from './Buy.types';
 import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
-	const { list, price, fiat_amount: fiatAmount, token_amount: tokenAmount, buyer, id } = order;
+	const {
+		list,
+		price,
+		fiat_amount: fiatAmount,
+		token_amount: tokenAmount,
+		buyer,
+		id,
+		payment_method: paymentMethod
+	} = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
@@ -23,13 +31,13 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		terms,
 		type
 	} = list!;
-	const paymentMethod = order.paymentMethod || list.payment_method;
+
 	const { address } = useAccount();
 	const seller = order.seller || list.seller;
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
-	const bank = type === 'BuyList' ? list.bank : paymentMethod.bank;
+	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
 
 	return (
 		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
