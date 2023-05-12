@@ -30,6 +30,14 @@ const DocsHeader = () => {
 						<a className="hover:underline" href="disclamer">
 							Disclamer
 						</a>
+						<a
+							href="https://docs.openpeer.xyz"
+							target="_blank"
+							rel="noreferrer"
+							className="px-2 hover:underline"
+						>
+							Docs
+						</a>
 						<a className="hover:underline" href="terms">
 							Terms
 						</a>
