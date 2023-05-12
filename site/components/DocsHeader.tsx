@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import logo from '../public/logo-dark.svg';
 import twitterLogo from '../public/twitter-dark.svg';
+import discord from '../public/discord-dark.svg';
 
 const DocsHeader = () => {
 	const [navbar, setNavbar] = useState(false);
@@ -48,9 +49,17 @@ const DocsHeader = () => {
 							href="https://twitter.com/openpeer_xyz"
 							target="_blank"
 							rel="noreferrer"
-							className="px-2 mt-1 hover:opacity-50"
+							className="mt-1 hover:opacity-50"
 						>
 							<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
+						</a>
+						<a
+							href="https://discord.gg/Wrf9BT8sZN"
+							target="_blank"
+							rel="noreferrer"
+							className="mt-1 hover:opacity-50"
+						>
+							<Image src={discord} alt="openpeer logo" width={20} height={20} />
 						</a>
 					</div>
 				</div>
