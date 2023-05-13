@@ -93,7 +93,20 @@ const DocsHeader = () => {
 								<div className="hover:opacity-50">
 									<Image
 										src={twitterLogo}
-										alt="openpeer logo"
+										alt="Twitter"
+										width={20}
+										height={20}
+										className="inline-block"
+									/>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer" className="px-2">
+								<div className="hover:opacity-50">
+									<Image
+										src={discord}
+										alt="Discord"
 										width={20}
 										height={20}
 										className="inline-block"

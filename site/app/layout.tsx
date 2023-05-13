@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								Terms
 							</a>
 							<a href="/privacy-policy" className="px-2 hover:underline">
-								Policy Privacy
+								Privacy Policy
 							</a>
 							<a
 								href="https://twitter.com/openpeer_xyz"
