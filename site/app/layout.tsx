@@ -23,42 +23,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								OpenPeer is a decentralized P2P exchange protocol.
 							</p>
 						</div>
-						<div className="flex mt-8 content-center md:mt-0 md:self-start justify-center md:justify-start">
-							<div className="flex flex-row items-center">
-								<a href="/disclamer" className="px-2 hover:underline">
-									Disclamer
-								</a>
-								<a href="/terms" className="px-2 hover:underline">
-									Terms
-								</a>
-								<a href="/privacy-policy" className="px-2 hover:underline">
-									Policy Privacy
-								</a>
-								<a
-									href="https://twitter.com/openpeer_xyz"
-									target="_blank"
-									rel="noreferrer"
-									className="px-2"
-								>
-									<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
-								</a>
-								<a
-									href="https://discord.gg/Wrf9BT8sZN"
-									target="_blank"
-									rel="noreferrer"
-									className="px-2"
-								>
-									<Image src={discord} alt="openpeer logo" width={20} height={20} />
-								</a>
-								<a
-									href="https://discord.gg/Wrf9BT8sZN"
-									target="_blank"
-									rel="noreferrer"
-									className="px-2"
-								>
-									<Image src={discord} alt="openpeer logo" width={20} height={20} />
-								</a>
-							</div>
+						<div className="flex flex-col space-y-4 md:space-y-0 text-center md:flex-row mt-8 items-center md:mt-0 md:self-start justify-center md:justify-start">
+							<a href="/disclamer" className="px-2 hover:underline">
+								Disclamer
+							</a>
+							<a
+								href="https://docs.openpeer.xyz"
+								target="_blank"
+								rel="noreferrer"
+								className="px-2 hover:underline"
+							>
+								Docs
+							</a>
+							<a href="/terms" className="px-2 hover:underline">
+								Terms
+							</a>
+							<a href="/privacy-policy" className="px-2 hover:underline">
+								Privacy Policy
+							</a>
+							<a
+								href="https://twitter.com/openpeer_xyz"
+								target="_blank"
+								rel="noreferrer"
+								className="px-2 m-auto"
+							>
+								<Image src={twitterLogo} alt="twitter logo" width={20} height={20} />
+							</a>
+							<a
+								href="https://discord.gg/Wrf9BT8sZN"
+								target="_blank"
+								rel="noreferrer"
+								className="px-2 m-auto"
+							>
+								<Image src={discord} alt="twitter logo" width={20} height={20} />
+							</a>
 						</div>
 					</div>
 				</div>
