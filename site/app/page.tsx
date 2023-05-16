@@ -1,8 +1,11 @@
 'use client';
+import './background.css';
+
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import discord from '../public/discord.svg';
 import lock from '../public/lock.png';
 import logo from '../public/logo.svg';
 import outlierVentures from '../public/outlier-ventures.png';
@@ -10,9 +13,6 @@ import passport from '../public/passport.png';
 import people from '../public/people.png';
 import polygonLogoWhite from '../public/polygon-logo-white.png';
 import twitterLogo from '../public/twitter.svg';
-import discord from '../public/discord.svg';
-
-import './background.css';
 
 interface FeatureParams {
 	title: string;
@@ -127,11 +127,11 @@ export default function Home() {
 					</div>
 					<div className="text-center mt-24">
 						<Link
-							href="https://forms.gle/GAVzdT8kK4CWpZXUA"
+							href="https://app.openpeer.xyz"
 							target="_blank"
 							className="bg-[#222222] px-20 py-4 rounded-lg font-bold"
 						>
-							Sign up for the waitlist
+							Launch App
 						</Link>
 					</div>
 				</div>
