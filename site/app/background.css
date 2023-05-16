@@ -1,0 +1,44 @@
+html,
+body {
+	padding: 0;
+	margin: 0;
+	color: white;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+	html {
+		color-scheme: dark;
+	}
+}
+
+html {
+	background-image: url('../public/lines.png'), url('../public/Rectangle.png'),
+		linear-gradient(
+			45deg,
+			rgba(65, 160, 176, 1) 0%,
+			rgba(111, 170, 205, 1) 53%,
+			rgba(185, 186, 252, 1) 73%,
+			rgba(195, 196, 240, 1) 83%,
+			rgba(179, 160, 249, 1) 100%
+		);
+	background-size: cover;
+	height: 100%;
+	/* Background image is centered vertically and horizontally at all times */
+	background-position: center center;
+
+	/* Background image doesn't tile */
+	background-repeat: no-repeat;
+
+	/* Background image is fixed in the viewport so that it doesn't move when
+the content's height is greater than the image's height */
+	background-attachment: fixed;
+}
