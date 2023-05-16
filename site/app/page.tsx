@@ -12,6 +12,8 @@ import polygonLogoWhite from '../public/polygon-logo-white.png';
 import twitterLogo from '../public/twitter.svg';
 import discord from '../public/discord.svg';
 
+import './background.css';
+
 interface FeatureParams {
 	title: string;
 	description: string;
