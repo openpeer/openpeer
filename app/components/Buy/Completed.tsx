@@ -23,7 +23,7 @@ const Completed = ({ order }: BuyStepProps) => {
 			<StepLayout>
 				<div className="my-8">
 					<div className="mb-4">
-						<span className="flex flex-row text-green-600 mb-2">
+						<span className="flex flex-row text-green-600 mb-2 items-center">
 							<CheckBadgeIcon className="w-8 mr-2" />
 							<HeaderH2 title="Purchase Complete" />
 						</span>

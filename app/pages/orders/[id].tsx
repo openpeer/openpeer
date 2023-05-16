@@ -26,19 +26,24 @@ const steps: { [key: string]: number } = {
 
 const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const [order, setOrder] = useState<UIOrder>();
+	const [websocketConnected, setWebsocketConnected] = useState(false);
 	const { wrongNetwork, status } = useConnection();
 	const { data: session } = useSession();
 	// @ts-ignore
 	const { jwt } = session || {};
 
-	useEffect(() => {
-		if (!session) return;
-
+	const fetchOrder = () => {
 		fetch(`/api/orders/${id}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setOrder({ ...data, ...{ step: steps[data.status || 'error'] } });
 			});
+	};
+
+	useEffect(() => {
+		if (!session) return;
+
+		fetchOrder();
 	}, [id, session]);
 
 	useEffect(() => {
@@ -56,6 +61,9 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 					received(data: string) {
 						const updatedOrder = JSON.parse(data);
 						setOrder({ ...updatedOrder, ...{ step: steps[updatedOrder.status] } });
+					},
+					connected() {
+						setWebsocketConnected(true);
 					}
 				}
 			);
@@ -63,6 +71,29 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 
 		setupChannel();
 	}, [jwt]);
+
+	useEffect(() => {
+		let intervalId: NodeJS.Timer;
+
+		const startFetching = () => {
+			intervalId = setInterval(fetchOrder, 10000); // Call fetchOrder every 10 seconds
+		};
+
+		const stopFetching = () => {
+			clearInterval(intervalId);
+		};
+
+		const fetchingNeeded = order && !['cancelled', 'closed'].includes(order.status);
+		if (!websocketConnected && fetchingNeeded) {
+			startFetching(); // Start fetching if WebSocket is not connected
+		} else {
+			stopFetching(); // Stop fetching if WebSocket is connected
+		}
+
+		return () => {
+			stopFetching(); // Cleanup: Stop fetching when the component unmounts
+		};
+	}, [websocketConnected]);
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || !order) return <Loading />;
