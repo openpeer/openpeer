@@ -10,6 +10,7 @@ interface ButtonProps {
 	link?: boolean;
 	disabled?: boolean;
 	processing?: boolean;
+	extraStyle?: string;
 }
 
 const Button = ({
@@ -20,7 +21,8 @@ const Button = ({
 	rounded = false,
 	link = false,
 	disabled = false,
-	processing = false
+	processing = false,
+	extraStyle = ''
 }: ButtonProps) => (
 	<button
 		type="button"
