@@ -2,7 +2,7 @@ import { ListsTable, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { useConnection } from 'hooks';
 import { List, Order } from 'models/types';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useChainId } from 'wagmi';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -28,32 +28,33 @@ const Widget = ({ currency, token, fiatAmount, tokenAmount }: WidgetProps) => {
 		}
 	}, [openConnectModal, status]);
 
-	useEffect(() => {
-		const search = async () => {
-			if (!currency || !token || !(fiatAmount || tokenAmount)) return;
-			setLoading(true);
-			try {
-				const params = {
-					type: 'SellList',
-					chain_id: String(chainId),
-					fiat_currency_code: currency,
-					token_address: token,
-					token_amount: String(fiatAmount || ''),
-					fiat_amount: String(tokenAmount || '')
-				};
+	const search = useCallback(async () => {
+		if (!currency || !token || !(fiatAmount || tokenAmount)) return;
+		window.ReactNativeWebView.postMessage(JSON.stringify({ currency, token }));
+		setLoading(true);
+		try {
+			const params = {
+				type: 'SellList',
+				chain_id: String(chainId),
+				fiat_currency_code: currency,
+				token_address: token,
+				token_amount: String(fiatAmount || ''),
+				fiat_amount: String(tokenAmount || '')
+			};
 
-				const filteredParams = Object.fromEntries(
-					Object.entries(params).filter(([, value]) => value !== undefined)
-				);
-				const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
-				const searchLists: List[] = await response.json();
-				setLists(searchLists);
-			} catch {
-				setLoading(false);
-			}
+			const filteredParams = Object.fromEntries(
+				Object.entries(params).filter(([, value]) => value !== undefined)
+			);
+			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
+			const searchLists: List[] = await response.json();
+			setLists(searchLists);
+		} catch {
 			setLoading(false);
-		};
+		}
+		setLoading(false);
+	}, [currency, token]);
 
+	useEffect(() => {
 		search();
 	}, [currency, token]);
 
@@ -67,7 +68,7 @@ const Widget = ({ currency, token, fiatAmount, tokenAmount }: WidgetProps) => {
 				setOrders(data.filter((o) => !['cancelled', 'closed'].includes(o.status)));
 				setLoading(false);
 			});
-	}, [chainId, status]);
+	}, [chainId]);
 
 	if (loading) return <Loading />;
 

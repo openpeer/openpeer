@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { chains } from 'models/chains';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
@@ -12,7 +13,10 @@ import { isBrowser, smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
 import { Manrope } from '@next/font/google';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { InjectedConnector } from '@wagmi/core';
+
+import Button from './Button/Button';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -26,6 +30,12 @@ const WidgetLayout = ({ Component, pageProps }: AppProps) => {
 	const minkeWallet = isBrowser() && window.ethereum?.isMinkeWallet;
 	// @ts-expect-error
 	const chainId = minkeWallet ? window.ethereum.chainId : undefined;
+	const { data: session, status } = useSession();
+	const { openConnectModal } = useConnectModal();
+
+	const connector = new InjectedConnector({
+		chains
+	});
 
 	useEffect(() => {
 		const { widget, ...rest } = pageProps;
@@ -36,20 +46,38 @@ const WidgetLayout = ({ Component, pageProps }: AppProps) => {
 		}
 	}, [pageProps]);
 
+	// @ts-expect-error
+	const connectedAddress = session?.address as `0x${string}` | undefined;
 	useEffect(() => {
 		const startConnection = async () => {
-			if (minkeWallet && chainId && !isConnected) {
-				const connector = new InjectedConnector({
-					chains
-				});
-				await connector.connect({ chainId: Number(chainId) });
+			if (minkeWallet && chainId) {
+				if (isConnected) {
+					if (connectedAddress && address !== connectedAddress) {
+						await signOut();
+					}
+				} else {
+					await connector.connect({ chainId: Number(chainId) });
+				}
 			}
 		};
 
 		startConnection();
-	}, [minkeWallet, chainId, isConnected]);
+	}, [minkeWallet, chainId, isConnected, connectedAddress]);
 
 	const { currency, token, ...rest } = props;
+
+	if (status === 'unauthenticated') {
+		return (
+			<div className="flex mb-2 h-screen">
+				<div className="flex-row m-auto flex justify-center justify-items-center content-center text-center">
+					<Button title="Connect Wallet" onClick={openConnectModal} />
+					<div className="hidden">
+						<Component {...pageProps} />
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className={`${manrope.variable} font-sans h-screen bg-slate-50`}>

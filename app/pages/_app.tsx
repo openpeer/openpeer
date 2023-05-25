@@ -7,6 +7,7 @@ import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
 import WidgetLayout from 'components/WidgetLayout';
 import merge from 'lodash.merge';
+import { minkeWallet } from 'models/rainbowkit/minke';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
 import { isBrowser } from 'utils';
@@ -39,7 +40,7 @@ const connectors = connectorsForWallets([
 	{
 		groupName: 'Recommended',
 		wallets: [
-			// minkeWallet({ chains, projectId, name: 'Minke' }),
+			minkeWallet({ chains, projectId, name: 'Minke' }),
 			metaMaskWallet({ chains, projectId }),
 			rainbowWallet({ chains, projectId }),
 			braveWallet({ chains }),
@@ -58,9 +59,22 @@ const connectors = connectorsForWallets([
 	}
 ]);
 
+const minkeConnectors = connectorsForWallets([
+	{
+		groupName: 'Minke',
+		wallets: [minkeWallet({ chains, projectId, name: 'Minke' })]
+	}
+]);
+
 const wagmiClient = createClient({
 	autoConnect: true,
 	connectors,
+	provider
+});
+
+const minkeClient = createClient({
+	autoConnect: true,
+	connectors: minkeConnectors,
 	provider
 });
 
@@ -78,9 +92,9 @@ const myTheme = merge(lightTheme(), {
 const App = ({ Component, pageProps }: AppProps) => {
 	const { disableAuthentication, widget } = pageProps;
 	// @ts-expect-error
-	const minkeWallet = isBrowser() && window.ethereum?.isMinkeWallet;
+	const isMinkeWallet = isBrowser() && window.ethereum?.isMinkeWallet;
 	return (
-		<WagmiConfig client={wagmiClient}>
+		<WagmiConfig client={isMinkeWallet ? minkeClient : wagmiClient}>
 			{disableAuthentication ? (
 				<RainbowKitProvider chains={chains} theme={myTheme}>
 					<Head />
@@ -92,7 +106,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 					<RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
 						<RainbowKitProvider chains={chains} theme={myTheme}>
 							<Head />
-							{widget || minkeWallet ? (
+							{widget || isMinkeWallet ? (
 								/* @ts-expect-error */
 								<WidgetLayout pageProps={pageProps} Component={Component} />
 							) : (
