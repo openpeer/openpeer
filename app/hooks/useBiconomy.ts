@@ -45,7 +45,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 
 				const client = new Biconomy((signer.provider as any).provider, {
 					apiKey,
-					debug: process.env.NODE_ENV === 'development',
+					debug: true,
 					contractAddresses: []
 				});
 				await client.init();
