@@ -136,7 +136,15 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 						id="fiat"
 						placeholder="Enter Amount"
 						extraStyle="h-16"
-						addOn={<CurrencySelect onSelect={setCurrency} selected={currency} minimal selectTheFirst />}
+						addOn={
+							<CurrencySelect
+								onSelect={setCurrency}
+								selected={currency}
+								minimal
+								selectTheFirst
+								selectByLocation
+							/>
+						}
 						type="decimal"
 						onChangeNumber={debounce(onChangeFiat, 1000)}
 						value={fiatAmount}

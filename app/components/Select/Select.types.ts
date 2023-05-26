@@ -28,6 +28,7 @@ export interface FiatCurrencySelect {
 	height?: SelectProps['height'];
 	selectedIdOnLoad?: string;
 	selectTheFirst?: boolean;
+	selectByLocation?: boolean;
 }
 
 export interface TokenSelectProps {

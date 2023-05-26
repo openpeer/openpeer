@@ -13,10 +13,31 @@ const CurrencySelect = ({
 	selectedIdOnLoad,
 	label = 'Choose Fiat currency to receive',
 	minimal = false,
-	selectTheFirst = false
+	selectTheFirst = false,
+	selectByLocation = false
 }: FiatCurrencySelect) => {
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
 	const [isLoading, setLoading] = useState(false);
+
+	useEffect(() => {
+		const fetchCurrencyByLocation = async () => {
+			if (selectByLocation && currencies) {
+				const response = await fetch('https://ipapi.co/json/');
+				const { currency } = await response.json();
+
+				if (currency) {
+					const toSelect = currencies.find((c) => c.code === currency);
+					if (toSelect) {
+						onSelect(toSelect);
+					}
+				}
+				if (selectTheFirst && !selected && currencies[0]) {
+					onSelect(currencies[0]);
+				}
+			}
+		};
+		fetchCurrencyByLocation();
+	}, [currencies]);
 
 	useEffect(() => {
 		setLoading(true);

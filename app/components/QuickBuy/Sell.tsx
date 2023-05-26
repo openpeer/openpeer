@@ -131,6 +131,7 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 					selected={currency}
 					label="Fiat to Receive"
 					height="h-16"
+					selectByLocation
 					selectTheFirst
 				/>
 				{lists.length > 0 ? (
