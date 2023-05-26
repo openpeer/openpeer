@@ -12,7 +12,7 @@ interface MarkAsPaidButtonParams {
 const MarkAsPaidButton = ({ escrowAddress }: MarkAsPaidButtonParams) => {
 	const { isConnected } = useAccount();
 
-	const { isLoading, isSuccess, data, markAsPaid } = useMarkAsPaid({ contract: escrowAddress });
+	const { isLoading, isSuccess, data, markAsPaid, isFetching } = useMarkAsPaid({ contract: escrowAddress });
 
 	const onPaymentDone = () => {
 		if (!isConnected) return;
@@ -22,15 +22,16 @@ const MarkAsPaidButton = ({ escrowAddress }: MarkAsPaidButtonParams) => {
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Marked the order as paid'
 	});
 
 	return (
 		<span className="w-full">
 			<Button
-				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : "I've made the payment"}
-				processing={isLoading}
-				disabled={isSuccess}
+				title={isLoading ? 'Processing...' : isSuccess ? 'Processing transaction...' : "I've made the payment"}
+				processing={isLoading || isFetching}
+				disabled={isSuccess || isFetching}
 				onClick={onPaymentDone}
 			/>
 		</span>

@@ -82,7 +82,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 	return (
 		<WagmiConfig client={wagmiClient}>
 			{disableAuthentication ? (
-				<RainbowKitProvider chains={chains} theme={myTheme}>
+				<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
 					<Head />
 					{/* @ts-ignore */}
 					<NoAuthLayout pageProps={pageProps} Component={Component} />
@@ -90,7 +90,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 			) : (
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
 					<RainbowKitSiweNextAuthProvider>
-						<RainbowKitProvider chains={chains} theme={myTheme}>
+						<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
 							<Head />
 							{/* @ts-ignore */}
 							<Layout pageProps={pageProps} Component={Component} />

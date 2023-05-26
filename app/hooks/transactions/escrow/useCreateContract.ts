@@ -33,7 +33,7 @@ const useCreateContract = ({ orderID, buyer, amount, token, fee, contract }: Use
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, escrowFunds: write, data };
+	return { isLoading, isSuccess, escrowFunds: write, data, isFetching: false };
 };
 
 export default useCreateContract;

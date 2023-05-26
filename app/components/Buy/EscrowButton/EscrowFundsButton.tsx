@@ -14,7 +14,7 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 	const [modalOpen, setModalOpen] = useState(false);
 	const [escrowConfirmed, setEscrowConfirmed] = useState(false);
 
-	const { isLoading, isSuccess, data, escrowFunds } = useEscrowFunds({
+	const { isLoading, isSuccess, data, escrowFunds, isFetching } = useEscrowFunds({
 		orderID: uuid!,
 		amount,
 		buyer,
@@ -41,7 +41,8 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Escrowed funds'
 	});
 
 	return (
@@ -49,8 +50,8 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 			<Button
 				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Escrow funds'}
 				onClick={escrow}
-				processing={isLoading}
-				disabled={isSuccess}
+				processing={isLoading || isFetching}
+				disabled={isSuccess || isFetching}
 			/>
 			<Modal
 				actionButtonTitle="Yes, confirm"

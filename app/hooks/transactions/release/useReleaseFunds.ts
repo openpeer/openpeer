@@ -12,8 +12,12 @@ const useReleaseFunds = ({ contract }: UseReleaseFundsProps) => {
 		contract
 	});
 
-	if (!isFetching && gaslessEnabled) {
-		return { isLoading, isSuccess, data, releaseFunds };
+	if (isFetching) {
+		return { isLoading: false, isSuccess: false, isFetching };
+	}
+
+	if (gaslessEnabled) {
+		return { isLoading, isSuccess, data, releaseFunds, isFetching };
 	}
 
 	return withGasCall;

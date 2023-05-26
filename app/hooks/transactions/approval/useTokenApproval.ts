@@ -17,11 +17,11 @@ const useTokenApproval = ({ address, spender, amount }: UseTokenApprovalParams) 
 
 	const { data, write } = useContractWrite(config);
 
-	const { isLoading, isSuccess } = useWaitForTransaction({
+	const { isLoading, isSuccess, isFetching } = useWaitForTransaction({
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, approve: write, data };
+	return { isLoading, isSuccess, isFetching, approve: write, data };
 };
 
 export default useTokenApproval;

@@ -12,8 +12,12 @@ const useMarkAsPaid = ({ contract }: UseMarkAsPaidProps) => {
 		contract
 	});
 
-	if (!isFetching && gaslessEnabled) {
-		return { isLoading, isSuccess, data, markAsPaid };
+	if (isFetching) {
+		return { isLoading: false, isSuccess: false, isFetching };
+	}
+
+	if (gaslessEnabled) {
+		return { isLoading, isSuccess, data, markAsPaid, isFetching };
 	}
 
 	return withGasCall;

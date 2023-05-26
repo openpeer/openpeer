@@ -46,7 +46,7 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 		]
 	});
 
-	if (isFetching || biconomy === undefined) {
+	if (isFetching || biconomy === undefined || gaslessEnabled === undefined) {
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };
 	}
 
@@ -77,6 +77,10 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 
 		try {
 			setIsLoading(true);
+			biconomy.on('txHashGenerated', (txData) => {
+				setIsSuccess(false);
+				updateData(txData);
+			});
 			biconomy.on('txMined', (minedData) => {
 				setIsLoading(false);
 				setIsSuccess(true);

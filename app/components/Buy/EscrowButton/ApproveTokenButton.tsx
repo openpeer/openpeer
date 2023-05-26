@@ -19,13 +19,18 @@ const ApproveTokenButton = ({
 	onTokenApproved: () => void;
 }) => {
 	const { address, isConnected } = useAccount();
-	const { isLoading, isSuccess, data, approve } = useApproval({
+	const { isFetching, isLoading, isSuccess, data, approve } = useApproval({
 		token,
 		spender,
 		amount
 	});
 
-	useTransactionFeedback({ hash: data?.hash, isSuccess, Link: <TransactionLink hash={data?.hash} /> });
+	useTransactionFeedback({
+		hash: data?.hash,
+		isSuccess,
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Approved token spending'
+	});
 
 	const approveToken = async () => {
 		if (!isConnected) return;
@@ -50,8 +55,8 @@ const ApproveTokenButton = ({
 		<Button
 			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : `Approve ${token.symbol}`}
 			onClick={approveToken}
-			processing={isLoading}
-			disabled={isSuccess}
+			processing={isLoading || isFetching}
+			disabled={isSuccess || isFetching || isLoading}
 		/>
 	);
 };

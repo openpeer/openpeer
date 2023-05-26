@@ -18,7 +18,7 @@ const useGasMarkAsPaid = ({ contract }: UseEscrowContractParams) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, markAsPaid: write, data };
+	return { isLoading, isSuccess, markAsPaid: write, data, isFetching: false };
 };
 
 export default useGasMarkAsPaid;

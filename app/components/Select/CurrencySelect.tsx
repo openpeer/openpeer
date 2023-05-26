@@ -22,17 +22,22 @@ const CurrencySelect = ({
 	useEffect(() => {
 		const fetchCurrencyByLocation = async () => {
 			if (selectByLocation && currencies) {
-				const response = await fetch('https://ipapi.co/json/');
-				const { currency } = await response.json();
+				try {
+					const response = await fetch('https://ipapi.co/currency/');
+					const currency = await response.text();
 
-				if (currency) {
-					const toSelect = currencies.find((c) => c.code === currency);
-					if (toSelect) {
-						onSelect(toSelect);
+					if (currency) {
+						const toSelect = currencies.find((c) => c.code === currency);
+						if (toSelect) {
+							onSelect(toSelect);
+						}
 					}
-				}
-				if (selectTheFirst && !selected && currencies[0]) {
-					onSelect(currencies[0]);
+
+					if (selectTheFirst && !selected && currencies[0]) {
+						onSelect(currencies[0]);
+					}
+				} catch (e) {
+					console.error('Currency API', e);
 				}
 			}
 		};

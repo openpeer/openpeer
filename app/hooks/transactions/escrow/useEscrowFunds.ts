@@ -36,7 +36,11 @@ const useEscrowFunds = ({ orderID, buyer, amount, token, fee }: UseEscrowFundsPr
 		tokenAddress: token.address
 	});
 
-	if (gasless && !isFetching && gaslessEnabled) {
+	if (isFetching) {
+		return { isLoading: false, isSuccess: false, isFetching };
+	}
+
+	if (gasless && gaslessEnabled) {
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 

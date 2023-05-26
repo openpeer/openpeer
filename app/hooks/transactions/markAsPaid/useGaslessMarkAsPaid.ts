@@ -21,7 +21,7 @@ const useGaslessMarkAsPaid = ({ contract }: UseGaslessMarkAsPaidProps) => {
 
 	const { biconomy, gaslessEnabled } = useBiconomy({ contract });
 
-	if (biconomy === undefined) {
+	if (biconomy === undefined || gaslessEnabled === undefined) {
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };
 	}
 
@@ -44,6 +44,10 @@ const useGaslessMarkAsPaid = ({ contract }: UseGaslessMarkAsPaidProps) => {
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);
 			setIsLoading(true);
+			biconomy.on('txHashGenerated', (txData) => {
+				setIsSuccess(false);
+				updateData(txData);
+			});
 			biconomy.on('txMined', (minedData) => {
 				setIsLoading(false);
 				setIsSuccess(true);

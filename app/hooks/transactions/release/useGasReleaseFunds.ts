@@ -18,7 +18,7 @@ const useGasReleaseFunds = ({ contract }: UseGasReleaseFundsParams) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, releaseFunds: write, data };
+	return { isLoading, isSuccess, releaseFunds: write, data, isFetching: false };
 };
 
 export default useGasReleaseFunds;

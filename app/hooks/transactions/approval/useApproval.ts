@@ -30,8 +30,12 @@ const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
 		userAddress: address!
 	});
 
-	if (gasless && !isFetching && gaslessEnabled) {
-		return { isLoading, isSuccess, data, approve };
+	if (isFetching) {
+		return { isLoading: false, isSuccess: false, isFetching };
+	}
+
+	if (gasless && gaslessEnabled) {
+		return { isLoading, isSuccess, data, approve, isFetching };
 	}
 
 	return withGasCall;

@@ -28,12 +28,16 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		functionName: 'sellerCanCancelAfter'
 	});
 
-	const { isLoading, isSuccess, cancelOrder, data } = useEscrowCancel({ contract: escrow!.address, isBuyer });
+	const { isLoading, isSuccess, cancelOrder, data, isFetching } = useEscrowCancel({
+		contract: escrow!.address,
+		isBuyer
+	});
 
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Cancelled the order'
 	});
 
 	useEffect(() => {
@@ -67,8 +71,8 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 				title={
 					sellerCantCancel ? 'You cannot cancel' : isLoading ? 'Processing...' : isSuccess ? 'Done' : title
 				}
-				processing={isLoading}
-				disabled={isSuccess || sellerCantCancel || sellerCantCancel}
+				processing={isLoading || isFetching}
+				disabled={isSuccess || sellerCantCancel || sellerCantCancel || isFetching}
 				onClick={onBlockchainCancel}
 				outlined={outlined}
 			/>

@@ -14,7 +14,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const { chain, chains } = useNetwork();
 	const { data: signer } = useSigner();
 	const apiKey = networkApiKeys[(chain || chains[0]).id];
-	const [gaslessEnabled, setGaslessEnabled] = useState(true);
+	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
 
 	const canSubmitGaslessTransaction = async () => {
 		if (apiKey && address) {

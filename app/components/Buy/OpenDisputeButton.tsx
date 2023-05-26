@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
@@ -45,7 +46,8 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Opened a dispute'
 	});
 
 	useEffect(() => {
@@ -102,12 +104,12 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 					paidForDispute
 						? 'Already opened'
 						: !canOpenDispute
-							? 'You cannot dispute'
-							: isLoading
-								? 'Processing...'
-								: isSuccess
-									? 'Done'
-									: title
+						? 'You cannot dispute'
+						: isLoading
+						? 'Processing...'
+						: isSuccess
+						? 'Done'
+						: title
 				}
 				processing={isLoading}
 				disabled={isSuccess || !canOpenDispute || paidForDispute}

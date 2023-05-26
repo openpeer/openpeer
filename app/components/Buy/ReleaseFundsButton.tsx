@@ -19,7 +19,7 @@ const ReleaseFundsButton = ({
 	title = 'Release funds'
 }: ReleaseFundsButtonParams) => {
 	const { isConnected } = useAccount();
-	const { isLoading, isSuccess, data, releaseFunds } = useReleaseFunds({ contract: escrow });
+	const { isLoading, isSuccess, data, releaseFunds, isFetching } = useReleaseFunds({ contract: escrow });
 	const [modalOpen, setModalOpen] = useState(false);
 	const [releaseConfirmed, setReleaseConfirmed] = useState(false);
 
@@ -37,7 +37,8 @@ const ReleaseFundsButton = ({
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Released the funds'
 	});
 
 	useEffect(() => {
@@ -50,14 +51,14 @@ const ReleaseFundsButton = ({
 		<>
 			<Button
 				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : title}
-				processing={isLoading}
-				disabled={isSuccess}
+				processing={isLoading || isFetching}
+				disabled={isSuccess || isFetching}
 				onClick={onReleaseFunds}
 				outlined={outlined}
 			/>
 
 			<Modal
-				actionButtonTitle="Yes, confirm"
+				actionButtonTitle={dispute ? 'Yes, confirm' : 'Yes I have received funds'}
 				title={dispute ? 'Are you sure?' : 'Are you sure you have received this payment in your account?'}
 				content={
 					dispute

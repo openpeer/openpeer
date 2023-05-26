@@ -17,8 +17,12 @@ const useEscrowCancel = ({ contract, isBuyer }: UseEscrowCancelProps) => {
 		isBuyer
 	});
 
-	if (!isFetching && gaslessEnabled) {
-		return { isLoading, isSuccess, data, cancelOrder };
+	if (isFetching) {
+		return { isLoading: false, isSuccess: false, isFetching };
+	}
+
+	if (gaslessEnabled) {
+		return { isLoading, isSuccess, data, cancelOrder, isFetching };
 	}
 
 	return withGasCall;

@@ -19,7 +19,7 @@ const useGasEscrowCancel = ({ contract, isBuyer }: UseGasEscrowCancelProps) => {
 		hash: data?.hash
 	});
 
-	return { isLoading, isSuccess, cancelOrder: write, data };
+	return { isLoading, isSuccess, cancelOrder: write, data, isFetching: false };
 };
 
 export default useGasEscrowCancel;

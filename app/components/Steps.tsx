@@ -35,9 +35,9 @@ const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => (
 								type="button"
 								className={`${pastStep && 'group bg-cyan-600 hover:bg-cyan-900 text-white'} ${
 									actualStep && 'border-2 border-cyan-600 bg-white text-cyan-600'
-								}${
+								} ${
 									futureStep &&
-									'border-2 border-gray-300 bg-white hover:border-gray-400 text-gray-400'
+									' border-2 border-gray-300 bg-white hover:border-gray-400 text-gray-400'
 								} relative flex h-8 w-8 items-center justify-center rounded-full cursor-pointer`}
 							>
 								{isTheLastStep ? <CheckCircleIcon /> : number}
