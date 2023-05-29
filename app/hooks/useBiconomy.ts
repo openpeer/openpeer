@@ -46,7 +46,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 				const client = new Biconomy((signer.provider as any).provider, {
 					apiKey,
 					debug: true,
-					contractAddresses: []
+					contractAddresses: [contract]
 				});
 				await client.init();
 				setBiconomy(client);
