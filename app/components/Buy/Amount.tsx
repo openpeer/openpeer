@@ -1,12 +1,13 @@
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
+import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
 import { verifyMessage } from 'ethers/lib/utils';
 import { useFormErrors } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
-import { List } from 'models/types';
+import { List, User } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
@@ -41,6 +42,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const [tokenAmount, setTokenAmount] = useState<number | undefined>(
 		orderTokenAmount || quickBuyToken ? Number(quickBuyToken) : undefined
 	);
+	const [user, setUser] = useState<User | null>();
 
 	const { errors, clearErrors, validate } = useFormErrors();
 
@@ -145,8 +147,27 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
 	}, [tokenAmount, fiatAmount]);
 
+	useEffect(() => {
+		if (!address) return;
+
+		fetch(`/api/users/${address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [address]);
+
 	const buyCrypto = list.type === 'BuyList';
 	const buttonText = buyCrypto ? '' : 'Sign and Continue';
+
+	if (!user?.email) {
+		return <AccountInfo setUser={setUser} />;
+	}
+
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">

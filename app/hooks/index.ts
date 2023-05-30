@@ -6,6 +6,7 @@ import useListPrice from './useListPrice';
 import useNotifications from './useNotifications';
 import useOpenDispute from './useOpenDispute';
 import useTransactionFeedback from './useTransactionFeedback';
+import useUserProfile from './useUserProfile';
 
 export {
 	useListPrice,
@@ -15,5 +16,6 @@ export {
 	useNotifications,
 	useOpenDispute,
 	useEscrowFee,
-	useBiconomy
+	useBiconomy,
+	useUserProfile
 };
