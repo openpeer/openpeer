@@ -7,6 +7,8 @@ import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
+import twitterLogo from '../public/twitter.svg';
+import discord from '../public/discord.svg';
 
 import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
@@ -54,7 +56,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 										/>
 									</Link>
 								</div>
-								<div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+								<div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8 items-center">
 									{navigation.map(({ name, href }) => (
 										<Link
 											href={href}
@@ -69,6 +71,101 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 											{name}
 										</Link>
 									))}
+
+									{/* inicio */}
+
+									<div className="relative" data-headlessui-state="open">
+										<button
+											className="flex items-center font-semibold hover:text-gray-900"
+											id="headlessui-menu-button-1"
+											type="button"
+											aria-haspopup="menu"
+											aria-expanded="true"
+											data-headlessui-state="open"
+											aria-controls="headlessui-menu-items-122"
+										>
+											<span className="hidden items-center sm:flex text-gray-500">•••</span>
+										</button>
+										<div
+											className="absolute right-0 top-full -mr-0.5 mt-3 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white text-sm font-normal text-slate-900 shadow-md ring-1 ring-slate-900/5 focus:outline-none sm:-mr-3.5 transform opacity-100 scale-100"
+											aria-labelledby="headlessui-menu-button-1"
+											id="headlessui-menu-items-122"
+											role="menu"
+											data-headlessui-state="open"
+										>
+											<div className="py-1.5" role="none">
+												<a
+													className="block py-1.5 block px-3.5 py-1.5 hover:bg-slate-100 text-gray-500"
+													id="headlessui-menu-item-123"
+													role="menuitem"
+													data-headlessui-state=""
+													href="/"
+												>
+													Docs
+												</a>
+											</div>
+											<div className="py-1.5" role="none">
+												<a
+													className="block py-1.5 block px-3.5 py-1.5 hover:bg-slate-100 text-gray-500"
+													id="headlessui-menu-item-126"
+													role="menuitem"
+													data-headlessui-state=""
+													href="/upgrade-team"
+												>
+													Disclamer
+												</a>
+												<a
+													className="block py-1.5 block px-3.5 py-1.5 hover:bg-slate-100 text-gray-500"
+													id="headlessui-menu-item-126"
+													role="menuitem"
+													data-headlessui-state=""
+													href="/upgrade-team"
+												>
+													Terms
+												</a>
+												<a
+													className="block py-1.5 block px-3.5 py-1.5 hover:bg-slate-100 text-gray-500"
+													id="headlessui-menu-item-126"
+													role="menuitem"
+													data-headlessui-state=""
+													href="/upgrade-team"
+												>
+													Privacy Policy
+												</a>
+											</div>
+											<div className="py-1.5" role="none">
+												<div className="flex flex-row py-1">
+													<a
+														href="https://twitter.com/openpeer_xyz"
+														target="_blank"
+														rel="noreferrer"
+														className="px-2 m-auto"
+													>
+														<Image
+															src={twitterLogo}
+															alt="openpeer logo"
+															width={20}
+															height={20}
+														/>
+													</a>
+													<a
+														href="https://discord.gg/Wrf9BT8sZN"
+														target="_blank"
+														rel="noreferrer"
+														className="px-2 m-auto"
+													>
+														<Image
+															src={discord}
+															alt="openpeer logo"
+															className="fill-gray-500"
+															width={20}
+															height={20}
+														/>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
