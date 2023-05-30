@@ -2,14 +2,19 @@ import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
+import { User } from 'models/types';
 import React, { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
+import AccountInfo from './AccountInfo';
 import { SetupListStepProps } from './Listing.types';
 import ListType from './ListType';
 import StepLayout from './StepLayout';
 
 const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) => {
+	const { address } = useAccount();
 	const { token, currency, type } = list;
+	const [user, setUser] = useState<User | null>();
 	const [lastToken, setLastToken] = useState<Option | undefined>(token);
 	const [lastCurrency, setLastCurrency] = useState<Option | undefined>(currency);
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -37,6 +42,20 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 		});
 	}, [lastToken, lastCurrency]);
 
+	useEffect(() => {
+		if (!address) return;
+
+		fetch(`/api/users/${address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [address]);
+
 	const resolver = () => {
 		const error: Errors = {};
 		if (!token) {
@@ -54,6 +73,10 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 			updateList({ ...list, ...{ step: list.step + 1 } });
 		}
 	};
+
+	if (!user?.email) {
+		return <AccountInfo setUser={setUser} />;
+	}
 
 	if (!list.type) {
 		return <ListType list={list} updateList={updateList} />;

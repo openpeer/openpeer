@@ -1,5 +1,5 @@
 import { Option } from 'components/Select/Select.types';
-import { List, PaymentMethod } from 'models/types';
+import { List, PaymentMethod, User } from 'models/types';
 
 export interface UIPaymentMethod {
 	id: number | undefined;
@@ -22,6 +22,7 @@ export interface UIList {
 	paymentMethod: UIPaymentMethod | undefined;
 	terms?: string | undefined;
 	quickSellSetupDone: boolean;
+	user?: User;
 }
 
 export interface ListStepProps {
