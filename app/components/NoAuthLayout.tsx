@@ -7,13 +7,13 @@ import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import twitterLogo from '../public/twitter.svg';
-import discord from '../public/discord.svg';
 
 import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import discord from '../public/discord.svg';
+import twitterLogo from '../public/twitter.svg';
 import { CollapseButton } from './Navigation';
 
 const manrope = Manrope({
@@ -36,10 +36,10 @@ const navigationItem = [
 const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title } = pageProps;
-	const [isDivVisible, setIsDivVisible] = useState(false);
+	const [menuVisible, setMenuVisible] = useState(false);
 
-	const toggleDiv = () => {
-		setIsDivVisible(!isDivVisible);
+	const toggleMenu = () => {
+		setMenuVisible(!menuVisible);
 	};
 
 	return (
@@ -87,17 +87,17 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 										<button
 											className="flex items-center font-semibold hover:text-gray-900"
 											type="button"
-											onClick={toggleDiv}
+											onClick={toggleMenu}
 										>
 											<span className="hidden items-center sm:flex text-gray-500">•••</span>
 										</button>
 										<div
 											className={`absolute right-0 top-full -mr-0.5 mt-3 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white text-sm font-normal text-slate-900 shadow-md ring-1 ring-slate-900/5 focus:outline-none sm:-mr-3.5 transform opacity-100 scale-100 z-50 ${
-												isDivVisible ? '' : 'hidden'
+												menuVisible ? '' : 'hidden'
 											}`}
 											role="menu"
 										>
-											<div className="py-1.5" role="menuItem">
+											<div className="py-1.5">
 												{navigationItem.map(({ name, href }) => (
 													<Link
 														href={href}
