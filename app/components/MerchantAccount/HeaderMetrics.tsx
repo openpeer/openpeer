@@ -161,18 +161,16 @@ const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
 									>
 										Edit profile
 									</Link>
-									{!verified && (
-										<button
-											type="button"
-											className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
-											onClick={() => setVerificationModal(true)}
-										>
-											Get Verified
-											<span className="ml-2">
-												<VerifiedIcon />
-											</span>
-										</button>
-									)}
+									<button
+										type="button"
+										className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
+										onClick={() => setVerificationModal(true)}
+									>
+										{verified ? '' : 'Get'} Verified
+										<span className="ml-2">
+											<VerifiedIcon />
+										</span>
+									</button>
 								</>
 							) : (
 								<Link
