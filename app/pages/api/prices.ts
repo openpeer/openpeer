@@ -9,7 +9,7 @@ interface PriceResponse {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<PriceResponse>) {
 	const {
-		query: { token, fiat }
+		query: { token, fiat, tokenSymbol }
 	} = req;
 	try {
 		const { data } = await axios.get(
@@ -20,6 +20,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 			}
 		);
+
+		if (data && !data[token as string][fiat as string]) {
+			const response = await axios.get(`https://api.coinbase.com/v2/prices/${tokenSymbol}-${fiat}/spot`);
+			const {
+				data: { amount }
+			} = response.data;
+			res.status(200).json({ [token as string]: { [fiat as string]: Number(amount) } });
+			return;
+		}
+
 		res.status(200).json(data);
 	} catch (err) {
 		res.status(500).json({});

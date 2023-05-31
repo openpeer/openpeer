@@ -79,7 +79,7 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 	useEffect(() => {
 		if (!token || !currency) return;
 		const coingeckoId = (token as Token).coingecko_id;
-		fetch(`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}`)
+		fetch(`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}&tokenSymbol=${token.name}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setPrice(data[coingeckoId][currency.name.toLowerCase()]);

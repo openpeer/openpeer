@@ -10,14 +10,14 @@ const useListPrice = (list: List | undefined) => {
 		margin_type: marginType
 	} = list || {};
 	const [price, setPrice] = useState<number | undefined>(marginType === 'fixed' ? margin : undefined);
-	const { coingecko_id: uuid } = token;
+	const { coingecko_id: uuid, symbol } = token;
 	const { code } = currency;
 
 	const updatePrice = useCallback(async () => {
 		if (!list) return;
 
 		if (marginType === 'percentage') {
-			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}`)
+			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}`)
 				.then((res) => res.json())
 				.then((data) => {
 					const apiPrice: number = data[uuid!][code.toLowerCase()];
