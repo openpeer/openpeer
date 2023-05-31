@@ -30,6 +30,11 @@ const navigation = [
 const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title } = pageProps;
+	const [isDivVisible, setIsDivVisible] = useState(false);
+
+	const toggleDiv = () => {
+		setIsDivVisible(!isDivVisible);
+	};
 
 	return (
 		<div className={`${manrope.variable} font-sans h-screen bg-slate-50`}>
@@ -71,9 +76,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 											{name}
 										</Link>
 									))}
-
-									{/* inicio */}
-
+									{/* dropdown menu START */}
 									<div className="relative" data-headlessui-state="open">
 										<button
 											className="flex items-center font-semibold hover:text-gray-900"
@@ -83,11 +86,15 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 											aria-expanded="true"
 											data-headlessui-state="open"
 											aria-controls="headlessui-menu-items-122"
+											onClick={toggleDiv}
 										>
 											<span className="hidden items-center sm:flex text-gray-500">•••</span>
 										</button>
 										<div
-											className="absolute right-0 top-full -mr-0.5 mt-3 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white text-sm font-normal text-slate-900 shadow-md ring-1 ring-slate-900/5 focus:outline-none sm:-mr-3.5 transform opacity-100 scale-100"
+											className={`absolute right-0 top-full -mr-0.5 mt-3 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white text-sm font-normal text-slate-900 shadow-md ring-1 ring-slate-900/5 focus:outline-none sm:-mr-3.5 transform opacity-100 scale-100 z-50 ${
+												isDivVisible ? '' : 'hidden'
+											}`}
+											// className="absolute right-0 top-full -mr-0.5 mt-3 w-60 origin-top-right divide-y divide-gray-100 rounded-lg bg-white text-sm font-normal text-slate-900 shadow-md ring-1 ring-slate-900/5 focus:outline-none sm:-mr-3.5 transform opacity-100 scale-100 z-50"
 											aria-labelledby="headlessui-menu-button-1"
 											id="headlessui-menu-items-122"
 											role="menu"
@@ -99,18 +106,17 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 													id="headlessui-menu-item-123"
 													role="menuitem"
 													data-headlessui-state=""
-													href="/"
+													href="https://docs.openpeer.xyz/"
+													target="_blank"
 												>
 													Docs
 												</a>
-											</div>
-											<div className="py-1.5" role="none">
 												<a
 													className="block py-1.5 block px-3.5 py-1.5 hover:bg-slate-100 text-gray-500"
 													id="headlessui-menu-item-126"
 													role="menuitem"
 													data-headlessui-state=""
-													href="/upgrade-team"
+													href="https://openpeer.xyz/disclamer"
 												>
 													Disclamer
 												</a>
@@ -119,7 +125,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 													id="headlessui-menu-item-126"
 													role="menuitem"
 													data-headlessui-state=""
-													href="/upgrade-team"
+													href="https://openpeer.xyz/terms"
 												>
 													Terms
 												</a>
@@ -128,22 +134,23 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 													id="headlessui-menu-item-126"
 													role="menuitem"
 													data-headlessui-state=""
-													href="/upgrade-team"
+													href="https://openpeer.xyz/privacy-policy"
 												>
 													Privacy Policy
 												</a>
 											</div>
 											<div className="py-1.5" role="none">
-												<div className="flex flex-row py-1">
+												<div className="flex flex-row py-1 px-4">
 													<a
 														href="https://twitter.com/openpeer_xyz"
 														target="_blank"
 														rel="noreferrer"
-														className="px-2 m-auto"
+														className="px-2"
 													>
 														<Image
 															src={twitterLogo}
 															alt="openpeer logo"
+															className="opacity-40 hover:opacity-90"
 															width={20}
 															height={20}
 														/>
@@ -152,20 +159,21 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 														href="https://discord.gg/Wrf9BT8sZN"
 														target="_blank"
 														rel="noreferrer"
-														className="px-2 m-auto"
+														className="px-2"
 													>
 														<Image
 															src={discord}
 															alt="openpeer logo"
-															className="fill-gray-500"
-															width={20}
-															height={20}
+															className="opacity-40 hover:opacity-90"
+															width={21}
+															height={21}
 														/>
 													</a>
 												</div>
 											</div>
 										</div>
 									</div>
+									{/* dropdown menu end */}
 								</div>
 							</div>
 						</div>
