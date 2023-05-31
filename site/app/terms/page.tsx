@@ -59,10 +59,16 @@ export default function TermsPage() {
 				<h3 className="mt-8 text-lg font-bold mb-4">Modification of this Agreement</h3>
 				<p className="mb-4">
 					We reserve the right, in our sole discretion, to modify this Agreement from time to time. If we make
-					any modifications, we will notify you by reuploading a current version of the Agreement at:
-					<span className="break-words">
-						https://docs.google.com/document/d/e/2PACX-1vTbrZiFIdODPBupwSGhtn-gOcOkNxdoXhtQHJfZzSkhVSPPCRCQmMHo1CRtJuf_7eoC8q4iyLXtAmyO/pub.
-					</span>
+					any modifications, we will notify you by reuploading a{' '}
+					<a
+						href="https://docs.google.com/document/d/e/2PACX-1vTbrZiFIdODPBupwSGhtn-gOcOkNxdoXhtQHJfZzSkhVSPPCRCQmMHo1CRtJuf_7eoC8q4iyLXtAmyO/pub"
+						target="_blank"
+						className="underline"
+						rel="noreferrer"
+					>
+						current version of the Agreement
+					</a>
+					.
 				</p>
 
 				<p className="mb-4">
