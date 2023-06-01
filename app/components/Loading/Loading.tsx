@@ -6,7 +6,7 @@ interface LoadingParams {
 	row?: boolean;
 }
 
-const Loading = ({ big = true, message = 'Loading...', row = true }: LoadingParams) => (
+const Loading = ({ big = true, message = '', row = true }: LoadingParams) => (
 	<div className={`flex mb-2 ${big && 'h-screen'}`}>
 		<div
 			className={`${
