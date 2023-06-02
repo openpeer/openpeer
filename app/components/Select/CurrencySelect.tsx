@@ -66,7 +66,7 @@ const CurrencySelect = ({
 	}, []);
 
 	if (isLoading) {
-		return <Loading />;
+		return <Loading message="" />;
 	}
 
 	return currencies ? (
