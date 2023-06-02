@@ -76,7 +76,7 @@ const CurrencySelect = ({
 	};
 
 	if (isLoading) {
-		return <Loading />;
+		return <Loading message="" />;
 	}
 	const result =
 		search && rawCurrencies
