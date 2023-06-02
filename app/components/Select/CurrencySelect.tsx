@@ -1,3 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import Loading from 'components/Loading/Loading';
 import { FiatCurrency } from 'models/types';
 import React, { useEffect, useState } from 'react';
@@ -16,8 +18,10 @@ const CurrencySelect = ({
 	selectTheFirst = false,
 	selectByLocation = false
 }: FiatCurrencySelect) => {
+	const [rawCurrencies, setRawCurrencies] = useState<FiatCurrency[]>();
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
 	const [isLoading, setLoading] = useState(false);
+	const [search, setSearch] = useState('');
 
 	useEffect(() => {
 		const fetchCurrencyByLocation = async () => {
@@ -49,6 +53,7 @@ const CurrencySelect = ({
 		fetch('/api/currencies')
 			.then((res) => res.json())
 			.then((data) => {
+				setRawCurrencies(data);
 				const filtered: FiatCurrency[] = data.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } }));
 				setCurrencies(filtered);
 				if (selectedIdOnLoad) {
@@ -65,20 +70,38 @@ const CurrencySelect = ({
 			});
 	}, []);
 
+	const selectCurrency = (option: FiatCurrency | undefined) => {
+		onSelect(option);
+		setSearch('');
+	};
+
 	if (isLoading) {
 		return <Loading />;
 	}
+	const result =
+		search && rawCurrencies
+			? rawCurrencies
+					.filter(
+						(c) =>
+							c.code.toLowerCase().includes(search.toLowerCase()) ||
+							c.name.toLowerCase().includes(search.toLowerCase()) ||
+							String(c.country_code).toLowerCase().includes(search.toLowerCase()) ||
+							c.symbol.toLowerCase().includes(search.toLowerCase())
+					)
+					.map((c: FiatCurrency) => ({ ...c, ...{ name: c.code } }))
+			: currencies;
 
-	return currencies ? (
+	return result ? (
 		<Select
 			label={label}
-			options={currencies}
+			options={result}
 			selected={selected}
-			onSelect={onSelect as SelectProps['onSelect']}
+			onSelect={selectCurrency as SelectProps['onSelect']}
 			error={error}
 			minimal={minimal}
 			height={height}
 			flag
+			onSearch={setSearch}
 		/>
 	) : (
 		<></>

@@ -17,6 +17,7 @@ export interface InputProps {
 	error?: string;
 	disabled?: boolean;
 	extraStyle?: string;
+	containerExtraStyle?: string;
 }
 
 const Input = ({
@@ -34,7 +35,8 @@ const Input = ({
 	decimalScale = 2,
 	error,
 	disabled = false,
-	extraStyle = ''
+	extraStyle = '',
+	containerExtraStyle = ''
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -42,7 +44,7 @@ const Input = ({
 
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
-		<div className="my-8">
+		<div className={`my-8 ${containerExtraStyle}`}>
 			<div className="flex justify-between items-center">
 				<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
 					{label}
@@ -56,7 +58,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`${extraStyle} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
 							!!prefix && 'text-right'
 						}`}
 						allowedDecimalSeparators={[',', '.']}
@@ -71,7 +73,7 @@ const Input = ({
 					<input
 						type={type}
 						id={id}
-						className={`${extraStyle} block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
 							!!prefix && 'text-right'
 						}`}
 						value={value}

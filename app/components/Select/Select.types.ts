@@ -17,6 +17,7 @@ export interface SelectProps {
 	rounded?: boolean;
 	flag?: boolean;
 	token?: boolean;
+	onSearch?: (value: string) => void;
 }
 
 export interface FiatCurrencySelect {
