@@ -123,4 +123,5 @@ export interface Order {
 	dispute?: Dispute;
 	created_at: string;
 	payment_method: PaymentMethod;
+	trade_id: string;
 }

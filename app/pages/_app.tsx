@@ -14,18 +14,13 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Manrope } from '@next/font/google';
-import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
+import {
+	connectorsForWallets, lightTheme, RainbowKitProvider, Theme
+} from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import {
-	argentWallet,
-	braveWallet,
-	coinbaseWallet,
-	injectedWallet,
-	ledgerWallet,
-	metaMaskWallet,
-	rainbowWallet,
-	trustWallet,
-	walletConnectWallet
+	argentWallet, braveWallet, coinbaseWallet, injectedWallet, ledgerWallet, metaMaskWallet,
+	rainbowWallet, trustWallet, walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
@@ -34,6 +29,7 @@ const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygon
 
 const { chains, provider } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
+	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
 	publicProvider()
 ]);
 

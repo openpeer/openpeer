@@ -10,4 +10,5 @@ export interface EscrowFundsParams {
 
 export interface EscrowFundsButtonProps extends EscrowFundsParams {
 	fee: BigNumber;
+	contract: `0x${string}`;
 }

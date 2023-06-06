@@ -4,6 +4,7 @@ import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
+import { toBn } from 'evm-bn';
 import { useOpenDispute, useTransactionFeedback } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
@@ -18,7 +19,8 @@ interface OpenDisputeButtonParams {
 }
 
 const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }: OpenDisputeButtonParams) => {
-	const { uuid, escrow, buyer, seller } = order;
+	const { uuid, escrow, buyer, seller, trade_id: tradeId, token_amount: tokenAmount, list } = order;
+	const { token } = list;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
@@ -30,18 +32,30 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 
 	const { data: readData = [] } = useContractReads({
 		contracts: [
-			{ ...escrowContract, ...{ functionName: 'sellerCanCancelAfter' } },
+			{ ...escrowContract, ...{ functionName: 'escrows', args: [tradeId] } },
 			{ ...escrowContract, ...{ functionName: 'disputeFee' } },
-			{ ...escrowContract, ...{ functionName: 'paidForDispute', args: [connectedAddress] } }
+			{ ...escrowContract, ...{ functionName: 'disputePayments', args: [tradeId, connectedAddress] } }
 		]
 	});
 
 	const { data: balance } = useBalance({
 		address: connectedAddress
 	});
-	const [sellerCanCancelAfter, disputeFee, paidForDispute] = readData as [BigNumber, BigNumber, boolean];
+	const [escrowData, disputeFee, paidForDispute] = readData as [
+		{ sellerCanCancelAfter: BigNumber },
+		BigNumber,
+		boolean
+	];
+	const { sellerCanCancelAfter } = escrowData || {};
 
-	const { isLoading, isSuccess, openDispute, data } = useOpenDispute({ contract: escrowAddress, disputeFee });
+	const { isLoading, isSuccess, openDispute, data } = useOpenDispute({
+		contract: escrowAddress,
+		orderID: uuid,
+		buyer: buyer.address,
+		token,
+		amount: toBn(String(tokenAmount), token.decimals),
+		disputeFee
+	});
 
 	useTransactionFeedback({
 		hash: data?.hash,

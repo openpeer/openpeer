@@ -1,19 +1,23 @@
+import { UseEscrowCancelProps } from '../types';
 import useGasEscrowCancel from './useGasEscrowCancel';
 import useGaslessEscrowCancel from './useGaslessEscrowCancel';
 
-interface UseEscrowCancelProps {
-	contract: `0x${string}`;
-	isBuyer: boolean;
-}
-
-const useEscrowCancel = ({ contract, isBuyer }: UseEscrowCancelProps) => {
+const useEscrowCancel = ({ contract, orderID, buyer, token, amount, isBuyer }: UseEscrowCancelProps) => {
 	const withGasCall = useGasEscrowCancel({
 		contract,
+		orderID,
+		buyer,
+		token,
+		amount,
 		isBuyer
 	});
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, cancelOrder } = useGaslessEscrowCancel({
 		contract,
+		orderID,
+		buyer,
+		token,
+		amount,
 		isBuyer
 	});
 

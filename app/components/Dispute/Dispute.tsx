@@ -16,8 +16,8 @@ const Dispute = ({ order }: DisputeParams) => {
 	const { data: paidForDispute }: { data: boolean | undefined } = useContractRead({
 		address: escrowAddress,
 		abi: OpenPeerEscrow,
-		functionName: 'paidForDispute',
-		args: [address],
+		functionName: 'disputePayments',
+		args: [order.trade_id, address],
 		watch: true,
 		enabled: !!escrowAddress
 	});

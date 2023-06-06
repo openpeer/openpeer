@@ -1,22 +1,16 @@
-import { OpenPeerDeployer } from 'abis';
-import { BigNumber, Contract } from 'ethers';
+import { OpenPeerEscrow } from 'abis';
+import { Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-interface UseGaslessEscrowProps {
-	orderID: `0x${string}`;
-	contract: `0x${string}`;
-	buyer: `0x${string}`;
-	tokenAddress: `0x${string}`;
-	amount: BigNumber;
-}
+import { UseEscrowTransactionProps } from '../types';
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrow = ({ contract, orderID, buyer, tokenAddress, amount }: UseGaslessEscrowProps) => {
+const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -36,11 +30,11 @@ const useGaslessEscrow = ({ contract, orderID, buyer, tokenAddress, amount }: Us
 	const escrowFunds = async () => {
 		try {
 			const provider = await biconomy.provider;
-			const contractInstance = new Contract(contract, OpenPeerDeployer, biconomy.ethersProvider);
-			const { data: transactionData } = await contractInstance.populateTransaction.deployERC20Escrow(
+			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
+			const { data: transactionData } = await contractInstance.populateTransaction.createERC20Escrow(
 				orderID,
 				buyer,
-				tokenAddress,
+				token.address,
 				amount
 			);
 			const txParams = {
@@ -48,7 +42,7 @@ const useGaslessEscrow = ({ contract, orderID, buyer, tokenAddress, amount }: Us
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 800000
+				gasLimit: 400000
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);

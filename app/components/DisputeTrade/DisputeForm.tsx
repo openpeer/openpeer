@@ -159,7 +159,7 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 					(isBuyer ? (
 						<CancelOrderButton order={order} title="Cancel" />
 					) : (
-						<ReleaseFundsButton escrow={order.escrow!.address} outlined title="Cancel" dispute />
+						<ReleaseFundsButton order={order} outlined title="Cancel" dispute />
 					))}
 				{paidForDispute ? (
 					<Button title="Continue" onClick={onContinue} />

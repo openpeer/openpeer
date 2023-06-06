@@ -2,6 +2,7 @@ import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber } from 'ethers';
+import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
@@ -13,23 +14,30 @@ interface BlockchainCancelButtonParams {
 	outlined?: boolean;
 	title?: string;
 }
-
 const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: BlockchainCancelButtonParams) => {
-	const { escrow, buyer, seller } = order;
+	const { escrow, buyer, seller, trade_id: tradeId, uuid, list, token_amount: tokenAmount } = order;
+	const { token } = list;
 	const { isConnected, address: connectedAddress } = useAccount();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
-	const { data: sellerCanCancelAfter }: { data: BigNumber | undefined } = useContractRead({
+	const { data: escrowData } = useContractRead({
 		address: escrow!.address,
 		abi: OpenPeerEscrow,
-		functionName: 'sellerCanCancelAfter'
+		functionName: 'escrows',
+		args: [tradeId]
 	});
+
+	const { sellerCanCancelAfter } = (escrowData || {}) as { sellerCanCancelAfter: BigNumber };
 
 	const { isLoading, isSuccess, cancelOrder, data, isFetching } = useEscrowCancel({
 		contract: escrow!.address,
+		orderID: uuid,
+		buyer: buyer.address,
+		token,
+		amount: toBn(String(tokenAmount), token.decimals),
 		isBuyer
 	});
 

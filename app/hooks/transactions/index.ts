@@ -4,6 +4,4 @@ import useEscrowFunds from './escrow/useEscrowFunds';
 import useMarkAsPaid from './markAsPaid/useMarkAsPaid';
 import useReleaseFunds from './release/useReleaseFunds';
 
-export {
-	useApproval, useEscrowFunds, useMarkAsPaid, useEscrowCancel, useReleaseFunds
-};
+export { useApproval, useEscrowFunds, useMarkAsPaid, useEscrowCancel, useReleaseFunds };

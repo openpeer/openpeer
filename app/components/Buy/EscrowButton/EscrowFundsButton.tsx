@@ -8,7 +8,7 @@ import { useAccount } from 'wagmi';
 
 import { EscrowFundsButtonProps } from './EscrowButton.types';
 
-const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButtonProps) => {
+const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee, contract }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = toBn(String(tokenAmount), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -19,7 +19,8 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 		amount,
 		buyer,
 		fee,
-		token
+		token,
+		contract
 	});
 
 	const escrow = () => {
@@ -56,7 +57,7 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFunds
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Escrow funds?"
-				content="The funds will be sent to a new escrow contract."
+				content={`The funds will be sent to your escrow contract (${contract}).`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}

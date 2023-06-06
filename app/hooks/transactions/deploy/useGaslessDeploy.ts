@@ -1,16 +1,18 @@
-import { OpenPeerEscrow } from 'abis';
+import { OpenPeerDeployer } from 'abis';
 import { Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { UseEscrowCancelProps } from '../types';
+interface UseGaslessDeployProps {
+	contract: `0x${string}`;
+}
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrowCancel = ({ contract, isBuyer, orderID, buyer, token, amount }: UseEscrowCancelProps) => {
+const useGaslessDeploy = ({ contract }: UseGaslessDeployProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -27,19 +29,17 @@ const useGaslessEscrowCancel = ({ contract, isBuyer, orderID, buyer, token, amou
 		return { isFetching: false, gaslessEnabled: false, isSuccess, isLoading, data };
 	}
 
-	const cancelOrder = async () => {
+	const deploy = async () => {
 		try {
 			const provider = await biconomy.provider;
-			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
-			const { data: transactionData } = await contractInstance.populateTransaction[
-				isBuyer ? 'buyerCancel' : 'sellerCancel'
-			](orderID, buyer, token.address, amount);
+			const contractInstance = new Contract(contract, OpenPeerDeployer, biconomy.ethersProvider);
+			const { data: transactionData } = await contractInstance.populateTransaction.deploy();
 			const txParams = {
 				data: transactionData,
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 200000
+				gasLimit: 400000
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);
@@ -65,7 +65,7 @@ const useGaslessEscrowCancel = ({ contract, isBuyer, orderID, buyer, token, amou
 			setIsSuccess(false);
 		}
 	};
-	return { isFetching: false, gaslessEnabled: true, isLoading, isSuccess, data, cancelOrder };
+	return { isFetching: false, gaslessEnabled: true, isLoading, isSuccess, data, deploy };
 };
 
-export default useGaslessEscrowCancel;
+export default useGaslessDeploy;

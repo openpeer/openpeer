@@ -1,18 +1,28 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
+import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useMarkAsPaid } from 'hooks/transactions';
+import { Order } from 'models/types';
 import React from 'react';
 import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {
-	escrowAddress: `0x${string}`;
+	order: Order;
 }
 
-const MarkAsPaidButton = ({ escrowAddress }: MarkAsPaidButtonParams) => {
+const MarkAsPaidButton = ({ order }: MarkAsPaidButtonParams) => {
+	const { escrow, uuid, buyer, token_amount: tokenAmount, list } = order;
+	const { token } = list;
 	const { isConnected } = useAccount();
 
-	const { isLoading, isSuccess, data, markAsPaid, isFetching } = useMarkAsPaid({ contract: escrowAddress });
+	const { isLoading, isSuccess, data, markAsPaid, isFetching } = useMarkAsPaid({
+		contract: escrow!.address,
+		orderID: uuid,
+		buyer: buyer.address,
+		token,
+		amount: toBn(String(tokenAmount), token.decimals)
+	});
 
 	const onPaymentDone = () => {
 		if (!isConnected) return;

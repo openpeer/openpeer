@@ -1,15 +1,16 @@
+import { UseEscrowTransactionProps } from '../types';
 import useGaslessReleaseFunds from './useGaslessReleaseFunds';
 import useGasReleaseFunds from './useGasReleaseFunds';
 
-interface UseReleaseFundsProps {
-	contract: `0x${string}`;
-}
-
-const useReleaseFunds = ({ contract }: UseReleaseFundsProps) => {
-	const withGasCall = useGasReleaseFunds({ contract });
+const useReleaseFunds = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
+	const withGasCall = useGasReleaseFunds({ contract, orderID, buyer, token, amount });
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, releaseFunds } = useGaslessReleaseFunds({
-		contract
+		contract,
+		orderID,
+		buyer,
+		token,
+		amount
 	});
 
 	if (isFetching) {

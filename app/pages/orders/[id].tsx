@@ -7,6 +7,7 @@ import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 const ERROR_STEP = 0;
 const PAYMENT_METHOD_STEP = 2;
@@ -28,6 +29,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const [order, setOrder] = useState<UIOrder>();
 	const { wrongNetwork, status } = useConnection();
 	const { data: session } = useSession();
+	const { chain } = useNetwork();
 	// @ts-ignore
 	const { jwt } = session || {};
 
@@ -65,7 +67,9 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 	}, [jwt]);
 
-	if (wrongNetwork) return <WrongNetwork />;
+	if (wrongNetwork || (order?.list.chain_id && chain && order.list.chain_id !== chain.id)) {
+		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
+	}
 	if (status === 'loading' || !order) return <Loading />;
 
 	const { step, list, dispute } = order;

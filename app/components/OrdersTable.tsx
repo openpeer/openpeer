@@ -10,27 +10,33 @@ interface OrdersTableProps {
 }
 
 const NextButton = ({
-	order: { buyer: buyerUser, uuid, status },
+	order: { buyer: buyerUser, uuid, status, seller },
 	address
 }: {
 	order: Order;
 	address: string | undefined;
 }) => {
 	const buyer = address === buyerUser.address;
+
+	if (!buyer && seller.address !== address) {
+		return <></>;
+	}
+
+	let label = 'Continue';
 	if (buyer) {
 		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
-			return <></>;
+			label = 'See Order';
 		}
 	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
 		// seller
-		return <></>;
+		label = 'See Order';
 	}
 
 	const url = `/orders/${encodeURIComponent(uuid)}`;
 
 	return (
 		<Link href={url}>
-			<Button title="Continue" />
+			<Button title={label} />
 		</Link>
 	);
 };

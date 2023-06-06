@@ -1,16 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseGasEscrowCancelProps {
-	contract: `0x${string}`;
-	isBuyer: boolean;
-}
+import { UseEscrowCancelProps } from '../types';
 
-const useGasEscrowCancel = ({ contract, isBuyer }: UseGasEscrowCancelProps) => {
+const useGasEscrowCancel = ({ contract, isBuyer, orderID, buyer, token, amount }: UseEscrowCancelProps) => {
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: isBuyer ? 'buyerCancel' : 'sellerCancel'
+		functionName: isBuyer ? 'buyerCancel' : 'sellerCancel',
+		args: [orderID, buyer, token.address, amount]
 	});
 
 	const { data, write } = useContractWrite(config);

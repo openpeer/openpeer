@@ -11,14 +11,33 @@
 		"type": "constructor"
 	},
 	{
-		"anonymous": false,
 		"inputs": [],
+		"name": "EscrowNotFound",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			}
+		],
 		"name": "CancelledByBuyer",
 		"type": "event"
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			}
+		],
 		"name": "CancelledBySeller",
 		"type": "event"
 	},
@@ -26,7 +45,13 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "_sender",
 				"type": "address"
@@ -37,8 +62,34 @@
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_winner",
+				"type": "address"
+			}
+		],
 		"name": "DisputeResolved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "EscrowCreated",
 		"type": "event"
 	},
 	{
@@ -56,28 +107,29 @@
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
+			}
+		],
 		"name": "Released",
 		"type": "event"
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
-		"name": "SellerCancelDisabled",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "amount",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "_orderHash",
+				"type": "bytes32"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
+		"name": "SellerCancelDisabled",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -93,20 +145,28 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "buyer",
-		"outputs": [
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
 			{
 				"internalType": "address payable",
-				"name": "",
+				"name": "_buyer",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "buyerCancel",
 		"outputs": [
 			{
@@ -119,16 +179,54 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "dispute",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "createERC20Escrow",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "createNativeEscrow",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -145,13 +243,84 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "disputePayments",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "escrows",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "exists",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint32",
+				"name": "sellerCanCancelAfter",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "dispute",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
-		"name": "fee",
+		"name": "feeBps",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "feeDiscountNFT",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -178,23 +347,8 @@
 				"type": "address"
 			},
 			{
-				"internalType": "address payable",
-				"name": "_buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_token",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_fee",
+				"name": "_feeBps",
 				"type": "uint256"
 			},
 			{
@@ -215,6 +369,11 @@
 			{
 				"internalType": "address",
 				"name": "trustedForwarder",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_feeDiscountNFT",
 				"type": "address"
 			}
 		],
@@ -243,7 +402,28 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
 		"name": "markAsPaid",
 		"outputs": [
 			{
@@ -256,21 +436,29 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "openDispute",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
 			}
 		],
-		"name": "paidForDispute",
+		"name": "openDispute",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -278,11 +466,32 @@
 				"type": "bool"
 			}
 		],
-		"stateMutability": "view",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
 		"name": "release",
 		"outputs": [
 			{
@@ -297,13 +506,39 @@
 	{
 		"inputs": [
 			{
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			},
+			{
 				"internalType": "address payable",
 				"name": "_winner",
 				"type": "address"
 			}
 		],
 		"name": "resolveDispute",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -321,20 +556,28 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "sellerCanCancelAfter",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "uint32",
-				"name": "",
-				"type": "uint32"
+				"internalType": "bytes32",
+				"name": "_orderID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "sellerCancel",
 		"outputs": [
 			{
@@ -344,6 +587,19 @@
 			}
 		],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "sellerFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -361,19 +617,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "token",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "versionRecipient",
 		"outputs": [
 			{
@@ -384,9 +627,5 @@
 		],
 		"stateMutability": "pure",
 		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
 	}
 ]

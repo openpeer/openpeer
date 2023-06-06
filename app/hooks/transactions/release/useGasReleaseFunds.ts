@@ -1,15 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseGasReleaseFundsParams {
-	contract: `0x${string}`;
-}
+import { UseEscrowTransactionProps } from '../types';
 
-const useGasReleaseFunds = ({ contract }: UseGasReleaseFundsParams) => {
+const useGasReleaseFunds = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: 'release'
+		functionName: 'release',
+		args: [orderID, buyer, token.address, amount]
 	});
 
 	const { data, write } = useContractWrite(config);

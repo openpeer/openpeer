@@ -1,14 +1,15 @@
+import { UseEscrowTransactionProps } from '../types';
 import useGaslessMarkAsPaid from './useGaslessMarkAsPaid';
 import useGasMarkAsPaid from './useGasMarkAsPaid';
 
-interface UseMarkAsPaidProps {
-	contract: `0x${string}`;
-}
-
-const useMarkAsPaid = ({ contract }: UseMarkAsPaidProps) => {
-	const withGasCall = useGasMarkAsPaid({ contract });
+const useMarkAsPaid = ({ orderID, buyer, amount, token, contract }: UseEscrowTransactionProps) => {
+	const withGasCall = useGasMarkAsPaid({ orderID, buyer, amount, token, contract });
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, markAsPaid } = useGaslessMarkAsPaid({
+		orderID,
+		buyer,
+		amount,
+		token,
 		contract
 	});
 

@@ -47,7 +47,7 @@ const Release = ({ order }: BuyStepProps) => {
 						</span>
 						<span className="w-full">
 							{selling ? (
-								!!escrow && <ReleaseFundsButton escrow={escrow.address} dispute={false} />
+								!!escrow && <ReleaseFundsButton order={order} dispute={false} />
 							) : (
 								<CancelOrderButton order={order} />
 							)}

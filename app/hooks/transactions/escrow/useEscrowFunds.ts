@@ -1,23 +1,11 @@
-import { BigNumber } from 'ethers';
-import { DEPLOYER_CONTRACTS } from 'models/networks';
-import { Token } from 'models/types';
-import { useNetwork } from 'wagmi';
+import { constants } from 'ethers';
 
+import { UseEscrowFundsProps } from '../types';
 import useCreateContract from './useCreateContract';
 import useGaslessEscrow from './useGaslessEscrow';
 
-interface UseEscrowFundsPros {
-	orderID: `0x${string}`;
-	buyer: `0x${string}`;
-	amount: BigNumber;
-	fee: BigNumber;
-	token: Token;
-}
-
-const useEscrowFunds = ({ orderID, buyer, amount, token, fee }: UseEscrowFundsPros) => {
-	const { gasless } = token;
-	const { chain } = useNetwork();
-	const contract = DEPLOYER_CONTRACTS[chain?.id!];
+const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract }: UseEscrowFundsProps) => {
+	const nativeToken = token.address === constants.AddressZero;
 
 	const withGasCall = useCreateContract({
 		orderID,
@@ -33,14 +21,14 @@ const useEscrowFunds = ({ orderID, buyer, amount, token, fee }: UseEscrowFundsPr
 		buyer,
 		contract,
 		orderID,
-		tokenAddress: token.address
+		token
 	});
 
 	if (isFetching) {
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
 
-	if (gasless && gaslessEnabled) {
+	if (!nativeToken && gaslessEnabled) {
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 

@@ -4,15 +4,13 @@ import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-interface UseGaslessReleaseFundsProps {
-	contract: `0x${string}`;
-}
+import { UseEscrowTransactionProps } from '../types';
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessReleaseFunds = ({ contract }: UseGaslessReleaseFundsProps) => {
+const useGaslessReleaseFunds = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +31,12 @@ const useGaslessReleaseFunds = ({ contract }: UseGaslessReleaseFundsProps) => {
 		try {
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
-			const { data: transactionData } = await contractInstance.populateTransaction.release();
+			const { data: transactionData } = await contractInstance.populateTransaction.release(
+				orderID,
+				buyer,
+				token.address,
+				amount
+			);
 			const txParams = {
 				data: transactionData,
 				to: contract,

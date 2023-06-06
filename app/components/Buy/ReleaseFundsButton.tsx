@@ -1,25 +1,35 @@
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
+import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
+import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {
-	escrow: `0x${string}`;
+	order: Order;
 	title?: string;
 	outlined?: boolean;
 	dispute: boolean;
 }
 
 const ReleaseFundsButton = ({
-	escrow,
+	order,
 	dispute,
 	outlined = false,
-	title = 'Release funds'
+	title = 'Release Funds'
 }: ReleaseFundsButtonParams) => {
+	const { escrow, uuid, buyer, token_amount: tokenAmount, list } = order;
+	const { token } = list;
 	const { isConnected } = useAccount();
-	const { isLoading, isSuccess, data, releaseFunds, isFetching } = useReleaseFunds({ contract: escrow });
+	const { isLoading, isSuccess, data, releaseFunds, isFetching } = useReleaseFunds({
+		contract: escrow!.address,
+		orderID: uuid,
+		buyer: buyer.address,
+		token,
+		amount: toBn(String(tokenAmount), token.decimals)
+	});
 	const [modalOpen, setModalOpen] = useState(false);
 	const [releaseConfirmed, setReleaseConfirmed] = useState(false);
 

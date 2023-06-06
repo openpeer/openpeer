@@ -1,15 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseEscrowContractParams {
-	contract: `0x${string}`;
-}
+import { UseEscrowTransactionProps } from '../types';
 
-const useGasMarkAsPaid = ({ contract }: UseEscrowContractParams) => {
+const useGasMarkAsPaid = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,
-		functionName: 'markAsPaid'
+		functionName: 'markAsPaid',
+		args: [orderID, buyer, token.address, amount]
 	});
 
 	const { data, write } = useContractWrite(config);

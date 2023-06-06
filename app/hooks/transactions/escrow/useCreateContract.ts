@@ -1,25 +1,17 @@
-import { OpenPeerDeployer } from 'abis';
+import { OpenPeerEscrow } from 'abis';
 import { BigNumber, constants } from 'ethers';
-import { Token } from 'models/types';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
-interface UseCreateContractParams {
-	orderID: `0x${string}`;
-	contract: `0x${string}`;
-	buyer: `0x${string}`;
-	amount: BigNumber;
-	fee: BigNumber;
-	token: Token;
-}
+import { UseEscrowFundsProps } from '../types';
 
-const useCreateContract = ({ orderID, buyer, amount, token, fee, contract }: UseCreateContractParams) => {
+const useCreateContract = ({ orderID, buyer, amount, token, fee, contract }: UseEscrowFundsProps) => {
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 
 	const { config } = usePrepareContractWrite({
 		address: contract,
-		abi: OpenPeerDeployer,
-		functionName: nativeToken ? 'deployNativeEscrow' : 'deployERC20Escrow',
+		abi: OpenPeerEscrow,
+		functionName: nativeToken ? 'createNativeEscrow' : 'createERC20Escrow',
 		args: nativeToken ? [orderID, buyer, amount] : [orderID, buyer, address, amount],
 		overrides: {
 			gasLimit: BigNumber.from('2000000'),
