@@ -39,7 +39,7 @@ const useGaslessDeploy = ({ contract }: UseGaslessDeployProps) => {
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 400000
+				gasLimit: 800000
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);

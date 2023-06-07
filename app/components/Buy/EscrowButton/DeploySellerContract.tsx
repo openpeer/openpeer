@@ -25,7 +25,7 @@ const DeploySellerContract = () => {
 
 	return (
 		<Button
-			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Create My Contract'}
+			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Create Escrow'}
 			onClick={deploySellerContract}
 			processing={isLoading || isFetching}
 			disabled={isSuccess || isFetching || isLoading}
