@@ -7,7 +7,7 @@ import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 
 interface ChatParams {
 	address: `0x${string}`;
-	label: 'buyer' | 'merchant';
+	label: 'buyer' | 'seller';
 }
 
 const Chat = ({ address, label }: ChatParams) => {

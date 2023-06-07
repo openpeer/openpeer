@@ -68,7 +68,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 				<>
 					<div className="border-bottom border border-color-gray-200 mb-4" />
 					<div className="flex flex-row items-center justify-between">
-						<span className="text-neutral-500">Rate {selling ? 'buyer' : 'merchant'}</span>
+						<span className="text-neutral-500">Rate {selling ? 'buyer' : 'seller'}</span>
 						<span className="w-1/2">
 							<div className="flex flex-col flex-col-reverse md:flex-row items-center">
 								<span className="w-full md:pr-8">

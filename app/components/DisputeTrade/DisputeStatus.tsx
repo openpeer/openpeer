@@ -32,7 +32,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 	const isBuyer = address === buyer.address;
 	const tokenValue = `${tokenAmount} ${token.symbol}`;
 	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
-	const counterpart = isBuyer ? 'merchant' : 'buyer';
+	const counterpart = isBuyer ? 'seller' : 'buyer';
 	const { fee } = useEscrowFee({ address: order?.escrow?.address, token, tokenAmount });
 	const date = new Date(createdAt);
 
@@ -68,7 +68,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 				<Label title="Transaction Details" />
 				<div className="text-sm mt-4">
 					<div className="flex flex-row justify-between mb-2">
-						<span className="text-gray-500">Merchant</span>
+						<span className="text-gray-500">Seller</span>
 						<span>{seller.name || smallWalletAddress(seller.address, 10)}</span>
 					</div>
 					<div className="flex flex-row justify-between mb-2">

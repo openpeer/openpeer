@@ -20,7 +20,7 @@ interface StatusTimeLineParams {
 
 const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 	const { counterpart_replied: replied, resolved } = dispute;
-	const counterpart = isBuyer ? 'Merchant' : 'Buyer';
+	const counterpart = isBuyer ? 'Seller' : 'Buyer';
 
 	const { data: disputeFee }: { data: BigNumber | undefined } = useContractRead({
 		address: escrow,

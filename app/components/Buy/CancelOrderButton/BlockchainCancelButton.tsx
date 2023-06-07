@@ -88,7 +88,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 				<Modal
 					actionButtonTitle="Yes, confirm"
 					title="Cancel Order?"
-					content={`The escrowed funds will return to ${isBuyer ? 'the merchant' : 'you'}.`}
+					content={`The escrowed funds will return to ${isBuyer ? 'the seller' : 'you'}.`}
 					type="alert"
 					open={modalOpen}
 					onClose={() => setModalOpen(false)}

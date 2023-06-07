@@ -35,7 +35,7 @@ const Release = ({ order }: BuyStepProps) => {
 								? `Please, confirm the payment of ${currency?.symbol} ${Number(fiatAmount).toFixed(
 										2
 								  )} in your bank and release the funds to the buyer. You can also dispute the transaction.`
-								: `Awaiting confirmation from the merchant and the release of ${tokenAmount} ${token?.name}.`}
+								: `Awaiting confirmation from the seller and the release of ${tokenAmount} ${token?.name}.`}
 						</p>
 					</div>
 

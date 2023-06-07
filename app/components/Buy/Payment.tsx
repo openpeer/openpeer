@@ -41,19 +41,19 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div>
 						<span className="flex flex-row mb-2 text-yellow-600">
 							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Merchant Deposit" />
+							<HeaderH2 title="Awaiting Seller Deposit" />
 						</span>
 						<p className="text-base">
 							{selling
 								? 'Please deposit funds to escrow in order to confirm and complete this transaction.'
-								: 'Kindly wait for the merchant to accept the order and escrow their funds. Payments details will become visible as soon as merchant escrow the funds. '}
+								: 'Kindly wait for the seller to accept the order and escrow their funds. Payments details will become visible as soon as seller escrow the funds. '}
 						</p>
 					</div>
 				)}
 				{status === 'escrowed' && (
 					<div>
 						<span className={`flex flex-row mb-2 ${!!selling && 'text-yellow-600'}`}>
-							<HeaderH2 title={selling ? 'Awaiting Buyer Payment' : 'Pay Merchant'} />
+							<HeaderH2 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
 						</span>
 						<p className="text-base">
 							{selling
