@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								rel="noreferrer"
 								className="px-2 m-auto"
 							>
-								<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
+								<Image src={twitterLogo} alt="openpeer logo" width={18} height={18} />
 							</a>
 							<a
 								href="https://discord.gg/Wrf9BT8sZN"
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								rel="noreferrer"
 								className="px-2 m-auto"
 							>
-								<Image src={discord} alt="openpeer logo" width={20} height={20} />
+								<Image src={discord} alt="openpeer logo" width={18} height={18} />
 							</a>
 						</div>
 					</div>

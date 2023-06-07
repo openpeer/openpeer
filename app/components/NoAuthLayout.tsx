@@ -30,7 +30,8 @@ const navigationItem = [
 	{ name: 'Docs', href: 'https://docs.openpeer.xyz/' },
 	{ name: 'Disclamer', href: 'https://openpeer.xyz/disclamer' },
 	{ name: 'Terms', href: 'https://openpeer.xyz/terms' },
-	{ name: 'Privacy Policy', href: 'https://openpeer.xyz/privacy-policy' }
+	{ name: 'Privacy Policy', href: 'https://openpeer.xyz/privacy-policy' },
+	{ name: 'Blog', href: 'https://blog.openpeer.xyz/' }
 ];
 
 const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
@@ -61,7 +62,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 										<Image
 											src={darkLogo}
 											alt="openpeer logo"
-											className="h-8 w-auto"
+											className="h-10 w-auto"
 											width={104}
 											height={23}
 										/>
@@ -126,8 +127,8 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 															src={twitterLogo}
 															alt="openpeer logo"
 															className="opacity-40 hover:opacity-90"
-															width={20}
-															height={20}
+															width={18}
+															height={18}
 														/>
 													</a>
 													<a
@@ -140,8 +141,8 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 															src={discord}
 															alt="openpeer logo"
 															className="opacity-40 hover:opacity-90"
-															width={21}
-															height={21}
+															width={19}
+															height={19}
 														/>
 													</a>
 												</div>

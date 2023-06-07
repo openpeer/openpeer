@@ -141,7 +141,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
 							<Link href="/">
-								<Image src={logo} alt="openpeer logo" className="w-40" />
+								<Image src={logo} alt="openpeer logo" className="w-48" />
 							</Link>
 						</div>
 						<div className="flex flex-1 flex-col overflow-y-auto">
