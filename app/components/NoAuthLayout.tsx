@@ -62,7 +62,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 										<Image
 											src={darkLogo}
 											alt="openpeer logo"
-											className="h-8 w-auto"
+											className="h-10 w-auto"
 											width={104}
 											height={23}
 										/>
