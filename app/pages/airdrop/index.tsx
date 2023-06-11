@@ -10,10 +10,10 @@ const AirdropPage = () => {
 			<div className="absolute top-0 right-0 -z-40">
 				<Image src={bgTopRight} alt={''} />
 			</div>
-			<div className="p-4 md:mt-8 md:px-16 flex flex-row space-x-16 text-zinc-800 relative">
-				<div className="w-1/2 flex flex-col">
-					<span className="font-extrabold text-5xl">Trade on OpenPeer</span>
-					<span className="font-extrabold text-transparent text-5xl mb-4 bg-clip-text bg-gradient-to-r from-[#9B69F6] via-[#3CB5C9] to-[#3CB5C9]">
+			<div className="p-6 md:mt-8 md:px-16 flex flex-col md:flex-row md:space-x-16 text-zinc-800 relative text-center md:text-left">
+				<div className="w-full md:w-1/2 flex flex-col">
+					<span className="font-extrabold text-4xl md:text-5xl">Trade on OpenPeer</span>
+					<span className="font-extrabold text-transparent text-4xl md:text-5xl mb-4 bg-clip-text bg-gradient-to-r from-[#9B69F6] via-[#3CB5C9] to-[#3CB5C9]">
 						receive rewards
 					</span>
 					<span className="text-base text-zinc-800">
@@ -22,24 +22,24 @@ const AirdropPage = () => {
 						Read about details here.
 					</span>
 				</div>
-				<div className="w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
-					<div className="flex flex-col justify-center items-center h-full bg-white text-white rounded-lg text-gray-800">
-						<div className="mb-4 font-light text-zinc-500">Time until the next airdrop</div>
-						<div className="flex flex-row space-x-8">
+				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+					<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
+						<div className="mb-4 font-light text-zinc-500 md:text-xl">Time until the next airdrop</div>
+						<div className="flex flex-row space-x-2 md:space-x-8">
 							<div className="flex items-center space-x-2">
-								<span className="text-2xl font-bold">05</span>
+								<span className="text-2xl md:text-3xl font-bold">05</span>
 								<span className="font-light">day</span>
 							</div>
 							<div className="flex items-center space-x-2">
-								<span className="text-2xl font-bold">07</span>
+								<span className="text-2xl md:text-3xl font-bold">07</span>
 								<span className="font-light">hour</span>
 							</div>
 							<div className="flex items-center space-x-2">
-								<span className="text-2xl font-bold">03</span>
+								<span className="text-2xl md:text-3xl font-bold">03</span>
 								<span className="font-light">min</span>
 							</div>
 							<div className="flex items-center space-x-2">
-								<span className="text-2xl font-bold">56</span>
+								<span className="text-2xl md:text-3xl font-bold">56</span>
 								<span className="font-light">sec</span>
 							</div>
 						</div>
@@ -65,7 +65,7 @@ const AirdropPage = () => {
 				</div>
 				<div className="mt-4 w-full rounded-xl p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
 					<div className="flex flex-col p-8 justify-center items-center h-full bg-white text-white rounded-lg text-gray-800">
-						<div className="flex flex-row space-x-20 items-center">
+						<div className="flex flex-col md:flex-row md:space-x-20 items-center">
 							<div>
 								<div className="flex flex-col mb-4">
 									<span>0 / 38493.81 USD</span>
