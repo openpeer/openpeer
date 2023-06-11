@@ -57,7 +57,7 @@ const AirdropPage = () => {
 					<span>
 						<a
 							href=""
-							className="border border-teal-600 px-8 py-2 rounded-full text-teal-600 hover:bg-teal-600 hover:text-white"
+							className="border border-teal-600 px-8 py-2 rounded-full text-teal-600 hover:bg-teal-600 hover:text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200"
 						>
 							Share it
 						</a>
@@ -99,8 +99,8 @@ const AirdropPage = () => {
 								</div>
 							</div>
 							<div className="flex justify-center items-center text-center">
-								<div className="rounded-full p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
-									<div className="flex flex-col w-[220px] h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
+								<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
+									<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
 										<span className="text-white text-base mb-2">Elegible for</span>
 										<span className="text-white text-5xl font-bold mb-2">0</span>
 										<span className="text-white text-2xl">vP2P</span>
@@ -110,6 +110,7 @@ const AirdropPage = () => {
 						</div>
 					</div>
 				</div>
+				<div className="p-8 m-auto text-sm text-gray-400">OpenPeer 2023</div>
 				<div className="absolute bottom-40 left-0 -z-40">
 					<Image src={bgBottomLeft} alt={''} />
 				</div>
