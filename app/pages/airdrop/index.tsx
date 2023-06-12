@@ -19,7 +19,10 @@ const AirdropPage = () => {
 					<span className="text-base text-zinc-800">
 						We’re running a retroactive airdrop campaign with a monthly rewards pool. If you trade on
 						OpenPeer, you will be rewarded based on your volume and providing liquidity to the protocol.
-						Read about details here.
+						<a href="#" className="underline hover:no-underline">
+							Read about details here
+						</a>
+						.
 					</span>
 				</div>
 				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
@@ -57,7 +60,7 @@ const AirdropPage = () => {
 					<span>
 						<a
 							href=""
-							className="border border-teal-600 px-8 py-2 rounded-full text-teal-600 hover:bg-teal-600 hover:text-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-200"
+							className="border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-cyan-800 hover:text-white transition ease-in-out hover:-translate-y-1 duration-200"
 						>
 							Share it
 						</a>
