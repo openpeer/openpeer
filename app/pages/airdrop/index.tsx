@@ -124,7 +124,7 @@ const AirdropPage = () => {
 
 export async function getServerSideProps() {
 	return {
-		props: { title: 'OpenPeer Airdrop' } // will be passed to the page component as props
+		props: { title: 'Airdrop' } // will be passed to the page component as props
 	};
 }
 export default AirdropPage;
