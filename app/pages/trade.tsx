@@ -1,25 +1,37 @@
-import { ListsTable, Loading, Switcher } from 'components';
+import { ListsTable, Loading, Pagination, Switcher } from 'components';
+import { usePagination } from 'hooks';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
+interface PaginationMeta {
+	current_page: number;
+	total_pages: number;
+	total_count: number;
+}
+
 const HomePage = () => {
 	const [buySideLists, setBuySideLists] = useState<List[]>([]);
 	const [sellSideLists, setSellSideLists] = useState<List[]>([]);
 	const [lists, setLists] = useState<List[]>([]);
 	const [isLoading, setLoading] = useState(false);
+	const [type, setType] = useState<string>('Buy');
+	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
+
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
-	const [type, setType] = useState<string>('Buy');
+	const { page, onNextPage, onPrevPage } = usePagination();
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/lists?chain_id=${chainId}`)
+		fetch(`/api/lists?chain_id=${chainId}&page=${page}&type=${type === 'Buy' ? 'SellList' : 'BuyList'}`)
 			.then((res) => res.json())
-			.then((data: List[]) => {
+			.then((response: { data: List[]; meta: any }) => {
+				const { data, meta } = response;
+				setPaginationMeta(meta);
 				const toBuyers = data.filter((list) => list.type === 'SellList');
 				const toSellers = data.filter((list) => list.type === 'BuyList');
 				setSellSideLists(toSellers);
@@ -27,7 +39,7 @@ const HomePage = () => {
 				setLists(toBuyers);
 				setLoading(false);
 			});
-	}, [chainId, address]);
+	}, [chainId, address, page, type]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
@@ -46,6 +58,16 @@ const HomePage = () => {
 				<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
 				<div className="py-4">
 					<ListsTable lists={lists} />
+					{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
+						<Pagination
+							length={lists.length}
+							totalCount={paginationMeta.total_count}
+							page={page}
+							pagesCount={paginationMeta.total_pages}
+							onPrevPage={onPrevPage}
+							onNextPage={onNextPage}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

@@ -5,13 +5,10 @@ import { minkeApi } from './utils/utils';
 
 const fetchCurrencies = async (): Promise<FiatCurrency[]> => {
 	const { data } = await minkeApi.get('/currencies');
-	return data;
+	return data.data;
 };
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse<FiatCurrency[]>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<FiatCurrency[]>) {
 	try {
 		const result = await fetchCurrencies();
 		res.status(200).json(result);

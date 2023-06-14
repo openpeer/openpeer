@@ -1,8 +1,10 @@
 import { Order } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from './utils/utils';
+
+// eslint-disable-next-line import/order
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const createOrder = async (body: NextApiRequest['body'], token: string): Promise<Order> => {
 	const { data } = await minkeApi.post('/orders', body, {
@@ -10,7 +12,7 @@ const createOrder = async (body: NextApiRequest['body'], token: string): Promise
 			Authorization: `Bearer ${token}`
 		}
 	});
-	return data;
+	return data.data;
 };
 
 const fetchOrders = async (params: NextApiRequest['query'], token: string): Promise<Order[]> => {
@@ -20,7 +22,7 @@ const fetchOrders = async (params: NextApiRequest['query'], token: string): Prom
 			Authorization: `Bearer ${token}`
 		}
 	});
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order | Order[]>) {

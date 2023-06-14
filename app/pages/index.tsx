@@ -1,4 +1,4 @@
-import { ListsTable, Pagination, Switcher } from 'components';
+import { ListsTable, Switcher } from 'components';
 import { Buy, Sell } from 'components/QuickBuy';
 import { List } from 'models/types';
 import React, { useState } from 'react';
@@ -79,7 +79,6 @@ const Quick = () => {
 						</div>
 					</div>
 				</div>
-				<Pagination next="URL" prev="URL" minResult="1" maxResult="10" totalResult="90" />
 			</div>
 		</>
 	);
