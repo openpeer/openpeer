@@ -67,7 +67,7 @@ export default async function auth(req: any, res: any) {
 				session.token = token;
 				session.jwt = encodedToken;
 				const { data: user } = await minkeApi.get(`/users/${session.address}`);
-				session.user = user;
+				session.user = user.data;
 				return session;
 			}
 		}

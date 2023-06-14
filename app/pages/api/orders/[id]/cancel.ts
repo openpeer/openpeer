@@ -2,8 +2,10 @@
 import { Order } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../../utils/utils';
+
+// eslint-disable-next-line import/order
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const cancelOrder = async (id: string, body: NextApiRequest['body'], token: string): Promise<Order> => {
 	const { data } = await minkeApi.patch(`/orders/${id}/cancel`, body, {
@@ -11,7 +13,7 @@ const cancelOrder = async (id: string, body: NextApiRequest['body'], token: stri
 			Authorization: `Bearer ${token}`
 		}
 	});
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order>) {

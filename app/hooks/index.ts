@@ -5,6 +5,7 @@ import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
 import useNotifications from './useNotifications';
 import useOpenDispute from './useOpenDispute';
+import usePagination from './usePagination';
 import useTransactionFeedback from './useTransactionFeedback';
 import useUserProfile from './useUserProfile';
 
@@ -17,5 +18,6 @@ export {
 	useOpenDispute,
 	useEscrowFee,
 	useBiconomy,
-	useUserProfile
+	useUserProfile,
+	usePagination
 };
