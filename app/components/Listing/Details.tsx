@@ -1,7 +1,10 @@
 import { Textarea } from 'components';
-import { verifyMessage } from 'ethers/lib/utils.js';
+import { verifyMessage } from 'ethers/lib/utils';
+import { useRouter } from 'next/router';
+import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
@@ -10,7 +13,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const { terms } = list;
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const router = useRouter();
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
@@ -38,7 +42,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				const { id } = await result.json();
 
 				if (id) {
-					updateList({ ...list, ...{ step: list.step + 1 } });
+					router.push(`/${address}`);
 				}
 			}
 		}

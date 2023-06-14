@@ -1,134 +1,166 @@
+import 'react-wallet-chat/dist/index.css';
+
 import Avatar from 'components/Avatar';
-import Button from 'components/Button/Button';
-import Loading from 'components/Loading/Loading';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import { ChartBarSquareIcon, ChatBubbleLeftEllipsisIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
+import Chat from './Chat';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
-	const { list, price, fiatAmount, tokenAmount, buyer } = order;
+	const {
+		list,
+		price,
+		fiat_amount: fiatAmount,
+		token_amount: tokenAmount,
+		buyer,
+		id,
+		payment_method: paymentMethod
+	} = order;
 	const {
 		fiat_currency: currency,
 		limit_min: limitMin,
 		limit_max: limitMax,
-		payment_method: paymentMethod,
-		seller,
 		token,
 		total_available_amount: totalAvailableAmount,
-		terms
+		terms,
+		type
 	} = list!;
 
 	const { address } = useAccount();
+	const seller = order.seller || list.seller;
 	const selling = seller.address === address;
-	const chatAddress = selling ? seller.address : buyer?.address;
+	const chatAddress = selling ? buyer.address : seller.address;
+	const user = !!selling && !!buyer ? buyer : seller;
+	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
 
 	return (
-		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
+		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
-				<div className="flex flex-row items-center w-1/2">
-					<Avatar user={seller} />
-					<span className="ml-2 overflow-hidden text-ellipsis hover:overflow-visible hover:break-all cursor-pointer">
-						{seller.address}
-					</span>
-				</div>
+				<Link href={`/${user.address}`} target="_blank">
+					<div className="flex flex-row items-center">
+						<Avatar user={user} />
+						<span className="ml-2 cursor-pointer">{user.name || smallWalletAddress(user.address)}</span>
+					</div>
+				</Link>
 				<div className="flex flex-row">
 					<div className="flex flex-row">
 						<ChartBarSquareIcon className="w-6 mr-2 text-gray-500" />
-						<span>150 Trades</span>
+						<span>
+							{user.trades} {user.trades === 1 ? 'Trade' : 'Trades'}
+						</span>
 					</div>
-					<div className="flex flex-row ml-4">
+					<div className="flex flex-row ml-4 hidden">
 						<StarIcon className="w-6 mr-2 text-yellow-400" />
 						<span> 4.5 </span>
 					</div>
 				</div>
 			</div>
-			<ul className="flex flex-col bg-gray-100 rounded-lg p-6">
-				<li className="w-full flex flex-row justify-between mb-4">
-					<div>Total available amount</div>
-					<div className="font-bold text-right">
+			<div className="flex flex-col bg-gray-100 rounded-lg p-6">
+				<div className="w-full flex flex-row justify-between mb-4">
+					<div className="text-sm">Total available amount</div>
+					<div className="font-bold text-right text-sm">
 						{totalAvailableAmount} {token.symbol}{' '}
-						{!!price && `(${currency.symbol} ${Number(totalAvailableAmount) * price})`}
+						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
-				</li>
-				<li className="w-full flex flex-row justify-between mb-4">
-					<div>Price</div>
-					<div className="font-bold text-right">
-						{currency.symbol} {price}
+				</div>
+				<div className="w-full flex flex-row justify-between">
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Price</div>
+						<div className="font-bold text-right text-sm">
+							{currency.symbol} {Number(price).toFixed(2)}
+						</div>
 					</div>
-				</li>
-				{!!fiatAmount && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Amount to pay</div>
-						<div className="font-bold">
-							{currency.symbol} {fiatAmount}
+					{/* <div className="w-full flex flex-row mb-4">
+						<div className="text-sm">Payment Limit</div>
+						<div className="text-sm font-bold">10 minutes</div>
+					</div> */}
+				</div>
+
+				<div className="w-full flex flex-row justify-between">
+					{!!fiatAmount && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Amount to pay</div>
+							<div className="font-bold text-sm">
+								{selling
+									? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
+									: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
+							</div>
 						</div>
-					</li>
-				)}
-				{!!tokenAmount && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Amount to receive</div>
-						<div className="font-bold">
-							{Number(tokenAmount)?.toFixed(2)} {token.symbol}
+					)}
+					{!!tokenAmount && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Amount to receive</div>
+							<div className="font-bold text-sm">
+								{selling
+									? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
+									: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
+							</div>
 						</div>
-					</li>
-				)}
-				{!!limitMin && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Min order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMin}
+					)}
+				</div>
+				<div className="w-full flex flex-row justify-between">
+					{!!limitMin && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Min order</div>
+							<div className="font-bold text-right text-sm">
+								{currency.symbol} {limitMin}
+							</div>
 						</div>
-					</li>
-				)}
-				{!!limitMax && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Max order</div>
-						<div className="font-bold text-right">
-							{currency.symbol} {limitMax}
+					)}
+					{!!limitMax && (
+						<div className="flex flex-row space-x-2 mb-4">
+							<div className="text-sm">Max order</div>
+							<div className="font-bold text-right text-sm">
+								{currency.symbol} {limitMax}
+							</div>
 						</div>
-					</li>
+					)}
+				</div>
+				{bank && (
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Payment method</div>
+						<div className="flex flex-row items-center font-bold">
+							<Image
+								src={bank.icon}
+								alt={bank.name}
+								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+								width={24}
+								height={24}
+								unoptimized
+							/>
+							{bank?.name}
+						</div>
+					</div>
 				)}
-				<li className="w-full flex flex-row justify-between mb-4">
-					<div>Payment channel</div>
-					<div className="font-bold">{paymentMethod?.bank?.name}</div>
-				</li>
 				{!!terms && (
-					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Terms</div>
-						<div className="font-bold">{terms}</div>
-					</li>
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Terms</div>
+						<div className="text-sm font-bold">{terms}</div>
+					</div>
 				)}
-				{/* <li className="w-full flex flex-row justify-between mb-4">
-					<div>Payment Limit</div>
-					<div className="font-bold">10 minutes</div>
-				</li> */}
-			</ul>
+			</div>
+
 			<div className="mt-6">
-				<span className="text-[#3C9AAA]">Please Note</span>
-				<p className="mt-2">
-					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Thanks for doing
-					business with me.
+				<span className="text-gray-800 text-sm font-bold">Seller&apos;s Note</span>
+				<p className="mt-2 text-sm text-gray-500">
+					Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Ensure
+					you&apos;re including the reference number {id ? `(${String(Number(id) * 10000)})` : ''} on your
+					transfer. Thanks for trading with me.
 				</p>
-				{!!chatAddress && (
-					<Button
-						onClick={() =>
-							window.open(
-								`https://chat.blockscan.com/index?a=${selling ? seller.address : buyer?.address}`,
-								'_blank',
-								'noreferrer'
-							)
-						}
-						title={
-							<span className="flex flex-row items-center justify-center">
-								<span className="mr-2">Chat with {selling ? 'buyer' : 'merchant'}</span>
-								<ChatBubbleLeftEllipsisIcon className="w-8" />
-							</span>
-						}
-						outlined
-					/>
-				)}
+			</div>
+			{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'seller'} />}
+			<div className="bg-[#FEFAF5] text-[#E37A00] p-4 rounded">
+				<p className="text-sm font-bold mb-2">Disclaimer</p>
+				<p className="text-sm">
+					Trades settled outside of OpenPeer cannot have funds escrowed and can&apos;t be disputed. You should
+					only trade with sellers through OpenPeer.
+				</p>
 			</div>
 		</div>
 	);

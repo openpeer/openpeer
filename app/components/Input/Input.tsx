@@ -1,8 +1,9 @@
+import React from 'react';
 import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
 	label: string;
-	addOn?: string;
+	addOn?: JSX.Element;
 	id: string;
 	value?: number | string | undefined;
 	onChange?: (value: string) => void | undefined;
@@ -11,8 +12,12 @@ export interface InputProps {
 	required?: boolean;
 	placeholder?: string;
 	prefix?: JSX.Element;
+	labelSideInfo?: string;
 	decimalScale?: number;
 	error?: string;
+	disabled?: boolean;
+	extraStyle?: string;
+	containerExtraStyle?: string;
 }
 
 const Input = ({
@@ -25,9 +30,13 @@ const Input = ({
 	required = false,
 	placeholder,
 	prefix,
+	labelSideInfo,
 	onChangeNumber,
 	decimalScale = 2,
-	error
+	error,
+	disabled = false,
+	extraStyle = '',
+	containerExtraStyle = ''
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -35,10 +44,13 @@ const Input = ({
 
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
-		<div className="my-8">
-			<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
-				{label}
-			</label>
+		<div className={`my-8 ${containerExtraStyle}`}>
+			<div className="flex justify-between items-center">
+				<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
+					{label}
+				</label>
+				<span className="text-sm text-gray-500">{labelSideInfo}</span>
+			</div>
 			<div className="relative mt-1 rounded-md shadow-sm">
 				{prefix}
 				{type === 'decimal' ? (
@@ -46,7 +58,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
 							!!prefix && 'text-right'
 						}`}
 						allowedDecimalSeparators={[',', '.']}
@@ -55,25 +67,23 @@ const Input = ({
 						placeholder={placeholder}
 						required={required}
 						allowNegative={false}
+						disabled={disabled}
 					/>
 				) : (
 					<input
 						type={type}
 						id={id}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
 							!!prefix && 'text-right'
 						}`}
 						value={value}
 						onChange={onInputChange}
 						placeholder={placeholder}
 						required={required}
+						disabled={disabled}
 					/>
 				)}
-				{!!addOn && (
-					<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-						<span className="text-gray-500 sm:text-sm">{addOn}</span>
-					</div>
-				)}
+				{!!addOn && <div className="absolute inset-y-0 right-0 flex items-center">{addOn}</div>}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>

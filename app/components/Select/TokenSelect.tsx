@@ -1,40 +1,61 @@
-import { Loading } from 'components';
-import { useEffect, useState } from 'react';
+import Loading from 'components/Loading/Loading';
+import { Token } from 'models/types';
+import React, { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 
-import { Token } from '../../models/types';
 import Select from './Select';
-import { SelectProps } from './Select.types';
+import { SelectProps, TokenSelectProps } from './Select.types';
 
 const TokenSelect = ({
 	onSelect,
 	selected,
-	error
-}: {
-	onSelect: SelectProps['onSelect'];
-	selected: SelectProps['selected'];
-	error?: SelectProps['error'];
-}) => {
+	error,
+	minimal,
+	selectedIdOnLoad,
+	label = 'Choose token to list'
+}: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id;
+	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
+		if (!chainId) return;
+
 		setLoading(true);
 		fetch(`/api/tokens?chain_id=${chainId}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setTokens(data);
+				const source: Token[] = minimal ? data.map((t: Token) => ({ ...t, ...{ name: t.symbol } })) : data;
+				setTokens(source);
+				if (selectedIdOnLoad) {
+					if (!selected) {
+						const toSelect = source.find(({ id }) => String(id) === selectedIdOnLoad);
+						if (toSelect && !selected) {
+							onSelect(toSelect);
+						}
+					}
+				} else if (minimal && !selected && source[0]) {
+					onSelect(source[0]);
+				}
 				setLoading(false);
 			});
 	}, [chainId]);
 
 	if (isLoading) {
-		return <Loading />;
+		return <Loading message="" />;
 	}
 	return tokens ? (
-		<Select label="Choose token to list" options={tokens} selected={selected} onSelect={onSelect} error={error} />
+		<Select
+			label={label}
+			options={tokens}
+			selected={selected}
+			onSelect={onSelect as SelectProps['onSelect']}
+			error={error}
+			minimal={minimal}
+			token
+		/>
 	) : (
 		<></>
 	);

@@ -8,6 +8,7 @@ export interface EscrowFundsParams {
 	tokenAmount: number;
 }
 
-export interface EscrowFundsButton extends EscrowFundsParams {
+export interface EscrowFundsButtonProps extends EscrowFundsParams {
 	fee: BigNumber;
+	contract: `0x${string}`;
 }

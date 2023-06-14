@@ -1,12 +1,8 @@
-interface SectionHeadingProps {
-  title: string
-}
-const HeaderH2 = ({ title }: SectionHeadingProps) => {
-  return (
-    <>
-      <h2 className="text-2xl">{title}</h2>
-    </>
-  )
-}
+import React from 'react';
 
-export default HeaderH2
+interface SectionHeadingProps {
+	title: string;
+}
+const HeaderH2 = ({ title }: SectionHeadingProps) => <h2 className="text-2xl">{title}</h2>;
+
+export default HeaderH2;

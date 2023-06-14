@@ -1,8 +1,11 @@
+/* eslint-disable no-param-reassign */
 import jwt from 'jsonwebtoken';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getCsrfToken } from 'next-auth/react';
 import { SiweMessage } from 'siwe';
+
+import { minkeApi } from '../utils/utils';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -38,7 +41,6 @@ export default async function auth(req: any, res: any) {
 					}
 					return null;
 				} catch (e) {
-					console.error(e);
 					return null;
 				}
 			}
@@ -51,7 +53,7 @@ export default async function auth(req: any, res: any) {
 	if (isDefaultSigninPage) {
 		providers.pop();
 	}
-	return await NextAuth(req, res, {
+	const result = await NextAuth(req, res, {
 		// https://next-auth.js.org/configuration/providers/oauth
 		providers,
 		session: {
@@ -64,8 +66,12 @@ export default async function auth(req: any, res: any) {
 				session.address = token.sub;
 				session.token = token;
 				session.jwt = encodedToken;
+				const { data: user } = await minkeApi.get(`/users/${session.address}`);
+				session.user = user;
 				return session;
 			}
 		}
 	});
+
+	return result;
 }

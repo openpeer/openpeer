@@ -1,13 +1,17 @@
+import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
+import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
-import { verifyMessage } from 'ethers/lib/utils.js';
+import Token from 'components/Token/Token';
+import { verifyMessage } from 'ethers/lib/utils';
 import { useFormErrors } from 'hooks';
+import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
-import { List } from 'models/types';
-import Image from 'next/image';
+import { List, User } from 'models/types';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
+import { truncate } from 'utils';
 import { useAccount, useSignMessage } from 'wagmi';
 
 import { BuyStepProps, UIOrder } from './Buy.types';
@@ -16,50 +20,45 @@ interface BuyAmountStepProps extends BuyStepProps {
 	price: number | undefined;
 }
 
-const truncate = (num: number, places: number) => Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
-
-const Prefix = ({ label, imageSRC }: { label: string; imageSRC: string }) => (
+const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => (
 	<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 		<div className="flex flex-row">
-			<span className="mr-2">
-				<Image
-					src={imageSRC}
-					alt={label}
-					className="h-6 w-6 flex-shrink-0 rounded-full"
-					width={24}
-					height={24}
-				/>
-			</span>
+			<span className="mr-2">{image}</span>
 			<span className="text-gray-500">{label}</span>
 		</div>
 	</div>
 );
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
+	const router = useRouter();
+	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
-	const { fiat_currency: currency, token } = list;
+	const { fiat_currency: currency, token, type } = list;
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount);
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
+		orderFiatAmount || quickBuyFiat ? Number(quickBuyFiat) : undefined
+	);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(
+		orderTokenAmount || quickBuyToken ? Number(quickBuyToken) : undefined
+	);
+	const [user, setUser] = useState<User | null>();
 
 	const { errors, clearErrors, validate } = useFormErrors();
-
-	const router = useRouter();
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
 			const signingAddress = verifyMessage(variables.message, data);
 			if (signingAddress === address) {
-				const result = await fetch(`/api/orders/`, {
+				const result = await fetch('/api/orders/', {
 					method: 'POST',
 					body: JSON.stringify(
 						snakecaseKeys(
 							{
 								order: {
 									listId: order.list.id,
-									fiatAmount: fiatAmount,
-									tokenAmount: tokenAmount,
+									fiatAmount,
+									tokenAmount,
 									price
 								},
 								data,
@@ -84,7 +83,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		const { limit_min: limitMin, limit_max: limitMax, total_available_amount: totalAvailableAmount } = list;
 		const max = Number(limitMax) || Number(totalAvailableAmount) * (price || 0);
 
-		if (!fiatAmount || fiatAmount < (Number(limitMin) || 0)) {
+		if (!fiatAmount) {
+			error.fiatAmount = 'Should be bigger than 0';
+		} else if (fiatAmount < (Number(limitMin) || 0)) {
 			error.fiatAmount = `Should be more or equal ${limitMin}`;
 		} else if (fiatAmount > max) {
 			error.fiatAmount = `Should be less or equal ${max}`;
@@ -105,21 +106,27 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				...order,
 				...{ fiat_amount: fiatAmount!, token_amount: tokenAmount!, price }
 			};
-			updateOrder(newOrder);
-			const message = JSON.stringify(
-				snakecaseKeys(
-					{
-						listId: newOrder.list.id,
-						fiatAmount: newOrder.fiat_amount,
-						tokenAmount: newOrder.token_amount,
-						price
-					},
-					{ deep: true }
-				),
-				undefined,
-				4
-			);
-			signMessage({ message: message });
+
+			if (type === 'SellList') {
+				updateOrder(newOrder);
+
+				const message = JSON.stringify(
+					snakecaseKeys(
+						{
+							listId: newOrder.list.id,
+							fiatAmount: newOrder.fiat_amount,
+							tokenAmount: newOrder.token_amount,
+							price
+						},
+						{ deep: true }
+					),
+					undefined,
+					4
+				);
+				signMessage({ message });
+			} else {
+				updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
+			}
 		}
 	};
 
@@ -128,6 +135,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		setFiatAmount(val);
 		if (price && val) setTokenAmount(truncate(val / price, token.decimals));
 	}
+
 	function onChangeToken(val: number | undefined) {
 		clearErrors(['tokenAmount']);
 
@@ -137,27 +145,52 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	useEffect(() => {
 		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tokenAmount, fiatAmount]);
 
+	useEffect(() => {
+		if (!address) return;
+
+		fetch(`/api/users/${address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [address]);
+
+	const buyCrypto = list.type === 'BuyList';
+	const buttonText = buyCrypto ? '' : 'Sign and Continue';
+
+	if (!user?.email) {
+		return <AccountInfo setUser={setUser} />;
+	}
+
 	return (
-		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
+		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
 				<Input
-					label="Amount to buy"
-					prefix={<Prefix label={currency!.symbol} imageSRC={currency!.icon} />}
+					label={buyCrypto ? "Amount you'll receive" : 'Amount to buy'}
+					prefix={
+						<Prefix
+							label={currency!.symbol}
+							image={<Flag name={countries[currency.country_code]} size={24} />}
+						/>
+					}
 					id="amountBuy"
 					value={fiatAmount}
-					onChangeNumber={onChangeFiat}
+					onChangeNumber={(f) => onChangeFiat(f)}
 					type="decimal"
 					error={errors.fiatAmount}
 				/>
 				<Input
-					label="Amount you'll receive"
-					prefix={<Prefix label={token!.name} imageSRC={token!.icon} />}
+					label={buyCrypto ? 'Amount to sell' : "Amount you'll receive"}
+					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
 					id="amountToReceive"
 					value={tokenAmount}
-					onChangeNumber={onChangeToken}
+					onChangeNumber={(t) => onChangeToken(t)}
 					type="decimal"
 					decimalScale={token.decimals}
 					error={errors.tokenAmount}

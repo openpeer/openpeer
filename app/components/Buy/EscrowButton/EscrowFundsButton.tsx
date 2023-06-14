@@ -1,41 +1,69 @@
-import { Button } from 'components';
+import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { toBn } from 'evm-bn';
-import { useCreateContract, useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import { useEscrowFunds } from 'hooks/transactions';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { EscrowFundsButton } from './EscrowButton.types';
+import { EscrowFundsButtonProps } from './EscrowButton.types';
 
-const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee }: EscrowFundsButton) => {
+const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee, contract }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = toBn(String(tokenAmount), token.decimals);
+	const [modalOpen, setModalOpen] = useState(false);
+	const [escrowConfirmed, setEscrowConfirmed] = useState(false);
 
-	const { isLoading, isSuccess, data, createContract } = useCreateContract({
+	const { isLoading, isSuccess, data, escrowFunds, isFetching } = useEscrowFunds({
 		orderID: uuid!,
-		buyer,
 		amount,
+		buyer,
+		fee,
 		token,
-		fee
+		contract
 	});
 
 	const escrow = () => {
 		if (!isConnected) return;
-		createContract?.();
+
+		if (!escrowConfirmed) {
+			setModalOpen(true);
+			return;
+		}
+		escrowFunds?.();
 	};
+
+	useEffect(() => {
+		if (escrowConfirmed) {
+			escrow();
+		}
+	}, [escrowConfirmed]);
 
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Escrowed funds'
 	});
 
 	return (
-		<Button
-			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Escrow funds'}
-			onClick={escrow}
-			processing={isLoading}
-			disabled={isSuccess}
-		/>
+		<>
+			<Button
+				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Escrow funds'}
+				onClick={escrow}
+				processing={isLoading || isFetching}
+				disabled={isSuccess || isFetching}
+			/>
+			<Modal
+				actionButtonTitle="Yes, confirm"
+				title="Escrow funds?"
+				content={`The funds will be sent to your escrow contract (${contract}).`}
+				type="confirmation"
+				open={modalOpen}
+				onClose={() => setModalOpen(false)}
+				onAction={() => setEscrowConfirmed(true)}
+			/>
+		</>
 	);
 };
 

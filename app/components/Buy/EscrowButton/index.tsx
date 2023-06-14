@@ -1,52 +1,54 @@
+import { OpenPeerDeployer } from 'abis';
 import { BigNumber, constants } from 'ethers';
-import { toBn } from 'evm-bn';
-import { DEPLOYER_CONTRACTS } from 'hooks/useCreateContract';
-import { useState } from 'react';
-import { useContractRead, useNetwork } from 'wagmi';
+import { useEscrowFee } from 'hooks';
+import { DEPLOYER_CONTRACTS } from 'models/networks';
+import React, { useState } from 'react';
+import { useAccount, useContractRead, useNetwork } from 'wagmi';
 
-import OpenPeerDeployer from '../../../abis/OpenPeerDeployer.json';
 import ApproveTokenButton from './ApproveTokenButton';
+import DeploySellerContract from './DeploySellerContract';
 import { EscrowFundsParams } from './EscrowButton.types';
 import EscrowFundsButton from './EscrowFundsButton';
 
 const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) => {
-	const { chain } = useNetwork();
 	const nativeToken = token.address === constants.AddressZero;
-	const spender = DEPLOYER_CONTRACTS[chain!.id];
 	const [approved, setApproved] = useState(nativeToken);
+	const { chain } = useNetwork();
+	const deployer = DEPLOYER_CONTRACTS[chain!.id];
+	const { address } = useAccount();
 
-	const {
-		data: feeBps,
-		isError,
-		isSuccess,
-		isFetching
-	} = useContractRead({
-		address: spender,
+	const { isFetching, fee, totalAmount } = useEscrowFee({ token, tokenAmount });
+	const { data: sellerContract } = useContractRead({
+		address: deployer,
 		abi: OpenPeerDeployer,
-		functionName: 'fee'
+		functionName: 'sellerContracts',
+		args: [address],
+		enabled: !!address,
+		watch: true
 	});
 
 	if (isFetching) return <></>;
 
-	const rawTokenAmount = toBn(String(tokenAmount), token.decimals);
-	const fee = rawTokenAmount.mul(feeBps as BigNumber).div(BigNumber.from('10000'));
-	const amount = rawTokenAmount.add(fee);
+	const needsToDeploy = !sellerContract || sellerContract === constants.AddressZero;
 
 	return (
 		<span className="w-full">
-			{nativeToken || approved ? (
+			{(nativeToken || approved) && !needsToDeploy ? (
 				<EscrowFundsButton
 					buyer={buyer}
 					fee={fee as BigNumber}
 					token={token}
 					tokenAmount={tokenAmount}
 					uuid={uuid}
+					contract={sellerContract as `0x${string}`}
 				/>
+			) : needsToDeploy ? (
+				<DeploySellerContract />
 			) : (
 				<ApproveTokenButton
 					token={token}
-					amount={amount}
-					spender={spender}
+					amount={totalAmount!}
+					spender={sellerContract as `0x${string}`}
 					onTokenApproved={() => setApproved(true)}
 				/>
 			)}

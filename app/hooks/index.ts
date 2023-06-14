@@ -1,19 +1,21 @@
+import useBiconomy from './useBiconomy';
 import useConnection from './useConnection';
-import useCreateContract from './useCreateContract';
+import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
-import useMarkAsPaid from './useMarkAsPaid';
-import useReleaseFunds from './useReleaseFunds';
-import useTokenApproval from './useTokenApproval';
+import useNotifications from './useNotifications';
+import useOpenDispute from './useOpenDispute';
 import useTransactionFeedback from './useTransactionFeedback';
+import useUserProfile from './useUserProfile';
 
 export {
 	useListPrice,
 	useConnection,
-	useCreateContract,
-	useMarkAsPaid,
-	useReleaseFunds,
 	useFormErrors,
 	useTransactionFeedback,
-	useTokenApproval
+	useNotifications,
+	useOpenDispute,
+	useEscrowFee,
+	useBiconomy,
+	useUserProfile
 };

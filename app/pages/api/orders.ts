@@ -1,29 +1,40 @@
 import { Order } from 'models/types';
-
-import { minkeApi } from './utils/utils';
+import { getSession } from 'next-auth/react';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { minkeApi } from './utils/utils';
 
-const createOrder = async (body: NextApiRequest['body']): Promise<Order> => {
-	const { data } = await minkeApi.post('/orders', body);
+const createOrder = async (body: NextApiRequest['body'], token: string): Promise<Order> => {
+	const { data } = await minkeApi.post('/orders', body, {
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
 	return data;
 };
 
-const fetchOrders = async (params: NextApiRequest['query']): Promise<Order[]> => {
-	const { data } = await minkeApi.get('/orders', { params });
+const fetchOrders = async (params: NextApiRequest['query'], token: string): Promise<Order[]> => {
+	const { data } = await minkeApi.get('/orders', {
+		params,
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
 	return data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order | Order[]>) {
 	const { method, body, query } = req;
+	// @ts-ignore
+	const { jwt } = await getSession({ req });
 
 	try {
 		switch (method) {
 			case 'GET':
-				res.status(200).json(await fetchOrders(query));
+				res.status(200).json(await fetchOrders(query, jwt));
 				break;
 			case 'POST':
-				res.status(200).json(await createOrder(body));
+				res.status(200).json(await createOrder(body, jwt));
 				break;
 			default:
 				res.setHeader('Allow', ['GET', 'POST']);
