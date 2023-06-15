@@ -103,7 +103,7 @@ const AirdropPage = () => {
 							<div>
 								<div className="flex flex-col mb-4">
 									<span>
-										{buyVolume} / {total} USD
+										{Number(buyVolume).toFixed(2)} / {Number(total).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible buy volume</span>
 									<span className="text-[#67738E] font-light">
@@ -121,7 +121,7 @@ const AirdropPage = () => {
 							<div>
 								<div className="flex flex-col mb-4">
 									<span>
-										{sellVolume} / {total} USD
+										{Number(sellVolume).toFixed(2)} / {Number(total).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible sell volume</span>
 									<span className="text-[#67738E] font-light">
