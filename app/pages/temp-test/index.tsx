@@ -142,7 +142,9 @@ const AirdropPage = () => {
 								<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
 									<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
 										<span className="text-white text-base mb-2">Eligible for</span>
-										<span className="text-white text-5xl font-bold mb-2">{tokens}</span>
+										<span className="text-white text-5xl font-bold mb-2">
+											{Number(tokens).toFixed(2)}
+										</span>
 										<span className="text-white text-2xl">vP2P</span>
 									</div>
 								</div>
