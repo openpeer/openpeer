@@ -29,6 +29,7 @@ const AirdropPage = () => {
 
 	const total = (volume.total || 0) * 2; // times two because buyer and seller get the same amount
 	const tokens = address && total ? ((buyVolume + sellVolume) / total) * POOL : 0;
+	console.log({ volume, total, tokens });
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
