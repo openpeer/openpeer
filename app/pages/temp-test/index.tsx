@@ -5,6 +5,8 @@ import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 const ROUND = 1;
 const POOL = 500000;
 
@@ -86,9 +88,13 @@ const AirdropPage = () => {
 						<span className="text-lg">Monthly airdrop</span>
 					</div>
 					<span>
-						<div className="border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-cyan-800 hover:text-white transition ease-in-out hover:-translate-y-1 duration-200">
-							Share it
-						</div>
+						{address ? (
+							<div className="border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-cyan-800 hover:text-white transition ease-in-out hover:-translate-y-1 duration-200">
+								Share it
+							</div>
+						) : (
+							<ConnectButton />
+						)}
 					</span>
 				</div>
 				<div className="mt-4 w-full rounded-xl p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
