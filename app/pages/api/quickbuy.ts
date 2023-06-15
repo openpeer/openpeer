@@ -5,7 +5,7 @@ import { minkeApi } from './utils/utils';
 
 const fetchLists = async (params: NextApiRequest['query']): Promise<Token[]> => {
 	const { data } = await minkeApi.get('/quick_buy', { params });
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Token[]>) {

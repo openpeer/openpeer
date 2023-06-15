@@ -23,7 +23,7 @@ const BuyPage = ({ id }: { id: number }) => {
 			.then((data) => {
 				setOrder({
 					...order,
-					...{ list: data, listId: data.id }
+					...{ list: data.data, listId: data.data.id }
 				});
 			});
 	}, [id]);

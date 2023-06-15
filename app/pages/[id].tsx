@@ -32,7 +32,7 @@ const Profile = ({ id }: { id: number }) => {
 		fetch(`/api/lists?chain_id=${chainId}&seller=${user.address}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setLists(data);
+				setLists(data.data);
 			});
 	}, [user, chainId]);
 
