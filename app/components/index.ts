@@ -12,6 +12,7 @@ import MarginSwitcher from './MarginSwitcher';
 import HeaderMetrics from './MerchantAccount/HeaderMetrics';
 import Modal from './Modal/ModalWindow';
 import NotificationHeader from './Notifications/NotificationHeader';
+import Pagination from './Pagination/Pagination';
 import HeaderH3 from './SectionHeading/h3';
 import BankSelect from './Select/BankSelect';
 import CurrencySelect from './Select/CurrencySelect';
@@ -43,5 +44,6 @@ export {
 	Switcher,
 	Modal,
 	Flag,
-	Accordion
+	Accordion,
+	Pagination
 };

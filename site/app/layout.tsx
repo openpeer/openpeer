@@ -24,9 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							</p>
 						</div>
 						<div className="flex flex-col space-y-4 md:space-y-0 text-center md:flex-row mt-8 items-center md:mt-0 md:self-start justify-center md:justify-start">
-							<a href="/disclamer" className="px-2 hover:underline">
-								Disclamer
-							</a>
 							<a
 								href="https://docs.openpeer.xyz"
 								target="_blank"
@@ -34,6 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								className="px-2 hover:underline"
 							>
 								Docs
+							</a>
+							<a href="/disclamer" className="px-2 hover:underline">
+								Disclamer
 							</a>
 							<a href="/terms" className="px-2 hover:underline">
 								Terms

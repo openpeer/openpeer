@@ -1,12 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { List } from 'models/types';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../utils/utils';
+
+// eslint-disable-next-line import/order
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const fetchList = async (id: string): Promise<List> => {
 	const { data } = await minkeApi.get(`/lists/${id}`);
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List>) {

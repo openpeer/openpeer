@@ -10,7 +10,7 @@ const fetchLists = async (params: NextApiRequest['query']): Promise<List[]> => {
 
 const createList = async (body: NextApiRequest['body']): Promise<List> => {
 	const { data } = await minkeApi.post('/lists', body);
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List[] | List>) {

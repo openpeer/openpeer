@@ -2,8 +2,10 @@
 import { User } from 'models/types';
 import { getSession } from 'next-auth/react';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../utils/utils';
+
+// eslint-disable-next-line import/order
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const fetchUser = async (address: string, token: string): Promise<User> => {
 	const { data } = await minkeApi.get(`/user_profiles/${address}`, {
@@ -11,7 +13,7 @@ const fetchUser = async (address: string, token: string): Promise<User> => {
 			Authorization: `Bearer ${token}`
 		}
 	});
-	return data;
+	return data.data;
 };
 
 const updateUser = async (address: string, body: NextApiRequest['body'], token: string): Promise<User> => {
@@ -20,7 +22,7 @@ const updateUser = async (address: string, body: NextApiRequest['body'], token: 
 			Authorization: `Bearer ${token}`
 		}
 	});
-	return data;
+	return data.data;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<User>) {

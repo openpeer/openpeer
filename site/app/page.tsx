@@ -57,11 +57,11 @@ export default function Home() {
 
 					<div className="hidden md:block">
 						<div className="flex flex-row items-center justify-between space-x-8 text-xl">
-							<a className="hidden" href="faq.html">
-								FAQ
-							</a>
 							<a href="https://docs.openpeer.xyz" target="_blank" rel="noreferrer">
 								Docs
+							</a>
+							<a href="https://blog.openpeer.xyz" target="_blank" rel="noreferrer">
+								Blog
 							</a>
 							<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
 								<Image src={twitterLogo} alt="twitter logo" width={20} height={20} />
@@ -76,15 +76,17 @@ export default function Home() {
 				<div className={`navbar-menu ${navbar ? '' : 'hidden'}`}>
 					<div className="flex flex-column space-x-8 text-xl">
 						<ul className="text-center flex-1">
-							<li className="hidden">
-								<a href="faq.html">FAQ</a>
-							</li>
-							<li>
+							<li className="text-center flex-1 mb-4 mt-4">
 								<a href="https://docs.openpeer.xyz" target="_blank" rel="noreferrer">
 									Docs
 								</a>
 							</li>
-							<li>
+							<li className="text-center flex-1 mb-4">
+								<a href="https://blog.openpeer.xyz" target="_blank" rel="noreferrer">
+									Blog
+								</a>
+							</li>
+							<li className="mb-4">
 								<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
 									<div>
 										<Image
@@ -97,7 +99,7 @@ export default function Home() {
 									</div>
 								</a>
 							</li>
-							<li>
+							<li className="mb-4">
 								<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer">
 									<div>
 										<Image
