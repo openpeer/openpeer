@@ -55,8 +55,8 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 					order_id: id
 				},
 				{
-					received(data: string) {
-						const updatedOrder = JSON.parse(data);
+					received(response: string) {
+						const { data: updatedOrder } = JSON.parse(response);
 						console.log('updatedOrder', updatedOrder);
 						setOrder({ ...updatedOrder, ...{ step: steps[updatedOrder.status] } });
 					}
@@ -67,7 +67,6 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 	}, [jwt]);
 
-	console.log({ order, wrongNetwork, chain });
 	if (wrongNetwork || (order?.list?.chain_id && chain && order.list.chain_id !== chain.id)) {
 		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
 	}
