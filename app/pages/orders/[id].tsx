@@ -67,7 +67,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 	}, [jwt]);
 
-	if (wrongNetwork || (order?.list.chain_id && chain && order.list.chain_id !== chain.id)) {
+	if (wrongNetwork || (order?.list?.chain_id && chain && order.list.chain_id !== chain.id)) {
 		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
 	}
 	if (status === 'loading' || !order) return <Loading />;
