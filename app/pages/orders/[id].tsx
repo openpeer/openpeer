@@ -57,7 +57,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 				{
 					received(data: string) {
 						const updatedOrder = JSON.parse(data);
-						console.log({ updatedOrder });
+						console.log('updatedOrder', updatedOrder);
 						setOrder({ ...updatedOrder, ...{ step: steps[updatedOrder.status] } });
 					}
 				}
