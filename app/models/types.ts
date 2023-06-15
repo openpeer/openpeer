@@ -125,3 +125,9 @@ export interface Order {
 	payment_method: PaymentMethod;
 	trade_id: string;
 }
+
+export interface Airdrop {
+	buy_volume?: number;
+	sell_volume?: number;
+	total: number;
+}
