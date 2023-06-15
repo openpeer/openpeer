@@ -49,26 +49,29 @@ const HomePage = () => {
 		}
 	}, [type, buySideLists, sellSideLists]);
 
-	if (isLoading) return <Loading />;
 	if (!lists) return <p>No lists data</p>;
 
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
 				<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
-				<div className="py-4">
-					<ListsTable lists={lists} />
-					{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
-						<Pagination
-							length={lists.length}
-							totalCount={paginationMeta.total_count}
-							page={page}
-							pagesCount={paginationMeta.total_pages}
-							onPrevPage={onPrevPage}
-							onNextPage={onNextPage}
-						/>
-					)}
-				</div>
+				{isLoading ? (
+					<Loading />
+				) : (
+					<div className="py-4">
+						<ListsTable lists={lists} />
+						{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
+							<Pagination
+								length={lists.length}
+								totalCount={paginationMeta.total_count}
+								page={page}
+								pagesCount={paginationMeta.total_pages}
+								onPrevPage={onPrevPage}
+								onNextPage={onNextPage}
+							/>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	);
