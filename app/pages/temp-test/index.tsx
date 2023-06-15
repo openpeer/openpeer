@@ -27,9 +27,10 @@ const AirdropPage = () => {
 
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
 
-	const total = (volume.total || 0) * 2; // times two because buyer and seller get the same amount
-	const tokens = address && total ? ((buyVolume + sellVolume) / total) * POOL : 0;
-	console.log({ volume, total, tokens });
+	const total = Number(volume.total || 0);
+	const usdTotal = (total || 0) * 2; // times two because buyer and seller get the same amount
+	const tokens = address && total ? ((Number(buyVolume) + Number(sellVolume)) / total) * POOL : 0;
+	console.log({ volume, total, usdTotal, tokens });
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
@@ -104,7 +105,7 @@ const AirdropPage = () => {
 							<div>
 								<div className="flex flex-col mb-4">
 									<span>
-										{Number(buyVolume).toFixed(2)} / {Number(total).toFixed(2)} USD
+										{Number(buyVolume).toFixed(2)} / {Number(usdTotal).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible buy volume</span>
 									<span className="text-[#67738E] font-light">
@@ -122,7 +123,7 @@ const AirdropPage = () => {
 							<div>
 								<div className="flex flex-col mb-4">
 									<span>
-										{Number(sellVolume).toFixed(2)} / {Number(total).toFixed(2)} USD
+										{Number(sellVolume).toFixed(2)} / {Number(usdTotal).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible sell volume</span>
 									<span className="text-[#67738E] font-light">
