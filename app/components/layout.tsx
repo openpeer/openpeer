@@ -6,6 +6,7 @@ import { User } from 'models/types';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+// import OpenpeerAirdrop from 'public/airdrop/openpeedrAirdrop.svg';
 import logo from 'public/logo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -13,7 +14,6 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import OpenpeerAirdrop from 'public/airdrop/openpeedrAirdrop.svg';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -26,19 +26,19 @@ const manrope = Manrope({
 	variable: '--font-manrope'
 });
 
-const AirdropIcon = () => (
-	<Image
-		src={OpenpeerAirdrop}
-		alt="openpeer logo"
-		className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
-	/>
-);
+// const AirdropIcon = () => (
+// <Image
+// src={OpenpeerAirdrop}
+// alt="openpeer logo"
+// className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+// />
+// );
 
 const navigation = [
 	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
-	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
+	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
+	// { name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
 ];
 
 const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => (
