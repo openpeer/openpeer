@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Link from 'next/link';
 
 const ROUND = 1;
 const POOL = 500000;
@@ -46,7 +47,11 @@ const AirdropPage = () => {
 					<span className="text-base text-zinc-800">
 						We&apos;re running a retroactive airdrop campaign with a monthly rewards pool. If you trade on
 						OpenPeer, you will be rewarded based on your volume and providing liquidity to the protocol.
-						<div className="underline hover:no-underline"> Read about details here.</div>
+						<Link href="https://blog.openpeer.xyz/openpeer-rewards-campaign" target="_blank">
+							<div className="ml-2 underline inline-block hover:no-underline cursor-pointer">
+								Read about details here.
+							</div>
+						</Link>
 					</span>
 				</div>
 				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
@@ -91,9 +96,17 @@ const AirdropPage = () => {
 					</div>
 					<span>
 						{address ? (
-							<div className="border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-cyan-800 hover:text-white transition ease-in-out hover:-translate-y-1 duration-200">
-								Share it
-							</div>
+							<Link
+								href="https://twitter.com/intent/tweet?text=Trade%20on%20OpenPeer%20receive%20rewards&url=https%3A%2F%2Fopenpeer.xyz%2Fairdrop&via=openpeer_xyz."
+								target="_blank"
+							>
+								<div className="flex items-center border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-cyan-100 transition ease-in-out hover:-translate-y-1 duration-100 cursor-pointer">
+									<svg width="20" height="20" fill="currentColor" className="text-cyan-600 mr-2">
+										<path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
+									</svg>
+									Share it
+								</div>
+							</Link>
 						) : (
 							<ConnectButton />
 						)}
