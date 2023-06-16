@@ -1,4 +1,5 @@
 import { ListsTable, Loading, Pagination, Switcher } from 'components';
+import Filters from 'components/Buy/Filters';
 import { usePagination } from 'hooks';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
@@ -54,6 +55,9 @@ const HomePage = () => {
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+				<div className="flex justify-end">
+					<Filters />
+				</div>
 				<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
 				{isLoading ? (
 					<Loading />

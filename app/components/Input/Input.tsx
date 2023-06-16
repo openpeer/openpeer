@@ -83,7 +83,7 @@ const Input = ({
 						disabled={disabled}
 					/>
 				)}
-				{!!addOn && <div className="absolute inset-y-0 right-0 flex items-center">{addOn}</div>}
+				{!!addOn && <div className="absolute inset-y-0 right-2 flex items-center">{addOn}</div>}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>
