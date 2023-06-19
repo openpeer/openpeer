@@ -144,7 +144,7 @@ const AirdropCountdown = ({
 
 				<div className="flex flex-row space-x-2">
 					{days > 0 && (
-						<div className="flex items-center justify-around">
+						<div className="flex items-center justify-around space-x-2">
 							<span className="text-2xl md:text-3xl font-bold">{days}</span>
 							<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
 						</div>
