@@ -3,7 +3,7 @@ import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { BigNumber, constants } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useVerificationStatus } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ import { switchNetwork } from '@wagmi/core';
 
 const ROUND = 1;
 const POOL = 500000;
-const AIRDROP_START = 5000; // @TODO: Marcos - change this to 1688209200000 when the airdrop starts
+const AIRDROP_START = 1688209200000;
 const CHAIN = polygonMumbai; // @TODO: Marcos - change this to Polygon when the airdrop starts
 const CONTRACT_ADDRESS = '0x8F6587918d09F86876F4Fb1F83808deA5d3e09b1'; // @TODO: Marcos - change this to the real contract address when the airdrop starts
 
@@ -71,7 +71,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		overrides: {
 			gasLimit: BigNumber.from('150000')
 		},
-		enabled: !wrongChain && proof.length > 0 && !!address
+		enabled: !wrongChain && !!address
 	});
 
 	const { data, write: claim } = useContractWrite(config);
@@ -179,8 +179,7 @@ const AirdropCountdown = ({
 const AirdropPage = () => {
 	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
-	// const { verified } = useVerificationStatus(address); @TODO: Marcos: uncomment this line
-	const verified = true;
+	const { verified } = useVerificationStatus(address);
 
 	useEffect(() => {
 		if (!address) return;
