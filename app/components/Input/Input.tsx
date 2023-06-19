@@ -3,7 +3,7 @@ import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
 	label: string;
-	addOn?: JSX.Element;
+	addOn?: JSX.Element | string;
 	id: string;
 	value?: number | string | undefined;
 	onChange?: (value: string) => void | undefined;

@@ -1,14 +1,37 @@
 import Input from 'components/Input/Input';
 import CurrencySelect from 'components/Select/CurrencySelect';
-import DropDown from 'components/Select/DropDown';
+import Select from 'components/Select/Select';
 import { FiatCurrency } from 'models/types';
 import React from 'react';
 
+const optionItems: {} = {
+	option1: 'option1',
+	option2: 'option2',
+	option3: 'option2'
+};
+
 const Filters = () => (
 	<div className="flex items-center space-x-4">
-		<Input label="Search by amount" addOn="INR ₹" id="0" placeholder="Enter Amount" />
-		<DropDown label="Verfication" />
-		<DropDown label="Payment Method" />
+		<Input label="Search by amount" id="0" addOn="INR ₹" placeholder="Enter Amount" />
+		<Select
+			label="Verfication"
+			options={optionItems}
+			selected={undefined}
+			// eslint-disable-next-line react/jsx-no-bind, func-names
+			onSelect={function (): void {
+				throw new Error('Function not implemented.');
+			}}
+		/>
+		<Select
+			label="Payment Method"
+			options={optionItems}
+			updateValue={undefined}
+			selected={undefined}
+			// eslint-disable-next-line react/jsx-no-bind, func-names
+			onSelect={function (): void {
+				throw new Error('Function not implemented.');
+			}}
+		/>
 		<CurrencySelect
 			label="Currency"
 			onSelect={function (option: FiatCurrency | undefined): void {
