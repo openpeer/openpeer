@@ -1,5 +1,9 @@
+import { VP2P } from 'abis';
 import { Button } from 'components';
-import { useVerificationStatus } from 'hooks';
+import TransactionLink from 'components/TransactionLink';
+import { BigNumber, constants } from 'ethers';
+import { parseUnits } from 'ethers/lib/utils';
+import { useTransactionFeedback } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,12 +11,19 @@ import { useRouter } from 'next/router';
 import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import Countdown from 'react-countdown';
+import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
 
+import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { switchNetwork } from '@wagmi/core';
 
 const ROUND = 1;
 const POOL = 500000;
+const AIRDROP_START = 5000; // @TODO: Marcos - change this to 1688209200000 when the airdrop starts
+const CHAIN = polygonMumbai; // @TODO: Marcos - change this to Polygon when the airdrop starts
+const CONTRACT_ADDRESS = '0x8F6587918d09F86876F4Fb1F83808deA5d3e09b1'; // @TODO: Marcos - change this to the real contract address when the airdrop starts
 
 const CallToActionButton = ({ address, verified }: { address: `0x${string}` | undefined; verified: boolean }) => {
 	const router = useRouter();
@@ -43,10 +54,133 @@ const CallToActionButton = ({ address, verified }: { address: `0x${string}` | un
 	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
 };
 
+const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
+	const { chain } = useNetwork();
+	const { address } = useAccount();
+	const wrongChain = CHAIN.id !== chain?.id;
+	const amount = parseUnits(tokens.toString(), 18);
+	const distribution = [[address || constants.AddressZero, amount.toString()]];
+	const merkleTree = StandardMerkleTree.of(distribution, ['address', 'uint256']);
+	const proof = address ? merkleTree.getProof(distribution[0]) : [];
+
+	const { config } = usePrepareContractWrite({
+		address: CONTRACT_ADDRESS,
+		abi: VP2P,
+		functionName: 'claim',
+		args: [ROUND, amount, proof],
+		overrides: {
+			gasLimit: BigNumber.from('150000')
+		},
+		enabled: !wrongChain && proof.length > 0 && !!address
+	});
+
+	const { data, write: claim } = useContractWrite(config);
+
+	const { isLoading, isSuccess } = useWaitForTransaction({
+		hash: data?.hash
+	});
+
+	const onClaimRewards = async () => {
+		if (wrongChain) {
+			switchNetwork({ chainId: CHAIN.id });
+		} else {
+			claim?.();
+		}
+	};
+
+	useTransactionFeedback({
+		hash: data?.hash,
+		isSuccess,
+		Link: <TransactionLink hash={data?.hash} />,
+		description: 'Claimed OpenPeer Rewards'
+	});
+
+	return (
+		<Button
+			title={wrongChain ? `Switch to ${CHAIN.name}` : 'Claim Rewards'}
+			onClick={onClaimRewards}
+			disabled={isLoading}
+		/>
+	);
+};
+
+const AirdropCountdown = ({
+	address,
+	verified,
+	tokens
+}: {
+	address: `0x${string}` | undefined;
+	verified: boolean;
+	tokens: number;
+}) => {
+	const renderer = ({
+		days,
+		hours,
+		minutes,
+		seconds,
+		completed
+	}: {
+		days: number;
+		hours: number;
+		minutes: number;
+		seconds: number;
+		completed: boolean;
+	}) => {
+		if (completed) {
+			return (
+				<div className="my-4">
+					{verified ? (
+						<ClaimRewardsButton tokens={tokens} />
+					) : (
+						<CallToActionButton address={address} verified={verified} />
+					)}
+				</div>
+			);
+		}
+		// Render a countdown
+		return (
+			<>
+				<div className="mb-4 font-light text-zinc-500 md:text-xl">Time until the next airdrop</div>
+
+				<div className="flex flex-row space-x-2">
+					{days > 0 && (
+						<div className="flex items-center justify-around">
+							<span className="text-2xl md:text-3xl font-bold">{days}</span>
+							<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
+						</div>
+					)}
+					<div className="flex items-center justify-around">
+						<span className="text-2xl md:text-3xl font-bold">{hours}</span>
+						<span className="font-light">{hours === 1 ? 'hour' : 'hours'}</span>
+					</div>
+					<div className="flex items-center justify-around">
+						<span className="text-2xl md:text-3xl font-bold">{minutes}</span>
+						<span className="font-light">{minutes === 1 ? 'minute' : 'minutes'}</span>
+					</div>
+					<div className="flex items-center justify-around">
+						<span className="text-2xl md:text-3xl font-bold">{seconds}</span>
+						<span className="font-light">{seconds === 1 ? 'second' : 'seconds'}</span>
+					</div>
+				</div>
+				<div className="my-4">
+					<CallToActionButton address={address} verified={verified} />
+				</div>
+			</>
+		);
+	};
+
+	return (
+		<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
+			<Countdown date={AIRDROP_START} renderer={renderer} />
+		</div>
+	);
+};
+
 const AirdropPage = () => {
 	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
-	const { verified } = useVerificationStatus(address);
+	// const { verified } = useVerificationStatus(address); @TODO: Marcos: uncomment this line
+	const verified = true;
 
 	useEffect(() => {
 		if (!address) return;
@@ -88,30 +222,7 @@ const AirdropPage = () => {
 					</span>
 				</div>
 				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
-					<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
-						<div className="mb-4 font-light text-zinc-500 md:text-xl">Time until the next airdrop</div>
-						<div className="flex flex-row space-x-2">
-							<div className="flex items-center justify-around">
-								<span className="text-2xl md:text-3xl font-bold">05</span>
-								<span className="font-light">day</span>
-							</div>
-							<div className="flex items-center justify-around">
-								<span className="text-2xl md:text-3xl font-bold">07</span>
-								<span className="font-light">hour</span>
-							</div>
-							<div className="flex items-center justify-around">
-								<span className="text-2xl md:text-3xl font-bold">03</span>
-								<span className="font-light">min</span>
-							</div>
-							<div className="flex items-center justify-around">
-								<span className="text-2xl md:text-3xl font-bold">56</span>
-								<span className="font-light">sec</span>
-							</div>
-						</div>
-						<div className="my-4">
-							<CallToActionButton address={address} verified={verified} />
-						</div>
-					</div>
+					<AirdropCountdown address={address} verified={verified} tokens={tokens} />
 				</div>
 			</div>
 			<div className="p-4 md:px-16 mt-4 flex flex-col text-[#25385A]">
