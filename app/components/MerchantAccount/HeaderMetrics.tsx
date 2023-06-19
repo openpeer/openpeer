@@ -1,7 +1,7 @@
 import Avatar from 'components/Avatar';
 import { providers } from 'ethers';
+import { useVerificationStatus } from 'hooks';
 import { User } from 'models/types';
-import { Verification } from 'models/verification';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { smallWalletAddress } from 'utils';
@@ -39,8 +39,9 @@ const Metric = ({
 	</div>
 );
 
-interface HeaderMetricsParams {
+interface HeaderMetricsProps {
 	user: User;
+	verificationOpen: boolean;
 }
 
 const getTimePassed = (timestamp: number): string => {
@@ -52,7 +53,7 @@ const getTimePassed = (timestamp: number): string => {
 	const yearsPassed = daysPassed / 365;
 
 	if (yearsPassed >= 1) {
-		return `${Math.floor(yearsPassed)} years`;
+		return `${Math.floor(yearsPassed)} ${yearsPassed >= 2 ? 'years' : 'year'}`;
 	}
 	if (daysPassed >= 30) {
 		const monthsPassed = daysPassed / 30;
@@ -75,20 +76,14 @@ const VerifiedIcon = () => (
 	</svg>
 );
 
-const HeaderMetrics = ({ user }: HeaderMetricsParams) => {
+const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 	const { trades, created_at: createdAt, name, twitter, address, completion_rate: completionRate } = user;
 	const date = new Date(createdAt);
 	const [walletAge, setWalletAge] = useState<string>();
-	const [verificationModal, setVerificationModal] = useState(false);
-	const [verification, setVerification] = useState<Verification>();
+	const [verificationModal, setVerificationModal] = useState(verificationOpen);
 	const { chain } = useNetwork();
 	const { address: connectedAddress } = useAccount();
-	const verified = verification && verification.status === 'VERIFIED';
-
-	const fetchVerificationStatus = async () => {
-		const request = await fetch(`/api/verifications?alias=${address}`);
-		setVerification(await request.json());
-	};
+	const { verified, verification, fetchVerificationStatus } = useVerificationStatus(address);
 
 	useEffect(() => {
 		const fetchWalletAge = async () => {

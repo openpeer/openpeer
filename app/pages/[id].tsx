@@ -3,6 +3,7 @@ import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
@@ -13,6 +14,8 @@ const Profile = ({ id }: { id: number }) => {
 	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
+	const router = useRouter();
+	const { verification } = router.query;
 
 	useEffect(() => {
 		fetch(`/api/users/${id}`)
@@ -56,7 +59,7 @@ const Profile = ({ id }: { id: number }) => {
 				/>
 			)}
 
-			<HeaderMetrics user={user} />
+			<HeaderMetrics user={user} verificationOpen={!!verification} />
 			{lists && lists.length > 0 && (
 				<div className="flex px-6">
 					<div className="w-full md:w-5/6 m-auto">

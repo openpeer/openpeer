@@ -1,20 +1,53 @@
+import { Button } from 'components';
+import { useVerificationStatus } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import Link from 'next/link';
-import { Button } from 'components';
 
 const ROUND = 1;
 const POOL = 500000;
 
+const CallToActionButton = ({ address, verified }: { address: `0x${string}` | undefined; verified: boolean }) => {
+	const router = useRouter();
+
+	if (!address) {
+		return <ConnectButton />;
+	}
+
+	if (!verified) {
+		return (
+			<Button
+				title="Verify your account"
+				onClick={
+					() =>
+						router.push(
+							{
+								pathname: `/${address}`,
+								query: { verification: true }
+							},
+							`/${address}`
+						)
+					// eslint-disable-next-line react/jsx-curly-newline
+				}
+			/>
+		);
+	}
+
+	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
+};
+
 const AirdropPage = () => {
 	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
+	const { verified } = useVerificationStatus(address);
+
 	useEffect(() => {
 		if (!address) return;
 
@@ -32,7 +65,6 @@ const AirdropPage = () => {
 	const total = Number(volume.total || 0);
 	const usdTotal = (total || 0) * 2; // times two because buyer and seller get the same amount
 	const tokens = address && total ? ((Number(buyVolume) + Number(sellVolume)) / total) * POOL : 0;
-	console.log({ volume, total, usdTotal, tokens });
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
@@ -76,8 +108,8 @@ const AirdropPage = () => {
 								<span className="font-light">sec</span>
 							</div>
 						</div>
-						<div className="my-4 hidden">
-							<Button title="Start trading" />
+						<div className="my-4">
+							<CallToActionButton address={address} verified={verified} />
 						</div>
 					</div>
 				</div>
@@ -170,7 +202,7 @@ const AirdropPage = () => {
 					</div>
 				</div>
 				<div className="flex w-full md:w-1/4 m-auto py-8">
-					<Button title="Start trading" />
+					<CallToActionButton address={address} verified={verified} />
 				</div>
 				<div className="absolute bottom-40 left-0 -z-40">
 					<Image src={bgBottomLeft} alt="background image" />
