@@ -154,6 +154,11 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 							</div>
 						</div>
 						<div className="sm:ml-6 sm:flex pr-4 sm:items-center">
+							<Link href="/airdrop" className="hover:animate-pulse drop-shadow-md">
+								<span className="px-16 py-3 bg-gradient-to-r from-[#2C76E5] via-[#955AFF] to-[#6FD9EC] rounded-lg text-white text-base font-bold">
+									Rewards
+								</span>
+							</Link>
 							<div className="relative ml-3">
 								<ConnectButton
 									showBalance={false}
