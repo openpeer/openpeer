@@ -82,7 +82,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 		<div className={`${manrope.variable} font-sans`}>
 			<div>
 				<Transition.Root show={sidebarOpen} as={Fragment}>
-					<Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
+					<Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
 						<Transition.Child
 							as={Fragment}
 							enter="transition-opacity ease-linear duration-300"
