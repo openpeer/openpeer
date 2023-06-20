@@ -144,22 +144,22 @@ const AirdropCountdown = ({
 
 				<div className="flex flex-row space-x-2">
 					{days > 0 && (
-						<div className="flex items-center justify-around">
+						<div className="flex items-center justify-around space-x-2">
 							<span className="text-2xl md:text-3xl font-bold">{days}</span>
 							<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
 						</div>
 					)}
-					<div className="flex items-center justify-around">
+					<div className="flex items-center justify-around space-x-2">
 						<span className="text-2xl md:text-3xl font-bold">{hours}</span>
 						<span className="font-light">{hours === 1 ? 'hour' : 'hours'}</span>
 					</div>
-					<div className="flex items-center justify-around">
-						<span className="text-2xl md:text-3xl font-bold">{minutes}</span>
-						<span className="font-light">{minutes === 1 ? 'minute' : 'minutes'}</span>
+					<div className="flex items-center justify-around space-x-2">
+						<span className="text-xl md:text-3xl font-bold">{minutes}</span>
+						<span className="font-light">{minutes === 1 ? 'min' : 'mins'}</span>
 					</div>
-					<div className="flex items-center justify-around">
-						<span className="text-2xl md:text-3xl font-bold">{seconds}</span>
-						<span className="font-light">{seconds === 1 ? 'second' : 'seconds'}</span>
+					<div className="flex items-center justify-around space-x-2">
+						<span className="text-xl md:text-3xl font-bold">{seconds}</span>
+						<span className="font-light">{seconds === 1 ? 'sec' : 'secs'}</span>
 					</div>
 				</div>
 				<div className="my-4">
@@ -243,7 +243,7 @@ const AirdropPage = () => {
 					<span>
 						{address ? (
 							<Link
-								href="https://twitter.com/intent/tweet?text=Trade%20on%20OpenPeer%20receive%20rewards&url=https%3A%2F%2Fopenpeer.xyz%2Fairdrop&via=openpeer_xyz."
+								href="https://twitter.com/intent/tweet?text=I've started trading P2P on OpenPeer a new decentralized P2P exchange backed by Outlier and Polygon Ventures @openpeer_xyz - you can earn rewards at https://app.openpeer.xyz/airdrop"
 								target="_blank"
 							>
 								<div className="flex items-center border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-gradient-to-r from-purple-200 via-cyan-50 to-cyan-200 transition ease-in-out hover:-translate-y-1 duration-300 cursor-pointer">
@@ -301,7 +301,7 @@ const AirdropPage = () => {
 								<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
 									<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
 										<span className="text-white text-base mb-2">Eligible for</span>
-										<span className="text-white text-5xl font-bold mb-2">
+										<span className="text-white text-4xl font-bold mb-2">
 											{Number(tokens).toFixed(2)}
 										</span>
 										<span className="text-white text-2xl">vP2P</span>
