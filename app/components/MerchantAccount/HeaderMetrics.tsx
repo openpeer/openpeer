@@ -1,10 +1,10 @@
 import Avatar from 'components/Avatar';
+import QuadrataClient from 'components/QuadrataClient';
 import { providers } from 'ethers';
 import { useVerificationStatus } from 'hooks';
 import { User } from 'models/types';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -15,11 +15,6 @@ import {
 	ChartBarSquareIcon,
 	StarIcon
 } from '@heroicons/react/24/outline';
-
-// import Synaps from '@synaps-io/react-verify';
-import Quadrata from './Quadrata';
-
-const queryClient = new QueryClient();
 
 const Metric = ({
 	label,
@@ -195,13 +190,11 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 					</div>
 				</div>
 			</div>
-			<QueryClientProvider client={queryClient}>
-				<Quadrata
-					onFinish={onFinish}
-					open={verificationModal && !verified}
-					onHide={() => setVerificationModal(false)}
-				/>
-			</QueryClientProvider>
+			<QuadrataClient
+				onFinish={onFinish}
+				open={verificationModal && !verified}
+				onHide={() => setVerificationModal(false)}
+			/>
 		</>
 	);
 };
