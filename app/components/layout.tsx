@@ -84,7 +84,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 		<div className={`${manrope.variable} font-sans`}>
 			<div>
 				<Transition.Root show={sidebarOpen} as={Fragment}>
-					<Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
+					<Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
 						<Transition.Child
 							as={Fragment}
 							enter="transition-opacity ease-linear duration-300"
@@ -148,7 +148,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 				</Transition.Root>
 
 				{/* Static sidebar for desktop */}
-				<div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
+				<div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
@@ -163,7 +163,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-col md:pl-64">
+				<div className="flex flex-col lg:pl-64">
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
 						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
 						<div className="w-full flex items-center justify-between px-4">
