@@ -155,11 +155,11 @@ const AirdropCountdown = ({
 					</div>
 					<div className="flex items-center justify-around space-x-2">
 						<span className="text-xl md:text-3xl font-bold">{minutes}</span>
-						<span className="font-light">{minutes === 1 ? 'min' : 'min'}</span>
+						<span className="font-light">{minutes === 1 ? 'min' : 'mins'}</span>
 					</div>
 					<div className="flex items-center justify-around space-x-2">
 						<span className="text-xl md:text-3xl font-bold">{seconds}</span>
-						<span className="font-light">{seconds === 1 ? 'sec' : 'sec'}</span>
+						<span className="font-light">{seconds === 1 ? 'sec' : 'secs'}</span>
 					</div>
 				</div>
 				<div className="my-4">
@@ -243,7 +243,7 @@ const AirdropPage = () => {
 					<span>
 						{address ? (
 							<Link
-								href="https://twitter.com/intent/tweet?text=Trade%20on%20OpenPeer%20receive%20rewards&url=https%3A%2F%2Fopenpeer.xyz%2Fairdrop&via=openpeer_xyz."
+								href="https://twitter.com/intent/tweet?text=I've started trading P2P on OpenPeer a new decentralized P2P exchange backed by Outlier and Polygon Ventures @openpeer_xyz - you can earn rewards at https://app.openpeer.xyz/airdrop"
 								target="_blank"
 							>
 								<div className="flex items-center border border-cyan-600 px-8 py-2 rounded-full text-cyan-600 hover:bg-gradient-to-r from-purple-200 via-cyan-50 to-cyan-200 transition ease-in-out hover:-translate-y-1 duration-300 cursor-pointer">
