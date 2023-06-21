@@ -1,4 +1,5 @@
 import Avatar from 'components/Avatar';
+import QuadrataClient from 'components/QuadrataClient';
 import { providers } from 'ethers';
 import { useVerificationStatus } from 'hooks';
 import { User } from 'models/types';
@@ -8,14 +9,12 @@ import { smallWalletAddress } from 'utils';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {
-	ArrowLongLeftIcon,
 	CalendarDaysIcon,
 	CalendarIcon,
 	ChartBarIcon,
 	ChartBarSquareIcon,
 	StarIcon
 } from '@heroicons/react/24/outline';
-import Synaps from '@synaps-io/react-verify';
 
 const Metric = ({
 	label,
@@ -83,7 +82,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 	const [verificationModal, setVerificationModal] = useState(verificationOpen);
 	const { chain } = useNetwork();
 	const { address: connectedAddress } = useAccount();
-	const { verified, verification, fetchVerificationStatus } = useVerificationStatus(address);
+	const { verified, fetchVerificationStatus } = useVerificationStatus(address);
 
 	useEffect(() => {
 		const fetchWalletAge = async () => {
@@ -102,110 +101,101 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 		}
 	}, [address]);
 
-	if (verificationModal && !!verification) {
-		const onFinish = async () => {
-			await fetchVerificationStatus();
-			setVerificationModal(false);
-		};
-		return (
-			<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8 px-6 pt-6 md:p-0">
-				<div>
-					<div
-						className="flex flex-row items-center cursor-pointer"
-						onClick={() => setVerificationModal(false)}
-					>
-						<ArrowLongLeftIcon width={24} />
-						<span className="pl-2">Back</span>
-					</div>
-					<Synaps sessionId={verification.session_id} service="individual" lang="en" onFinish={onFinish} />
-				</div>
-			</div>
-		);
-	}
+	const onFinish = async () => {
+		await fetchVerificationStatus();
+		setVerificationModal(false);
+	};
 
 	return (
-		<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8 px-6 pt-6 md:p-0">
-			<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
-				<div className="flex flex-col items-center">
-					<span className="m-auto flex items-center justify-center bg-gray-50 w-24 h-24 rounded-full">
-						<Avatar user={user} className="inline-block h-20 w-20" />
-					</span>
-					<div className="flex items-center pl-4 text-lg mb-2 mt-4">
-						<span className="mr-2">{name || smallWalletAddress(address)}</span>
-						{verified && (
-							<span>
-								<VerifiedIcon />
-							</span>
-						)}
-					</div>
-					{!!twitter && (
-						<span className="text-sm mb-4">
-							<Link href={`https://twitter.com/${twitter}/`}>
-								{twitter.startsWith('@') ? '' : '@'}
-								{twitter}
-							</Link>
+		<>
+			<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8 px-6 pt-6 md:p-0">
+				<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
+					<div className="flex flex-col items-center">
+						<span className="m-auto flex items-center justify-center bg-gray-50 w-24 h-24 rounded-full">
+							<Avatar user={user} className="inline-block h-20 w-20" />
 						</span>
-					)}
-					{!!chain && (
-						<div className="flex flex-row">
-							{user.address === connectedAddress ? (
-								<>
-									<Link
-										href={`/${address}/edit`}
-										className="flex items-center py-2 px-6 border rounded"
-									>
-										Edit profile
-									</Link>
-									<button
-										type="button"
-										className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
-										onClick={() => setVerificationModal(true)}
-									>
-										{verified ? '' : 'Get'} Verified
-										<span className="ml-2">
-											<VerifiedIcon />
-										</span>
-									</button>
-								</>
-							) : (
-								<Link
-									href={`${chain.blockExplorers!.default.url}/address/${address}`}
-									className="flex items-center py-2 px-6 border rounded"
-									target="_blank"
-								>
-									View on {chain.blockExplorers!.default.name}
-								</Link>
+						<div className="flex items-center pl-4 text-lg mb-2 mt-4">
+							<span className="mr-2">{name || smallWalletAddress(address)}</span>
+							{verified && (
+								<span>
+									<VerifiedIcon />
+								</span>
 							)}
 						</div>
-					)}
+						{!!twitter && (
+							<span className="text-sm mb-4">
+								<Link href={`https://twitter.com/${twitter}/`}>
+									{twitter.startsWith('@') ? '' : '@'}
+									{twitter}
+								</Link>
+							</span>
+						)}
+						{!!chain && (
+							<div className="flex flex-row">
+								{user.address === connectedAddress ? (
+									<>
+										<Link
+											href={`/${address}/edit`}
+											className="flex items-center py-2 px-6 border rounded"
+										>
+											Edit profile
+										</Link>
+										<button
+											type="button"
+											className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
+											onClick={() => setVerificationModal(true)}
+										>
+											{verified ? '' : 'Get'} Verified
+											<span className="ml-2">
+												<VerifiedIcon />
+											</span>
+										</button>
+									</>
+								) : (
+									<Link
+										href={`${chain.blockExplorers!.default.url}/address/${address}`}
+										className="flex items-center py-2 px-6 border rounded"
+										target="_blank"
+									>
+										View on {chain.blockExplorers!.default.name}
+									</Link>
+								)}
+							</div>
+						)}
+					</div>
 				</div>
-			</div>
-			<div>
-				<div className="w-full flex flex-col md:flex-row justify-around gap-6">
-					<Metric
-						label="Joined"
-						value={date.toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric'
-						})}
-						Icon={CalendarDaysIcon}
-					/>
-					<Metric label="Wallet Age" value={walletAge} Icon={CalendarIcon} />
-					<Metric label="Trades" value={trades.toString()} Icon={ChartBarIcon} />
-				</div>
+				<div>
+					<div className="w-full flex flex-col md:flex-row justify-around gap-6">
+						<Metric
+							label="Joined"
+							value={date.toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric'
+							})}
+							Icon={CalendarDaysIcon}
+						/>
+						<Metric label="Wallet Age" value={walletAge} Icon={CalendarIcon} />
+						<Metric label="Trades" value={trades.toString()} Icon={ChartBarIcon} />
+					</div>
 
-				<div className="w-full flex flex-col md:flex-row justify-around gap-6 mt-4">
-					<Metric label="Reviews" value="Coming soon..." Icon={StarIcon} />
-					<Metric
-						label="Completion Rate"
-						value={completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}
-						Icon={ChartBarSquareIcon}
-					/>
-					{/* <Metric label="Avg Trade Completion" value="5 minutes" Icon={ClockIcon} /> */}
+					<div className="w-full flex flex-col md:flex-row justify-around gap-6 mt-4">
+						<Metric label="Reviews" value="Coming soon..." Icon={StarIcon} />
+						<Metric
+							label="Completion Rate"
+							value={completionRate ? `${(completionRate * 100).toFixed(2)}%` : 'No trades'}
+							Icon={ChartBarSquareIcon}
+						/>
+						{/* <Metric label="Avg Trade Completion" value="5 minutes" Icon={ClockIcon} /> */}
+					</div>
 				</div>
 			</div>
-		</div>
+			<QuadrataClient
+				onFinish={onFinish}
+				open={verificationModal && !verified}
+				onHide={() => setVerificationModal(false)}
+			/>
+		</>
 	);
 };
 
