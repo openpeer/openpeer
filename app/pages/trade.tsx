@@ -1,6 +1,7 @@
 import { ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination } from 'hooks';
+import { SearchFilters } from 'models/search';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ const HomePage = () => {
 	const [isLoading, setLoading] = useState(false);
 	const [type, setType] = useState<string>('Buy');
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
+	const [filters, setFilters] = useState<SearchFilters>({} as SearchFilters);
 
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
@@ -28,7 +30,27 @@ const HomePage = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/lists?chain_id=${chainId}&page=${page}&type=${type === 'Buy' ? 'SellList' : 'BuyList'}`)
+		const params: { [key: string]: string | undefined } = {
+			chain_id: chainId.toString(),
+			page: page.toString(),
+			type: type === 'Buy' ? 'SellList' : 'BuyList',
+			amount: filters.amount ? filters.amount.toString() : undefined,
+			currency: filters.currency ? filters.currency.id.toString() : undefined,
+			payment_method: filters.paymentMethod ? filters.paymentMethod.id.toString() : undefined,
+			token: filters.token ? filters.token.id.toString() : undefined,
+			fiat_amount: filters.fiatAmount ? filters.fiatAmount.toString() : undefined
+		};
+
+		const search = Object.keys(params)
+			.filter((key) => !!params[key])
+			.reduce((obj, key) => {
+				const newObject = obj;
+				newObject[key] = params[key] as string;
+				return newObject;
+			}, {} as { [key: string]: string });
+
+		const searchParams = new URLSearchParams(search);
+		fetch(`/api/lists?${searchParams.toString()}`)
 			.then((res) => res.json())
 			.then((response: { data: List[]; meta: any }) => {
 				const { data, meta } = response;
@@ -40,7 +62,7 @@ const HomePage = () => {
 				setLists(toBuyers);
 				setLoading(false);
 			});
-	}, [chainId, address, page, type]);
+	}, [chainId, address, page, type, filters]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
@@ -58,7 +80,7 @@ const HomePage = () => {
 				<div className="flex flex-row items-center justify-between">
 					<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
 					<div className="flex justify-end">
-						<Filters />
+						<Filters onFilterUpdate={setFilters} />
 					</div>
 				</div>
 				{isLoading ? (
