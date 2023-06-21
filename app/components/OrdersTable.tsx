@@ -140,7 +140,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 															<div className="w-16 flex flex-row mb-2">
 																<Avatar user={user} />
 															</div>
-															<div className="text-sm text-gray-900 break-all">
+															<div className="text-sm text-gray-900 text-ellipsis overflow-hidden">
 																{user.name || smallWalletAddress(user.address)}
 															</div>
 														</div>

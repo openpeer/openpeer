@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import Token from './Token/Token';
 
 interface ListsTableProps {
 	lists: List[];
@@ -78,7 +79,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						id,
 						total_available_amount: amount,
 						seller,
-						token: { symbol },
+						token,
 						fiat_currency: { symbol: fiatSymbol },
 						limit_min: min,
 						limit_max: max,
@@ -88,6 +89,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					const { address: sellerAddress, name } = seller;
 					const canBuy = sellerAddress !== address;
 					const bank = paymentMethod?.bank || list.bank;
+					const { symbol } = token;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -99,15 +101,27 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<div className="w-16 flex flex-row mb-2">
 													<Avatar user={seller} />
 												</div>
-												<div className="text-sm text-gray-900 break-all">
+												<div className="text-sm text-gray-900 text-ellipsis overflow-hidden">
 													{name || smallWalletAddress(sellerAddress)}
 												</div>
 											</div>
 										</Link>
 										<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-											<span>
-												{amount} {symbol}
-											</span>
+											<div className="flex flex-row items-center space-x-2">
+												<Token token={token} size={24} />
+												<span>
+													{amount} {symbol}
+												</span>
+												<Image
+													src={bank.icon}
+													alt={bank.name}
+													className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+													width={24}
+													height={24}
+													unoptimized
+												/>
+												<span>{bank.name}</span>
+											</div>
 										</div>
 									</div>
 									<div className="w-2/5 flex flex-col lg:hidden px-4">
@@ -126,10 +140,20 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{amount} {symbol}
+								<div className="flex flex-row items-center space-x-2">
+									<Token token={token} size={24} />
+									<span>
+										{amount} {symbol}
+									</span>
+								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
+								<div className="flex flex-row items-center space-x-2">
+									<span>
+										{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
+									</span>
+									<Token token={token} size={24} />
+								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
