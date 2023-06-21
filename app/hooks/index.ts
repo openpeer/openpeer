@@ -8,6 +8,7 @@ import useOpenDispute from './useOpenDispute';
 import usePagination from './usePagination';
 import useTransactionFeedback from './useTransactionFeedback';
 import useUserProfile from './useUserProfile';
+import useVerificationStatus from './useVerificationStatus';
 
 export {
 	useListPrice,
@@ -19,5 +20,6 @@ export {
 	useEscrowFee,
 	useBiconomy,
 	useUserProfile,
-	usePagination
+	usePagination,
+	useVerificationStatus
 };

@@ -6,14 +6,16 @@ import { User } from 'models/types';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-// import OpenpeerAirdrop from 'public/airdrop/openpeedrAirdrop.svg';
+import OpenpeerAirdrop from 'public/airdrop/openpeedrAirdrop.svg';
 import logo from 'public/logo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+	ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
+} from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -26,19 +28,19 @@ const manrope = Manrope({
 	variable: '--font-manrope'
 });
 
-// const AirdropIcon = () => (
-// <Image
-// src={OpenpeerAirdrop}
-// alt="openpeer logo"
-// className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
-// />
-// );
+const AirdropIcon = () => (
+	<Image
+		src={OpenpeerAirdrop}
+		alt="openpeer logo"
+		className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+	/>
+);
 
 const navigation = [
 	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
-	// { name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
+	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
+	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
 ];
 
 const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => (
@@ -82,7 +84,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 		<div className={`${manrope.variable} font-sans`}>
 			<div>
 				<Transition.Root show={sidebarOpen} as={Fragment}>
-					<Dialog as="div" className="relative z-40 md:hidden" onClose={setSidebarOpen}>
+					<Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
 						<Transition.Child
 							as={Fragment}
 							enter="transition-opacity ease-linear duration-300"
@@ -146,7 +148,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 				</Transition.Root>
 
 				{/* Static sidebar for desktop */}
-				<div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
+				<div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex min-h-0 flex-1 flex-col bg-black">
 						<div className="flex h-16 flex-shrink-0 items-center px-4">
@@ -161,7 +163,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-col md:pl-64">
+				<div className="flex flex-col lg:pl-64">
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
 						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
 						<div className="w-full flex items-center justify-between px-4">
