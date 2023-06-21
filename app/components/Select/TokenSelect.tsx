@@ -45,7 +45,7 @@ const TokenSelect = ({
 	}, [chainId]);
 
 	if (isLoading) {
-		return <Loading message="" />;
+		return <Loading message="" big={false} />;
 	}
 	return tokens ? (
 		<Select

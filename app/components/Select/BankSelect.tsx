@@ -32,7 +32,7 @@ const BankSelect = ({
 	}, [currencyId]);
 
 	if (isLoading) {
-		return <Loading />;
+		return <Loading big={false} />;
 	}
 
 	return banks ? (
