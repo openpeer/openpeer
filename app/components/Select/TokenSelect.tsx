@@ -13,7 +13,8 @@ const TokenSelect = ({
 	error,
 	minimal,
 	selectedIdOnLoad,
-	label = 'Choose token to list'
+	label = 'Choose token to list',
+	labelStyle = ''
 }: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -55,6 +56,7 @@ const TokenSelect = ({
 			error={error}
 			minimal={minimal}
 			token
+			labelStyle={labelStyle}
 		/>
 	) : (
 		<></>

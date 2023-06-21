@@ -26,14 +26,17 @@ export default function Select({
 	height = '',
 	rounded = false,
 	flag = false,
-	token = false
+	token = false,
+	labelStyle = ''
 }: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
 			{({ open }) => (
 				<div className={`my-8 ${minimal ? 'pr-1.5' : ''}`}>
 					{!minimal && (
-						<Listbox.Label className="block text-base font-medium text-gray-700">{label}</Listbox.Label>
+						<Listbox.Label className={`block text-base font-medium text-gray-700 ${labelStyle}`}>
+							{label}
+						</Listbox.Label>
 					)}
 					<div className={`relative ${minimal ? '' : 'mt-1'}`}>
 						<Listbox.Button

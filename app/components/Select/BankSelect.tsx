@@ -9,12 +9,14 @@ const BankSelect = ({
 	currencyId,
 	onSelect,
 	selected,
-	error
+	error,
+	labelStyle = ''
 }: {
 	currencyId: number;
 	onSelect: SelectProps['onSelect'];
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
+	labelStyle?: SelectProps['labelStyle'];
 }) => {
 	const [banks, setBanks] = useState<Bank[]>();
 	const [isLoading, setLoading] = useState(false);

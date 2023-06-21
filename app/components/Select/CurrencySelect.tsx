@@ -16,7 +16,8 @@ const CurrencySelect = ({
 	label = 'Choose Fiat currency to receive',
 	minimal = false,
 	selectTheFirst = false,
-	selectByLocation = false
+	selectByLocation = false,
+	labelStyle = ''
 }: FiatCurrencySelect) => {
 	const [rawCurrencies, setRawCurrencies] = useState<FiatCurrency[]>();
 	const [currencies, setCurrencies] = useState<FiatCurrency[]>();
@@ -102,6 +103,7 @@ const CurrencySelect = ({
 			height={height}
 			flag
 			onSearch={setSearch}
+			labelStyle={labelStyle}
 		/>
 	) : (
 		<></>
