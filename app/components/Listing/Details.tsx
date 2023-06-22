@@ -21,10 +21,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 			const signingAddress = verifyMessage(variables.message, data);
 			if (signingAddress === address) {
 				const result = await fetch(
-					'/api/lists',
+					list.id ? `/api/lists/${list.id}` : '/api/lists',
 
 					{
-						method: 'POST',
+						method: list.id ? 'PUT' : 'POST',
 						body: JSON.stringify(
 							snakecaseKeys(
 								{
