@@ -23,6 +23,7 @@ const HomePage = () => {
 	const [type, setType] = useState<string>('Buy');
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 	const [filters, setFilters] = useState<SearchFilters>({} as SearchFilters);
+	const [showFilters, setShowFilters] = useState(false);
 
 	const { chain, chains } = useNetwork();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
@@ -75,14 +76,33 @@ const HomePage = () => {
 
 	if (!lists) return <p>No lists data</p>;
 
+	const handleToggleFilters = () => {
+		setShowFilters(!showFilters);
+	};
+
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-				<div className="flex flex-col lg:flex-row items-center lg:justify-between">
-					<div className="mt-6">
+				<div className="flex flex-row items-center justify-between">
+					<div className="lg:mt-6">
 						<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
 					</div>
 					<div className="flex lg:justify-end">
+						<div className="flex items-center lg:hidden" onClick={handleToggleFilters}>
+							<AdjustmentsVerticalIcon
+								width={24}
+								height={24}
+								className="text-gray-600 hover:cursor-pointer"
+							/>
+							<span className="text-gray-600 hover:cursor-pointer ml-2">Filters</span>
+						</div>
+						{showFilters && (
+							<div className="border border-gray-500">
+								<Filters onFilterUpdate={setFilters} />
+							</div>
+						)}
+					</div>
+					<div className="flex lg:justify-end hidden lg:block">
 						<Filters onFilterUpdate={setFilters} />
 					</div>
 				</div>

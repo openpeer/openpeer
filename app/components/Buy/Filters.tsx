@@ -45,7 +45,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	};
 
 	return (
-		<div className="flex flex-col lg:flex-row items-center space-x-4">
+		<div className="flex flex-row items-center space-x-4">
 			<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm w-full truncate" />
 			<Input
 				label="Token Amount"
