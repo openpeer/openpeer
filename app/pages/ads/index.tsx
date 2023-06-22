@@ -14,6 +14,8 @@ const Ads = () => {
 	const { data: session } = useSession();
 
 	useEffect(() => {
+		if (!address) return;
+
 		fetch(`/api/lists?chain_id=${chainId}&seller=${address}`)
 			.then((res) => res.json())
 			.then((data) => {
@@ -21,13 +23,13 @@ const Ads = () => {
 			});
 	}, [address, chainId]);
 
-	if (address === undefined || lists === undefined) {
-		return <Loading />;
+	// @ts-expect-error
+	if (address === undefined || !session || session.address !== address) {
+		return <WrongNetwork />;
 	}
 
-	// @ts-expect-error
-	if (!session || session.address !== address) {
-		return <WrongNetwork />;
+	if (lists === undefined) {
+		return <Loading />;
 	}
 
 	return (

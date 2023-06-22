@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const { method, query, body } = req;
 	const { id } = query;
 	// @ts-ignore
-	const { jwt } = await getSession({ req });
+	const { jwt } = (await getSession({ req })) || {};
 
 	try {
 		switch (method) {

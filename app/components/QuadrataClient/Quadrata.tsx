@@ -6,22 +6,13 @@ import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import {
-	useAccount,
-	useContractWrite,
-	useNetwork,
-	usePrepareContractWrite,
-	useSigner,
+	useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useSigner,
 	useWaitForTransaction
 } from 'wagmi';
 
 import {
-	Page,
-	QuadAttribute,
-	QuadClient,
-	QuadClientConfig,
-	QuadClientEnvironment,
-	QuadClientMintParamsReadyCallback,
-	QuadMintParamsBigNumbers
+	Page, QuadAttribute, QuadClient, QuadClientConfig, QuadClientEnvironment,
+	QuadClientMintParamsReadyCallback, QuadMintParamsBigNumbers
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
 
@@ -152,7 +143,7 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 	};
 
 	if (!account) {
-		return <h1>Connect wallet</h1>;
+		return <></>;
 	}
 
 	if (isConnecting || !accessToken) {

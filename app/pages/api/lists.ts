@@ -22,7 +22,7 @@ const createList = async (body: NextApiRequest['body'], token: string): Promise<
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List[] | List>) {
 	const { method, query, body } = req;
 	// @ts-ignore
-	const { jwt } = await getSession({ req });
+	const { jwt } = (await getSession({ req })) || {};
 
 	try {
 		switch (method) {
