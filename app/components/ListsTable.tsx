@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import EditListButtons from './Button/EditListButtons';
 
 interface ListsTableProps {
 	lists: List[];
@@ -86,7 +87,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						payment_method: paymentMethod
 					} = list;
 					const { address: sellerAddress, name } = seller;
-					const canBuy = sellerAddress !== address;
+					const isSeller = sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
 
 					return (
@@ -114,7 +115,9 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										<span className="font-bold mb-2">
 											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 										</span>
-										{canBuy && (
+										{isSeller ? (
+											<EditListButtons id={list.id} />
+										) : (
 											<BuyButton
 												id={list.id}
 												fiatAmount={fiatAmount}
@@ -148,7 +151,9 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
-								{canBuy && (
+								{isSeller ? (
+									<EditListButtons id={list.id} />
+								) : (
 									<BuyButton
 										id={list.id}
 										fiatAmount={fiatAmount}

@@ -1,10 +1,10 @@
 import { ListsTable, Switcher } from 'components';
 import { Buy, Sell } from 'components/QuickBuy';
 import { List } from 'models/types';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 
 type QuickBuyType = 'Buy' | 'Sell';
 

@@ -67,7 +67,9 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	useEffect(() => {
 		setLoading(true);
 		if (type === 'BuyList') {
-			setPaymentMethod(undefined);
+			if (!list.id) {
+				setPaymentMethod(undefined);
+			}
 			setPaymentMethods([]);
 			setLoading(false);
 			return;
@@ -79,7 +81,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				setPaymentMethods(data);
 				if (!paymentMethod.bank?.id) {
 					setPaymentMethod(data[0]);
-				} else {
+				} else if (!list.id) {
 					setPaymentMethod(undefined);
 				}
 				setLoading(false);
