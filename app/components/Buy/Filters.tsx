@@ -45,7 +45,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	};
 
 	return (
-		<div className="flex flex-row items-center space-x-4">
+		<div className="flex lg:flex-row items-center space-x-4">
 			<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm w-full truncate" />
 			<Input
 				label="Token Amount"
@@ -55,7 +55,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={amount}
 				onChangeNumber={debounce(setAmount, 800)}
 				labelStyle="text-sm"
-				containerExtraStyle="w-32"
+				containerExtraStyle="w-full lg:w-32"
 				extraStyle="pr-2"
 			/>
 			<CurrencySelect label="Currency" onSelect={setCurrency} selected={currency} labelStyle="text-sm truncate" />
@@ -67,7 +67,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={fiatAmount}
 				onChangeNumber={debounce(setFiatAmount, 800)}
 				labelStyle="text-sm"
-				containerExtraStyle="w-32"
+				containerExtraStyle="w-full lg:w-32"
 				extraStyle="pr-2"
 			/>
 			<BankSelect

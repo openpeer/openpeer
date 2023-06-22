@@ -83,29 +83,27 @@ const HomePage = () => {
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-				<div className="flex flex-row items-center justify-between">
+				<div className="flex flex-row items-center justify-between relative">
 					<div className="lg:mt-6">
 						<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
 					</div>
-					<div className="flex lg:justify-end">
-						<div className="flex items-center lg:hidden" onClick={handleToggleFilters}>
-							<AdjustmentsVerticalIcon
-								width={24}
-								height={24}
-								className="text-gray-600 hover:cursor-pointer"
-							/>
-							<span className="text-gray-600 hover:cursor-pointer ml-2">Filters</span>
-						</div>
-						{showFilters && (
-							<div className="border border-gray-500">
-								<Filters onFilterUpdate={setFilters} />
-							</div>
-						)}
+					<div className="flex items-center lg:hidden lg:justify-end" onClick={handleToggleFilters}>
+						<AdjustmentsVerticalIcon
+							width={24}
+							height={24}
+							className="text-gray-600 hover:cursor-pointer"
+						/>
+						<span className="text-gray-600 hover:cursor-pointer ml-2">Filters</span>
 					</div>
 					<div className="flex lg:justify-end hidden lg:block">
 						<Filters onFilterUpdate={setFilters} />
 					</div>
 				</div>
+				{showFilters && (
+					<div className="my-8">
+						<Filters onFilterUpdate={setFilters} />
+					</div>
+				)}
 				{isLoading ? (
 					<Loading />
 				) : (
