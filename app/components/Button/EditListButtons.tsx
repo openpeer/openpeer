@@ -34,7 +34,7 @@ const EditListButtons = ({ id }: { id: number }) => {
 			</Link>
 			<div
 				className="bg-red-400 rounded p-1.5 cursor-pointer"
-				onClick={() => signMessage({ message: `I want to delete the order ${id}` })}
+				onClick={() => signMessage({ message: `I want to delete the list ${id}` })}
 			>
 				<TrashIcon width={20} height={20} color="white" />
 			</div>
