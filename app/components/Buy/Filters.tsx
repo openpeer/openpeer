@@ -45,8 +45,8 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	};
 
 	return (
-		<div className="flex items-center space-x-4">
-			<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm" />
+		<div className="flex flex-col lg:flex-row items-center space-x-4">
+			<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm w-full truncate" />
 			<Input
 				label="Token Amount"
 				id="amount"
@@ -55,8 +55,10 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={amount}
 				onChangeNumber={debounce(setAmount, 800)}
 				labelStyle="text-sm"
+				containerExtraStyle="w-32"
+				extraStyle="pr-2"
 			/>
-			<CurrencySelect label="Currency" onSelect={setCurrency} selected={currency} labelStyle="text-sm" />
+			<CurrencySelect label="Currency" onSelect={setCurrency} selected={currency} labelStyle="text-sm truncate" />
 			<Input
 				label="Fiat Amount"
 				id="fiatAmount"
@@ -65,15 +67,17 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={fiatAmount}
 				onChangeNumber={debounce(setFiatAmount, 800)}
 				labelStyle="text-sm"
+				containerExtraStyle="w-32"
+				extraStyle="pr-2"
 			/>
 			<BankSelect
 				currencyId={currency?.id || -1}
 				onSelect={setPaymentMethod}
 				selected={paymentMethod}
-				labelStyle="text-sm"
+				labelStyle="text-sm truncate w-full"
 			/>
-			<div>
-				<XMarkIcon width={24} height={24} className="cursor-pointer" onClick={reset} />
+			<div className="my-8 mt-14">
+				<XMarkIcon width={24} height={24} className="hove:cursor-pointer cursor-pointer" onClick={reset} />
 			</div>
 		</div>
 	);

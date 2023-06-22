@@ -1,3 +1,4 @@
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination } from 'hooks';
@@ -77,9 +78,11 @@ const HomePage = () => {
 	return (
 		<div className="py-6">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-				<div className="flex flex-row items-center justify-between">
-					<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
-					<div className="flex justify-end">
+				<div className="flex flex-col lg:flex-row items-center lg:justify-between">
+					<div className="mt-6">
+						<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
+					</div>
+					<div className="flex lg:justify-end">
 						<Filters onFilterUpdate={setFilters} />
 					</div>
 				</div>
