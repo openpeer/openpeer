@@ -45,8 +45,10 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	};
 
 	return (
-		<div className="flex lg:flex-row items-center space-x-4">
-			<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm w-full truncate" />
+		<div className="w-full flex flex-col lg:flex-row items-center lg:space-x-4">
+			<div className="w-full lg:w-auto">
+				<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm truncate" />
+			</div>
 			<Input
 				label="Token Amount"
 				id="amount"
@@ -55,10 +57,17 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={amount}
 				onChangeNumber={debounce(setAmount, 800)}
 				labelStyle="text-sm"
-				containerExtraStyle="w-full lg:w-32"
+				containerExtraStyle="w-full lg:w-32 my-0"
 				extraStyle="pr-2"
 			/>
-			<CurrencySelect label="Currency" onSelect={setCurrency} selected={currency} labelStyle="text-sm truncate" />
+			<div className="w-full lg:w-auto">
+				<CurrencySelect
+					label="Currency"
+					onSelect={setCurrency}
+					selected={currency}
+					labelStyle="text-sm truncate"
+				/>
+			</div>
 			<Input
 				label="Fiat Amount"
 				id="fiatAmount"
@@ -67,17 +76,24 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 				value={fiatAmount}
 				onChangeNumber={debounce(setFiatAmount, 800)}
 				labelStyle="text-sm"
-				containerExtraStyle="w-full lg:w-32"
+				containerExtraStyle="w-full lg:w-32 my-0"
 				extraStyle="pr-2"
 			/>
-			<BankSelect
-				currencyId={currency?.id || -1}
-				onSelect={setPaymentMethod}
-				selected={paymentMethod}
-				labelStyle="text-sm truncate w-full"
-			/>
-			<div className="my-8 mt-14">
-				<XMarkIcon width={24} height={24} className="hove:cursor-pointer cursor-pointer" onClick={reset} />
+			<div className="w-full lg:w-auto">
+				<BankSelect
+					currencyId={currency?.id || -1}
+					onSelect={setPaymentMethod}
+					selected={paymentMethod}
+					labelStyle="text-sm truncate w-full"
+				/>
+			</div>
+			<div className="w-full mb-4 lg:w-auto lg:mt-6 lg:mb-0">
+				<div className="flex items-center text-gray-600 hover:cursor-pointer">
+					<XMarkIcon width={24} height={24} className="text-gray-600 hove:cursor-pointer" onClick={reset} />
+					<div className="lg:hidden text-sm" onClick={reset}>
+						Clear Filters
+					</div>
+				</div>
 			</div>
 		</div>
 	);

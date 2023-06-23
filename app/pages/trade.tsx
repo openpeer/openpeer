@@ -100,7 +100,7 @@ const HomePage = () => {
 					</div>
 				</div>
 				{showFilters && (
-					<div className="my-8">
+					<div className="lg:my-8 lg:hidden">
 						<Filters onFilterUpdate={setFilters} />
 					</div>
 				)}

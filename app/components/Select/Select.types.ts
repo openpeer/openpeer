@@ -19,6 +19,7 @@ export interface SelectProps {
 	token?: boolean;
 	onSearch?: (value: string) => void;
 	labelStyle?: string;
+	extraStyle?: string;
 }
 
 export interface FiatCurrencySelect {
