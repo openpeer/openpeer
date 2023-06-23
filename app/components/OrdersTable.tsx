@@ -1,9 +1,12 @@
-import { Avatar, Button } from 'components';
+import { Avatar, Button, Flag } from 'components';
+import { countries } from 'models/countries';
 import { Order } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
+
+import Token from './Token/Token';
 
 interface OrdersTableProps {
 	orders: Order[];
@@ -146,28 +149,49 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 														</div>
 													</Link>
 													<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-														<span>
-															{currency.symbol} {Number(fiatAmount).toFixed(2)}
-														</span>
-														<span>{orderStatus(status)}</span>
+														<div className="flex flex-row items-center space-x-1">
+															<Flag name={countries[currency.country_code]} size={24} />
+															<span>
+																{currency.symbol} {Number(fiatAmount).toFixed(2)}
+															</span>
+															<span>{orderStatus(status)}</span>
+														</div>
 													</div>
 												</div>
 												<div className="w-2/5 flex flex-col lg:hidden px-4">
-													<span className="font-bold mb-2">
-														{Number(tokenAmount).toFixed(2)} {token.symbol}
-													</span>
+													<div className="flex flex-row items-center space-x-1 mb-2">
+														<Token token={token} size={24} />
+														<span className="font-bold">
+															{Number(tokenAmount).toFixed(2)} {token.symbol}
+														</span>
+													</div>
 													<NextButton order={order} address={address} />
 												</div>
 											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{currency.symbol} {Number(price).toFixed(2)}
+											<div className="flex flex-row items-center space-x-1">
+												<Flag name={countries[currency.country_code]} size={24} />
+												<span>
+													{currency.symbol} {Number(price).toFixed(2)}
+												</span>
+											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{currency.symbol} {Number(fiatAmount).toFixed(2)}
+											<div className="flex flex-row items-center space-x-1">
+												<Flag name={countries[currency.country_code]} size={24} />
+												<span>
+													{currency.symbol} {Number(fiatAmount).toFixed(2)}
+												</span>
+											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											{Number(tokenAmount).toFixed(2)} {token.symbol}
+											<div className="flex flex-row items-center space-x-1">
+												<Token token={token} size={24} />
+												<span>
+													{Number(tokenAmount).toFixed(2)} {token.symbol}
+												</span>
+											</div>
 										</td>
 										<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 											{orderStatus(status)}
