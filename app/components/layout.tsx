@@ -13,7 +13,13 @@ import { ToastContainer } from 'react-toastify';
 import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+	ChartBarSquareIcon,
+	PencilIcon,
+	PlusCircleIcon,
+	ShoppingBagIcon,
+	XMarkIcon
+} from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 

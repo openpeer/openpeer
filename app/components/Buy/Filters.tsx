@@ -52,7 +52,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 			<Input
 				label="Token Amount"
 				id="amount"
-				placeholder="Enter the Token Amount"
+				placeholder="1000"
 				type="decimal"
 				value={amount}
 				onChangeNumber={debounce(setAmount, 800)}
@@ -71,7 +71,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 			<Input
 				label="Fiat Amount"
 				id="fiatAmount"
-				placeholder="Enter the Fiat Amount"
+				placeholder="500"
 				type="decimal"
 				value={fiatAmount}
 				onChangeNumber={debounce(setFiatAmount, 800)}

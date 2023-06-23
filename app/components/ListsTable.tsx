@@ -1,3 +1,4 @@
+import { countries } from 'models/countries';
 import { List } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,8 +8,9 @@ import { useAccount } from 'wagmi';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
-import Token from './Token/Token';
 import EditListButtons from './Button/EditListButtons';
+import Flag from './Flag/Flag';
+import Token from './Token/Token';
 
 interface ListsTableProps {
 	lists: List[];
@@ -81,7 +83,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						total_available_amount: amount,
 						seller,
 						token,
-						fiat_currency: { symbol: fiatSymbol },
+						fiat_currency: { symbol: fiatSymbol, country_code: countryCode } = {},
 						limit_min: min,
 						limit_max: max,
 						price,
@@ -108,7 +110,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 											</div>
 										</Link>
 										<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-											<div className="flex flex-row items-center space-x-2">
+											<div className="flex flex-row items-center space-x-1">
 												<Token token={token} size={24} />
 												<span>
 													{amount} {symbol}
@@ -126,9 +128,18 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										</div>
 									</div>
 									<div className="w-2/5 flex flex-col lg:hidden px-4">
-										<span className="font-bold mb-2">
-											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
-										</span>
+										<div className="flex flex-row items-center space-x-1 mb-2">
+											<Flag name={countries[countryCode!]} size={24} />
+											<span className="font-bold">
+												<div className="flex flex-row items-center space-x-1">
+													<span>
+														{fiatSymbol} {Number(price).toFixed(2)} per
+													</span>
+													<Token token={token} size={24} />
+													<span>{symbol}</span>
+												</div>
+											</span>
+										</div>
 										{isSeller ? (
 											<EditListButtons id={list.id} />
 										) : (
@@ -143,7 +154,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-2">
+								<div className="flex flex-row items-center space-x-1">
 									<Token token={token} size={24} />
 									<span>
 										{amount} {symbol}
@@ -151,11 +162,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-2">
+								<div className="flex flex-row items-center space-x-1">
+									<Flag name={countries[countryCode!]} size={24} />
 									<span>
 										{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 									</span>
-									<Token token={token} size={24} />
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
