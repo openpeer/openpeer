@@ -18,6 +18,8 @@ export interface SelectProps {
 	flag?: boolean;
 	token?: boolean;
 	onSearch?: (value: string) => void;
+	labelStyle?: string;
+	extraStyle?: string;
 }
 
 export interface FiatCurrencySelect {
@@ -30,6 +32,7 @@ export interface FiatCurrencySelect {
 	selectedIdOnLoad?: string;
 	selectTheFirst?: boolean;
 	selectByLocation?: boolean;
+	labelStyle?: string;
 }
 
 export interface TokenSelectProps {
@@ -39,4 +42,5 @@ export interface TokenSelectProps {
 	minimal?: SelectProps['minimal'];
 	selectedIdOnLoad?: string;
 	label?: string;
+	labelStyle?: string;
 }

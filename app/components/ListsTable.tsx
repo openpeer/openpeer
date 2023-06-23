@@ -1,3 +1,4 @@
+import { countries } from 'models/countries';
 import { List } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +9,8 @@ import { useAccount } from 'wagmi';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
+import Flag from './Flag/Flag';
+import Token from './Token/Token';
 
 interface ListsTableProps {
 	lists: List[];
@@ -79,8 +82,8 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						id,
 						total_available_amount: amount,
 						seller,
-						token: { symbol },
-						fiat_currency: { symbol: fiatSymbol },
+						token,
+						fiat_currency: { symbol: fiatSymbol, country_code: countryCode } = {},
 						limit_min: min,
 						limit_max: max,
 						price,
@@ -89,6 +92,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					const { address: sellerAddress, name } = seller;
 					const isSeller = sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
+					const { symbol } = token;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -100,21 +104,42 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<div className="w-16 flex flex-row mb-2">
 													<Avatar user={seller} />
 												</div>
-												<div className="text-sm text-gray-900 break-all">
+												<div className="text-sm text-gray-900 text-ellipsis overflow-hidden">
 													{name || smallWalletAddress(sellerAddress)}
 												</div>
 											</div>
 										</Link>
 										<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
-											<span>
-												{amount} {symbol}
-											</span>
+											<div className="flex flex-row items-center space-x-1">
+												<Token token={token} size={24} />
+												<span>
+													{amount} {symbol}
+												</span>
+												<Image
+													src={bank.icon}
+													alt={bank.name}
+													className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+													width={24}
+													height={24}
+													unoptimized
+												/>
+												<span>{bank.name}</span>
+											</div>
 										</div>
 									</div>
 									<div className="w-2/5 flex flex-col lg:hidden px-4">
-										<span className="font-bold mb-2">
-											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
-										</span>
+										<div className="flex flex-row items-center space-x-1 mb-2">
+											<Flag name={countries[countryCode!]} size={24} />
+											<span className="font-bold">
+												<div className="flex flex-row items-center space-x-1">
+													<span>
+														{fiatSymbol} {Number(price).toFixed(2)} per
+													</span>
+													<Token token={token} size={24} />
+													<span>{symbol}</span>
+												</div>
+											</span>
+										</div>
 										{isSeller ? (
 											<EditListButtons id={list.id} />
 										) : (
@@ -129,10 +154,20 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{amount} {symbol}
+								<div className="flex flex-row items-center space-x-1">
+									<Token token={token} size={24} />
+									<span>
+										{amount} {symbol}
+									</span>
+								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
+								<div className="flex flex-row items-center space-x-1">
+									<Flag name={countries[countryCode!]} size={24} />
+									<span>
+										{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
+									</span>
+								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}

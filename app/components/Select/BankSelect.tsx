@@ -9,12 +9,14 @@ const BankSelect = ({
 	currencyId,
 	onSelect,
 	selected,
-	error
+	error,
+	labelStyle = ''
 }: {
 	currencyId: number;
 	onSelect: SelectProps['onSelect'];
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
+	labelStyle?: SelectProps['labelStyle'];
 }) => {
 	const [banks, setBanks] = useState<Bank[]>();
 	const [isLoading, setLoading] = useState(false);
@@ -30,11 +32,18 @@ const BankSelect = ({
 	}, [currencyId]);
 
 	if (isLoading) {
-		return <Loading />;
+		return <Loading big={false} />;
 	}
 
 	return banks ? (
-		<Select label="Payment Method" options={banks} selected={selected} onSelect={onSelect} error={error} />
+		<Select
+			label="Payment Method"
+			options={banks}
+			selected={selected}
+			onSelect={onSelect}
+			error={error}
+			labelStyle={labelStyle}
+		/>
 	) : (
 		<></>
 	);

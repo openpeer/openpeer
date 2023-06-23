@@ -3,7 +3,7 @@ import { NumericFormat, OnValueChange } from 'react-number-format';
 
 export interface InputProps {
 	label: string;
-	addOn?: JSX.Element;
+	addOn?: JSX.Element | string;
 	id: string;
 	value?: number | string | undefined;
 	onChange?: (value: string) => void | undefined;
@@ -18,6 +18,7 @@ export interface InputProps {
 	disabled?: boolean;
 	extraStyle?: string;
 	containerExtraStyle?: string;
+	labelStyle?: string;
 }
 
 const Input = ({
@@ -36,7 +37,8 @@ const Input = ({
 	error,
 	disabled = false,
 	extraStyle = '',
-	containerExtraStyle = ''
+	containerExtraStyle = '',
+	labelStyle = ''
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -46,12 +48,12 @@ const Input = ({
 	return (
 		<div className={`my-8 ${containerExtraStyle}`}>
 			<div className="flex justify-between items-center">
-				<label htmlFor={id} className="block text-base font-medium text-gray-700 mb-1">
+				<label htmlFor={id} className={`block text-base font-medium text-gray-700 mb-1 ${labelStyle}`}>
 					{label}
 				</label>
 				<span className="text-sm text-gray-500">{labelSideInfo}</span>
 			</div>
-			<div className="relative mt-1 rounded-md shadow-sm">
+			<div className="relative rounded-md shadow-sm">
 				{prefix}
 				{type === 'decimal' ? (
 					<NumericFormat
@@ -83,7 +85,7 @@ const Input = ({
 						disabled={disabled}
 					/>
 				)}
-				{!!addOn && <div className="absolute inset-y-0 right-0 flex items-center">{addOn}</div>}
+				{!!addOn && <div className="absolute inset-y-0 right-2 flex items-center">{addOn}</div>}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 		</div>

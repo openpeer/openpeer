@@ -6,7 +6,7 @@ import { User } from 'models/types';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import OpenpeerAirdrop from 'public/airdrop/openpeedrAirdrop.svg';
+import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -14,7 +14,11 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
-	ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon, XMarkIcon
+	ChartBarSquareIcon,
+	PencilIcon,
+	PlusCircleIcon,
+	ShoppingBagIcon,
+	XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';

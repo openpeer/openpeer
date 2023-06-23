@@ -8,9 +8,7 @@ import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import {
-	ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon
-} from '@heroicons/react/24/outline';
+import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
