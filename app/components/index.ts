@@ -1,6 +1,7 @@
 import Accordion from './Accordion/Accordion';
 import Avatar from './Avatar';
 import Button from './Button/Button';
+import EditListButtons from './Button/EditListButtons';
 import Switcher from './Button/Switcher';
 import Checkbox from './Checkbox/Checkbox';
 import Flag from './Flag/Flag';
@@ -45,5 +46,6 @@ export {
 	Modal,
 	Flag,
 	Accordion,
-	Pagination
+	Pagination,
+	EditListButtons
 };

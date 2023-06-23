@@ -37,6 +37,7 @@ const AirdropIcon = () => (
 const navigation = [
 	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
+	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
 	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
 ];

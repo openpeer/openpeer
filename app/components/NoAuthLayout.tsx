@@ -8,7 +8,9 @@ import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import { ChartBarSquareIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
+import {
+	ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon
+} from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -24,6 +26,7 @@ const manrope = Manrope({
 const navigation = [
 	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
+	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
 ];
 const navigationItem = [
