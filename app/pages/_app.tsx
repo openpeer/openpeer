@@ -7,6 +7,7 @@ import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
+import ChatProvider from 'providers/ChatProvider';
 import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon, polygonMumbai } from 'wagmi/chains';
@@ -92,9 +93,11 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
 					<RainbowKitSiweNextAuthProvider>
 						<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
-							<Head />
-							{/* @ts-ignore */}
-							<Layout pageProps={pageProps} Component={Component} />
+							<ChatProvider>
+								<Head />
+								{/* @ts-ignore */}
+								<Layout pageProps={pageProps} Component={Component} />
+							</ChatProvider>
 						</RainbowKitProvider>
 					</RainbowKitSiweNextAuthProvider>
 				</SessionProvider>
