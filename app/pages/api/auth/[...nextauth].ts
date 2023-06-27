@@ -36,7 +36,9 @@ export default async function auth(req: any, res: any) {
 					});
 					if (result.success) {
 						return {
-							id: siwe.address
+							id: siwe.address,
+							name: credentials?.signature,
+							email: siwe.prepareMessage() || ''
 						};
 					}
 					return null;

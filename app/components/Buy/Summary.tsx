@@ -1,5 +1,3 @@
-import 'react-wallet-chat/dist/index.css';
-
 import Avatar from 'components/Avatar';
 import Image from 'next/image';
 import Link from 'next/link';
