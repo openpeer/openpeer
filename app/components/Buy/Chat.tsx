@@ -38,7 +38,7 @@ const Chat = ({ address, label }: ChatParams) => {
 				}
 			/>
 
-			{process.env.NODE_ENV !== 'production' && (
+			{process.env.NODE_ENV === 'production' && (
 				<WalletChatWidget
 					requestSignature={false}
 					connectedWallet={
