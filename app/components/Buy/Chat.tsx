@@ -1,7 +1,11 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import Button from 'components/Button/Button';
-import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import React from 'react';
 // @ts-ignore
-import { WalletChatWidget } from 'react-wallet-chat';
+import { ChatWithOwner, WalletChatProvider, WalletChatWidget } from 'react-wallet-chat';
+import { useAccount, useNetwork } from 'wagmi';
 
 import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 
@@ -11,28 +15,46 @@ interface ChatParams {
 }
 
 const Chat = ({ address, label }: ChatParams) => {
-	const [widgetState, setWidgetState] = useState({});
+	const { address: account, connector } = useAccount();
+	const { chain } = useNetwork();
+	const { data: session } = useSession();
+	// @ts-expect-error
+	const { token: { name: signature = '', email: message = '' } = {} } = session || {};
+
 	return (
-		<>
-			<Button
-				onClick={() => {
-					setWidgetState({
-						...widgetState,
-						chatAddr: address,
-						isOpen: true
-					});
-				}}
-				title={
-					<span className="flex flex-row items-center justify-center">
-						<span className="mr-2">Chat with {label}</span>
-						<ChatBubbleLeftEllipsisIcon className="w-8" />
-					</span>
+		<WalletChatProvider>
+			<ChatWithOwner
+				ownerAddress={address}
+				render={
+					<Button
+						title={
+							<span className="flex flex-row items-center justify-center">
+								<span className="mr-2">Chat with {label}</span>
+								<ChatBubbleLeftEllipsisIcon className="w-8" />
+							</span>
+						}
+						outlined
+					/>
 				}
-				outlined
 			/>
 
-			{process.env.NODE_ENV !== 'development' && <WalletChatWidget widgetState={widgetState} />}
-		</>
+			{process.env.NODE_ENV === 'production' && (
+				<WalletChatWidget
+					requestSignature={false}
+					connectedWallet={
+						account && chain ? { walletName: connector?.name || '', account, chainId: chain.id } : undefined
+					}
+					signedMessageData={
+						signature && message
+							? {
+									signature,
+									msgToSign: message
+							  }
+							: undefined
+					}
+				/>
+			)}
+		</WalletChatProvider>
 	);
 };
 
