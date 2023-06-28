@@ -25,6 +25,19 @@ const updateUser = async (address: string, body: NextApiRequest['body'], token: 
 	return data.data;
 };
 
+const verifyUser = async (chainId: string, token: string): Promise<User> => {
+	const { data } = await minkeApi.post(
+		`/user_profiles/verify/${chainId}`,
+		{},
+		{
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+	);
+	return data.data;
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<User>) {
 	const { query, method, body } = req;
 	const { address } = query;
@@ -37,6 +50,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			break;
 		case 'PUT':
 			res.status(200).json(await updateUser(address as string, body, jwt));
+			break;
+		case 'POST':
+			res.status(200).json(await verifyUser(address as string, jwt));
 			break;
 		default:
 			res.setHeader('Allow', ['GET', 'PUT']);

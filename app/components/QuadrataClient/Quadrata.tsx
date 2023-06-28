@@ -4,15 +4,23 @@ import Loading from 'components/Loading/Loading';
 import { parseUnits } from 'ethers/lib/utils';
 import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import {
-	useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useSigner,
+	useAccount,
+	useContractWrite,
+	useNetwork,
+	usePrepareContractWrite,
+	useSigner,
 	useWaitForTransaction
 } from 'wagmi';
 
 import {
-	Page, QuadAttribute, QuadClient, QuadClientConfig, QuadClientEnvironment,
-	QuadClientMintParamsReadyCallback, QuadMintParamsBigNumbers
+	Page,
+	QuadAttribute,
+	QuadClient,
+	QuadClientConfig,
+	QuadClientEnvironment,
+	QuadClientMintParamsReadyCallback,
+	QuadMintParamsBigNumbers
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
 
@@ -22,19 +30,11 @@ const quadConfig: QuadClientConfig = {
 	protocolName: 'OpenPeer'
 };
 
-export interface AttributeOnboardStatusDto {
-	data: {
-		type: 'attributes';
-		toClaim: QuadAttribute[];
-	};
-}
-
 const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: boolean; onHide: () => void }) => {
 	// State
 	const [signature, setSignature] = useState<string>();
 	const [mintParams, setMintParams] = useState<QuadMintParamsBigNumbers>();
 	const [mintComplete, setMintComplete] = useState(false);
-	const [attributesToClaim, setAttributesToClaim] = useState<QuadAttribute[]>([]);
 	const [accessToken, setAccessToken] = useState('');
 
 	// Hooks
@@ -42,7 +42,6 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 	const { address: account, isConnecting } = useAccount();
 	const { data: signer } = useSigner();
 
-	// Required attributes for this protocol
 	const requiredAttributes = [QuadAttribute.DID, QuadAttribute.AML];
 
 	useEffect(() => {
@@ -57,39 +56,6 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 
 		getApiAccessToken();
 	}, []);
-
-	// Check which attributes to claim for a given wallet
-	const apiAttributesOnboardStatus = async () => {
-		const response = await fetch(
-			`${
-				process.env.NEXT_PUBLIC_QUADRATA_API_URL
-			}/attributes/onboard_status?wallet=${account}&chainId=${chainId}&attributes=${requiredAttributes
-				.map((attr) => attr.toLowerCase())
-				.join(',')}`,
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`
-				}
-			}
-		);
-		if (!response.ok) {
-			throw new Error('/attributes/onboard_status Failed');
-		}
-		return (await response.json()) as AttributeOnboardStatusDto;
-	};
-
-	useQuery('QUAD_API_ATTR_ONBOARD_STATUS', () => apiAttributesOnboardStatus(), {
-		enabled: !!accessToken,
-		onSuccess: ({ data: { toClaim } }) => {
-			setAttributesToClaim(toClaim);
-		},
-		onError: (err) => {
-			throw new Error(`/attributes/onboard_status error : ${err}`);
-		},
-		retry: false
-	});
 
 	// Claim Passport on-chain
 	const { config } = usePrepareContractWrite({
@@ -107,7 +73,10 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 
 	useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess() {
+		onSuccess: async () => {
+			await fetch(`/api/user_profiles/${chainId}`, {
+				method: 'POST'
+			});
 			setMintComplete(true);
 			setMintParams(undefined);
 			onFinish();
@@ -146,11 +115,11 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 		return <></>;
 	}
 
-	if (isConnecting || !accessToken) {
+	if (isConnecting) {
 		return <Loading />;
 	}
 
-	if ((attributesToClaim && attributesToClaim.length === 0) || !open) {
+	if (!open) {
 		return <></>;
 	}
 
@@ -164,7 +133,7 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 			chainId={chainId}
 			onSign={handleSign}
 			signature={signature}
-			attributes={attributesToClaim}
+			attributes={requiredAttributes}
 			onMintClick={handleMintClick}
 			mintComplete={mintComplete}
 			onPageChange={handlePageChange}
