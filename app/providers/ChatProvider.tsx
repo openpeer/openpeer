@@ -17,7 +17,6 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 	const { data: session } = useSession();
 	// @ts-expect-error
 	const { token: { name: signature = '', email: message = '' } = {} } = session || {};
-	console.log({ signature, message });
 
 	return (
 		<WalletChatProvider>

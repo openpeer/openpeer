@@ -7,7 +7,6 @@ import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
-import ChatProvider from 'providers/ChatProvider';
 import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon, polygonMumbai } from 'wagmi/chains';
@@ -15,18 +14,13 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Manrope } from '@next/font/google';
-import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
+import {
+	connectorsForWallets, lightTheme, RainbowKitProvider, Theme
+} from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import {
-	argentWallet,
-	braveWallet,
-	coinbaseWallet,
-	injectedWallet,
-	ledgerWallet,
-	metaMaskWallet,
-	rainbowWallet,
-	trustWallet,
-	walletConnectWallet
+	argentWallet, braveWallet, coinbaseWallet, injectedWallet, ledgerWallet, metaMaskWallet,
+	rainbowWallet, trustWallet, walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
@@ -93,11 +87,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
 					<RainbowKitSiweNextAuthProvider>
 						<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
-							<ChatProvider>
-								<Head />
-								{/* @ts-ignore */}
-								<Layout pageProps={pageProps} Component={Component} />
-							</ChatProvider>
+							<Head />
+							{/* @ts-ignore */}
+							<Layout pageProps={pageProps} Component={Component} />
 						</RainbowKitProvider>
 					</RainbowKitSiweNextAuthProvider>
 				</SessionProvider>
