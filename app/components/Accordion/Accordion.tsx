@@ -27,7 +27,7 @@ const Accordion = ({ title, content, open = false }: AccordionProps) => {
 					)}
 				</span>
 			</button>
-			{isOpen && <div className="text-left p-4 transition-all duration-300">{content}</div>}
+			{isOpen && <div className="text-left transition-all duration-300">{content}</div>}
 		</div>
 	);
 };
