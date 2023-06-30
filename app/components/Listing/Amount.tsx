@@ -58,6 +58,10 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			error.limitMin = 'Should be smaller than the max';
 		}
 
+		if (!!limitMin && min > total) {
+			error.limitMin = 'Should be smaller than the total available amount';
+		}
+
 		if (!percentage && (margin || 0) <= 0) {
 			error.margin = 'Should be bigger than zero';
 		}
