@@ -144,13 +144,15 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 														<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 															{user.name || smallWalletAddress(user.address)}
 														</div>
-														<div className="hidden pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
-															<CheckBadgeIcon
-																width="18"
-																height="18"
-																className="text-cyan-600"
-															/>
-														</div>
+														{user.name && (
+															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
+																<CheckBadgeIcon
+																	width="18"
+																	height="18"
+																	className="text-cyan-600"
+																/>
+															</div>
+														)}
 													</div>
 												</Link>
 												<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
