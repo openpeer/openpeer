@@ -24,7 +24,7 @@ const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => (
 				return (
 					<li
 						key={number}
-						className={classNames(!isTheLastStep ? 'w-full pr-24 sm:pr-20' : '', 'relative')}
+						className={classNames(!isTheLastStep ? 'w-full sm:pr-20' : '', 'relative')}
 						onClick={pastStep && !!onStepClick ? () => onStepClick(number) : undefined}
 					>
 						<>
