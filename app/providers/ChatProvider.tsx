@@ -21,20 +21,22 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 
 	return (
 		<WalletChatProvider>
-			<WalletChatWidget
-				requestSignature={false}
-				connectedWallet={
-					account && chain ? { walletName: connector?.name || '', account, chainId: chain.id } : undefined
-				}
-				signedMessageData={
-					signature && message
-						? {
-								signature,
-								msgToSign: message
-						  }
-						: undefined
-				}
-			/>
+			<div className="hidden md:block">
+				<WalletChatWidget
+					requestSignature={false}
+					connectedWallet={
+						account && chain ? { walletName: connector?.name || '', account, chainId: chain.id } : undefined
+					}
+					signedMessageData={
+						signature && message
+							? {
+									signature,
+									msgToSign: message
+							  }
+							: undefined
+					}
+				/>
+			</div>
 			{children}
 		</WalletChatProvider>
 	);
