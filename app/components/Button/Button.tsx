@@ -28,7 +28,7 @@ const Button = ({
 			minimal
 				? 'text-xl font-bold w-8'
 				: outlined
-				? 'w-full px-2 py-3 rounded border border-cyan-600 text-base text-cyan-600 my-8'
+				? 'w-full px-2 py-3 rounded border border-cyan-600 text-base text-cyan-600 my-4'
 				: processing
 				? 'flex flex-row items-center justify-center w-full px-5 py-2.5 rounded bg-cyan-600 text-base text-white'
 				: disabled
