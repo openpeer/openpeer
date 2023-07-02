@@ -137,7 +137,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 								<tr key={id} className="hover:bg-gray-50">
 									<td className="md:pl-4 py-4">
 										<div className="w-full flex flex-row justify-around md:justify-start items-center">
-											<div className="w-3/5 mr-6">
+											<div className="w-full">
 												<Link href={`/${user.address}`}>
 													<div className="flex flex-row items-center cursor-pointer">
 														<Avatar user={user} className="w-5 md:w-8" />
