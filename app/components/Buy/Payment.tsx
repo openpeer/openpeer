@@ -1,5 +1,5 @@
 import StepLayout from 'components/Listing/StepLayout';
-import HeaderH2 from 'components/SectionHeading/h2';
+import HeaderH3 from 'components/SectionHeading/h3';
 import Image from 'next/image';
 import React from 'react';
 import { useAccount } from 'wagmi';
@@ -36,12 +36,12 @@ const Payment = ({ order }: BuyStepProps) => {
 
 	return (
 		<StepLayout>
-			<div className="my-8">
+			<div className="my-0 md:my-8">
 				{status === 'created' && (
 					<div>
-						<span className="flex flex-row mb-2 text-yellow-600">
-							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Seller Deposit" />
+						<span className="flex flex-row items-center mb-2 text-yellow-600">
+							<ClockIcon className="w-6 mr-2" />
+							<HeaderH3 title="Awaiting Seller Deposit" />
 						</span>
 						<p className="text-base">
 							{selling
@@ -53,7 +53,7 @@ const Payment = ({ order }: BuyStepProps) => {
 				{status === 'escrowed' && (
 					<div>
 						<span className={`flex flex-row mb-2 ${!!selling && 'text-yellow-600'}`}>
-							<HeaderH2 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
+							<HeaderH3 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
 						</span>
 						<p className="text-base">
 							{selling
@@ -136,7 +136,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				)}
 
-				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
+				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>
