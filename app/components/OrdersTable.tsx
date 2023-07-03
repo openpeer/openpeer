@@ -6,8 +6,9 @@ import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 
-import Token from './Token/Token';
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
+
+import Token from './Token/Token';
 
 interface OrdersTableProps {
 	orders: Order[];
