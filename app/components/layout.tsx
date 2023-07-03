@@ -56,7 +56,7 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 				href={item.href}
 				className={`${
 					selected === item.name ? 'bg-gray-700' : ''
-				} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-8 text-base font-medium`}
+				} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium`}
 				onClick={onClick}
 			>
 				<item.icon
