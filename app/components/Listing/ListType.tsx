@@ -57,21 +57,21 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 
 	return (
 		<StepLayout onProceed={onProceed}>
-			<h2 className="text-xl mt-8 mb-8">Choose the order type to sell or buy crypto</h2>
+			<h2 className="text-xl mt-12 mb-2">Choose order type</h2>
 			<fieldset className="mb-4">
-				<Option
-					type="SellList"
-					title="Sell Order"
-					description="Let users buy crypto from you in exchange for fiat."
-					onClick={setType}
-					selected={type === 'SellList'}
-				/>
 				<Option
 					type="BuyList"
 					title="Buy Order"
-					description="Let users sell their crypto to you in exchange for fiat."
+					description="I want to buy crypto in exchange for fiat"
 					onClick={setType}
 					selected={type === 'BuyList'}
+				/>
+				<Option
+					type="SellList"
+					title="Sell Order"
+					description="I want to sell crypto in exchange for fiat"
+					onClick={setType}
+					selected={type === 'SellList'}
 				/>
 			</fieldset>
 		</StepLayout>

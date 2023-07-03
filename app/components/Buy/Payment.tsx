@@ -41,7 +41,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					<div>
 						<span className="flex flex-row mb-2 text-yellow-600">
 							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Seller Deposit" />
+							<HeaderH2 title="Awaiting Escrow Deposit" />
 						</span>
 						<p className="text-base">
 							{selling
