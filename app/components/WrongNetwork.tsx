@@ -4,7 +4,7 @@ import { polygon, polygonMumbai } from 'wagmi/chains';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const WrongNetwork = ({ desiredChainId }: { desiredChainId?: number }) => {
-	let chainName = 'Polygon';
+	let chainName = '';
 	if (desiredChainId) {
 		// @TODO: change to the chains helper
 		const chain = [polygon, polygonMumbai].find((c) => c.id === desiredChainId);
@@ -15,7 +15,7 @@ const WrongNetwork = ({ desiredChainId }: { desiredChainId?: number }) => {
 	return (
 		<div className="flex h-screen">
 			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
-				<span className="mb-6 text-xl">Connect to {chainName}</span>
+				<span className="mb-6 text-xl">Connect {chainName ? `to ${chainName}` : 'your wallet'}</span>
 				<span className="mb-6 text-gray-500 text-xl">Access the OpenPeer using your favorite wallet</span>
 				<span className="mb-4 m-auto">
 					<ConnectButton showBalance={false} />
