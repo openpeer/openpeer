@@ -49,7 +49,7 @@ const OrdersPage = () => {
 
 	return (
 		<>
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+			<div className="mx-auto max-w-7xl sm:px-0 md:px-8">
 				<Accordion content={<OrdersTable orders={activeOrders} />} title="Active orders" open />
 				{closedOrders.length > 0 && (
 					<Accordion content={<OrdersTable orders={closedOrders} />} title="Closed orders" />

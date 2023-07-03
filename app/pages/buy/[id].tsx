@@ -39,7 +39,7 @@ const BuyPage = ({ id }: { id: number }) => {
 	if (status === 'loading' || !list || !canBuy) return <Loading />;
 
 	return (
-		<div className="pt-6">
+		<div className="pt-4 md:pt-6">
 			<div className="w-full flex flex-row px-4 sm:px-6 md:px-8 mb-16">
 				<div className="w-full lg:w-2/4">
 					<Steps

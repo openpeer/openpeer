@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import Button from 'components/Button/Button';
 import StepLayout from 'components/Listing/StepLayout';
-import HeaderH2 from 'components/SectionHeading/h2';
+import HeaderH3 from 'components/SectionHeading/h3';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
@@ -26,8 +26,8 @@ const Cancelled = ({ order }: BuyStepProps) => {
 			<div className="my-8">
 				<div className="mb-4">
 					<span className="flex flex-row text-red-600 mb-2">
-						<XCircleIcon className="w-8 mr-2" />
-						<HeaderH2 title="Order Cancelled" />
+						<XCircleIcon className="w-6 mr-2" />
+						<HeaderH3 title="Order Cancelled" />
 					</span>
 					<p className="text-base">
 						{selling
@@ -43,7 +43,7 @@ const Cancelled = ({ order }: BuyStepProps) => {
 
 				<div className="border-b border-gray-200 my-4" />
 
-				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
+				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full">
 						<Button title="Back to Listings" onClick={() => router.push('/')} />
 					</span>

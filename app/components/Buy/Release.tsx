@@ -1,7 +1,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
 import StepLayout from 'components/Listing/StepLayout';
-import HeaderH2 from 'components/SectionHeading/h2';
+import HeaderH3 from 'components/SectionHeading/h3';
 import React from 'react';
 import { useAccount } from 'wagmi';
 
@@ -26,8 +26,8 @@ const Release = ({ order }: BuyStepProps) => {
 				<div className="my-8">
 					<div className="mb-4">
 						<span className="flex flex-row text-yellow-600 mb-2">
-							<ClockIcon className="w-8 mr-2" />
-							<HeaderH2 title="Awaiting Release" />
+							<ClockIcon className="w-6 mr-2" />
+							<HeaderH3 title="Awaiting Release" />
 						</span>
 						<p className="text-base">
 							This order has been marked as paid.{' '}
@@ -41,7 +41,7 @@ const Release = ({ order }: BuyStepProps) => {
 
 					<OrderResume order={order} />
 
-					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
+					<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 						<span className="w-full md:pr-8">
 							<OpenDisputeButton order={order} />
 						</span>

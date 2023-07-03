@@ -29,7 +29,7 @@ const Summary = ({ list }: SummaryProps) => {
 
 	if (!token && !currency) {
 		return (
-			<div className="m-auto">
+			<div className="hidden md:block m-auto">
 				<Image
 					src={coins}
 					alt="coins image"

@@ -1,5 +1,6 @@
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
+import HeaderH3 from 'components/SectionHeading/h3';
 import Image from 'next/image';
 import React from 'react';
 import { useAccount } from 'wagmi';
@@ -36,7 +37,7 @@ const Payment = ({ order }: BuyStepProps) => {
 
 	return (
 		<StepLayout>
-			<div className="my-8">
+			<div className="my-0 md:my-8">
 				{status === 'created' && (
 					<div>
 						<span className="flex flex-row mb-2 text-yellow-600">
@@ -53,7 +54,7 @@ const Payment = ({ order }: BuyStepProps) => {
 				{status === 'escrowed' && (
 					<div>
 						<span className={`flex flex-row mb-2 ${!!selling && 'text-yellow-600'}`}>
-							<HeaderH2 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
+							<HeaderH3 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
 						</span>
 						<p className="text-base">
 							{selling
@@ -62,25 +63,25 @@ const Payment = ({ order }: BuyStepProps) => {
 						</p>
 					</div>
 				)}
-				<div className="flex flex-row justify-around bg-gray-100 rounded-lg p-6 my-4">
-					<div className="flex flex-col">
-						<span className="text-sm">Amount to pay</span>
-						<span className="text-lg font-medium">
+				<div className="flex flex-col justify-around bg-gray-100 rounded-lg p-4 my-4">
+					<div className="flex flex-row items-center mb-1">
+						<span className="text-sm mr-2">Amount to pay</span>
+						<span className="text-base font-medium">
 							{selling
 								? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
 								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 						</span>
 					</div>
 					{selling && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
-					<div className="flex flex-col">
-						<span className="text-sm">Price</span>
-						<span className="text-lg font-medium">
+					<div className="flex flex-row items-center mb-1">
+						<span className="text-sm mr-2">Price</span>
+						<span className="text-base font-medium">
 							{currency.symbol} {Number(price).toFixed(2)}
 						</span>
 					</div>
-					<div className="flex flex-col">
-						<span className="text-sm">Amount to receive</span>
-						<span className="text-lg font-medium">
+					<div className="flex flex-row items-center mb-1">
+						<span className="text-sm mr-2">Amount to receive</span>
+						<span className="text-base font-medium">
 							{selling
 								? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
 								: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
@@ -136,7 +137,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				)}
 
-				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-8 md:mt-0">
+				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>

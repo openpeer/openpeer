@@ -13,7 +13,7 @@ interface StepsProps {
 }
 
 const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => (
-	<nav aria-label="Progress" className="w-full">
+	<nav aria-label="Progress" className="w-full hidden md:block">
 		<ol className="w-full flex items-center justify-between">
 			{Array.from({ length: stepsCount + 1 }, (_, i) => i + 1).map((number) => {
 				const futureStep = currentStep < number;
@@ -24,7 +24,7 @@ const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => (
 				return (
 					<li
 						key={number}
-						className={classNames(!isTheLastStep ? 'w-full pr-24 sm:pr-20' : '', 'relative')}
+						className={classNames(!isTheLastStep ? 'w-full sm:pr-20' : '', 'relative')}
 						onClick={pastStep && !!onStepClick ? () => onStepClick(number) : undefined}
 					>
 						<>

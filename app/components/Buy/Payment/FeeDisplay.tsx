@@ -15,9 +15,9 @@ const FeeDisplay = ({ escrow, tokenAmount, token }: FeeDisplayParams) => {
 	if (isFetching && !fee) return <></>;
 
 	return (
-		<div className="flex flex-col">
-			<span className="text-sm">Fee</span>
-			<span className="text-xl">{`${formatUnits(fee!, token.decimals)} ${token.symbol}`}</span>
+		<div className="flex flex-row items-center mb-1">
+			<span className="text-sm mr-2">Fee</span>
+			<span className="text-base">{`${formatUnits(fee!, token.decimals)} ${token.symbol}`}</span>
 		</div>
 	);
 };
