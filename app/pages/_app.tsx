@@ -6,11 +6,10 @@ import Head from 'app/head';
 import Layout from 'components/layout';
 import NoAuthLayout from 'components/NoAuthLayout';
 import merge from 'lodash.merge';
+import { devChains, productionChains } from 'models/networks';
 import { SessionProvider } from 'next-auth/react';
-import ChatProvider from 'providers/ChatProvider';
 import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -31,7 +30,7 @@ import {
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
-const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
+const enabledChains = process.env.NODE_ENV === 'development' ? devChains : productionChains;
 
 const { chains, provider } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
@@ -93,11 +92,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<SessionProvider refetchInterval={0} session={pageProps.session}>
 					<RainbowKitSiweNextAuthProvider>
 						<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
-							<ChatProvider>
-								<Head />
-								{/* @ts-ignore */}
-								<Layout pageProps={pageProps} Component={Component} />
-							</ChatProvider>
+							<Head />
+							{/* @ts-ignore */}
+							<Layout pageProps={pageProps} Component={Component} />
 						</RainbowKitProvider>
 					</RainbowKitSiweNextAuthProvider>
 				</SessionProvider>

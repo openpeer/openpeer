@@ -57,7 +57,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 
 	useEffect(() => {
 		canSubmitGaslessTransaction();
-	}, [address]);
+	}, [address, apiKey]);
 
 	return { biconomy, gaslessEnabled };
 };

@@ -1,5 +1,5 @@
 import { OpenPeerEscrow } from 'abis';
-import { Contract } from 'ethers';
+import { constants, Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -31,11 +31,13 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrow
 		try {
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
+			const partner = constants.AddressZero;
 			const { data: transactionData } = await contractInstance.populateTransaction.createERC20Escrow(
 				orderID,
 				buyer,
 				token.address,
-				amount
+				amount,
+				partner
 			);
 			const txParams = {
 				data: transactionData,

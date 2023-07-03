@@ -30,6 +30,7 @@ export interface Token {
 	coingecko_id: string;
 	icon: string;
 	gasless: boolean;
+	minimum_amount?: number;
 }
 
 export interface List {

@@ -1,13 +1,13 @@
 import { constants } from 'ethers';
 
 import { UseEscrowFundsProps } from '../types';
-import useCreateContract from './useCreateContract';
+import useEscrowWithGas from './useEscrowWithGas';
 import useGaslessEscrow from './useGaslessEscrow';
 
 const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract }: UseEscrowFundsProps) => {
 	const nativeToken = token.address === constants.AddressZero;
 
-	const withGasCall = useCreateContract({
+	const withGasCall = useEscrowWithGas({
 		orderID,
 		contract,
 		buyer,

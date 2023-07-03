@@ -50,12 +50,26 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 
 		const error: Errors = {};
 
+		const { minimum_amount: minimumAmount } = token as Token;
+
+		if (!!minimumAmount && total < Number(minimumAmount)) {
+			error.totalAvailableAmount = `Should be bigger or equals to ${minimumAmount} ${token!.name}`;
+		}
+
 		if (total <= 0) {
 			error.totalAvailableAmount = 'Should be bigger than 0';
 		}
 
 		if (!!limitMax && min > max) {
 			error.limitMin = 'Should be smaller than the max';
+		}
+
+		const fiatTotal = total * price!;
+
+		if (!!limitMin && min > fiatTotal) {
+			error.limitMin = `Should be smaller than the total available amount ${fiatTotal.toFixed(2)} ${
+				currency!.name
+			}`;
 		}
 
 		if (!percentage && (margin || 0) <= 0) {

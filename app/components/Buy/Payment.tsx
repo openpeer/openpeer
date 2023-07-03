@@ -1,4 +1,5 @@
 import StepLayout from 'components/Listing/StepLayout';
+import HeaderH2 from 'components/SectionHeading/h2';
 import HeaderH3 from 'components/SectionHeading/h3';
 import Image from 'next/image';
 import React from 'react';
@@ -39,9 +40,9 @@ const Payment = ({ order }: BuyStepProps) => {
 			<div className="my-0 md:my-8">
 				{status === 'created' && (
 					<div>
-						<span className="flex flex-row items-center mb-2 text-yellow-600">
-							<ClockIcon className="w-6 mr-2" />
-							<HeaderH3 title="Awaiting Seller Deposit" />
+						<span className="flex flex-row mb-2 text-yellow-600">
+							<ClockIcon className="w-8 mr-2" />
+							<HeaderH2 title="Awaiting Escrow Deposit" />
 						</span>
 						<p className="text-base">
 							{selling
