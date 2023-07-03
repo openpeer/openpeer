@@ -20,9 +20,9 @@ import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { switchNetwork } from '@wagmi/core';
 
-const ROUND = 1;
-const POOL = 500000;
-const AIRDROP_START = 1688209200000;
+const ROUND = 2;
+const POOL = 1000000;
+const AIRDROP_START = 1690891200000;
 const CHAIN = polygonMumbai; // @TODO: Marcos - change this to Polygon when the airdrop starts
 const CONTRACT_ADDRESS = '0x8F6587918d09F86876F4Fb1F83808deA5d3e09b1'; // @TODO: Marcos - change this to the real contract address when the airdrop starts
 
