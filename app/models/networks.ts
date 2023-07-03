@@ -1,4 +1,4 @@
-import { arbitrum, avalanche, polygon, polygonMumbai } from 'wagmi/dist/chains';
+import { arbitrum, avalanche, polygon, polygonMumbai } from 'wagmi/chains';
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
