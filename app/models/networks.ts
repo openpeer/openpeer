@@ -1,4 +1,4 @@
-import { arbitrum, avalanche, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
+import { arbitrum, avalanche, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -6,7 +6,8 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygonMumbai.id]: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[arbitrum.id]: process.env.NEXT_PUBLIC_ARBITRUM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[optimism.id]: process.env.NEXT_PUBLIC_OPTIMISM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
-	[mainnet.id]: process.env.NEXT_PUBLIC_ETHEREUM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
+	[mainnet.id]: process.env.NEXT_PUBLIC_ETHEREUM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
+	[gnosis.id]: process.env.NEXT_PUBLIC_GNOSIS_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
 };
 
 export const networkApiKeys: { [key: number]: string } = {
@@ -20,3 +21,7 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[polygonMumbai.id]: '0x185cc335175B1E7E29e04A321E1873932379a4a0',
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
+
+export const productionChains = [polygon, mainnet, arbitrum, optimism, gnosis, avalanche, polygonMumbai];
+
+export const devChains = [...productionChains, polygonMumbai];
