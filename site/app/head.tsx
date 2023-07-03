@@ -1,11 +1,11 @@
 export default function Head() {
 	return (
 		<>
-			<title>OpenPeer - Self-Custody P2P Crypto Trading</title>
+			<title>OpenPeer - Decentralised P2P Exchange</title>
 			<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1" />
 			<meta
 				name="description"
-				content="Trade crypto on our decentralized P2P platform. Select your token and fiat, set your margin, and start trading today."
+				content="Buy crypto directly to your wallet from your bank account with zero-fees."
 			/>
 			<link rel="icon" href="/favicon.png" />
 		</>
