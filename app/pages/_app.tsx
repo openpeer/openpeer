@@ -8,7 +8,7 @@ import NoAuthLayout from 'components/NoAuthLayout';
 import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, mainnet, WagmiConfig } from 'wagmi';
 import { arbitrum, avalanche, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
@@ -32,8 +32,8 @@ const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
 const enabledChains =
 	process.env.NODE_ENV === 'development'
-		? [polygon, arbitrum, optimism, avalanche, polygonMumbai]
-		: [polygon, arbitrum, optimism, avalanche];
+		? [polygon, mainnet, arbitrum, optimism, avalanche, polygonMumbai]
+		: [polygon, mainnet, arbitrum, optimism, avalanche];
 
 const { chains, provider } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
