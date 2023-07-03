@@ -9,23 +9,29 @@ import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon, polygonMumbai } from 'wagmi/chains';
+import { avalanche, polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Manrope } from '@next/font/google';
-import {
-	connectorsForWallets, lightTheme, RainbowKitProvider, Theme
-} from '@rainbow-me/rainbowkit';
+import { connectorsForWallets, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit';
 import { RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import {
-	argentWallet, braveWallet, coinbaseWallet, injectedWallet, ledgerWallet, metaMaskWallet,
-	rainbowWallet, trustWallet, walletConnectWallet
+	argentWallet,
+	braveWallet,
+	coinbaseWallet,
+	injectedWallet,
+	ledgerWallet,
+	metaMaskWallet,
+	rainbowWallet,
+	trustWallet,
+	walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
-const enabledChains = process.env.NODE_ENV === 'development' ? [polygon, polygonMumbai] : [polygon];
+const enabledChains =
+	process.env.NODE_ENV === 'development' ? [polygon, avalanche, polygonMumbai] : [polygon, avalanche];
 
 const { chains, provider } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),

@@ -1,5 +1,6 @@
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	137: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
+	43114: process.env.NEXT_PUBLIC_AVAX_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	80001: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
 };
 
@@ -10,5 +11,6 @@ export const networkApiKeys: { [key: number]: string } = {
 
 export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	137: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d',
+	43114: '0x97058A9B7D0ce525009083F9b2C219336ce97736',
 	80001: '0x185cc335175B1E7E29e04A321E1873932379a4a0'
 };
