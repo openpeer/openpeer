@@ -199,6 +199,11 @@
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_partner",
+				"type": "address"
 			}
 		],
 		"name": "createERC20Escrow",
@@ -222,11 +227,29 @@
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_partner",
+				"type": "address"
 			}
 		],
 		"name": "createNativeEscrow",
 		"outputs": [],
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "deployer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -295,6 +318,16 @@
 				"internalType": "bool",
 				"name": "dispute",
 				"type": "bool"
+			},
+			{
+				"internalType": "address payable",
+				"name": "partner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "openPeerFee",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -470,6 +503,19 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "openPeerFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "bytes32",
@@ -590,7 +636,13 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_partner",
+				"type": "address"
+			}
+		],
 		"name": "sellerFee",
 		"outputs": [
 			{
