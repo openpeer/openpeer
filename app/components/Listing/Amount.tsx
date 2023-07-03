@@ -64,8 +64,12 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			error.limitMin = 'Should be smaller than the max';
 		}
 
-		if (!!limitMin && min > total) {
-			error.limitMin = 'Should be smaller than the total available amount';
+		const fiatTotal = total * price!;
+
+		if (!!limitMin && min > fiatTotal) {
+			error.limitMin = `Should be smaller than the total available amount ${fiatTotal.toFixed(2)} ${
+				currency!.name
+			}`;
 		}
 
 		if (!percentage && (margin || 0) <= 0) {
