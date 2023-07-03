@@ -1,10 +1,11 @@
-import { arbitrum, avalanche, polygon, polygonMumbai } from 'wagmi/chains';
+import { arbitrum, avalanche, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[avalanche.id]: process.env.NEXT_PUBLIC_AVAX_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[polygonMumbai.id]: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
-	[arbitrum.id]: process.env.NEXT_PUBLIC_ARBITRUM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
+	[arbitrum.id]: process.env.NEXT_PUBLIC_ARBITRUM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
+	[optimism.id]: process.env.NEXT_PUBLIC_OPTIMISM_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
 };
 
 export const networkApiKeys: { [key: number]: string } = {

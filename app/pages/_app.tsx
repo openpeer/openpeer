@@ -9,7 +9,7 @@ import merge from 'lodash.merge';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { arbitrum, avalanche, polygon, polygonMumbai } from 'wagmi/chains';
+import { arbitrum, avalanche, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -32,8 +32,8 @@ const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
 const enabledChains =
 	process.env.NODE_ENV === 'development'
-		? [polygon, arbitrum, avalanche, polygonMumbai]
-		: [polygon, arbitrum, avalanche];
+		? [polygon, arbitrum, optimism, avalanche, polygonMumbai]
+		: [polygon, arbitrum, optimism, avalanche];
 
 const { chains, provider } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
