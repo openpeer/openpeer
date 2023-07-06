@@ -6,28 +6,32 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import discord from '../public/discord.svg';
-import lock from '../public/lock.png';
 import logo from '../public/logo.svg';
-import outlierVentures from '../public/outlier-ventures.png';
-import passport from '../public/passport.png';
-import people from '../public/people.png';
-import polygonLogoWhite from '../public/polygon-logo-white.png';
 import twitterLogo from '../public/twitter.svg';
+import outlierVentures from '../public/partners/outlierventures.png';
+import polygonLogoWhite from '../public/partners/polygonlogowhite.png';
+import w3iLogoWhite from '../public/partners/w3ilogowhite.png';
+import bitfwdLogoWhite from '../public/partners/bitfwdlogowhite.png';
+import heroImage from '../public/hero-image.png';
+import keysImage from '../public/illustrations/keys.png';
+import Button from '../components/Button/Button';
+import ButtonAnimated from '../components/Button/ButtonAnimated';
 
 interface FeatureParams {
 	title: string;
 	description: string;
-	image: StaticImageData;
+	// image?: StaticImageData;
+	cta: string;
 }
 
-const Feature = ({ title, description, image }: FeatureParams) => {
+const Feature = ({ title, description, cta }: FeatureParams) => {
 	return (
-		<div className="flex flex-col items-center mb-12">
-			<Image src={image} alt={title} width={150} className="mb-4" />
-			<h3 className="text-2xl mb-4 text-center">{title}</h3>
-			<div className="font-normal">
-				<p className="text-center text-base">{description}</p>
-			</div>
+		<div className="flex flex-col mb-12 border border-white rounded-2xl p-8">
+			<h3 className="text-2xl mb-4">{title}</h3>
+			<p className="font-normal text-sm mb-4">{description}</p>
+			<Link href={''}>
+				<ButtonAnimated smallButton title={cta} />
+			</Link>
 		</div>
 	);
 };
@@ -37,8 +41,9 @@ export default function Home() {
 
 	return (
 		<>
+			<Image src={heroImage} alt={''} className="absolute top-0 left-0 right-0 -z-50" />
 			<div>
-				<nav className="mt-10 relative flex justify-between w-full items-center">
+				<nav className="rounded-lg mt-10 flex justify-between w-2/3 mx-auto items-center p-8 backdrop-blur-xl bg-white/30 border border-white/10">
 					<a className="text-3xl font-bold leading-none" href="/">
 						<Image src={logo} alt="openpeer logo" width={200} height={51} />
 					</a>
@@ -119,53 +124,69 @@ export default function Home() {
 				<div className="mt-24 sm:mt-24 mb-24">
 					<div className="text-center text-5xl sm:text-6xl mb-8">
 						<div className="font-semibold">
-							<h1>Self-Custodial P2P Exchange</h1>
+							<h1>Decentralised P2P Exchange</h1>
 						</div>
 					</div>
 					<div className="font-normal">
 						<div className="flex flex-row text-center justify-center space-x-4 text-2xl mb-12">
-							Buy crypto directly to your wallet from your bank account with zero-fees
+							Buy crypto directly to your wallet from your bank account with zero-fees.
 						</div>
 					</div>
 					<div className="text-center mt-24">
-						<Link
-							href="https://app.openpeer.xyz"
-							target="_blank"
-							className="bg-[#222222] px-20 py-4 rounded-lg font-bold"
-						>
-							Launch App
+						<Link href="https://app.openpeer.xyz" target="_blank">
+							<ButtonAnimated title="LAUNCH APP" />
 						</Link>
 					</div>
 				</div>
-				<div className="flex flex-col justify-around mx-20 md:space-x-20 md:flex-row mb-24">
+
+				<div className="my-40 mx-8">
+					<div className="flex flex-col flex-col-reverse md:fex-row border border-white/10 rounded-lg p-16 relative bg-gradient-to-r from-[#142228] via-[#142228]  backdrop-blur-xl">
+						<div>
+							<h3 className="text-[#7AB0B5] text-5xl font-bold mb-8">Your Keys, Your Coins</h3>
+							<p className="text-[#DBDBDB] text-xl">
+								Only you control your crypto. Buy and sell crypto with fiat directly from your
+								self-custody wallet like Metamsk. No need to hold your funds on an exchange.
+							</p>
+						</div>
+						<div className="md:w-1/2">
+							<div className="relative md:absolute -top-10 right-0">
+								<Image src={keysImage} alt={''} />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="flex flex-col justify-around mx-8 md:space-x-8 md:flex-row mb-24">
 					{[
 						{
-							title: 'Self-Custodial',
+							title: 'P2P Merchants',
 							description:
-								'Only you control your crypto. Deploy a escrow contract with your funds that can only be withdrawn by the other party upon payment.',
-							image: lock
+								'Trade peer-to-peer with verified and high quality traders in your country. Get priority support from the OpenPeer team as you grow your trading business.',
+							cta: 'Get in touch'
 						},
 						{
-							title: 'Direct to Wallet',
+							title: 'Wallets',
 							description:
-								'Buy and sell crypto with fiat directly from your self-custody wallet like Metamask. No need to hold your funds on an exchange.',
-							image: passport
+								'Add OpenPeer to your self-custody wallet as a P2P fiat on/off ramp solution for your users. Quickly ntegrate our SDK and open up global markets for your business.',
+							cta: 'Get in touch'
 						},
 						{
-							title: 'Global Availability',
+							title: 'Dapps & Games',
 							description:
-								'Trade with anyone anywhere with any currency and payment method. OpenPeer is an open protocol on Ethereum & Polygon.',
-							image: people
+								'Onboard users into any on-chain asset both fungible or non-fungible. Users choose the asset and their fiat currency and OpenPeer will do the rest.',
+							cta: 'Get in touch'
 						}
 					].map((item) => (
 						<Feature key={item.title} {...item} />
 					))}
 				</div>
 				<div className="flex flex-col text-center mb-24">
-					<h3 className="text-2xl mb-12">Supported by</h3>
+					<h3 className="text-4xl mb-12">Backers and Partners</h3>
 					<div className="flex flex-col md:flex-row items-center gap-8 m-auto">
 						<Image src={outlierVentures} alt="Outlier Ventures" />
 						<Image src={polygonLogoWhite} alt="Polygon" />
+						<Image src={w3iLogoWhite} alt="Polygon" />
+						<Image src={bitfwdLogoWhite} alt="Polygon" />
 					</div>
 				</div>
 			</div>
