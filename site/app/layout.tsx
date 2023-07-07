@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								<Image src={twitterLogo} alt="openpeer logo" width={18} height={18} />
 							</a>
 							<a
-								href="https://discord.gg/Wrf9BT8sZN"
+								href="https://discord.gg/EDHfTfCQ44"
 								target="_blank"
 								rel="noreferrer"
 								className="px-2 m-auto"
