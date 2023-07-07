@@ -12,10 +12,10 @@ const ButtonAnimated = ({ title, onClick, smallButton = false }: ButtonAnimatedP
 			className={
 				smallButton
 					? 'relative inline-flex items-center px-10 py-2 overflow-hidden text-lg font-medium bg-cyan-600 text-white rounded-md hover:text-white group hover:bg-gray-50'
-					: 'relative inline-flex items-center px-12 py-4 overflow-hidden text-lg font-medium bg-cyan-600 text-white rounded-md hover:text-white group hover:bg-gray-50'
+					: 'relative inline-flex items-center px-12 py-4 overflow-hidden text-lg font-medium bg-[#7AB0B5] text-white rounded-md hover:text-white group hover:bg-gray-50'
 			}
 		>
-			<span className="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-cyan-600 via-[#EE8A40] to-[#F09C62] opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+			<span className="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-[#7AB0B5] via-[#EE8A40] to-[#F09C62] opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
 			<span className="absolute right-0 flex items-center justify-start w-8 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
 				<svg
 					className="w-5 h-5"
