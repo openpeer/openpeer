@@ -10,7 +10,7 @@ import twitterLogo from '../public/twitter.svg';
 const NavigationSite = () => {
 	const [navbar, setNavbar] = useState(false);
 	return (
-		<nav className="rounded-lg mt-10 flex justify-between md:w-2/3 mx-auto items-center p-8 backdrop-blur-xl bg-white/20 border border-white/10">
+		<nav className="rounded-lg mt-10 flex justify-between md:w-2/4 mx-auto items-center p-6 backdrop-blur-xl bg-white/20 border border-white/10">
 			<a className="text-3xl font-bold leading-none" href="/">
 				<Image src={logo} alt="openpeer logo" width={200} height={51} />
 			</a>

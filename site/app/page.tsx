@@ -50,23 +50,13 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="text-center mt-0 md:mt-16">
-						{/* <Link href="https://app.openpeer.xyz" target="_blank">
+						<Link href="https://app.openpeer.xyz" target="_blank">
 							<ButtonAnimated title="LAUNCH APP" />
-						</Link> */}
-
-						<a
-							href="#_"
-							className="relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden group rounded-md shadow-2xl shadow-orange-500/50 animate-pulse hover:animate-none"
-						>
-							<span className="w-full h-full bg-gradient-to-br from-[#ff8a05] via-[#F09C62] to-[#7AB0B5] group-hover:from-[#7AB0B5] group-hover:via-[#F09C62] group-hover:to-[#ff8a05] absolute"></span>
-							<span className="relative px-12 py-4 transition-all ease-out bg-[#1c2e47] rounded-md group-hover:bg-opacity-0 duration-400">
-								<span className="relative text-white">LAUNCH APP</span>
-							</span>
-						</a>
+						</Link>
 					</div>
 				</div>
 
-				<div className="my-24 md:mt-32 md:mb-24 mx-2 lg:mx-8">
+				<div className="my-24 md:mt-32 md:mb-24 mx-2 lg:mx-10">
 					<div className="w-full flex flex-col flex-col-reverse md:flex-row border border-white/10 rounded-2xl p-6 md:py-24 md:px-16 relative bg-gradient-to-r from-[#142228] via-[#142228]  backdrop-blur-xl">
 						<div className="w-full md:w-1/2">
 							<h3 className="text-[#7AB0B5] text-5xl font-bold mb-8">Your Keys, Your Coins</h3>
