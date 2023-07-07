@@ -185,7 +185,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
 												href={`/${user.address}`}
 											>
-												<Avatar user={user} className="w-full" />
+												<Avatar user={user} className="w-10 aspect-square" />
 											</Link>
 										)}
 										<ConnectButton
