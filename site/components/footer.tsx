@@ -7,7 +7,7 @@ import discord from '../public/discord.svg';
 
 const FooterSite = () => {
 	return (
-		<div className="bg-[#2A3B52] text-white">
+		<div className="text-white">
 			<div className="container mx-auto p-8 md:p-16 flex flex-col justify-center md:flex-row md:justify-between">
 				<div className="flex flex-col items-start md:items-start">
 					<a className="text-3xl font-bold leading-none" href="#">
@@ -20,24 +20,28 @@ const FooterSite = () => {
 						href="https://docs.openpeer.xyz"
 						target="_blank"
 						rel="noreferrer"
-						className="md:px-2 hover:underline"
+						className="md:px-2 text-base relative group"
 					>
 						Docs
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
-					<a href="/disclamer" className="md:px-2 hover:underline">
+					<a href="/disclamer" className="md:px-2 text-base relative group">
 						Disclamer
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
-					<a href="/terms" className="md:px-2 hover:underline">
+					<a href="/terms" className="md:px-2 text-base relative group">
 						Terms
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
-					<a href="/privacy-policy" className="md:px-2 hover:underline">
+					<a href="/privacy-policy" className="md:px-2 text-base relative group">
 						Privacy Policy
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
 					<a
 						href="https://twitter.com/openpeer_xyz"
 						target="_blank"
 						rel="noreferrer"
-						className="md:px-2 py-2 mb:py-0 md:m-auto"
+						className="md:px-2 text-base relative group"
 					>
 						<Image src={twitterLogo} alt="openpeer logo" width={18} height={18} />
 					</a>

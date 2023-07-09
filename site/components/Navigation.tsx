@@ -29,17 +29,19 @@ const NavigationSite = () => {
 						href="https://docs.openpeer.xyz"
 						target="_blank"
 						rel="noreferrer"
-						className="text-base border-b-2 border-transparent hover:border-b-2 hover:border-[#F09C62]"
+						className="text-base relative group"
 					>
 						Docs
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
 					<a
 						href="https://blog.openpeer.xyz"
 						target="_blank"
 						rel="noreferrer"
-						className="text-base border-b-2 border-transparent hover:border-b-2 hover:border-[#F09C62]"
+						className="text-base relative group"
 					>
 						Blog
+						<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-400 transition-all group-hover:w-full"></span>
 					</a>
 					<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
 						<Image src={twitterLogo} alt="twitter logo" width={20} height={20} />
