@@ -1,6 +1,5 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { BigNumber, constants } from 'ethers';
 import { useTransactionFeedback } from 'hooks';
 import { useApproval } from 'hooks/transactions';
 import { Token } from 'models/types';
@@ -15,7 +14,7 @@ const ApproveTokenButton = ({
 }: {
 	token: Token;
 	spender: `0x${string}`;
-	amount: BigNumber;
+	amount: bigint;
 	onTokenApproved: () => void;
 }) => {
 	const { address, isConnected } = useAccount();
@@ -45,7 +44,7 @@ const ApproveTokenButton = ({
 		args: [address!, spender]
 	});
 
-	const approved = ((allowance as BigNumber) || constants.Zero).gte(amount);
+	const approved = allowance || BigInt(0) >= amount;
 
 	useEffect(() => {
 		if (isSuccess || approved) onTokenApproved();

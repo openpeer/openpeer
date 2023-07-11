@@ -1,10 +1,9 @@
 import { OpenPeerEscrow } from 'abis';
 import Label from 'components/Label/Label';
-import { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils';
 import { Dispute } from 'models/types';
 import React from 'react';
-import { useContractRead } from 'wagmi';
+import { formatUnits } from 'viem';
+import { useContractRead, useNetwork } from 'wagmi';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
 
@@ -21,17 +20,26 @@ interface StatusTimeLineParams {
 const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 	const { counterpart_replied: replied, resolved } = dispute;
 	const counterpart = isBuyer ? 'Seller' : 'Buyer';
+	const { chain } = useNetwork();
 
-	const { data: disputeFee }: { data: BigNumber | undefined } = useContractRead({
+	const { data: disputeFee } = useContractRead({
 		address: escrow,
 		abi: OpenPeerEscrow,
 		functionName: 'disputeFee'
 	});
 
+	if (!disputeFee || !chain) return <></>;
+
+	const {
+		nativeCurrency: { decimals, symbol }
+	} = chain;
+
 	const steps = [
 		{
 			name: 'Pay Dispute Fee',
-			description: `Pay ${disputeFee ? formatUnits(disputeFee) : 1} MATIC to open dispute.`,
+			description: `Pay ${
+				disputeFee ? formatUnits(disputeFee as bigint, decimals) : 1
+			} ${symbol} to open dispute.`,
 			status: 'complete'
 		},
 		{ name: `${counterpart} Notified`, description: `${counterpart} has been notified`, status: 'complete' },
@@ -46,8 +54,6 @@ const StatusTimeLine = ({ escrow, dispute, isBuyer }: StatusTimeLineParams) => {
 			status: resolved ? 'complete' : replied ? 'current' : 'upcoming'
 		}
 	];
-
-	if (!disputeFee) return <></>;
 
 	return (
 		<>

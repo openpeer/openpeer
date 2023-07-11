@@ -1,12 +1,11 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { BigNumber } from 'ethers';
-import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
+import { parseUnits } from 'viem';
 import { useAccount, useContractRead } from 'wagmi';
 
 interface BlockchainCancelButtonParams {
@@ -23,21 +22,19 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
-	const { data: escrowData } = useContractRead({
+	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
 		address: escrow!.address,
 		abi: OpenPeerEscrow,
 		functionName: 'escrows',
 		args: [tradeId]
 	});
 
-	const { sellerCanCancelAfter } = (escrowData || {}) as { sellerCanCancelAfter: BigNumber };
-
 	const { isLoading, isSuccess, cancelOrder, data, isFetching } = useEscrowCancel({
 		contract: escrow!.address,
 		orderID: uuid,
 		buyer: buyer.address,
 		token,
-		amount: toBn(String(tokenAmount), token.decimals),
+		amount: parseUnits(String(tokenAmount), token.decimals),
 		isBuyer
 	});
 
@@ -54,9 +51,11 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		}
 	}, [cancelConfirmed]);
 
-	if (sellerCanCancelAfter === undefined) {
+	if (isFetchingEscrowData) {
 		return <p>Loading...</p>;
 	}
+
+	const [, sellerCanCancelAfter] = escrowData as [boolean, bigint];
 
 	const now = Date.now() / 1000;
 	const sellerCanCancelAfterSeconds = parseInt(sellerCanCancelAfter.toString(), 10);

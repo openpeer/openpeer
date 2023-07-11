@@ -1,7 +1,7 @@
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { BigNumber, constants } from 'ethers';
+import { constants } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
 import { useTransactionFeedback } from 'hooks';
 import { Airdrop } from 'models/types';
@@ -49,9 +49,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		abi: VP2P,
 		functionName: 'claim',
 		args: [ROUND, amount, proof],
-		overrides: {
-			gasLimit: BigNumber.from('150000')
-		},
+		gas: BigInt('150000'),
 		enabled: !wrongChain && !!address
 	});
 

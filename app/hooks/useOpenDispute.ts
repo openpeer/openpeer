@@ -9,9 +9,8 @@ const useOpenDispute = ({ contract, orderID, buyer, token, amount, disputeFee }:
 		abi: OpenPeerEscrow,
 		functionName: 'openDispute',
 		args: [orderID, buyer, token.address, amount],
-		overrides: {
-			value: disputeFee
-		}
+		value: disputeFee,
+		enabled: disputeFee !== undefined
 	});
 
 	const { data, write } = useContractWrite(config);

@@ -1,15 +1,15 @@
 import '@quadrata/core-react/lib/cjs/quadrata-ui.min.css';
 
 import Loading from 'components/Loading/Loading';
-import { parseUnits } from 'ethers/lib/utils';
 import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
+import { recoverMessageAddress } from 'viem';
 import {
 	useAccount,
 	useContractWrite,
 	useNetwork,
 	usePrepareContractWrite,
-	useSigner,
+	useSignMessage,
 	useWaitForTransaction
 } from 'wagmi';
 
@@ -40,7 +40,7 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 	// Hooks
 	const { chain: { id: chainId } = { id: 0 } } = useNetwork();
 	const { address: account, isConnecting } = useAccount();
-	const { data: signer } = useSigner();
+	const { data: signMessageData, signMessage, variables } = useSignMessage();
 
 	const requiredAttributes = [QuadAttribute.DID, QuadAttribute.AML];
 
@@ -49,13 +49,27 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 		const getApiAccessToken = async () => {
 			fetch('/api/quadrata')
 				.then((res) => res.json())
-				.then((data) => {
-					setAccessToken(data.accessToken);
+				.then((response) => {
+					setAccessToken(response.accessToken);
 				});
 		};
 
 		getApiAccessToken();
 	}, []);
+
+	useEffect(() => {
+		(async () => {
+			if (variables?.message && signMessageData) {
+				const recoveredAddress = await recoverMessageAddress({
+					message: variables?.message,
+					signature: signMessageData
+				});
+				if (recoveredAddress === account) {
+					setSignature(signMessageData);
+				}
+			}
+		})();
+	}, [signMessageData, variables?.message]);
 
 	// Claim Passport on-chain
 	const { config } = usePrepareContractWrite({
@@ -63,9 +77,8 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 		args: mintParams ? [mintParams.params, mintParams.signaturesIssuers, mintParams.signatures] : undefined,
 		address: quadrataPassportContracts[chainId],
 		enabled: Boolean(mintParams),
-		overrides: {
-			value: mintParams?.fee || parseUnits('0')
-		},
+		// @ts-expect-error
+		value: mintParams?.fee || BigInt(0),
 		functionName: 'setAttributesBulk'
 	});
 
@@ -88,8 +101,8 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 		// User clicked the initial sign button
 		// Signing the message and updating state.
 		// Will navigate to the next step upon signature update
-		if (signer && account) {
-			setSignature(await signer.signMessage(message));
+		if (account) {
+			signMessage({ message });
 		}
 	};
 

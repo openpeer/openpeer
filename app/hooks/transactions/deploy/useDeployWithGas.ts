@@ -1,5 +1,4 @@
 import { OpenPeerDeployer } from 'abis';
-import { BigNumber } from 'ethers';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 interface UseDeployWithGasProps {
@@ -11,9 +10,7 @@ const useDeployWithGas = ({ contract }: UseDeployWithGasProps) => {
 		address: contract,
 		abi: OpenPeerDeployer,
 		functionName: 'deploy',
-		overrides: {
-			gasLimit: BigNumber.from('2000000')
-		}
+		gas: BigInt('2000000')
 	});
 
 	const { data, write } = useContractWrite(config);
