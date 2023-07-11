@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Abi, formatUnits, parseUnits } from 'viem';
-import { useAccount, useBalance, useContractReads } from 'wagmi';
+import { useAccount, useBalance, useContractReads, useNetwork } from 'wagmi';
 
 interface OpenDisputeButtonParams {
 	order: Order;
@@ -27,6 +27,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 	const escrowContract = { address: escrowAddress, abi: OpenPeerEscrow as Abi };
 	const [modalOpen, setModalOpen] = useState(false);
 	const [disputeConfirmed, setDisputeConfirmed] = useState(false);
+	const { chain } = useNetwork();
 
 	const { data: readData = [], isFetching } = useContractReads({
 		contracts: [
@@ -41,7 +42,6 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		address: connectedAddress
 	});
 	const [escrowDataResult, disputeFeeResult, paidForDisputeResult] = readData as { result: unknown }[];
-	const [, sellerCanCancelAfter] = escrowDataResult.result as [boolean, bigint];
 
 	const { isLoading, isSuccess, openDispute, data } = useOpenDispute({
 		contract: escrowAddress,
@@ -49,7 +49,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		buyer: buyer.address,
 		token,
 		amount: parseUnits(String(tokenAmount), token.decimals),
-		disputeFee: disputeFeeResult.result as bigint
+		disputeFee: disputeFeeResult?.result as bigint
 	});
 
 	useTransactionFeedback({
@@ -73,14 +73,19 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 
 	if (
 		isFetching ||
-		sellerCanCancelAfter === undefined ||
 		disputeFeeResult === undefined ||
 		paidForDisputeResult === undefined ||
-		balance?.value === undefined
+		balance?.value === undefined ||
+		chain === undefined
 	) {
 		return <p>Loading...</p>;
 	}
 
+	const {
+		nativeCurrency: { decimals, symbol }
+	} = chain;
+
+	const [, sellerCanCancelAfter] = escrowDataResult.result as [boolean, bigint];
 	const disputeFee = disputeFeeResult.result as bigint;
 	const canOpenDispute = (isBuyer || isSeller) && parseInt(sellerCanCancelAfter.toString(), 10) === 1;
 
@@ -93,7 +98,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 		}
 
 		if (disputeFee > balance.value) {
-			toast.error(`You need ${formatUnits(disputeFee, token.decimals)} MATIC to open a dispute`, {
+			toast.error(`You need ${formatUnits(disputeFee, decimals)} ${symbol} to open a dispute`, {
 				theme: 'dark',
 				position: 'top-right',
 				autoClose: 10000,
@@ -130,7 +135,10 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Dispute Trade"
-				content="Once you dispute the trade the other party will have 24 hours to counter the dispute and send it to arbitration. A small fee of 1 MATIC is required to open a dispute. If you win the dispute the fee will be returned"
+				content={`Once you dispute the trade the other party will have 24 hours to counter the dispute and send it to arbitration. A small fee of ${formatUnits(
+					disputeFee,
+					decimals
+				)} ${symbol} is required to open a dispute. If you win the dispute the fee will be returned`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}

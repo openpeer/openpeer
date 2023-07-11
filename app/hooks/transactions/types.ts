@@ -13,7 +13,7 @@ export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
 }
 
 export interface UseOpenDisputeProps extends UseEscrowTransactionProps {
-	disputeFee: bigint;
+	disputeFee: bigint | undefined;
 }
 
 export interface UseEscrowCancelProps extends UseEscrowTransactionProps {
