@@ -1,20 +1,19 @@
-import { BigNumber } from 'ethers';
 import { Token } from 'models/types';
 
 export interface UseEscrowTransactionProps {
 	contract: `0x${string}`;
 	orderID: `0x${string}`;
 	buyer: `0x${string}`;
-	amount: BigNumber;
+	amount: bigint;
 	token: Token;
 }
 
 export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
-	fee: BigNumber;
+	fee: bigint;
 }
 
 export interface UseOpenDisputeProps extends UseEscrowTransactionProps {
-	disputeFee: BigNumber;
+	disputeFee: bigint;
 }
 
 export interface UseEscrowCancelProps extends UseEscrowTransactionProps {

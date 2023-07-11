@@ -9,7 +9,7 @@ import merge from 'lodash.merge';
 import { devChains, productionChains } from 'models/networks';
 import { SessionProvider } from 'next-auth/react';
 import React from 'react';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -32,7 +32,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
 const enabledChains = process.env.NODE_ENV === 'development' ? devChains : productionChains;
 
-const { chains, provider } = configureChains(enabledChains, [
+const { chains, publicClient } = configureChains(enabledChains, [
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_API_KEY! }),
 	alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY! }),
 	publicProvider()
@@ -61,10 +61,10 @@ const connectors = connectorsForWallets([
 	}
 ]);
 
-const wagmiClient = createClient({
+const wagmiConfig = createConfig({
 	autoConnect: true,
 	connectors,
-	provider
+	publicClient
 });
 
 const manrope = Manrope({
@@ -81,7 +81,7 @@ const myTheme = merge(lightTheme(), {
 const App = ({ Component, pageProps }: AppProps) => {
 	const { disableAuthentication } = pageProps;
 	return (
-		<WagmiConfig client={wagmiClient}>
+		<WagmiConfig config={wagmiConfig}>
 			{disableAuthentication ? (
 				<RainbowKitProvider showRecentTransactions chains={chains} theme={myTheme}>
 					<Head />
