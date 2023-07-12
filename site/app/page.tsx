@@ -37,7 +37,7 @@ export default function Home() {
 				<div className="mt-24 sm:mt-48 mb-24">
 					<div className="text-center mb-8">
 						<h1 className="text-5xl lg:text-8xl font-bold shadow-md antialiased">
-							Decentralised P2P Exchange
+							Decentralised P2P <br className="hidden lg:block" /> Exchange
 						</h1>
 					</div>
 					<div className="font-normal">
@@ -82,8 +82,8 @@ export default function Home() {
 							</div>
 						</div>
 						<div className="w-full md:w-1/2">
-							<div className="text-[#DBDBDB] text-xl mb-4">Anywhere Peer 2 Peer</div>
-							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#56d364] via-[#2ea043]">
+							<div className="text-[#DBDBDB] text-xl mb-4">Anywhere</div>
+							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Global Availability
 							</h3>
 							<p className="text-[#DBDBDB] text-xl">
@@ -98,7 +98,8 @@ export default function Home() {
 					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-24 md:px-16 relative">
 						<div className="w-full md:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Your choose</div>
-							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#F49F64] to-[#F56B0A]">
+							{/* <h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#F49F64] to-[#F56B0A]"> */}
+							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Multichain Settlement
 							</h3>
 							<p className="text-[#DBDBDB] text-xl">
