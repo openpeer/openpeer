@@ -23,10 +23,6 @@ const nextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'openpeerimages.s3.us-west-1.amazonaws.com'
-			},
-			{
-				protocol: 'https',
-				hostname: 'openpeerbanksimages.s3.us-west-1.amazonaws.com'
 			}
 		]
 	},
