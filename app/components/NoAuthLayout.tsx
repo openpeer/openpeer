@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
@@ -10,7 +11,6 @@ import { ToastContainer } from 'react-toastify';
 
 import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import discord from '../public/discord.svg';
 import twitterLogo from '../public/twitter.svg';
@@ -164,13 +164,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 								</span>
 							</Link>
 							<div className="relative ml-3">
-								<ConnectButton
-									showBalance={false}
-									accountStatus={{
-										smallScreen: 'avatar',
-										largeScreen: 'full'
-									}}
-								/>
+								<ConnectKitButton />
 							</div>
 						</div>
 					</div>

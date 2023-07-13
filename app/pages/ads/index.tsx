@@ -1,7 +1,6 @@
-import { ListsTable, Loading, WrongNetwork } from 'components';
+import { ListsTable, Loading } from 'components';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
@@ -11,7 +10,6 @@ const Ads = () => {
 	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
-	const { data: session } = useSession();
 
 	useEffect(() => {
 		if (!address) return;
@@ -22,11 +20,6 @@ const Ads = () => {
 				setLists(data.data);
 			});
 	}, [address, chainId]);
-
-	// @ts-expect-error
-	if (address === undefined || !session || session.address !== address) {
-		return <WrongNetwork />;
-	}
 
 	if (lists === undefined) {
 		return <Loading />;

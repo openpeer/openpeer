@@ -1,11 +1,8 @@
-import { Loading, Steps } from 'components';
+import { Loading, Steps, WrongNetwork } from 'components';
 import { Cancelled, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
-import WrongNetwork from 'components/WrongNetwork';
-import { useConnection } from 'hooks';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
@@ -27,21 +24,17 @@ const steps: { [key: string]: number } = {
 
 const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const [order, setOrder] = useState<UIOrder>();
-	const { wrongNetwork, status } = useConnection();
-	const { data: session } = useSession();
 	const { chain } = useNetwork();
-	// @ts-ignore
-	const { jwt } = session || {};
+	// @TODO: Marcos fix JWT
+	const jwt = '';
 
 	useEffect(() => {
-		if (!session) return;
-
 		fetch(`/api/orders/${id}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setOrder({ ...data, ...{ step: steps[data.status || 'error'] } });
 			});
-	}, [id, session]);
+	}, [id, jwt]);
 
 	useEffect(() => {
 		const setupChannel = async () => {
@@ -67,10 +60,11 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 	}, [jwt]);
 
-	if (wrongNetwork || (order?.list?.chain_id && chain && order.list.chain_id !== chain.id)) {
+	if (order?.list?.chain_id && chain && order.list.chain_id !== chain.id) {
 		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
 	}
-	if (status === 'loading' || !order) return <Loading />;
+
+	if (!order) return <Loading />;
 
 	const { step, list, dispute } = order;
 

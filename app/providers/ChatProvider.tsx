@@ -1,6 +1,5 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import { useSession } from 'next-auth/react';
+/* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
 import { WalletChatProvider, WalletChatWidget } from 'react-wallet-chat';
 import { useAccount, useNetwork } from 'wagmi';
@@ -14,9 +13,9 @@ interface ChatProviderProps {
 const ChatProvider = ({ children }: ChatProviderProps) => {
 	const { address: account, connector } = useAccount();
 	const { chain } = useNetwork();
-	const { data: session } = useSession();
-	// @ts-expect-error
-	const { token: { name: signature = '', email: message = '' } = {} } = session || {};
+	// @TODO: add signature and message
+	const signature = '';
+	const message = '';
 
 	return (
 		<WalletChatProvider>

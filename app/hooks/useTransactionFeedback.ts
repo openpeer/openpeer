@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNetwork } from 'wagmi';
 
-import { useAccountModal, useAddRecentTransaction } from '@rainbow-me/rainbowkit';
-
 interface Params {
 	isSuccess: boolean;
 	hash: `0x${string}` | undefined;
@@ -13,8 +11,10 @@ interface Params {
 
 const useTransactionFeedback = ({ isSuccess, hash, Link, description }: Params) => {
 	const { chain } = useNetwork();
-	const addRecentTransaction = useAddRecentTransaction();
-	const { openAccountModal } = useAccountModal();
+
+	// @TODO - Marcos - Add to recent transactions
+	const addRecentTransaction = (a: any) => console.log(a);
+	const openAccountModal = () => console.log('a');
 
 	useEffect(() => {
 		if (hash) {

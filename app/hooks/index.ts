@@ -1,5 +1,4 @@
 import useBiconomy from './useBiconomy';
-import useConnection from './useConnection';
 import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
 import useListPrice from './useListPrice';
@@ -12,7 +11,6 @@ import useVerificationStatus from './useVerificationStatus';
 
 export {
 	useListPrice,
-	useConnection,
 	useFormErrors,
 	useTransactionFeedback,
 	useNotifications,

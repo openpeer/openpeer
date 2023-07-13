@@ -1,6 +1,6 @@
-import { Avatar, Button, HeaderH3, Input, Loading, WrongNetwork } from 'components';
+import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
 import ImageUploader from 'components/ImageUploader';
-import { useConnection, useUserProfile } from 'hooks';
+import { useUserProfile } from 'hooks';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React from 'react';
@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
-	const { wrongNetwork } = useConnection();
 	const { address } = useAccount();
 	const onUpdateProfile = () => {
 		toast.success('Done', {
@@ -38,10 +37,9 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	if (user === undefined) {
 		return <Loading />;
 	}
-	if (user === null) {
+	if (user === null || id !== address) {
 		return <ErrorPage statusCode={404} />;
 	}
-	if (wrongNetwork || id !== address) return <WrongNetwork />;
 
 	return (
 		<div className="w-full m-auto flex flex-col sm:flex-row px-8 py-4 gap-x-16 justify-center mt-8">
