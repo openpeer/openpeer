@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { Order } from 'models/types';
-import { getSession } from 'next-auth/react';
+import { siweServer } from 'utils/siweServer';
 
 import { minkeApi } from '../../utils/utils';
 
@@ -18,8 +18,8 @@ const cancelOrder = async (id: string, body: NextApiRequest['body'], token: stri
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order>) {
 	const { id, body } = req.query;
-	// @ts-ignore
-	const { jwt } = await getSession({ req });
+	// @ts-expect-error
+	const { jwt } = await siweServer.getSession(req, res);
 
 	try {
 		const result = await cancelOrder(id as string, body, jwt);

@@ -3,16 +3,17 @@ import 'tailwindcss/tailwind.css';
 
 import Head from 'app/head';
 import CustomAvatar from 'components/CustomAvatar';
-import Layout from 'components/layout';
-import NoAuthLayout from 'components/NoAuthLayout';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
 import { devChains, productionChains } from 'models/networks';
+import dynamic from 'next/dynamic';
 import React from 'react';
 import { siweClient } from 'utils/siweClient';
 import { createConfig, WagmiConfig } from 'wagmi';
 
 import { Manrope } from '@next/font/google';
 
+const Layout = dynamic(() => import('../components/layout'), { ssr: false });
+const NoAuthLayout = dynamic(() => import('../components/NoAuthLayout'), { ssr: false });
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
 const enabledChains = process.env.NODE_ENV === 'development' ? devChains : productionChains;
@@ -39,10 +40,10 @@ const config = createConfig(
 );
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const { disableAuthentication } = pageProps;
+	const { simpleLayout } = pageProps;
 	return (
 		<WagmiConfig config={config}>
-			<siweClient.Provider signOutOnNetworkChange={false} enabled={!disableAuthentication}>
+			<siweClient.Provider signOutOnNetworkChange={false}>
 				<ConnectKitProvider
 					customTheme={{
 						'--ck-font-family': manrope.style.fontFamily,
@@ -56,7 +57,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 					}}
 				>
 					<Head />
-					{disableAuthentication ? (
+					{simpleLayout ? (
 						// @ts-expect-error
 						<NoAuthLayout pageProps={pageProps} Component={Component} />
 					) : (

@@ -93,6 +93,6 @@ const Quick = () => {
 	);
 };
 
-Quick.getInitialProps = async () => ({ disableAuthentication: true });
+Quick.getInitialProps = async () => ({ simpleLayout: true });
 
 export default Quick;

@@ -288,7 +288,7 @@ const AirdropPage = () => {
 
 export async function getServerSideProps() {
 	return {
-		props: { title: 'Airdrop', disableAuthentication: true } // will be passed to the page component as props
+		props: { title: 'Airdrop', simpleLayout: true } // will be passed to the page component as props
 	};
 }
 export default AirdropPage;

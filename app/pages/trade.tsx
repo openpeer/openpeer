@@ -1,4 +1,3 @@
-import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination } from 'hooks';
@@ -8,6 +7,8 @@ import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
+
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 
 interface PaginationMeta {
 	current_page: number;
@@ -128,7 +129,8 @@ const HomePage = () => {
 
 export const getServerSideProps: GetServerSideProps = async () => ({
 	props: {
-		title: 'Trade P2P'
+		title: 'Trade P2P',
+		disableAuthentication: true
 	}
 });
 

@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { ConnectKitButton, useModal, useSIWE } from 'connectkit';
+import { User } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
@@ -21,6 +22,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
+import Avatar from './Avatar';
 import Button from './Button/Button';
 import { CollapseButton } from './Navigation';
 import Notifications from './Notifications/Notifications';
@@ -75,7 +77,7 @@ const Unauthenticated = () => {
 				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
 				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
 				<span className="mb-4 m-auto">
-					<Button title="Sign in" onClick={() => openSIWE(true)} />
+					<Button title="Sign in" onClick={() => openSIWE(false)} />
 				</span>
 			</div>
 		</div>
@@ -84,11 +86,10 @@ const Unauthenticated = () => {
 
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
-	const { title } = pageProps;
+	const { title, disableAuthentication } = pageProps;
 	const { address, isConnected } = useAccount();
-	const { data, isSignedIn } = useSIWE();
-	console.log('session', data);
-	const authenticated = isSignedIn && isConnected && data.address === address;
+	const { data: session, isSignedIn } = useSIWE();
+	const authenticated = disableAuthentication || (isSignedIn && isConnected && session.address === address);
 
 	return (
 		<div className={`${manrope.variable} font-sans`}>
@@ -185,12 +186,12 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative">
 									<div className="flex flex-row items-center">
-										{!!address && (
+										{address && (
 											<Link
 												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
 												href={`/${address}`}
 											>
-												{/* <Avatar user={user} className="w-full" /> @TODO: Marcos */}
+												<Avatar user={{ address } as User} className="w-full" />
 											</Link>
 										)}
 										<ConnectKitButton />

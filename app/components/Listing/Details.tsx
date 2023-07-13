@@ -61,7 +61,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		<StepLayout onProceed={onProceed} buttonText="Sign and Finish">
 			<div className="my-8">
 				{/* <Label title="Time Limit for Payment" />
-        <Selector value={10} suffix=" mins" updateValue={() => console.log('update')} /> */}
+        <Selector value={10} suffix=" mins" updateValue={} /> */}
 				<Textarea
 					label="Order Terms"
 					rows={4}
