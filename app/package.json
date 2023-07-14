@@ -35,7 +35,6 @@
 		"eslint-config-next": "13.0.6",
 		"ethereum-blockies-base64": "^1.0.2",
 		"ethers": "5.7.2",
-		"evm-bn": "^1.1.2",
 		"formidable": "^2.1.1",
 		"jsonwebtoken": "^9.0.0",
 		"lodash": "^4.17.21",

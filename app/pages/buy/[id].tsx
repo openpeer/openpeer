@@ -33,7 +33,8 @@ const BuyPage = ({ id }: { id: number }) => {
 	const seller = order.seller || order.list?.seller;
 	const canBuy = seller && seller.address !== address;
 
-	if (!list || !canBuy) return <Loading />;
+	if (!list) return <Loading />;
+	if (!canBuy) return <Loading message="You are the seller of this order" />;
 
 	return (
 		<div className="pt-4 md:pt-6">

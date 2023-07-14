@@ -2,8 +2,10 @@ import { Loading, Steps, WrongNetwork } from 'components';
 import { Cancelled, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
+import jwt from 'jsonwebtoken';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
+import { siweServer } from 'utils/siweServer';
 import { useNetwork } from 'wagmi';
 
 const ERROR_STEP = 0;
@@ -22,11 +24,9 @@ const steps: { [key: string]: number } = {
 	error: ERROR_STEP
 };
 
-const OrderPage = ({ id }: { id: `0x${string}` }) => {
+const OrderPage = ({ id, token }: { id: `0x${string}`; token: string }) => {
 	const [order, setOrder] = useState<UIOrder>();
 	const { chain } = useNetwork();
-	// @TODO: Marcos fix JWT
-	const jwt = '';
 
 	useEffect(() => {
 		fetch(`/api/orders/${id}`)
@@ -34,14 +34,14 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 			.then((data) => {
 				setOrder({ ...data, ...{ step: steps[data.status || 'error'] } });
 			});
-	}, [id, jwt]);
+	}, [id, token]);
 
 	useEffect(() => {
 		const setupChannel = async () => {
-			if (!jwt) return;
+			if (!token) return;
 			const { createConsumer } = await import('@rails/actioncable');
 
-			const consumer = createConsumer(`${process.env.NEXT_PUBLIC_API_WS_URL}/cable?token=${jwt}`);
+			const consumer = createConsumer(`${process.env.NEXT_PUBLIC_API_WS_URL}/cable?token=${token}`);
 			consumer.subscriptions.create(
 				{
 					channel: 'OrdersChannel',
@@ -58,7 +58,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		};
 
 		setupChannel();
-	}, [jwt]);
+	}, [token]);
 
 	if (order?.list?.chain_id && chain && order.list.chain_id !== chain.id) {
 		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
@@ -89,7 +89,15 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
-	// Pass data to the page via props
-	({ props: { title: 'Buy', id: String(context.params?.id) } });
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async ({ req, res, params }) => {
+	const { address } = await siweServer.getSession(req, res);
+	const encodedToken = jwt.sign(
+		{ sub: address, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+		process.env.NEXTAUTH_SECRET!,
+		{
+			algorithm: 'HS256'
+		}
+	);
+	return { props: { title: 'Buy', id: String(params?.id), token: encodedToken } };
+};
 export default OrderPage;
