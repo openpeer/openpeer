@@ -4,7 +4,7 @@ import './background.css';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 
-import HeroImage from '../public/hero-image.png';
+import HeroImage from '../public/illustrations/hero-image.png';
 import KeysImage from '../public/illustrations/keys.png';
 import ButtonAnimated from '../components/Button/ButtonAnimated';
 import NavigationSite from '../components/Navigation';
@@ -33,20 +33,21 @@ export default function Home() {
 	return (
 		<>
 			<div>
+				<Image src={HeroImage} alt="Hero Image" className="absolute -top-56 -right-72 -z-20" />
 				<NavigationSite />
-				<div className="mt-24 sm:mt-48 mb-24">
-					<div className="text-center mb-8">
-						<h1 className="text-5xl lg:text-8xl font-bold shadow-md antialiased">
+				<div className="w-4/5 m-auto mt-24 mb-48">
+					<div className="text-left mb-8">
+						<h1 className="text-5xl lg:text-7xl font-bold antialiased">
 							Decentralised P2P <br className="hidden lg:block" /> Exchange
 						</h1>
 					</div>
 					<div className="font-normal">
-						<div className="flex flex-row text-center justify-center space-x-4 text-2xl mb-8">
+						<div className="flex flex-row text-left space-x-4 text-2xl mb-8">
 							Buy crypto directly to your wallet from your <br className="hidden md:block" /> bank account
 							with zero-fees.
 						</div>
 					</div>
-					<div className="text-center mt-0 md:mt-16">
+					<div className="text-left mt-0 md:mt-16">
 						<Link href="https://app.openpeer.xyz" target="_blank">
 							<ButtonAnimated title="LAUNCH APP" />
 						</Link>
