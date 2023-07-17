@@ -8,7 +8,7 @@ interface CheckboxProps {
 
 const Checkbox = ({ content, id, name }: CheckboxProps) => (
 	<div className="relative flex items-start py-2.5">
-		<div className="flex h-5 items-center">
+		<div className="flex h-6 items-center">
 			<input
 				id={id}
 				name={name}
@@ -17,8 +17,8 @@ const Checkbox = ({ content, id, name }: CheckboxProps) => (
 				className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
 			/>
 		</div>
-		<div className="ml-3 text-base">
-			<label htmlFor={id} className="font-medium text-gray-700">
+		<div className="ml-2 text-base">
+			<label htmlFor={id} className="font-medium text-gray-700 cursor-pointer">
 				{content}
 			</label>
 		</div>
