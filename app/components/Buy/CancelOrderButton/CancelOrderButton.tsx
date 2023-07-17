@@ -1,4 +1,4 @@
-import { Button, Modal } from 'components';
+import { Button, Checkbox, Input, Modal } from 'components';
 import { verifyMessage } from 'ethers/lib/utils';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
@@ -80,7 +80,31 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Cancel Order?"
-				content="The order will be cancelled"
+				content={
+					<>
+						<div className="text-base text-left mt-4 text-gray-700 font-medium">
+							What is the reason for your wish to cancel?
+						</div>
+						<Checkbox content="Trade took too long to complete" id="tooLong" name="cencelReason" />
+						<Checkbox
+							content="Other trader hasn't completed next steps"
+							id="hasntCompleated"
+							name="cencelReason"
+						/>
+						<Checkbox
+							content="Don't want to trade with other trader"
+							id="dontWantToTrade"
+							name="cencelReason"
+						/>
+						<Checkbox content="Don't understand OpenPeer" id="DontUnderstandOpenPeer" name="cencelReason" />
+						<Checkbox content="Other" id="cancelReasonOther" name="cencelReason" />
+						<Input
+							label="Please, tell us why you're cancelling"
+							id="cancelReasonDescription"
+							containerExtraStyle="my-2"
+						/>
+					</>
+				}
 				type="alert"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
