@@ -42,7 +42,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
 				<Link href={`/${user.address}`} target="_blank">
 					<div className="flex flex-row items-center">
-						<Avatar user={user} />
+						<Avatar user={user} className="w-10 aspect-square" />
 						<span className="ml-2 cursor-pointer">{user.name || smallWalletAddress(user.address)}</span>
 					</div>
 				</Link>
