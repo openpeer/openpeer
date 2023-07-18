@@ -13,6 +13,18 @@ interface CancelOrderButtonParams {
 	title?: string;
 }
 
+interface CancelReasons {
+	[key: string]: string;
+}
+
+const cancelReasons: CancelReasons = {
+	tookTooLong: 'Trade took too long to complete',
+	hasntCompletedNextSteps: "Other trader hasn't completed next steps",
+	dontWantToTrade: "Don't want to trade with other trader",
+	dontUnderstand: "Don't understand OpenPeer",
+	other: 'Other'
+};
+
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
 	const { seller, buyer, uuid } = order;
 
@@ -24,6 +36,11 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
+	const [cancellation, setCancellation] = useState<{ [key: string]: boolean }>({});
+
+	const toggleCancellation = (key: string) => {
+		setCancellation({ ...cancellation, [key]: !cancellation[key] });
+	};
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
@@ -85,19 +102,16 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 						<div className="text-base text-left mt-4 text-gray-700 font-medium">
 							What is the reason for your wish to cancel?
 						</div>
-						<Checkbox content="Trade took too long to complete" id="tooLong" name="cencelReason" />
-						<Checkbox
-							content="Other trader hasn't completed next steps"
-							id="hasntCompleated"
-							name="cencelReason"
-						/>
-						<Checkbox
-							content="Don't want to trade with other trader"
-							id="dontWantToTrade"
-							name="cencelReason"
-						/>
-						<Checkbox content="Don't understand OpenPeer" id="DontUnderstandOpenPeer" name="cencelReason" />
-						<Checkbox content="Other" id="cancelReasonOther" name="cencelReason" />
+
+						{Object.keys(cancelReasons).map((key) => (
+							<Checkbox
+								content={cancelReasons[key]}
+								id={key}
+								name={key}
+								onChange={() => toggleCancellation(key)}
+							/>
+						))}
+
 						<Input
 							label="Please, tell us why you're cancelling"
 							id="cancelReasonDescription"

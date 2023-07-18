@@ -2,11 +2,13 @@ import Button from 'components/Button/Button';
 import React, { Fragment } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { CheckIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import {
+	CheckIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon
+} from '@heroicons/react/24/outline';
 
 export interface ModalProps {
 	title: string;
-	content: string;
+	content: string | JSX.Element;
 	type: 'alert' | 'success' | 'confirmation';
 	actionButtonTitle: string;
 	open: boolean;
