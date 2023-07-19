@@ -1,10 +1,10 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { toBn } from 'evm-bn';
 import { useTransactionFeedback } from 'hooks';
 import { useMarkAsPaid } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React from 'react';
+import { parseUnits } from 'viem';
 import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {
@@ -21,7 +21,7 @@ const MarkAsPaidButton = ({ order }: MarkAsPaidButtonParams) => {
 		orderID: uuid,
 		buyer: buyer.address,
 		token,
-		amount: toBn(String(tokenAmount), token.decimals)
+		amount: parseUnits(String(tokenAmount), token.decimals)
 	});
 
 	const onPaymentDone = () => {

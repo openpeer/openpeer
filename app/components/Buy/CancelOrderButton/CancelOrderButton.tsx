@@ -1,11 +1,13 @@
-import { Button, Checkbox, Input, Modal } from 'components';
+import { Button, Modal } from 'components';
 import { verifyMessage } from 'ethers/lib/utils';
+import { useCancelReasons } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useSignMessage } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
+import CancelReasons from './CancelReasons';
 
 interface CancelOrderButtonParams {
 	order: Order;
@@ -13,22 +15,11 @@ interface CancelOrderButtonParams {
 	title?: string;
 }
 
-interface CancelReasons {
-	[key: string]: string;
-}
-
-const cancelReasons: CancelReasons = {
-	tookTooLong: 'Trade took too long to complete',
-	hasntCompletedNextSteps: "Other trader hasn't completed next steps",
-	dontWantToTrade: "Don't want to trade with other trader",
-	dontUnderstand: "Don't understand OpenPeer",
-	other: 'Other'
-};
-
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
 	const { seller, buyer, uuid } = order;
 
 	const { address } = useAccount();
+	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
 
 	const isBuyer = buyer.address === address;
 	const isSeller = seller.address === address;
@@ -36,19 +27,17 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
-	const [cancellation, setCancellation] = useState<{ [key: string]: boolean }>({});
-
-	const toggleCancellation = (key: string) => {
-		setCancellation({ ...cancellation, [key]: !cancellation[key] });
-	};
 
 	const { signMessage } = useSignMessage({
 		onSuccess: async (data, variables) => {
 			const signingAddress = verifyMessage(variables.message, data);
 			if (signingAddress === address) {
 				const result = await fetch(`/api/orders/${uuid}/cancel`, {
-					method: 'PATCH',
-					body: message
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ cancellation, other_reason: otherReason })
 				});
 				const savedOrder = await result.json();
 				if (!savedOrder.uuid) {
@@ -97,28 +86,7 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Cancel Order?"
-				content={
-					<>
-						<div className="text-base text-left mt-4 text-gray-700 font-medium">
-							What is the reason for your wish to cancel?
-						</div>
-
-						{Object.keys(cancelReasons).map((key) => (
-							<Checkbox
-								content={cancelReasons[key]}
-								id={key}
-								name={key}
-								onChange={() => toggleCancellation(key)}
-							/>
-						))}
-
-						<Input
-							label="Please, tell us why you're cancelling"
-							id="cancelReasonDescription"
-							containerExtraStyle="my-2"
-						/>
-					</>
-				}
+				content={<CancelReasons setOtherReason={setOtherReason} toggleCancellation={toggleCancellation} />}
 				type="alert"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
