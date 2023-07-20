@@ -19,6 +19,7 @@ export interface User {
 	twitter: string | null;
 	completion_rate: number | null;
 	created_at: string;
+	verified: boolean;
 }
 
 export interface Token {

@@ -4,14 +4,11 @@ import WrongNetwork from 'components/WrongNetwork';
 import { useConnection } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
-	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
 	const { wrongNetwork, status } = useConnection();
 
@@ -19,13 +16,13 @@ const OrdersPage = () => {
 		if (status !== 'authenticated') return;
 
 		setLoading(true);
-		fetch(`/api/orders?chain_id=${chainId}`)
+		fetch('/api/orders')
 			.then((res) => res.json())
 			.then((data) => {
 				setOrders(data);
 				setLoading(false);
 			});
-	}, [chainId, address, status]);
+	}, [address, status]);
 
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading' || isLoading) return <Loading />;

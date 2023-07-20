@@ -12,9 +12,19 @@ export interface ModalProps {
 	open: boolean;
 	onClose: () => void;
 	onAction: () => void;
+	actionDisabled?: boolean;
 }
 
-const ModalWindow = ({ title, content, type, actionButtonTitle, open, onClose, onAction }: ModalProps) => {
+const ModalWindow = ({
+	title,
+	content,
+	type,
+	actionButtonTitle,
+	open,
+	onClose,
+	onAction,
+	actionDisabled = false
+}: ModalProps) => {
 	const confirmAction = () => {
 		onAction();
 		onClose();
@@ -82,7 +92,11 @@ const ModalWindow = ({ title, content, type, actionButtonTitle, open, onClose, o
 										<Button title="Cancel" outlined onClick={onClose} />
 									</span>
 									<span className="w-full">
-										<Button title={actionButtonTitle} onClick={confirmAction} />
+										<Button
+											title={actionButtonTitle}
+											onClick={confirmAction}
+											disabled={actionDisabled}
+										/>
 									</span>
 								</div>
 							</Dialog.Panel>

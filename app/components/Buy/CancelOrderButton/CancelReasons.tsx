@@ -6,9 +6,10 @@ import React from 'react';
 interface CancelReasonsProps {
 	toggleCancellation: (key: string) => void;
 	setOtherReason: (value: string) => void;
+	showOtherReason: boolean;
 }
 
-const CancelReasons = ({ toggleCancellation, setOtherReason }: CancelReasonsProps) => (
+const CancelReasons = ({ toggleCancellation, setOtherReason, showOtherReason }: CancelReasonsProps) => (
 	<>
 		<div className="text-base text-left mt-4 text-gray-700 font-medium">
 			What is the reason for your wish to cancel?
@@ -23,13 +24,14 @@ const CancelReasons = ({ toggleCancellation, setOtherReason }: CancelReasonsProp
 				key={key}
 			/>
 		))}
-
-		<Input
-			label="Please, tell us why you're cancelling"
-			id="cancelReasonDescription"
-			containerExtraStyle="my-2"
-			onChange={setOtherReason}
-		/>
+		{showOtherReason && (
+			<Input
+				label="Please, tell us why you're cancelling"
+				id="cancelReasonDescription"
+				containerExtraStyle="my-2"
+				onChange={setOtherReason}
+			/>
+		)}
 	</>
 );
 

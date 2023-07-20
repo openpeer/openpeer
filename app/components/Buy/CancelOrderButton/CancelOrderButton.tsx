@@ -37,7 +37,10 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ cancellation, other_reason: otherReason })
+					body: JSON.stringify({
+						cancellation,
+						other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+					})
 				});
 				const savedOrder = await result.json();
 				if (!savedOrder.uuid) {
@@ -86,11 +89,18 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Cancel Order?"
-				content={<CancelReasons setOtherReason={setOtherReason} toggleCancellation={toggleCancellation} />}
+				content={
+					<CancelReasons
+						setOtherReason={setOtherReason}
+						toggleCancellation={toggleCancellation}
+						showOtherReason={cancellation.other}
+					/>
+				}
 				type="alert"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
 				onAction={() => setCancelConfirmed(true)}
+				actionDisabled={Object.keys(cancellation).length === 0 || (cancellation.other && !otherReason)}
 			/>
 		</>
 	) : (

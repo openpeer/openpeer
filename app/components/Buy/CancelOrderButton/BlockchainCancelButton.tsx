@@ -61,7 +61,10 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ cancellation, other_reason: otherReason })
+				body: JSON.stringify({
+					cancellation,
+					other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+				})
 			});
 		};
 
@@ -111,11 +114,18 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 							<div>The escrowed funds will return to {isBuyer ? 'the seller' : 'you'}.</div>
 						</div>
 					}
-					content={<CancelReasons setOtherReason={setOtherReason} toggleCancellation={toggleCancellation} />}
+					content={
+						<CancelReasons
+							setOtherReason={setOtherReason}
+							toggleCancellation={toggleCancellation}
+							showOtherReason={cancellation.other}
+						/>
+					}
 					type="alert"
 					open={modalOpen}
 					onClose={() => setModalOpen(false)}
 					onAction={() => setCancelConfirmed(true)}
+					actionDisabled={Object.keys(cancellation).length === 0 || (cancellation.other && !otherReason)}
 				/>
 			</>
 		</>
