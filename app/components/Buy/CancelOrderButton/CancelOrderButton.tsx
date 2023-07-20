@@ -1,11 +1,13 @@
 import { Button, Modal } from 'components';
 import { verifyMessage } from 'ethers/lib/utils';
+import { useCancelReasons } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useSignMessage } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
+import CancelReasons from './CancelReasons';
 
 interface CancelOrderButtonParams {
 	order: Order;
@@ -17,6 +19,7 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 	const { seller, buyer, uuid } = order;
 
 	const { address } = useAccount();
+	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
 
 	const isBuyer = buyer.address === address;
 	const isSeller = seller.address === address;
@@ -30,8 +33,14 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			const signingAddress = verifyMessage(variables.message, data);
 			if (signingAddress === address) {
 				const result = await fetch(`/api/orders/${uuid}/cancel`, {
-					method: 'PATCH',
-					body: message
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						cancellation,
+						other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+					})
 				});
 				const savedOrder = await result.json();
 				if (!savedOrder.uuid) {
@@ -80,11 +89,18 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			<Modal
 				actionButtonTitle="Yes, confirm"
 				title="Cancel Order?"
-				content="The order will be cancelled"
+				content={
+					<CancelReasons
+						setOtherReason={setOtherReason}
+						toggleCancellation={toggleCancellation}
+						showOtherReason={cancellation.other}
+					/>
+				}
 				type="alert"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
 				onAction={() => setCancelConfirmed(true)}
+				actionDisabled={Object.keys(cancellation).length === 0 || (cancellation.other && !otherReason)}
 			/>
 		</>
 	) : (

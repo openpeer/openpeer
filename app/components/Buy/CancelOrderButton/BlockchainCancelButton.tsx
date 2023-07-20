@@ -1,12 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useCancelReasons, useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
 import { useAccount, useContractRead } from 'wagmi';
+
+import CancelReasons from './CancelReasons';
 
 interface BlockchainCancelButtonParams {
 	order: Order;
@@ -17,6 +19,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	const { escrow, buyer, seller, trade_id: tradeId, uuid, list, token_amount: tokenAmount } = order;
 	const { token } = list;
 	const { isConnected, address: connectedAddress } = useAccount();
+	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
 	const [modalOpen, setModalOpen] = useState(false);
@@ -50,6 +53,25 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 			onBlockchainCancel();
 		}
 	}, [cancelConfirmed]);
+
+	useEffect(() => {
+		const saveCancellationReasons = async () => {
+			await fetch(`/api/orders/${uuid}/cancel`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					cancellation,
+					other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+				})
+			});
+		};
+
+		if (isSuccess) {
+			saveCancellationReasons();
+		}
+	}, [isSuccess]);
 
 	if (isFetchingEscrowData) {
 		return <p>Loading...</p>;
@@ -86,12 +108,24 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 			<>
 				<Modal
 					actionButtonTitle="Yes, confirm"
-					title="Cancel Order?"
-					content={`The escrowed funds will return to ${isBuyer ? 'the seller' : 'you'}.`}
+					title={
+						<div className="flex flex-col">
+							<div>Cancel Order?</div>
+							<div>The escrowed funds will return to {isBuyer ? 'the seller' : 'you'}.</div>
+						</div>
+					}
+					content={
+						<CancelReasons
+							setOtherReason={setOtherReason}
+							toggleCancellation={toggleCancellation}
+							showOtherReason={cancellation.other}
+						/>
+					}
 					type="alert"
 					open={modalOpen}
 					onClose={() => setModalOpen(false)}
 					onAction={() => setCancelConfirmed(true)}
+					actionDisabled={Object.keys(cancellation).length === 0 || (cancellation.other && !otherReason)}
 				/>
 			</>
 		</>
