@@ -24,6 +24,7 @@ export interface UIList {
 	terms?: string | undefined;
 	quickSellSetupDone: boolean;
 	user?: User;
+	depositTimeLimit: number;
 }
 
 export interface ListStepProps {

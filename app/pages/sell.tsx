@@ -15,8 +15,13 @@ const DETAILS_STEP = 4;
 
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const DEFAULT_MARGIN_VALUE = 1;
+const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
 
-const defaultList = { marginType: DEFAULT_MARGIN_TYPE, margin: DEFAULT_MARGIN_VALUE };
+const defaultList = {
+	marginType: DEFAULT_MARGIN_TYPE,
+	margin: DEFAULT_MARGIN_VALUE,
+	depositTimeLimit: DEFAULT_DEPOSIT_TIME_LIMIT
+};
 
 const SellPage = () => {
 	const router = useRouter();
@@ -38,21 +43,15 @@ const SellPage = () => {
 
 	useEffect(() => {
 		if (list.step > 3) {
-			setList({
-				step: PAYMENT_METHOD_STEP,
-				marginType: DEFAULT_MARGIN_TYPE,
-				margin: DEFAULT_MARGIN_VALUE
-			} as UIList);
+			setList({ ...{ step: PAYMENT_METHOD_STEP }, ...defaultList } as UIList);
 		}
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
 		setList({
-			step: SETUP_STEP,
-			marginType: DEFAULT_MARGIN_TYPE,
-			margin: DEFAULT_MARGIN_VALUE,
-			type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined
+			...{ step: SETUP_STEP, type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined },
+			...defaultList
 		} as UIList);
 	}, [chain]);
 

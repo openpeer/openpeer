@@ -27,7 +27,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		token,
 		total_available_amount: totalAvailableAmount,
 		terms,
-		type
+		type,
+		deposit_time_limit: depositTimeLimit
 	} = list!;
 
 	const { address } = useAccount();
@@ -133,6 +134,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 								unoptimized
 							/>
 							{bank?.name}
+						</div>
+					</div>
+				)}
+				{!!depositTimeLimit && (
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Deposit Time Limit</div>
+						<div className="text-sm font-bold">
+							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}
 						</div>
 					</div>
 				)}

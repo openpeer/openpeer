@@ -52,6 +52,7 @@ export interface List {
 	total_available_amount: string;
 	price: number;
 	type: 'SellList' | 'BuyList';
+	deposit_time_limit: number | undefined;
 }
 
 export interface AccountField {

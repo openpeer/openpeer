@@ -35,6 +35,7 @@ const EditTrade = ({ id }: { id: number }) => {
 					bank,
 					payment_method: paymentMethod,
 					margin,
+					deposit_time_limit: depositTimeLimit,
 					terms
 				} = data;
 				setList(data);
@@ -55,7 +56,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					paymentMethod: paymentMethod || { bank, bankId: bank.id },
 					quickSellSetupDone: true,
 					terms: terms || '',
-					margin: margin ? Number(margin) : undefined
+					margin: margin ? Number(margin) : undefined,
+					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0
 				};
 				setUiList(ui);
 			});
