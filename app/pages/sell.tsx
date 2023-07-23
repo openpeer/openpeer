@@ -25,8 +25,8 @@ const defaultList = {
 };
 
 const SellPage = () => {
-	const [showFilters, setShowFilters] = useState(false);
 	const router = useRouter();
+	const [showFilters, setShowFilters] = useState(false);
 	const { token, currency, tokenAmount, fiatAmount } = router.query;
 	const quickBuy = !!token && !!currency && !!Number(fiatAmount || '0');
 	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
@@ -72,7 +72,6 @@ const SellPage = () => {
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
-		console.log('clicked');
 	};
 
 	return (
@@ -93,8 +92,8 @@ const SellPage = () => {
 						<span className="text-gray-600 hover:cursor-pointer ml-2">Details</span>
 					</div>
 					{showFilters && (
-						<div className="mt-4">
-							<Summary list={list} /> ...
+						<div className="mt-4 md:hidden">
+							<Summary list={list} />
 						</div>
 					)}
 					{step === SETUP_STEP && (
