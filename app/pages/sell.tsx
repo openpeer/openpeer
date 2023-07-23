@@ -1,3 +1,4 @@
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps } from 'components';
 import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
@@ -24,6 +25,7 @@ const defaultList = {
 };
 
 const SellPage = () => {
+	const [showFilters, setShowFilters] = useState(false);
 	const router = useRouter();
 	const { token, currency, tokenAmount, fiatAmount } = router.query;
 	const quickBuy = !!token && !!currency && !!Number(fiatAmount || '0');
@@ -68,15 +70,33 @@ const SellPage = () => {
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading') return <Loading />;
 
+	const handleToggleFilters = () => {
+		setShowFilters(!showFilters);
+		console.log('clicked');
+	};
+
 	return (
-		<div className="py-6">
-			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16 2xl:w-3/4 2xl:m-auto">
-				<div className="lg:w-2/4">
+		<div className="pt-4 md:pt-6">
+			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16">
+				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
 						stepsCount={3}
 						onStepClick={(n) => setList({ ...list, ...{ step: n } })}
 					/>
+					<div className="flex flex-row justify-end md:hidden md:justify-end" onClick={handleToggleFilters}>
+						<AdjustmentsVerticalIcon
+							width={24}
+							height={24}
+							className="text-gray-600 hover:cursor-pointer"
+						/>
+						<span className="text-gray-600 hover:cursor-pointer ml-2">Details</span>
+					</div>
+					{showFilters && (
+						<div className="mt-4">
+							<Summary list={list} /> ...
+						</div>
+					)}
 					{step === SETUP_STEP && (
 						<Setup list={list} updateList={setList} tokenId={token} currencyId={currency} />
 					)}
@@ -84,7 +104,9 @@ const SellPage = () => {
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
 				</div>
-				<Summary list={list} />
+				<div className="hidden lg:contents">
+					<Summary list={list} />
+				</div>
 			</div>
 		</div>
 	);
