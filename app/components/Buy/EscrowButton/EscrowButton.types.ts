@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers';
 import { Token } from 'models/types';
 
 export interface EscrowFundsParams {
@@ -9,6 +8,6 @@ export interface EscrowFundsParams {
 }
 
 export interface EscrowFundsButtonProps extends EscrowFundsParams {
-	fee: BigNumber;
+	fee: bigint;
 	contract: `0x${string}`;
 }

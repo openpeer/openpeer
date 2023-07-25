@@ -1,13 +1,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { BigNumber } from 'ethers';
-import { toBn } from 'evm-bn';
-import { useTransactionFeedback } from 'hooks';
+import { useCancelReasons, useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
+import { parseUnits } from 'viem';
 import { useAccount, useContractRead } from 'wagmi';
+
+import CancelReasons from './CancelReasons';
 
 interface BlockchainCancelButtonParams {
 	order: Order;
@@ -18,26 +19,25 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	const { escrow, buyer, seller, trade_id: tradeId, uuid, list, token_amount: tokenAmount } = order;
 	const { token } = list;
 	const { isConnected, address: connectedAddress } = useAccount();
+	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
 	const isBuyer = buyer.address === connectedAddress;
 	const isSeller = seller.address === connectedAddress;
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
-	const { data: escrowData } = useContractRead({
+	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
 		address: escrow!.address,
 		abi: OpenPeerEscrow,
 		functionName: 'escrows',
 		args: [tradeId]
 	});
 
-	const { sellerCanCancelAfter } = (escrowData || {}) as { sellerCanCancelAfter: BigNumber };
-
 	const { isLoading, isSuccess, cancelOrder, data, isFetching } = useEscrowCancel({
 		contract: escrow!.address,
 		orderID: uuid,
 		buyer: buyer.address,
 		token,
-		amount: toBn(String(tokenAmount), token.decimals),
+		amount: parseUnits(String(tokenAmount), token.decimals),
 		isBuyer
 	});
 
@@ -54,9 +54,30 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 		}
 	}, [cancelConfirmed]);
 
-	if (sellerCanCancelAfter === undefined) {
+	useEffect(() => {
+		const saveCancellationReasons = async () => {
+			await fetch(`/api/orders/${uuid}/cancel`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					cancellation,
+					other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+				})
+			});
+		};
+
+		if (isSuccess) {
+			saveCancellationReasons();
+		}
+	}, [isSuccess]);
+
+	if (isFetchingEscrowData) {
 		return <p>Loading...</p>;
 	}
+
+	const [, sellerCanCancelAfter] = escrowData as [boolean, bigint];
 
 	const now = Date.now() / 1000;
 	const sellerCanCancelAfterSeconds = parseInt(sellerCanCancelAfter.toString(), 10);
@@ -87,12 +108,24 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 			<>
 				<Modal
 					actionButtonTitle="Yes, confirm"
-					title="Cancel Order?"
-					content={`The escrowed funds will return to ${isBuyer ? 'the seller' : 'you'}.`}
+					title={
+						<div className="flex flex-col">
+							<div>Cancel Order?</div>
+							<div>The escrowed funds will return to {isBuyer ? 'the seller' : 'you'}.</div>
+						</div>
+					}
+					content={
+						<CancelReasons
+							setOtherReason={setOtherReason}
+							toggleCancellation={toggleCancellation}
+							showOtherReason={cancellation.other}
+						/>
+					}
 					type="alert"
 					open={modalOpen}
 					onClose={() => setModalOpen(false)}
 					onAction={() => setCancelConfirmed(true)}
+					actionDisabled={Object.keys(cancellation).length === 0 || (cancellation.other && !otherReason)}
 				/>
 			</>
 		</>

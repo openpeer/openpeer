@@ -1,4 +1,5 @@
 import useBiconomy from './useBiconomy';
+import useCancelReasons from './useCancelReasons';
 import useConnection from './useConnection';
 import useEscrowFee from './useEscrowFee';
 import useFormErrors from './useFormErrors';
@@ -21,5 +22,6 @@ export {
 	useBiconomy,
 	useUserProfile,
 	usePagination,
-	useVerificationStatus
+	useVerificationStatus,
+	useCancelReasons
 };

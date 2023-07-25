@@ -1,8 +1,8 @@
 import { OpenPeerDeployer } from 'abis';
-import { BigNumber, constants } from 'ethers';
-import { toBn } from 'evm-bn';
+import { constants } from 'ethers';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { Token } from 'models/types';
+import { Abi, parseUnits } from 'viem';
 import { useContractReads, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
@@ -22,26 +22,28 @@ const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
 		contracts: [
 			{
 				address: contract,
-				abi: OpenPeerDeployer,
+				abi: OpenPeerDeployer as Abi,
 				functionName: 'sellerFee',
 				args: [partner]
 			},
 			{
 				address: contract,
-				abi: OpenPeerDeployer,
+				abi: OpenPeerDeployer as Abi,
 				functionName: 'openPeerFee'
 			}
 		]
 	});
 
-	if (isFetching || !token || !tokenAmount) return { isFetching };
+	if (isFetching || !token || !tokenAmount || !data) return { isFetching };
 
-	const [feeBps, openPeerFeeBps] = data as [BigNumber, BigNumber];
+	const [feeResult, openPeerFeeResult] = data || [];
+	const feeBps = feeResult.result as unknown;
+	const openPeerFeeBps = openPeerFeeResult.result as unknown;
 
-	const rawTokenAmount = toBn(String(tokenAmount), token.decimals);
-	const fee = rawTokenAmount.mul(feeBps as BigNumber).div(BigNumber.from('10000'));
-	const totalAmount = rawTokenAmount.add(fee);
+	const rawTokenAmount = parseUnits(tokenAmount.toString(), token.decimals);
+	const fee = (rawTokenAmount * (feeBps as bigint)) / BigInt(10000);
+	const totalAmount = rawTokenAmount + fee;
 
-	return { isFetching, fee, partnerFeeBps: feeBps.sub(openPeerFeeBps), totalAmount };
+	return { isFetching, fee, partnerFeeBps: (feeBps as bigint) - (openPeerFeeBps as bigint), totalAmount };
 };
 export default useEscrowFee;

@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers';
-
 export interface GetContractNonceProps {
 	contract: string;
 	userAddress: string;
@@ -16,7 +14,7 @@ export interface GetTransactionDataProps {
 	userAddress: `0x${string}`;
 	contract: `0x${string}`;
 	name: string;
-	nonce: BigNumber;
+	nonce: bigint;
 	chainId: number;
 	functionSignature: string;
 }

@@ -1,6 +1,7 @@
 import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useEthersSigner } from 'utils/ethers';
+import { useAccount, useNetwork } from 'wagmi';
 
 import { Biconomy } from '@biconomy/mexa';
 
@@ -12,9 +13,10 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const [biconomy, setBiconomy] = useState<Biconomy | null>();
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
-	const { data: signer } = useSigner();
-	const apiKey = networkApiKeys[(chain || chains[0]).id];
+	const chainId = (chain || chains[0]).id;
+	const apiKey = networkApiKeys[chainId];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
+	const signer = useEthersSigner();
 
 	const canSubmitGaslessTransaction = async () => {
 		if (apiKey && address) {
@@ -42,7 +44,6 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 					setBiconomy(null);
 					return;
 				}
-
 				const client = new Biconomy((signer.provider as any).provider, {
 					apiKey,
 					debug: true,

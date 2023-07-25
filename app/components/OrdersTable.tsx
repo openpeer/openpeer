@@ -1,6 +1,7 @@
 import { Avatar, Button, Flag } from 'components';
 import { countries } from 'models/countries';
-import { Order } from 'models/types';
+import { devChains } from 'models/networks';
+import { Order, Token as TokenModel } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
@@ -92,6 +93,12 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 								scope="col"
 								className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 							>
+								Chain
+							</th>
+							<th
+								scope="col"
+								className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+							>
 								Price
 							</th>
 							<th
@@ -124,7 +131,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 						{orders.map((order) => {
 							const {
 								id,
-								list: { fiat_currency: currency, token },
+								list: { fiat_currency: currency, token, chain_id: chainId },
 								price,
 								fiat_amount: fiatAmount,
 								token_amount: tokenAmount,
@@ -134,6 +141,8 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 							} = order;
 							const isSeller = address === seller.address;
 							const user = isSeller ? buyer : seller;
+							const network = devChains.find((chain) => chain.id === chainId);
+
 							return (
 								<tr key={id} className="hover:bg-gray-50">
 									<td className="md:pl-4 py-4">
@@ -141,11 +150,11 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 											<div className="w-full">
 												<Link href={`/${user.address}`}>
 													<div className="flex flex-row items-center cursor-pointer">
-														<Avatar user={user} className="w-5 md:w-8" />
+														<Avatar user={user} className="w-5 md:w-10 aspect-square" />
 														<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 															{user.name || smallWalletAddress(user.address)}
 														</div>
-														{user.name && (
+														{user.verified && (
 															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 																<CheckBadgeIcon
 																	width="18"
@@ -158,6 +167,16 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 												</Link>
 												<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
 													<div className="flex flex-col space-y-1">
+														<div className="flex flex-row items-center">
+															<span className="pr-2 text-sm">Chain</span>
+															<div className="flex flex-row items-center space-x-1">
+																<Token
+																	token={network?.nativeCurrency as TokenModel}
+																	size={18}
+																/>
+															</div>
+															<span className="pl-1 text-sm">{network?.name}</span>
+														</div>
 														<div className="flex flex-row items-center">
 															<span className="pr-2 text-sm">Pay</span>
 															<span className="text-base text-gray-900">
@@ -181,6 +200,12 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 											<div className="w-full md:w-2/5 flex flex-col lg:hidden px-4">
 												<NextButton order={order} address={address} />
 											</div>
+										</div>
+									</td>
+									<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+										<div className="flex flex-row items-center space-x-1">
+											<Token token={network?.nativeCurrency as TokenModel} size={24} />
+											<span>{network?.name}</span>
 										</div>
 									</td>
 									<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">

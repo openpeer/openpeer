@@ -1,13 +1,12 @@
+import { devChains } from 'models/networks';
 import React from 'react';
-import { polygon, polygonMumbai } from 'wagmi/chains';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const WrongNetwork = ({ desiredChainId }: { desiredChainId?: number }) => {
 	let chainName = '';
 	if (desiredChainId) {
-		// @TODO: change to the chains helper
-		const chain = [polygon, polygonMumbai].find((c) => c.id === desiredChainId);
+		const chain = devChains.find((c) => c.id === desiredChainId);
 		if (chain?.name) {
 			chainName = chain.name;
 		}

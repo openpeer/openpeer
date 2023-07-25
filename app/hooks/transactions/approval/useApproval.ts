@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers';
 import { Token } from 'models/types';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -8,7 +7,7 @@ import useTokenApproval from './useTokenApproval';
 interface UseTokenApprovalProps {
 	token: Token;
 	spender: `0x${string}`;
-	amount: BigNumber;
+	amount: bigint;
 }
 
 const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
@@ -33,7 +32,6 @@ const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
 	if (isFetching) {
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
-
 	if (gasless && gaslessEnabled) {
 		return { isLoading, isSuccess, data, approve, isFetching };
 	}

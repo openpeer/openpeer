@@ -22,6 +22,7 @@ const Summary = ({ list }: SummaryProps) => {
 		marginType,
 		margin,
 		paymentMethod,
+		depositTimeLimit,
 		terms,
 		type
 	} = list;
@@ -42,7 +43,7 @@ const Summary = ({ list }: SummaryProps) => {
 	}
 
 	return (
-		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-6 p-4">
+		<div className="w-full md:w-2/4 md:inline-block bg-white rounded-xl border-2 border-slate-100 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-6 p-4">
 			<ul className="w-full">
 				{!!token && (
 					<li className="w-full flex flex-row justify-between mb-4">
@@ -106,9 +107,9 @@ const Summary = ({ list }: SummaryProps) => {
 				)}
 				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400" />
 				{!!paymentMethod && (
-					<li className="w-full flex flex-row justify-between mb-4">
+					<li className="w-full flex flex-col md:flex-row justify-between mb-4">
 						<div>Payment Method</div>
-						<div className="w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
+						<div className="w-full md:w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
 							{!!paymentMethod.bank && (
 								<>
 									<div className="flex flex-row items-center text-gray-500 text-sm mb-2">
@@ -140,6 +141,14 @@ const Summary = ({ list }: SummaryProps) => {
 									})}
 								</>
 							)}
+						</div>
+					</li>
+				)}
+				{!!depositTimeLimit && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Deposit Time Limit</div>
+						<div className="font-bold">
+							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
 						</div>
 					</li>
 				)}

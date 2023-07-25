@@ -23,8 +23,16 @@ const nextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'openpeerimages.s3.us-west-1.amazonaws.com'
+			},
+			{
+				protocol: 'http',
+				hostname: 'localhost'
 			}
 		]
+	},
+	webpack: (config) => {
+		config.resolve.fallback = { fs: false, net: false, tls: false };
+		return config;
 	}
 };
 

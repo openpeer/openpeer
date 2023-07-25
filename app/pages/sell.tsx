@@ -1,3 +1,4 @@
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps } from 'components';
 import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
@@ -15,11 +16,17 @@ const DETAILS_STEP = 4;
 
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const DEFAULT_MARGIN_VALUE = 1;
+const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
 
-const defaultList = { marginType: DEFAULT_MARGIN_TYPE, margin: DEFAULT_MARGIN_VALUE };
+const defaultList = {
+	marginType: DEFAULT_MARGIN_TYPE,
+	margin: DEFAULT_MARGIN_VALUE,
+	depositTimeLimit: DEFAULT_DEPOSIT_TIME_LIMIT
+};
 
 const SellPage = () => {
 	const router = useRouter();
+	const [showFilters, setShowFilters] = useState(false);
 	const { token, currency, tokenAmount, fiatAmount } = router.query;
 	const quickBuy = !!token && !!currency && !!Number(fiatAmount || '0');
 	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
@@ -38,21 +45,15 @@ const SellPage = () => {
 
 	useEffect(() => {
 		if (list.step > 3) {
-			setList({
-				step: PAYMENT_METHOD_STEP,
-				marginType: DEFAULT_MARGIN_TYPE,
-				margin: DEFAULT_MARGIN_VALUE
-			} as UIList);
+			setList({ ...{ step: PAYMENT_METHOD_STEP }, ...defaultList } as UIList);
 		}
 	}, [address]);
 
 	useEffect(() => {
 		// need to reset the AD if the chain changed because the tokens will change
 		setList({
-			step: SETUP_STEP,
-			marginType: DEFAULT_MARGIN_TYPE,
-			margin: DEFAULT_MARGIN_VALUE,
-			type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined
+			...{ step: SETUP_STEP, type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined },
+			...defaultList
 		} as UIList);
 	}, [chain]);
 
@@ -69,15 +70,32 @@ const SellPage = () => {
 	if (wrongNetwork) return <WrongNetwork />;
 	if (status === 'loading') return <Loading />;
 
+	const handleToggleFilters = () => {
+		setShowFilters(!showFilters);
+	};
+
 	return (
-		<div className="py-6">
-			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16 2xl:w-3/4 2xl:m-auto">
-				<div className="lg:w-2/4">
+		<div className="pt-4 md:pt-6">
+			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16">
+				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
 						stepsCount={3}
 						onStepClick={(n) => setList({ ...list, ...{ step: n } })}
 					/>
+					<div className="flex flex-row justify-end md:hidden md:justify-end" onClick={handleToggleFilters}>
+						<AdjustmentsVerticalIcon
+							width={24}
+							height={24}
+							className="text-gray-600 hover:cursor-pointer"
+						/>
+						<span className="text-gray-600 hover:cursor-pointer ml-2">Details</span>
+					</div>
+					{showFilters && (
+						<div className="mt-4 md:hidden">
+							<Summary list={list} />
+						</div>
+					)}
 					{step === SETUP_STEP && (
 						<Setup list={list} updateList={setList} tokenId={token} currencyId={currency} />
 					)}
@@ -85,7 +103,9 @@ const SellPage = () => {
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
 				</div>
-				<Summary list={list} />
+				<div className="hidden lg:contents">
+					<Summary list={list} />
+				</div>
 			</div>
 		</div>
 	);

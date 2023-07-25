@@ -1,3 +1,4 @@
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps, WrongNetwork } from 'components';
 import { Amount, Details, PaymentMethod, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
@@ -16,6 +17,7 @@ const DETAILS_STEP = 3;
 const EditTrade = ({ id }: { id: number }) => {
 	const [list, setList] = useState<List>();
 	const [uiList, setUiList] = useState<UIList>();
+	const [showFilters, setShowFilters] = useState(false);
 	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
@@ -35,6 +37,7 @@ const EditTrade = ({ id }: { id: number }) => {
 					bank,
 					payment_method: paymentMethod,
 					margin,
+					deposit_time_limit: depositTimeLimit,
 					terms
 				} = data;
 				setList(data);
@@ -55,7 +58,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					paymentMethod: paymentMethod || { bank, bankId: bank.id },
 					quickSellSetupDone: true,
 					terms: terms || '',
-					margin: margin ? Number(margin) : undefined
+					margin: margin ? Number(margin) : undefined,
+					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0
 				};
 				setUiList(ui);
 			});
@@ -72,20 +76,39 @@ const EditTrade = ({ id }: { id: number }) => {
 
 	const { step } = uiList;
 
+	const handleToggleFilters = () => {
+		setShowFilters(!showFilters);
+	};
+
 	return (
-		<div className="py-6">
-			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16 2xl:w-3/4 2xl:m-auto">
-				<div className="lg:w-2/4">
+		<div className="pt-4 md:pt-6">
+			<div className="w-full flex flex-col md:flex-row px-4 sm:px-6 md:px-8 mb-16">
+				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
 						stepsCount={2}
 						onStepClick={(n) => setUiList({ ...uiList, ...{ step: n } })}
 					/>
+					<div className="flex flex-row justify-end md:hidden md:justify-end" onClick={handleToggleFilters}>
+						<AdjustmentsVerticalIcon
+							width={24}
+							height={24}
+							className="text-gray-600 hover:cursor-pointer"
+						/>
+						<span className="text-gray-600 hover:cursor-pointer ml-2">Details</span>
+					</div>
+					{showFilters && (
+						<div className="mt-4 md:hidden">
+							<Summary list={uiList} />
+						</div>
+					)}
 					{step === AMOUNT_STEP && <Amount list={uiList} updateList={setUiList} tokenAmount={undefined} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={uiList} updateList={setUiList} />}
 					{step === DETAILS_STEP && <Details list={uiList} updateList={setUiList} />}
 				</div>
-				<Summary list={uiList} />
+				<div className="hidden lg:contents">
+					<Summary list={uiList} />
+				</div>
 			</div>
 		</div>
 	);

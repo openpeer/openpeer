@@ -1,5 +1,5 @@
 import { OpenPeerDeployer } from 'abis';
-import { BigNumber, constants } from 'ethers';
+import { constants } from 'ethers';
 import { useEscrowFee } from 'hooks';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import React, { useState } from 'react';
@@ -36,7 +36,7 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 			{(nativeToken || approved) && !needsToDeploy ? (
 				<EscrowFundsButton
 					buyer={buyer}
-					fee={fee as BigNumber}
+					fee={fee!}
 					token={token}
 					tokenAmount={tokenAmount}
 					uuid={uuid}

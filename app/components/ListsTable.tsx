@@ -101,7 +101,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 									<div className="w-3/5 mr-6">
 										<Link href={`/${sellerAddress}`}>
 											<div className="flex flex-row items-center cursor-pointer">
-												<Avatar user={seller} className="w-5 md:w-8" />
+												<Avatar user={seller} className="w-5 md:w-10 aspect-square" />
 												<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 													{name || smallWalletAddress(sellerAddress)}
 												</div>

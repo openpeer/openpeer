@@ -1,10 +1,9 @@
-import { BigNumber } from 'ethers';
 import { erc20ABI, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 interface UseTokenApprovalParams {
 	address: `0x${string}`;
 	spender: `0x${string}`;
-	amount: BigNumber;
+	amount: bigint;
 }
 
 const useTokenApproval = ({ address, spender, amount }: UseTokenApprovalParams) => {

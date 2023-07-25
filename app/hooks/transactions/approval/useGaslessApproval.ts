@@ -1,9 +1,9 @@
-import { BigNumber } from 'ethers';
 import { Interface } from 'ethers/lib/utils';
 import useBiconomy from 'hooks/useBiconomy';
 import { sendSignedTransaction } from 'models/transactions';
 import { useState } from 'react';
 import { signGaslessTransaction } from 'utils/signing/signing';
+import { parseAbi } from 'viem';
 import { Chain, useContractReads } from 'wagmi';
 
 interface ApproveTokenProps {
@@ -11,15 +11,16 @@ interface ApproveTokenProps {
 	tokenAddress: `0x${string}`;
 	userAddress: `0x${string}`;
 	spender: `0x${string}`;
-	amount: BigNumber;
+	amount: bigint;
 }
 
-const noncesAbi = [
-	'function name() public view returns (string)',
+// @ts-expect-error
+const noncesAbi = parseAbi([
+	'function name() public view returns (string name)',
 	'function getNonce(address user) public view returns (uint256 nonce)',
 	'function _nonces(address user) public view returns (uint256)',
 	'function nonces(address user) public view returns (uint256)'
-];
+]);
 
 interface Data {
 	hash?: `0x${string}`;
@@ -35,8 +36,8 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 	const tokenContract = { address: tokenAddress, abi: noncesAbi };
 	const {
 		data: reads,
-		isSuccess: dataReadSuccess,
-		isFetching
+		isFetching,
+		isSuccess: dataReadSuccess
 	} = useContractReads({
 		contracts: [
 			{ ...tokenContract, functionName: 'name' },
@@ -50,13 +51,11 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };
 	}
 
-	const [name, getNonce, noncesResult, nonces] = reads as [
-		string | undefined,
-		BigNumber | undefined,
-		BigNumber | undefined,
-		BigNumber | undefined
-	];
-	const nonce = getNonce || noncesResult || nonces;
+	const [nameResult, getNonceResult, nonces2Result, nonces3Result] = reads || [];
+	const name = (nameResult?.result || '') as string;
+	const getNonce = getNonceResult?.result as unknown;
+	const noncesResult = nonces2Result?.result || nonces3Result?.result;
+	const nonce = (getNonce || noncesResult || noncesResult) as bigint;
 
 	if (biconomy === null || !gaslessEnabled || (dataReadSuccess && (!name || !nonce))) {
 		return { isFetching, gaslessEnabled: false, isSuccess, isLoading, data };

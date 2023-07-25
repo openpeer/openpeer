@@ -27,9 +27,10 @@ interface DisputeFormParams {
 	order: Order;
 	address: `0x${string}`;
 	paidForDispute: boolean;
+	fee: string;
 }
 
-const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
+const DisputeForm = ({ order, address, paidForDispute, fee }: DisputeFormParams) => {
 	const { uuid, dispute, buyer } = order;
 	const { user_dispute: userDispute, resolved } = dispute || {};
 	const { comments: userComment, dispute_files: files = [] } = userDispute || {};
@@ -150,8 +151,8 @@ const DisputeForm = ({ order, address, paidForDispute }: DisputeFormParams) => {
 				)}
 			</div>
 			{!paidForDispute && (
-				<div className="">
-					<Input label="Pay" disabled id="pay" value="1 MATIC" />
+				<div>
+					<Input label="Pay" disabled id="pay" value={fee} />
 				</div>
 			)}
 			<div className="flex flex-col md:flex-row gap-x-8 items-center">

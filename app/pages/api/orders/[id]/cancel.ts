@@ -17,7 +17,11 @@ const cancelOrder = async (id: string, body: NextApiRequest['body'], token: stri
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Order>) {
-	const { id, body } = req.query;
+	const {
+		body,
+		query: { id }
+	} = req;
+
 	// @ts-ignore
 	const { jwt } = await getSession({ req });
 

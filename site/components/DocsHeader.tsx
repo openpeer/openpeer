@@ -54,7 +54,7 @@ const DocsHeader = () => {
 							<Image src={twitterLogo} alt="openpeer logo" width={20} height={20} />
 						</a>
 						<a
-							href="https://discord.gg/Wrf9BT8sZN"
+							href="https://discord.gg/EDHfTfCQ44"
 							target="_blank"
 							rel="noreferrer"
 							className="mt-1 hover:opacity-50"
@@ -102,7 +102,7 @@ const DocsHeader = () => {
 							</a>
 						</li>
 						<li>
-							<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer" className="px-2">
+							<a href="https://discord.gg/EDHfTfCQ44" target="_blank" rel="noreferrer" className="px-2">
 								<div className="hover:opacity-50">
 									<Image
 										src={discord}

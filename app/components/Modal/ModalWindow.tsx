@@ -5,16 +5,26 @@ import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 
 export interface ModalProps {
-	title: string;
-	content: string;
+	title: string | JSX.Element;
+	content: string | JSX.Element;
 	type: 'alert' | 'success' | 'confirmation';
 	actionButtonTitle: string;
 	open: boolean;
 	onClose: () => void;
 	onAction: () => void;
+	actionDisabled?: boolean;
 }
 
-const ModalWindow = ({ title, content, type, actionButtonTitle, open, onClose, onAction }: ModalProps) => {
+const ModalWindow = ({
+	title,
+	content,
+	type,
+	actionButtonTitle,
+	open,
+	onClose,
+	onAction,
+	actionDisabled = false
+}: ModalProps) => {
 	const confirmAction = () => {
 		onAction();
 		onClose();
@@ -73,7 +83,7 @@ const ModalWindow = ({ title, content, type, actionButtonTitle, open, onClose, o
 											{title}
 										</Dialog.Title>
 										<div className="mt-2 mb-4 md:mb-0">
-											<p className="text-sm text-gray-500">{content}</p>
+											<div className="text-sm text-gray-500">{content}</div>
 										</div>
 									</div>
 								</div>
@@ -82,7 +92,11 @@ const ModalWindow = ({ title, content, type, actionButtonTitle, open, onClose, o
 										<Button title="Cancel" outlined onClick={onClose} />
 									</span>
 									<span className="w-full">
-										<Button title={actionButtonTitle} onClick={confirmAction} />
+										<Button
+											title={actionButtonTitle}
+											onClick={confirmAction}
+											disabled={actionDisabled}
+										/>
 									</span>
 								</div>
 							</Dialog.Panel>
