@@ -4,9 +4,10 @@ import './background.css';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 
-import HeroImage from '../public/illustrations/hero-image.png';
+// import HeroImage from '../public/illustrations/hero-image.png';
 import KeysImage from '../public/illustrations/keys.png';
 import GlobeImage from '../public/illustrations/globe.png';
+import ChainImage from '../public/illustrations/chain.png';
 import ButtonAnimated from '../components/Button/ButtonAnimated';
 import NavigationSite from '../components/Navigation';
 import Partners from '../components/Partners';
@@ -34,11 +35,11 @@ export default function Home() {
 	return (
 		<>
 			<div>
-				<div className="w-full flex items-center justify-center">
+				{/* <div className="w-full flex items-center justify-center">
 					<Image src={HeroImage} alt="Hero Image" className="absolute top-24 md:-top-10 -z-20" />
-				</div>
+				</div> */}
 				<NavigationSite />
-				<div className="w-full flex flex-col items-center mt-24 mb-48">
+				<div className="w-full flex flex-col items-center mt-24 mb-24">
 					<div className="text-center mb-10">
 						<h1 className="text-5xl lg:text-7xl font-bold antialiased">
 							Decentralised P2P <br className="hidden lg:block" /> Exchange
@@ -58,8 +59,8 @@ export default function Home() {
 				</div>
 
 				{/* <div className="w-full lg:w-4/5 mb-40 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-r from-[#3C9AAA]/50 to-transparent transition-all duration-1000 hover:scale-105"> */}
-				<div className="w-full lg:w-4/5 mb-16 md:mb-40 m-auto border border-[#30353B] rounded-2xl transition-all duration-1000 hover:scale-105 backdrop-blur-lg">
-					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-24 md:px-16 relative space-x-4 items-center">
+				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto border border-[#30353B] rounded-2xl transition-all duration-1000 hover:scale-105 backdrop-blur-lg">
+					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative space-x-4 items-center">
 						<div className="w-full md:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Decentralised</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
@@ -76,8 +77,8 @@ export default function Home() {
 					</div>
 				</div>
 
-				<div className="w-full lg:w-4/5 mb-16 md:mb-40 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
-					<div className="w-full flex flex-col md:flex-row p-6 md:py-24 md:px-16 relative items-center">
+				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
+					<div className="w-full flex flex-col md:flex-row p-6 md:py-16 md:px-16 relative items-center">
 						<div className="w-full md:w-1/2">
 							<div className="relative md:absolute md:top-20 md:left-10">
 								<Image src={GlobeImage} alt={''} />
@@ -101,8 +102,8 @@ export default function Home() {
 					</div>
 				</div>
 
-				<div className="w-full lg:w-4/5 mb-16 md:mb-40 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
-					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-24 md:px-16 relative">
+				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
+					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative">
 						<div className="w-full md:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Your choose</div>
 							{/* <h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#F49F64] to-[#F56B0A]"> */}
@@ -116,8 +117,8 @@ export default function Home() {
 							</p>
 						</div>
 						<div className="w-full md:w-1/2">
-							<div className="relative md:absolute -top-4 right-0">
-								<Image src={''} alt={''} />
+							<div className="relative md:absolute top-10 right-20">
+								<Image src={ChainImage} alt={''} />
 							</div>
 						</div>
 					</div>
@@ -150,7 +151,7 @@ export default function Home() {
 					))}
 				</div>
 
-				<div className="w-full md:w-2/3 m-auto flex flex-col md:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#010AD4]/50 to-transparent p-8 rounded-xl">
+				<div className="w-full md:w-2/3 m-auto flex flex-col md:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#00D4E5]/50 to-transparent p-8 rounded-xl">
 					<div className="text-center space-x-4 text-2xl mb-8 pt-4">
 						Buy crypto directly to your wallet from your <br className="hidden md:block" /> bank account
 						with zero-fees.
