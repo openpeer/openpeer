@@ -27,7 +27,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		token,
 		total_available_amount: totalAvailableAmount,
 		terms,
-		type
+		type,
+		deposit_time_limit: depositTimeLimit
 	} = list!;
 
 	const { address } = useAccount();
@@ -38,11 +39,11 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
 
 	return (
-		<div className="w-2/4 hidden md:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
+		<div className="w-full lg:w-2/4 lg:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
 			<div className="w-full flex flex-row justify-between items-center mb-6 mt-4 px-2">
 				<Link href={`/${user.address}`} target="_blank">
 					<div className="flex flex-row items-center">
-						<Avatar user={user} />
+						<Avatar user={user} className="w-10 aspect-square" />
 						<span className="ml-2 cursor-pointer">{user.name || smallWalletAddress(user.address)}</span>
 					</div>
 				</Link>
@@ -60,9 +61,9 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				</div>
 			</div>
 			<div className="flex flex-col bg-gray-100 rounded-lg p-6">
-				<div className="w-full flex flex-row justify-between mb-4">
+				<div className="w-full flex flex-col md:flex-row justify-between mb-4">
 					<div className="text-sm">Total available amount</div>
-					<div className="font-bold text-right text-sm">
+					<div className="font-bold md:text-right text-sm">
 						{totalAvailableAmount} {token.symbol}{' '}
 						{!!price && `(${currency.symbol} ${(Number(totalAvailableAmount) * price).toFixed(2)})`}
 					</div>
@@ -133,6 +134,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 								unoptimized
 							/>
 							{bank?.name}
+						</div>
+					</div>
+				)}
+				{!!depositTimeLimit && (
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Deposit Time Limit</div>
+						<div className="text-sm font-bold">
+							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}
 						</div>
 					</div>
 				)}

@@ -1,4 +1,3 @@
-import { Textarea } from 'components';
 import { verifyMessage } from 'ethers/lib/utils';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -6,11 +5,14 @@ import snakecaseKeys from 'snakecase-keys';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
+import Label from '../Label/Label';
+import Selector from '../Selector';
+import Textarea from '../Textarea/Textarea';
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const { terms } = list;
+	const { terms, depositTimeLimit, type } = list;
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
 	const router = useRouter();
@@ -60,8 +62,30 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed} buttonText="Sign and Finish">
 			<div className="my-8">
-				{/* <Label title="Time Limit for Payment" />
-        <Selector value={10} suffix=" mins" updateValue={} /> */}
+				<Label title="Deposit Time Limit" />
+				<div className="mb-4">
+					<span className="text-sm text-gray-600">
+						{depositTimeLimit > 0 ? (
+							<div>
+								Your order will be cancelled if {type === 'SellList' ? 'you' : 'the seller'} dont
+								deposit after {depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
+								<strong>You can set this to 0 to disable this feature.</strong>
+							</div>
+						) : (
+							<div>
+								Your orders will not be cancelled automatically.{' '}
+								<strong>You can set this to 0 to disable this feature.</strong>
+							</div>
+						)}
+					</span>
+				</div>
+				<Selector
+					value={depositTimeLimit}
+					suffix={depositTimeLimit === 1 ? ' min' : ' mins'}
+					changeableAmount={1}
+					updateValue={(n) => updateList({ ...list, ...{ depositTimeLimit: n } })}
+					decimals={0}
+				/>
 				<Textarea
 					label="Order Terms"
 					rows={4}

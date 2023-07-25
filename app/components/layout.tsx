@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { ConnectKitButton, useModal, useSIWE } from 'connectkit';
-import { User } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
@@ -191,7 +190,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
 												href={`/${address}`}
 											>
-												<Avatar user={{ address } as User} className="w-full" />
+												<Avatar user={user} className="w-10 aspect-square" />
 											</Link>
 										)}
 										<ConnectKitButton />

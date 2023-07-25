@@ -2,25 +2,22 @@ import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
-	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/orders?chain_id=${chainId}`)
+		fetch('/api/orders')
 			.then((res) => res.json())
 			.then((data) => {
 				setOrders(data);
 				setLoading(false);
 			});
-	}, [chainId, address]);
+	}, [address]);
 
 	if (isLoading) return <Loading />;
 

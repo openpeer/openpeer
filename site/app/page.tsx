@@ -66,7 +66,7 @@ export default function Home() {
 							<a href="https://twitter.com/openpeer_xyz" target="_blank" rel="noreferrer">
 								<Image src={twitterLogo} alt="twitter logo" width={20} height={20} />
 							</a>
-							<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer">
+							<a href="https://discord.gg/EDHfTfCQ44" target="_blank" rel="noreferrer">
 								<Image src={discord} alt="discord logo" width={20} height={20} />
 							</a>
 						</div>
@@ -100,7 +100,7 @@ export default function Home() {
 								</a>
 							</li>
 							<li className="mb-4">
-								<a href="https://discord.gg/Wrf9BT8sZN" target="_blank" rel="noreferrer">
+								<a href="https://discord.gg/EDHfTfCQ44" target="_blank" rel="noreferrer">
 									<div>
 										<Image
 											src={discord}
