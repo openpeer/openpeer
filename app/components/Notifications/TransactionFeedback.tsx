@@ -1,11 +1,11 @@
+import Avatar from 'components/Avatar';
+import { User } from 'models/types';
+import { useSession } from 'next-auth/react';
 import React, { Fragment } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/24/solid';
-import Avatar from 'components/Avatar';
-import { useSession } from 'next-auth/react';
-import { User } from 'next-auth';
 
 export interface ModalProps {
 	TransactionType: 'error' | 'success';
