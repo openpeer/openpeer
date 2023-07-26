@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 import Head from 'app/head';
 import CustomAvatar from 'components/CustomAvatar';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
+import { TransactionFeedbackProvider } from 'contexts/TransactionFeedContext';
 import { devChains, productionChains } from 'models/networks';
 import dynamic from 'next/dynamic';
 import React from 'react';
@@ -56,14 +57,16 @@ const App = ({ Component, pageProps }: AppProps) => {
 						embedGoogleFonts: true
 					}}
 				>
-					<Head />
-					{simpleLayout ? (
-						// @ts-expect-error
-						<NoAuthLayout pageProps={pageProps} Component={Component} />
-					) : (
-						// @ts-expect-error
-						<Layout pageProps={pageProps} Component={Component} />
-					)}
+					<TransactionFeedbackProvider>
+						<Head />
+						{simpleLayout ? (
+							// @ts-expect-error
+							<NoAuthLayout pageProps={pageProps} Component={Component} />
+						) : (
+							// @ts-expect-error
+							<Layout pageProps={pageProps} Component={Component} />
+						)}
+					</TransactionFeedbackProvider>
 				</ConnectKitProvider>
 			</siweClient.Provider>
 		</WagmiConfig>

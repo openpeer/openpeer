@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		body,
 		query: { id }
 	} = req;
+	// @ts-expect-error
 	const { jwt } = await siweServer.getSession(req, res);
 
 	try {
