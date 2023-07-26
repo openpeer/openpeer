@@ -1,26 +1,36 @@
 import Avatar from 'components/Avatar';
 import { User } from 'models/types';
-import { useSession } from 'next-auth/react';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import { smallWalletAddress } from 'utils';
+import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
-export interface ModalProps {
-	TransactionType: 'error' | 'success';
+export interface TransactionFeedbackProps {
 	open: boolean;
 	onClose: () => void;
-	onAction: () => void;
+	hash: `0x${string}` | undefined;
+	description: string;
+	onTransactionReplaced: (hash: `0x${string}`) => void;
 }
 
-const TransactionFeedback = ({ TransactionType, open, onClose, onAction }: ModalProps) => {
-	const confirmAction = () => {
-		onAction();
-		onClose();
-	};
-	const { data: session } = useSession();
-	const user = session?.user as User;
+const TransactionFeedback = ({ open, onClose, hash, description, onTransactionReplaced }: TransactionFeedbackProps) => {
+	const { address } = useAccount();
+	const { chain } = useNetwork();
+	const { isError, isLoading, isSuccess } = useWaitForTransaction({
+		hash,
+		onReplaced: ({ transaction: { hash: newHash } }) => onTransactionReplaced(newHash)
+	});
+
+	useEffect(() => {
+		if (isSuccess) {
+			setTimeout(() => {
+				onClose();
+			}, 1500);
+		}
+	}, [isSuccess]);
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
@@ -55,51 +65,69 @@ const TransactionFeedback = ({ TransactionType, open, onClose, onAction }: Modal
 											<XMarkIcon
 												className="w-4 h-4 text-gray-500"
 												aria-hidden="true"
-												onClick={confirmAction}
+												onClick={onClose}
 											/>
 										</span>
-										<Avatar user={user} className="w-5 md:w-10 aspect-square mb-2 mt-4" />
-										<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-											{user.name}
-										</Dialog.Title>
+										{address && (
+											<>
+												<Avatar
+													user={{ address } as User}
+													className="w-5 md:w-10 aspect-square mb-2 mt-4"
+												/>
+												<Dialog.Title
+													as="h3"
+													className="text-lg font-medium leading-6 text-gray-900"
+												>
+													{smallWalletAddress(address)}
+												</Dialog.Title>
+											</>
+										)}
 									</div>
 									<div className="p-4">
 										<div className="mt-2 mb-4">
-											<div className="text-sm text-gray-500">Recent Transactions</div>
+											<div className="text-sm text-gray-500">Recent Transaction</div>
 										</div>
-										{TransactionType === 'error' ? (
-											<div className="flex flex-row items-center space-x-2">
-												<div>
+
+										<div className="flex flex-row items-center space-x-2">
+											<div>
+												{isLoading ? (
+													<ArrowPathIcon
+														className="w-5 h-5 text-blue-600 font-bold animate-spin"
+														aria-hidden="true"
+													/>
+												) : isError ? (
 													<XCircleIcon
 														className="w-5 h-5 text-red-600 font-bold"
 														aria-hidden="true"
 													/>
-												</div>
-												<div className="text-base">
-													<span className="text-base">Cancelled the order</span>
-													<span className="text-base">Confirmed</span>
-												</div>
-											</div>
-										) : (
-											<div className="flex flex-row items-center space-x-2">
-												<div>
+												) : (
 													<CheckCircleIcon
 														className="w-5 h-5 text-blue-600 font-bold"
 														aria-hidden="true"
 													/>
-												</div>
-												<div className="flex flex-col text-base">
-													<span className="text-base">Cancelled the order</span>
-													<span className="text-xs text-blue-600">Confirmed</span>
-												</div>
+												)}
 											</div>
-										)}
-										<div className="mt-6 mb-2 flex flex-row justify-between">
-											<span className="text-xs">View more on Explorer</span>
-											<span className="text-xs">
-												<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
-											</span>
+											<div className="flex flex-col text-base">
+												<span className="text-base">{description}</span>
+												{isSuccess && <span className="text-xs text-blue-600">Confirmed</span>}
+											</div>
 										</div>
+										{hash && chain && chain.blockExplorers?.default && (
+											<a
+												target="_blank"
+												href={`${chain.blockExplorers.default.url}/tx/${hash}`}
+												rel="noopener noreferrer"
+											>
+												<div className="mt-6 mb-2 flex flex-row justify-between">
+													<span className="text-xs">
+														View more on {chain.blockExplorers.default.name}
+													</span>
+													<span className="text-xs">
+														<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
+													</span>
+												</div>
+											</a>
+										)}
 									</div>
 								</div>
 							</Dialog.Panel>

@@ -1,12 +1,12 @@
-import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { Loading, Steps } from 'components';
 import { Amount, PaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
-import WrongNetwork from 'components/WrongNetwork';
-import { useConnection, useListPrice } from 'hooks';
+import { useListPrice } from 'hooks';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -17,7 +17,6 @@ const BuyPage = ({ id }: { id: number }) => {
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
 	const { address } = useAccount();
-	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		fetch(`/api/lists/${id}`)
@@ -37,8 +36,8 @@ const BuyPage = ({ id }: { id: number }) => {
 	const seller = order.seller || order.list?.seller;
 	const canBuy = seller && seller.address !== address;
 
-	if (wrongNetwork) return <WrongNetwork />;
-	if (status === 'loading' || !list || !canBuy) return <Loading />;
+	if (!list) return <Loading />;
+	if (!canBuy) return <Loading message="You are not the seller of this order" />;
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);

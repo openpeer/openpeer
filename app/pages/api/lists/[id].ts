@@ -1,6 +1,7 @@
+import jwt from 'jsonwebtoken';
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { List } from 'models/types';
-import { getSession } from 'next-auth/react';
+import { siweServer } from 'utils/siweServer';
 
 import { minkeApi } from '../utils/utils';
 
@@ -33,8 +34,14 @@ const deleteList = async (id: string, token: string): Promise<List> => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List>) {
 	const { method, query, body } = req;
 	const { id } = query;
-	// @ts-ignore
-	const { jwt } = (await getSession({ req })) || {};
+	const { address } = await siweServer.getSession(req, res);
+	const encodedToken = jwt.sign(
+		{ sub: address, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+		process.env.NEXTAUTH_SECRET!,
+		{
+			algorithm: 'HS256'
+		}
+	);
 
 	try {
 		switch (method) {
@@ -42,10 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				res.status(200).json(await fetchList(id as string));
 				break;
 			case 'PUT':
-				res.status(200).json(await updateList(id as string, body, jwt));
+				res.status(200).json(await updateList(id as string, body, encodedToken));
 				break;
 			case 'DELETE':
-				res.status(200).json(await deleteList(id as string, jwt));
+				res.status(200).json(await deleteList(id as string, encodedToken));
 				break;
 			default:
 				res.setHeader('Allow', ['GET', 'POST']);

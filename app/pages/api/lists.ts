@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
+
+import jwt from 'jsonwebtoken';
+import { siweServer } from 'utils/siweServer';
 
 import { List } from '../../models/types';
 import { minkeApi } from './utils/utils';
@@ -21,8 +23,14 @@ const createList = async (body: NextApiRequest['body'], token: string): Promise<
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List[] | List>) {
 	const { method, query, body } = req;
-	// @ts-ignore
-	const { jwt } = (await getSession({ req })) || {};
+	const { address } = await siweServer.getSession(req, res);
+	const encodedToken = jwt.sign(
+		{ sub: address, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+		process.env.NEXTAUTH_SECRET!,
+		{
+			algorithm: 'HS256'
+		}
+	);
 
 	try {
 		switch (method) {
@@ -30,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				res.status(200).json(await fetchLists(query));
 				break;
 			case 'POST':
-				res.status(200).json(await createList(body, jwt));
+				res.status(200).json(await createList(body, encodedToken));
 				break;
 			default:
 				res.setHeader('Allow', ['GET', 'POST']);

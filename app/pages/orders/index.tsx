@@ -1,7 +1,5 @@
 import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
-import WrongNetwork from 'components/WrongNetwork';
-import { useConnection } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -10,11 +8,8 @@ const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setLoading] = useState(false);
 	const { address } = useAccount();
-	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
-		if (status !== 'authenticated') return;
-
 		setLoading(true);
 		fetch('/api/orders')
 			.then((res) => res.json())
@@ -22,10 +17,9 @@ const OrdersPage = () => {
 				setOrders(data);
 				setLoading(false);
 			});
-	}, [address, status]);
+	}, [address]);
 
-	if (wrongNetwork) return <WrongNetwork />;
-	if (status === 'loading' || isLoading) return <Loading />;
+	if (isLoading) return <Loading />;
 
 	const { activeOrders, closedOrders, cancelledOrders } = orders.reduce(
 		(acc: { [key: string]: Order[] }, order) => {

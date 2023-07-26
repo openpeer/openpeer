@@ -1,8 +1,7 @@
+import { useTransactionFeedbackModal } from 'contexts/TransactionFeedContext';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNetwork } from 'wagmi';
-
-import { useAccountModal, useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 
 interface Params {
 	isSuccess: boolean;
@@ -13,8 +12,8 @@ interface Params {
 
 const useTransactionFeedback = ({ isSuccess, hash, Link, description }: Params) => {
 	const { chain } = useNetwork();
-	const addRecentTransaction = useAddRecentTransaction();
-	const { openAccountModal } = useAccountModal();
+
+	const { addRecentTransaction } = useTransactionFeedbackModal();
 
 	useEffect(() => {
 		if (hash) {
@@ -22,10 +21,7 @@ const useTransactionFeedback = ({ isSuccess, hash, Link, description }: Params) 
 				hash,
 				description
 			});
-			openAccountModal?.();
 			if (isSuccess && chain?.blockExplorers) {
-				// @ts-expect-error
-				document.querySelector('div[aria-labelledby="rk_account_modal_title"]')?.click();
 				toast.success(Link, {
 					theme: 'dark',
 					position: 'top-right',

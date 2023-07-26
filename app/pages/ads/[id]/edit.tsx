@@ -5,7 +5,7 @@ import { UIList } from 'components/Listing/Listing.types';
 import { Option } from 'components/Select/Select.types';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
+import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
@@ -21,7 +21,6 @@ const EditTrade = ({ id }: { id: number }) => {
 	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
-	const { data: session } = useSession();
 
 	useEffect(() => {
 		fetch(`/api/lists/${id}`)
@@ -69,9 +68,12 @@ const EditTrade = ({ id }: { id: number }) => {
 		return <Loading />;
 	}
 
-	// @ts-expect-error
-	if (!session || session.address !== address || list.seller.address !== address || list.chain_id !== chainId) {
-		return <WrongNetwork />;
+	if (list.seller.address !== address) {
+		return <ErrorPage statusCode={404} />;
+	}
+
+	if (list.chain_id !== chainId) {
+		return <WrongNetwork desiredChainId={list.chain_id} />;
 	}
 
 	const { step } = uiList;

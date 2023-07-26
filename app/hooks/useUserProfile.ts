@@ -1,8 +1,8 @@
 import { S3 } from 'aws-sdk';
 import { Errors } from 'models/errors';
 import { User } from 'models/types';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 interface ErrorObject {
 	[fieldName: string]: string[];
@@ -10,17 +10,15 @@ interface ErrorObject {
 
 const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) => void }) => {
 	const [user, setUser] = useState<User | null>();
-	const { data: session } = useSession();
-	// @ts-expect-error
-	const { address } = session || {};
-
 	const [username, setUsername] = useState<string>();
 	const [email, setEmail] = useState<string>();
 	const [twitter, setTwitter] = useState<string>();
 	const [errors, setErrors] = useState<Errors>({});
 
+	const { address } = useAccount();
+
 	useEffect(() => {
-		if (!session) return;
+		if (!address) return;
 
 		fetch(`/api/user_profiles/${address}`)
 			.then((res) => res.json())
@@ -31,7 +29,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					setUser(data);
 				}
 			});
-	}, [session]);
+	}, [address]);
 
 	useEffect(() => {
 		if (user) {

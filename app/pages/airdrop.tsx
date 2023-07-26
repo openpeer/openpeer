@@ -1,6 +1,7 @@
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
+import { ConnectKitButton } from 'connectkit';
 import { constants } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
 import { useTransactionFeedback } from 'hooks';
@@ -16,7 +17,6 @@ import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useW
 import { polygonMumbai } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { switchNetwork } from '@wagmi/core';
 
 const ROUND = 2;
@@ -29,7 +29,7 @@ const CallToActionButton = ({ address }: { address: `0x${string}` | undefined })
 	const router = useRouter();
 
 	if (!address) {
-		return <ConnectButton />;
+		return <ConnectKitButton />;
 	}
 
 	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
@@ -220,7 +220,7 @@ const AirdropPage = () => {
 								</div>
 							</Link>
 						) : (
-							<ConnectButton />
+							<ConnectKitButton />
 						)}
 					</span>
 				</div>
@@ -288,7 +288,7 @@ const AirdropPage = () => {
 
 export async function getServerSideProps() {
 	return {
-		props: { title: 'Airdrop', disableAuthentication: true } // will be passed to the page component as props
+		props: { title: 'Airdrop', simpleLayout: true } // will be passed to the page component as props
 	};
 }
 export default AirdropPage;

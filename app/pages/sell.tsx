@@ -1,13 +1,12 @@
-import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
-import { Loading, Steps } from 'components';
+import { Steps } from 'components';
 import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
-import WrongNetwork from 'components/WrongNetwork';
-import { useConnection } from 'hooks';
 import { List } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
+
+import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 
 const SETUP_STEP = 1;
 const AMOUNT_STEP = 2;
@@ -41,7 +40,6 @@ const SellPage = () => {
 		...defaultList
 	} as UIList);
 	const { step } = list;
-	const { wrongNetwork, status } = useConnection();
 
 	useEffect(() => {
 		if (list.step > 3) {
@@ -66,9 +64,6 @@ const SellPage = () => {
 			}
 		}
 	}, [list]);
-
-	if (wrongNetwork) return <WrongNetwork />;
-	if (status === 'loading') return <Loading />;
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);

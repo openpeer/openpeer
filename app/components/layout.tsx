@@ -2,15 +2,15 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { ConnectKitButton, useModal, useSIWE } from 'connectkit';
 import { User } from 'models/types';
-import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -21,9 +21,9 @@ import {
 	XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import Avatar from './Avatar';
+import Button from './Button/Button';
 import { CollapseButton } from './Navigation';
 import Notifications from './Notifications/Notifications';
 
@@ -69,21 +69,27 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 	</div>
 );
 
+const Unauthenticated = () => {
+	const { openSIWE } = useModal();
+	return (
+		<div className="flex h-screen">
+			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
+				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
+				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
+				<span className="mb-4 m-auto">
+					<Button title="Sign in" onClick={() => openSIWE(false)} />
+				</span>
+			</div>
+		</div>
+	);
+};
+
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
-	const { title } = pageProps;
-	const { address } = useAccount();
-	const { disconnect } = useDisconnect();
-	const { data: session } = useSession();
-	const user = session?.user as User;
-
-	useEffect(() => {
-		// @ts-ignore
-		if (session && session.address !== address) {
-			disconnect();
-			signOut();
-		}
-	}, [session, address, disconnect]);
+	const { title, disableAuthentication } = pageProps;
+	const { address, isConnected } = useAccount();
+	const { data: session, isSignedIn } = useSIWE();
+	const authenticated = disableAuthentication || (isSignedIn && isConnected && session.address === address);
 
 	return (
 		<div className={`${manrope.variable} font-sans`}>
@@ -180,21 +186,15 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative">
 									<div className="flex flex-row items-center">
-										{!!user && (
+										{address && (
 											<Link
 												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
-												href={`/${user.address}`}
+												href={`/${address}`}
 											>
-												<Avatar user={user} className="w-10 aspect-square" />
+												<Avatar user={{ address } as User} className="w-10 aspect-square" />
 											</Link>
 										)}
-										<ConnectButton
-											showBalance={false}
-											accountStatus={{
-												smallScreen: 'avatar',
-												largeScreen: 'full'
-											}}
-										/>
+										<ConnectKitButton />
 									</div>
 								</Menu>
 							</div>
@@ -202,7 +202,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					</div>
 
 					<main className="flex-1 min-h-screen">
-						<Component {...pageProps} />
+						{authenticated ? <Component {...pageProps} /> : <Unauthenticated />}
 					</main>
 				</div>
 			</div>
