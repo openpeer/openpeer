@@ -127,6 +127,7 @@ export interface Order {
 	created_at: string;
 	payment_method: PaymentMethod;
 	trade_id: string;
+	deposit_time_limit: number | undefined;
 }
 
 export interface Airdrop {

@@ -27,12 +27,17 @@ const Payment = ({ order }: BuyStepProps) => {
 		id,
 		status,
 		seller,
-		payment_method: paymentMethod
+		payment_method: paymentMethod,
+		deposit_time_limit: depositTimeLimit
 	} = order;
 	const { token, fiat_currency: currency } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
+
+	const timeLimit =
+		status === 'created' && depositTimeLimit && Number(depositTimeLimit) > 0 ? Number(depositTimeLimit) : 0;
+	const timeLeft = timeLimit - Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000);
 
 	return (
 		<StepLayout>
@@ -88,7 +93,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				</div>
 
-				{status === 'created' && !selling && <PreShowDetails />}
+				{status === 'created' && <PreShowDetails timeLeft={timeLeft} />}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
 						<div className="flex flex-row justify-between mb-4">
