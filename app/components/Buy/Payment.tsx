@@ -1,8 +1,12 @@
+import { OpenPeerDeployer } from 'abis';
 import StepLayout from 'components/Listing/StepLayout';
+import ExplainerNotification from 'components/Notifications/ExplainerNotification';
 import HeaderH3 from 'components/SectionHeading/h3';
+import { constants } from 'ethers';
+import { DEPLOYER_CONTRACTS } from 'models/networks';
 import Image from 'next/image';
 import React from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useContractRead, useNetwork } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 
@@ -33,6 +37,18 @@ const Payment = ({ order }: BuyStepProps) => {
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
+
+	const { chain } = useNetwork();
+	const deployer = DEPLOYER_CONTRACTS[chain!.id];
+
+	const { data: sellerContract, isFetching } = useContractRead({
+		address: deployer,
+		abi: OpenPeerDeployer,
+		functionName: 'sellerContracts',
+		args: [address],
+		enabled: !!address && chain && status === 'created' && selling,
+		watch: true
+	});
 
 	return (
 		<StepLayout>
@@ -156,6 +172,13 @@ const Payment = ({ order }: BuyStepProps) => {
 							<MarkAsPaidButton order={order} />
 						))}
 				</div>
+				{(!isFetching && !sellerContract) ||
+					(sellerContract === constants.AddressZero && (
+						<ExplainerNotification
+							title="Why do I have to deploy a contract?"
+							content="OpenPeer is a decentralised protocol with a smart contract based escrow. You only need to deploy your contract once and then you can reuse it every time you sell crypto for fiat."
+						/>
+					))}
 			</div>
 		</StepLayout>
 	);

@@ -5,15 +5,15 @@ interface ExplainerNotificationProps {
 	title: string;
 	content: string;
 	info?: boolean;
-	disclamer?: boolean;
+	disclaimer?: boolean;
 }
 
-const ExplainerNotification = ({ title, content, info = false, disclamer = false }: ExplainerNotificationProps) => (
+const ExplainerNotification = ({ title, content, info = false, disclaimer = false }: ExplainerNotificationProps) => (
 	<div
 		className={
 			info
 				? 'bg-[#F7FBFC] text-[#3C9AAA] p-4 rounded'
-				: disclamer
+				: disclaimer
 				? 'bg-[#FEFAF5] text-[#E37A00] p-4 rounded'
 				: 'bg-[#F7FBFC] text-[#3C9AAA] p-4 rounded'
 		}
