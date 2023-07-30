@@ -4,10 +4,10 @@ import './background.css';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 
-// import HeroImage from '../public/illustrations/hero-image.png';
+import HeroImage from '../public/illustrations/hero-image.png';
 import KeysImage from '../public/illustrations/keys.png';
 import GlobeImage from '../public/illustrations/globe.png';
-import ChainImage from '../public/illustrations/chain.png';
+import NoChainImage from '../public/illustrations/nochain.png';
 import ButtonAnimated from '../components/Button/ButtonAnimated';
 import NavigationSite from '../components/Navigation';
 import Partners from '../components/Partners';
@@ -35,9 +35,9 @@ export default function Home() {
 	return (
 		<>
 			<div>
-				{/* <div className="w-full flex items-center justify-center">
+				<div className="w-full flex items-center justify-center">
 					<Image src={HeroImage} alt="Hero Image" className="absolute top-24 md:-top-10 -z-20" />
-				</div> */}
+				</div>
 				<NavigationSite />
 				<div className="w-full flex flex-col items-center mt-24 mb-24">
 					<div className="text-center mb-10">
@@ -118,7 +118,7 @@ export default function Home() {
 						</div>
 						<div className="w-full md:w-1/2">
 							<div className="relative md:absolute top-10 right-20">
-								<Image src={ChainImage} alt={''} />
+								<Image src={NoChainImage} alt={''} />
 							</div>
 						</div>
 					</div>
