@@ -63,7 +63,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	const { data, write: claim } = useContractWrite(config);
 
-	const { isLoading, isSuccess } = useWaitForTransaction({
+	const { isSuccess } = useWaitForTransaction({
 		hash: data?.hash
 	});
 
