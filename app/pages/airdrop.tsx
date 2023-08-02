@@ -13,11 +13,17 @@ import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
-import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import {
+	useAccount,
+	useContractWrite,
+	useNetwork,
+	usePrepareContractWrite,
+	useSwitchNetwork,
+	useWaitForTransaction
+} from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
-import { switchNetwork } from '@wagmi/core';
 
 const ROUND = 2;
 const POOL = 1000000;
@@ -44,6 +50,8 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 	const merkleTree = StandardMerkleTree.of(distribution, ['address', 'uint256']);
 	const proof = address ? merkleTree.getProof(distribution[0]) : [];
 
+	const { switchNetwork } = useSwitchNetwork();
+
 	const { config } = usePrepareContractWrite({
 		address: CONTRACT_ADDRESS,
 		abi: VP2P,
@@ -61,7 +69,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	const onClaimRewards = async () => {
 		if (wrongChain) {
-			switchNetwork({ chainId: CHAIN.id });
+			switchNetwork?.(CHAIN.id);
 		} else {
 			claim?.();
 		}
@@ -161,9 +169,8 @@ const AirdropPage = () => {
 
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
 
-	const total = Number(volume.total || 0);
-	const usdTotal = (total || 0) * 2; // times two because buyer and seller get the same amount
-	const tokens = address && total ? ((Number(buyVolume) + Number(sellVolume)) / total) * POOL : 0;
+	const usdTotal = (Number(volume.total || 0) || 0) * 2; // times two because buyer and seller get the same amount
+	const tokens = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
