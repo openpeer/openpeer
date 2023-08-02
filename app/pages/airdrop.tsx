@@ -1,3 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
@@ -25,11 +27,100 @@ import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 
+interface RoundData {
+	[key: `0x${string}`]: {
+		buy_volume: string;
+		sell_volume: string;
+	};
+}
+
+interface ClosedRound {
+	[key: number]: {
+		volume: number;
+		data: RoundData;
+	};
+}
+
 const ROUND = 2;
 const POOL = 1000000;
 const AIRDROP_START = 1690891200000;
 const CHAIN = polygon;
 const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
+const CLOSED_ROUNDS: ClosedRound = {
+	2: {
+		volume: 1564,
+		data: {
+			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': {
+				buy_volume: '0',
+				sell_volume: '549.6997'
+			},
+			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
+				buy_volume: '579.68332',
+				sell_volume: '115.366889266956'
+			},
+			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': {
+				buy_volume: '115.366889266956',
+				sell_volume: '29.98362'
+			},
+			'0x088Ba7c136f64B692D1822F12409b2e4a4f239E9': {
+				buy_volume: '0',
+				sell_volume: '6.686635033827799051968'
+			},
+			'0xcd2523e1ea097Aec34Dfff62312BF27568A17643': {
+				buy_volume: '6.84509502482351130324',
+				sell_volume: '0'
+			},
+			'0x501DeFc41e7c9a9C17702c7c432124794Ee99c72': {
+				buy_volume: '240.936408',
+				sell_volume: '243.323214514611001265352'
+			},
+			'0xA1Be19349c296C4c7125894672EbC1756493617a': {
+				buy_volume: '24.23211',
+				sell_volume: '51.92595'
+			},
+			'0x1fDa15a7D17efbc3e8a11Fbaea63fb405cfB3C32': {
+				buy_volume: '51.92595',
+				sell_volume: '24.23211'
+			},
+			'0x198a0a2fa5B012e4646E7240dDFb16529967d72b': {
+				buy_volume: '0.06114156388051156798314',
+				sell_volume: '0'
+			},
+			'0xeC8dD93C481cBE0c8658f7673f16343a72Af9c3D': {
+				buy_volume: '6.686635033827799051968',
+				sell_volume: '6.84509502482351130324'
+			},
+			'0x8A57DCEda6F8CDa5B99BC83aC64F659f63b926f7': {
+				buy_volume: '243.323214514611001265352',
+				sell_volume: '243.013446'
+			},
+			'0xF07CF0C322e146aC6a47C13F9533E42D81567eF7': {
+				buy_volume: '243.013446',
+				sell_volume: '240.936408'
+			},
+			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': {
+				buy_volume: '6.922842440460262167654',
+				sell_volume: '6.923047053560778694644'
+			},
+			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': {
+				buy_volume: '6.923047053560778694644',
+				sell_volume: '6.922842440460262167654'
+			},
+			'0x4f3931aadbE087de9E572765B64744714428BD0A': {
+				buy_volume: '12.462228',
+				sell_volume: '25.616802'
+			},
+			'0x21837bc754EB9289ced8BeA462ED64541EF078cB': {
+				buy_volume: '25.616802',
+				sell_volume: '12.462228'
+			},
+			'0x39550F20857A8a3B848009cF907A8d82Cf3a6e7f': {
+				buy_volume: '0',
+				sell_volume: '0.06114156388051156798314'
+			}
+		}
+	}
+};
 
 const CallToActionButton = ({ address }: { address: `0x${string}` | undefined }) => {
 	const router = useRouter();
@@ -63,7 +154,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	const { data, write: claim } = useContractWrite(config);
 
-	const { isSuccess } = useWaitForTransaction({
+	const { isSuccess, isLoading } = useWaitForTransaction({
 		hash: data?.hash
 	});
 
@@ -86,8 +177,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		<Button
 			title={wrongChain ? `Switch to ${CHAIN.name}` : 'Claim Rewards (soon)'}
 			onClick={onClaimRewards}
-			disabled={!wrongChain}
-			// disabled={isLoading}
+			disabled={isLoading}
 		/>
 	);
 };
@@ -158,14 +248,25 @@ const AirdropPage = () => {
 
 	useEffect(() => {
 		if (!address) return;
-
-		fetch(`/api/airdrop?address=${address}&round=${ROUND}`)
-			.then((res) => res.json())
-			.then((data) => {
-				if (!data.message) {
-					setVolume(data);
-				}
+		if (ROUND === 2) {
+			const addressVolume = CLOSED_ROUNDS[ROUND].data[address] || {
+				buy_volume: '0',
+				sell_volume: '0'
+			};
+			setVolume({
+				buy_volume: Number(addressVolume.buy_volume),
+				sell_volume: Number(addressVolume.sell_volume),
+				total: CLOSED_ROUNDS[ROUND].volume
 			});
+		} else {
+			fetch(`/api/airdrop?address=${address}&round=${ROUND}`)
+				.then((res) => res.json())
+				.then((data) => {
+					if (!data.message) {
+						setVolume(data);
+					}
+				});
+		}
 	}, [address]);
 
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
