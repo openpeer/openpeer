@@ -21,15 +21,15 @@ import {
 	useSwitchNetwork,
 	useWaitForTransaction
 } from 'wagmi';
-import { polygonMumbai } from 'wagmi/chains';
+import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 
 const ROUND = 2;
 const POOL = 1000000;
 const AIRDROP_START = 1690891200000;
-const CHAIN = polygonMumbai; // @TODO: Marcos - change this to Polygon when the airdrop starts
-const CONTRACT_ADDRESS = '0x8F6587918d09F86876F4Fb1F83808deA5d3e09b1'; // @TODO: Marcos - change this to the real contract address when the airdrop starts
+const CHAIN = polygon;
+const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
 
 const CallToActionButton = ({ address }: { address: `0x${string}` | undefined }) => {
 	const router = useRouter();
@@ -84,9 +84,10 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	return (
 		<Button
-			title={wrongChain ? `Switch to ${CHAIN.name}` : 'Claim Rewards'}
+			title={wrongChain ? `Switch to ${CHAIN.name}` : 'Claim Rewards (soon)'}
 			onClick={onClaimRewards}
-			disabled={isLoading}
+			disabled={!wrongChain}
+			// disabled={isLoading}
 		/>
 	);
 };
@@ -256,9 +257,7 @@ const AirdropPage = () => {
 										{Number(sellVolume).toFixed(2)} / {Number(usdTotal).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible sell volume</span>
-									<span className="text-[#67738E] font-light">
-										Crypto sales between new verified users.
-									</span>
+									<span className="text-[#67738E] font-light">Crypto sales between new users.</span>
 								</div>
 								<div className="flex flex-col mb-4">
 									<span className="text-[#25385A] font-bold">How to collect your reward?</span>
