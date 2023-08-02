@@ -4,8 +4,6 @@ import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { ConnectKitButton } from 'connectkit';
-import { constants } from 'ethers';
-import { parseUnits } from 'ethers/lib/utils';
 import { useTransactionFeedback } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
@@ -13,8 +11,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Countdown from 'react-countdown';
+
 import {
 	useAccount,
 	useContractWrite,
@@ -26,6 +25,8 @@ import {
 import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
+import { parseUnits } from 'viem';
+import roundTwoTree from '../airdrop/roundTwoTree.json';
 
 interface RoundData {
 	[key: `0x${string}`]: {
@@ -48,7 +49,8 @@ const CHAIN = polygon;
 const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
 const CLOSED_ROUNDS: ClosedRound = {
 	2: {
-		volume: 1567.09850225354,
+		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+		volume: 1567.09850225354078480242151,
 		data: {
 			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': {
 				buy_volume: '0',
@@ -137,10 +139,10 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 	const { address } = useAccount();
 	const wrongChain = CHAIN.id !== chain?.id;
 	const amount = parseUnits(tokens.toString(), 18);
-	const distribution = [[address || constants.AddressZero, amount.toString()]];
-	const merkleTree = StandardMerkleTree.of(distribution, ['address', 'uint256']);
-	const proof = address ? merkleTree.getProof(distribution[0]) : [];
-
+	// @ts-expect-error
+	const merkleTree = StandardMerkleTree.load(roundTwoTree);
+	const index = address ? Object.keys(CLOSED_ROUNDS[ROUND].data).indexOf(address) : -1;
+	const proof = address && index >= 0 ? merkleTree.getProof(index) : [];
 	const { switchNetwork } = useSwitchNetwork();
 
 	const { config } = usePrepareContractWrite({
@@ -149,7 +151,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		functionName: 'claim',
 		args: [ROUND, amount, proof],
 		gas: BigInt('150000'),
-		enabled: !wrongChain && !!address
+		enabled: !wrongChain && !!address && !!proof.length
 	});
 
 	const { data, write: claim } = useContractWrite(config);
@@ -175,9 +177,9 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	return (
 		<Button
-			title={wrongChain ? `Switch to ${CHAIN.name}` : 'Claim Rewards (soon)'}
+			title={wrongChain ? `Switch to ${CHAIN.name}` : !proof.length ? 'No tokens to claim' : 'Claim Rewards'}
 			onClick={onClaimRewards}
-			disabled={isLoading}
+			disabled={isLoading || !proof.length}
 		/>
 	);
 };
@@ -243,31 +245,24 @@ const AirdropCountdown = ({ address, tokens }: { address: `0x${string}` | undefi
 };
 
 const AirdropPage = () => {
-	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
+	let volume: Airdrop = {
+		buy_volume: 0,
+		sell_volume: 0,
+		total: CLOSED_ROUNDS[ROUND].volume
+	};
 
-	useEffect(() => {
-		if (!address) return;
-		if (ROUND === 2) {
-			const addressVolume = CLOSED_ROUNDS[ROUND].data[address] || {
-				buy_volume: '0',
-				sell_volume: '0'
-			};
-			setVolume({
-				buy_volume: Number(addressVolume.buy_volume),
-				sell_volume: Number(addressVolume.sell_volume),
-				total: CLOSED_ROUNDS[ROUND].volume
-			});
-		} else {
-			fetch(`/api/airdrop?address=${address}&round=${ROUND}`)
-				.then((res) => res.json())
-				.then((data) => {
-					if (!data.message) {
-						setVolume(data);
-					}
-				});
-		}
-	}, [address]);
+	if (address) {
+		const addressVolume = CLOSED_ROUNDS[ROUND].data[address] || {
+			buy_volume: '0',
+			sell_volume: '0'
+		};
+		volume = {
+			buy_volume: Number(addressVolume.buy_volume),
+			sell_volume: Number(addressVolume.sell_volume),
+			total: CLOSED_ROUNDS[ROUND].volume
+		};
+	}
 
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
 
