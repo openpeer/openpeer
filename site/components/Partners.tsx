@@ -5,6 +5,7 @@ import outlierVentures from '../public/partners/outlierventures.png';
 import polygonLogoWhite from '../public/partners/polygonlogowhite.png';
 import w3iLogoWhite from '../public/partners/w3ilogowhite.png';
 import bitfwdLogoWhite from '../public/partners/bitfwdlogowhite.png';
+import ybbFoundationLtd from '../public/partners/ybbFoundation.png';
 
 const Partners = () => {
 	return (
@@ -23,6 +24,9 @@ const Partners = () => {
 					</div>
 					<div className="flex items-center justify-center rounded-md border border-white/20 p-2 hover:bg-gradient-to-r from-[#010AD4]/50 to-transparent] h-16">
 						<Image src={bitfwdLogoWhite} alt="Polygon" />
+					</div>
+					<div className="flex items-center justify-center rounded-md border border-white/20 p-2 hover:bg-gradient-to-r from-[#010AD4]/50 to-transparent] h-16">
+						<Image src={ybbFoundationLtd} alt="YBB Foundation" />
 					</div>
 				</div>
 			</div>
