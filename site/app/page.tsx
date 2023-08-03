@@ -84,11 +84,6 @@ export default function Home() {
 								<Image src={GlobeImage} alt={''} />
 							</div>
 						</div>
-						{/* <div className="w-full md:w-1/2">
-							<div className="">
-								<Image className="mr-20" src={GlobeImage} alt={''} />
-							</div>
-						</div> */}
 						<div className="w-full md:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Anywhere</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
@@ -106,7 +101,6 @@ export default function Home() {
 					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative">
 						<div className="w-full md:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Your choose</div>
-							{/* <h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#F49F64] to-[#F56B0A]"> */}
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Multichain Settlement
 							</h3>
