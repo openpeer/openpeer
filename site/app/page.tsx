@@ -17,14 +17,15 @@ interface FeatureParams {
 	description: string;
 	// image?: StaticImageData;
 	cta: string;
+	url: string;
 }
 
-const Feature = ({ title, description, cta }: FeatureParams) => {
+const Feature = ({ title, description, cta, url }: FeatureParams) => {
 	return (
 		<div className="flex flex-col mb-12 backdrop-blur-md  border border-[#30353B] rounded-2xl p-8">
 			<h3 className="text-2xl mb-4">{title}</h3>
 			<p className="font-normal text-base md:text-sm mb-4">{description}</p>
-			<Link href={''}>
+			<Link href={url}>
 				<ButtonAnimated smallButton title={cta} />
 			</Link>
 		</div>
@@ -126,19 +127,22 @@ export default function Home() {
 							title: 'P2P Merchants',
 							description:
 								'Trade peer-to-peer with verified and high quality traders in your country. Get priority support from the OpenPeer team as you grow your trading business.',
-							cta: 'Get in touch'
+							cta: 'Get in touch',
+							url: 'mailto:merchants@openpeer.xyz'
 						},
 						{
 							title: 'Wallets',
 							description:
 								'Add OpenPeer to your self-custody wallet as a P2P fiat on/off ramp solution for your users. Quickly ntegrate our SDK and open up global markets for your business.',
-							cta: 'Get in touch'
+							cta: 'Get in touch',
+							url: 'mailto:partners@openpeer.xyz'
 						},
 						{
 							title: 'Dapps & Games',
 							description:
 								'Onboard users into any on-chain asset both fungible or non-fungible. Users choose the asset and their fiat currency and OpenPeer will do the rest.',
-							cta: 'Get in touch'
+							cta: 'Get in touch',
+							url: 'mailto:partners@openpeer.xyz'
 						}
 					].map((item) => (
 						<Feature key={item.title} {...item} />
