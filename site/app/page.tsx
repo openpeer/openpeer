@@ -111,7 +111,7 @@ export default function Home() {
 							</p>
 						</div>
 						<div className="w-full md:w-1/2">
-							<div className="relative md:absolute top-10 right-20">
+							<div className="relative md:absolute md:top-10 md:right-20">
 								<Image src={NoChainImage} alt={''} />
 							</div>
 						</div>
