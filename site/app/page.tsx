@@ -86,7 +86,7 @@ export default function Home() {
 							</div>
 						</div>
 						<div className="w-full md:w-1/2">
-							<div className="text-[#DBDBDB] text-xl mb-4">Anywhere</div>
+							<div className="text-[#DBDBDB] text-xl mb-4">Any Place</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Global Availability
 							</h3>
@@ -101,7 +101,7 @@ export default function Home() {
 				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
 					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative">
 						<div className="w-full md:w-1/2">
-							<div className="text-[#DBDBDB] text-xl mb-4">Your choose</div>
+							<div className="text-[#DBDBDB] text-xl mb-4">Any Chain</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Multichain Settlement
 							</h3>
