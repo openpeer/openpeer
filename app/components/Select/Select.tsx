@@ -53,14 +53,16 @@ export default function Select({
 									) : flag ? (
 										<Flag name={countries[selected.icon]} size={24} />
 									) : (
-										<Image
-											src={selected.icon}
-											alt={selected.name}
-											className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
-											width={24}
-											height={24}
-											unoptimized
-										/>
+										selected.icon && (
+											<Image
+												src={selected.icon}
+												alt={selected.name}
+												className={`${rounded ? 'rounded-full' : ''} h-6 w-6 flex-shrink-0`}
+												width={24}
+												height={24}
+												unoptimized
+											/>
+										)
 									))}
 								<span className={`${minimal ? 'ml-1' : 'ml-3'} block truncate`}>
 									{selected?.name || 'Select'}
@@ -111,16 +113,18 @@ export default function Select({
 													) : flag ? (
 														<Flag name={countries[option.icon]} size={24} />
 													) : (
-														<Image
-															src={option.icon}
-															alt={option.name}
-															className={`${
-																rounded ? 'rounded-full' : ''
-															} h-6 w-6 flex-shrink-0`}
-															width={24}
-															height={24}
-															unoptimized
-														/>
+														option.icon && (
+															<Image
+																src={option.icon}
+																alt={option.name}
+																className={`${
+																	rounded ? 'rounded-full' : ''
+																} h-6 w-6 flex-shrink-0`}
+																width={24}
+																height={24}
+																unoptimized
+															/>
+														)
 													)}
 
 													<span

@@ -3,8 +3,7 @@ import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { verifyMessage } from 'ethers/lib/utils';
-import { useFormErrors } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { List, User } from 'models/types';
@@ -12,7 +11,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { truncate } from 'utils';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { BuyStepProps, UIOrder } from './Buy.types';
 
@@ -46,33 +45,30 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	const { errors, clearErrors, validate } = useFormErrors();
 
-	const { signMessage } = useSignMessage({
+	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data, variables) => {
-			const signingAddress = verifyMessage(variables.message, data);
-			if (signingAddress === address) {
-				const result = await fetch('/api/orders/', {
-					method: 'POST',
-					body: JSON.stringify(
-						snakecaseKeys(
-							{
-								order: {
-									listId: order.list.id,
-									fiatAmount,
-									tokenAmount,
-									price
-								},
-								data,
-								address,
-								message: variables.message
+			const result = await fetch('/api/orders/', {
+				method: 'POST',
+				body: JSON.stringify(
+					snakecaseKeys(
+						{
+							order: {
+								listId: order.list.id,
+								fiatAmount,
+								tokenAmount,
+								price
 							},
-							{ deep: true }
-						)
+							data,
+							address,
+							message: variables.message
+						},
+						{ deep: true }
 					)
-				});
-				const { uuid } = await result.json();
-				if (uuid) {
-					router.push(`/orders/${uuid}`);
-				}
+				)
+			});
+			const { uuid } = await result.json();
+			if (uuid) {
+				router.push(`/orders/${uuid}`);
 			}
 		}
 	});

@@ -1,10 +1,9 @@
 import { Button, Modal } from 'components';
-import { verifyMessage } from 'ethers/lib/utils';
-import { useCancelReasons } from 'hooks';
+import { useCancelReasons, useConfirmationSignMessage } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
 import CancelReasons from './CancelReasons';
@@ -28,33 +27,30 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 	const [modalOpen, setModalOpen] = useState(false);
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
-	const { signMessage } = useSignMessage({
-		onSuccess: async (data, variables) => {
-			const signingAddress = verifyMessage(variables.message, data);
-			if (signingAddress === address) {
-				const result = await fetch(`/api/orders/${uuid}/cancel`, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						cancellation,
-						other_reason: otherReason && otherReason !== '' ? otherReason : undefined
-					})
+	const { signMessage } = useConfirmationSignMessage({
+		onSuccess: async () => {
+			const result = await fetch(`/api/orders/${uuid}/cancel`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					cancellation,
+					other_reason: otherReason && otherReason !== '' ? otherReason : undefined
+				})
+			});
+			const savedOrder = await result.json();
+			if (!savedOrder.uuid) {
+				toast.error('Error cancelling the order', {
+					theme: 'dark',
+					position: 'top-right',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: false,
+					progress: undefined
 				});
-				const savedOrder = await result.json();
-				if (!savedOrder.uuid) {
-					toast.error('Error cancelling the order', {
-						theme: 'dark',
-						position: 'top-right',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: false,
-						progress: undefined
-					});
-				}
 			}
 		}
 	});

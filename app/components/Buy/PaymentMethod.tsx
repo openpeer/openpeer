@@ -2,15 +2,14 @@
 import { Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
-import { verifyMessage } from 'ethers/lib/utils';
-import { useFormErrors } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
@@ -41,34 +40,31 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 		return error;
 	};
 
-	const { signMessage } = useSignMessage({
+	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data, variables) => {
-			const signingAddress = verifyMessage(variables.message, data);
-			if (signingAddress === address) {
-				const result = await fetch('/api/orders/', {
-					method: 'POST',
-					body: JSON.stringify(
-						snakecaseKeys(
-							{
-								order: {
-									listId: order.list.id,
-									fiatAmount: order.fiat_amount,
-									tokenAmount: order.token_amount,
-									price: order.price,
-									paymentMethod
-								},
-								data,
-								address,
-								message: variables.message
+			const result = await fetch('/api/orders/', {
+				method: 'POST',
+				body: JSON.stringify(
+					snakecaseKeys(
+						{
+							order: {
+								listId: order.list.id,
+								fiatAmount: order.fiat_amount,
+								tokenAmount: order.token_amount,
+								price: order.price,
+								paymentMethod
 							},
-							{ deep: true }
-						)
+							data,
+							address,
+							message: variables.message
+						},
+						{ deep: true }
 					)
-				});
-				const { uuid } = await result.json();
-				if (uuid) {
-					router.push(`/orders/${uuid}`);
-				}
+				)
+			});
+			const { uuid } = await result.json();
+			if (uuid) {
+				router.push(`/orders/${uuid}`);
 			}
 		}
 	});

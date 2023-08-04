@@ -1,28 +1,23 @@
-import { verifyMessage } from 'ethers/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useAccount, useSignMessage } from 'wagmi';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useConfirmationSignMessage } from 'hooks';
 
 const EditListButtons = ({ id }: { id: number }) => {
 	const router = useRouter();
-	const { address } = useAccount();
 
-	const { signMessage } = useSignMessage({
-		onSuccess: async (data, variables) => {
-			const signingAddress = verifyMessage(variables.message, data);
-			if (signingAddress === address) {
-				await fetch(
-					`/api/lists/${id}`,
+	const { signMessage } = useConfirmationSignMessage({
+		onSuccess: async () => {
+			await fetch(
+				`/api/lists/${id}`,
 
-					{
-						method: 'DELETE'
-					}
-				);
-				router.reload();
-			}
+				{
+					method: 'DELETE'
+				}
+			);
+			router.reload();
 		}
 	});
 	return (

@@ -4248,10 +4248,10 @@ connectkit-next-siwe@^0.2.0:
     iron-session "^6.2.1"
     siwe "^2.1.4"
 
-connectkit@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/connectkit/-/connectkit-1.4.0.tgz#2e58dca500ec9d3feb47d88c8254bb5d5080abea"
-  integrity sha512-gRfcb/7BDX4uKc3qghjVlV5rd3jfkivqSsUG5vywZYy4nSHE4q4NeHsgJTTC8WnNTWxfOz02oP8J2dCaeCHLNw==
+connectkit@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/connectkit/-/connectkit-1.5.0.tgz#281cdc60080de059d77f9230dcb33cdd3c64b55d"
+  integrity sha512-xFYqsUkGs9XP5UC4rzktNTjwb8u2gkh+xNcJwHQ3b3HDQU67bdjKPPAq11ZYMdWVURDrZKOp8EBdGpQwuB5XYg==
   dependencies:
     buffer "^6.0.3"
     detect-browser "^5.3.0"

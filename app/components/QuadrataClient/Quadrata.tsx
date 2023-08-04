@@ -4,14 +4,7 @@ import Loading from 'components/Loading/Loading';
 import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
 import { recoverMessageAddress } from 'viem';
-import {
-	useAccount,
-	useContractWrite,
-	useNetwork,
-	usePrepareContractWrite,
-	useSignMessage,
-	useWaitForTransaction
-} from 'wagmi';
+import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 import {
 	Page,
@@ -23,6 +16,7 @@ import {
 	QuadMintParamsBigNumbers
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
+import { useConfirmationSignMessage } from 'hooks';
 
 const quadConfig: QuadClientConfig = {
 	environment:
@@ -40,7 +34,7 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 	// Hooks
 	const { chain: { id: chainId } = { id: 0 } } = useNetwork();
 	const { address: account, isConnecting } = useAccount();
-	const { data: signMessageData, signMessage, variables } = useSignMessage();
+	const { data: signMessageData, signMessage, variables } = useConfirmationSignMessage({});
 
 	const requiredAttributes = [QuadAttribute.DID, QuadAttribute.AML];
 

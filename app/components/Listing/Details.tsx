@@ -1,8 +1,8 @@
-import { verifyMessage } from 'ethers/lib/utils';
+import { useConfirmationSignMessage } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount, useNetwork, useSignMessage } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import Label from '../Label/Label';
@@ -18,34 +18,31 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const router = useRouter();
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
-	const { signMessage } = useSignMessage({
+	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data, variables) => {
-			const signingAddress = verifyMessage(variables.message, data);
-			if (signingAddress === address) {
-				const result = await fetch(
-					list.id ? `/api/lists/${list.id}` : '/api/lists',
+			const result = await fetch(
+				list.id ? `/api/lists/${list.id}` : '/api/lists',
 
-					{
-						method: list.id ? 'PUT' : 'POST',
-						body: JSON.stringify(
-							snakecaseKeys(
-								{
-									chainId,
-									list,
-									data,
-									address,
-									message: variables.message
-								},
-								{ deep: true }
-							)
+				{
+					method: list.id ? 'PUT' : 'POST',
+					body: JSON.stringify(
+						snakecaseKeys(
+							{
+								chainId,
+								list,
+								data,
+								address,
+								message: variables.message
+							},
+							{ deep: true }
 						)
-					}
-				);
-				const { id } = await result.json();
-
-				if (id) {
-					router.push(`/${address}`);
+					)
 				}
+			);
+			const { id } = await result.json();
+
+			if (id) {
+				router.push(`/${address}`);
 			}
 		}
 	});

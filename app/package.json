@@ -29,7 +29,7 @@
 		"@wagmi/core": "^0.10.10",
 		"aws-sdk": "^2.1313.0",
 		"axios": "^1.2.1",
-		"connectkit": "^1.4.0",
+		"connectkit": "^1.5.0",
 		"connectkit-next-siwe": "^0.2.0",
 		"eslint": "8.29.0",
 		"eslint-config-next": "13.0.6",

@@ -9,6 +9,7 @@ import usePagination from './usePagination';
 import useTransactionFeedback from './useTransactionFeedback';
 import useUserProfile from './useUserProfile';
 import useVerificationStatus from './useVerificationStatus';
+import useConfirmationSignMessage from './useConfirmationSignMessage';
 
 export {
 	useListPrice,
@@ -21,5 +22,6 @@ export {
 	useUserProfile,
 	usePagination,
 	useVerificationStatus,
-	useCancelReasons
+	useCancelReasons,
+	useConfirmationSignMessage
 };
