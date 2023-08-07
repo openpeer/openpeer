@@ -1,5 +1,6 @@
+import { useChains } from 'connectkit';
 import { countries } from 'models/countries';
-import { List } from 'models/types';
+import { Token as TokenType, List } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -36,6 +37,7 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) =>
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
+	const chains = useChains();
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -43,6 +45,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 				<tr className="w-full relative">
 					<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
 						Seller
+					</th>
+					<th
+						scope="col"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+					>
+						Chain
 					</th>
 					<th
 						scope="col"
@@ -87,12 +95,15 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_min: min,
 						limit_max: max,
 						price,
-						payment_method: paymentMethod
+						payment_method: paymentMethod,
+						chain_id: chainId
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const isSeller = sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
+					const chain = chains.find((c) => c.id === chainId);
+					const chainToken = chain?.nativeCurrency;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -131,6 +142,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</div>
 												</div>
 												<div className="flex flex-row items-center">
+													<span className="pr-2 text-sm">{chain?.name}</span>
+													<Token token={chainToken! as TokenType} size={20} />
+												</div>
+												<div className="flex flex-row items-center">
 													<span className="pr-2 text-sm">Available</span>
 													<Token token={token} size={20} />
 												</div>
@@ -165,6 +180,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 											/>
 										)}
 									</div>
+								</div>
+							</td>
+							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+								<div className="flex flex-row items-center space-x-1">
+									<Token token={chainToken! as TokenType} size={24} />
+									<span>{chain?.name}</span>
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">

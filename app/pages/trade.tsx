@@ -5,8 +5,7 @@ import { SearchFilters } from 'models/search';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 
@@ -26,15 +25,12 @@ const HomePage = () => {
 	const [filters, setFilters] = useState<SearchFilters>({} as SearchFilters);
 	const [showFilters, setShowFilters] = useState(false);
 
-	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const { address } = useAccount();
 	const { page, onNextPage, onPrevPage } = usePagination();
 
 	useEffect(() => {
 		setLoading(true);
 		const params: { [key: string]: string | undefined } = {
-			chain_id: chainId.toString(),
 			page: page.toString(),
 			type: type === 'Buy' ? 'SellList' : 'BuyList',
 			amount: filters.amount ? filters.amount.toString() : undefined,
@@ -65,7 +61,7 @@ const HomePage = () => {
 				setLists(toBuyers);
 				setLoading(false);
 			});
-	}, [chainId, address, page, type, filters]);
+	}, [address, page, type, filters]);
 
 	useEffect(() => {
 		if (type === 'Buy') {

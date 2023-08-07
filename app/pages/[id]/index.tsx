@@ -5,15 +5,12 @@ import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 const Profile = ({ id }: { id: number }) => {
 	const [user, setUser] = useState<User | null>();
 	const [lists, setLists] = useState<List[]>([]);
-	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 	const router = useRouter();
 	const { verification } = router.query;
 
@@ -32,12 +29,12 @@ const Profile = ({ id }: { id: number }) => {
 	useEffect(() => {
 		if (!user) return;
 
-		fetch(`/api/lists?chain_id=${chainId}&seller=${user.address}`)
+		fetch(`/api/lists?&seller=${user.address}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setLists(data.data);
 			});
-	}, [user, chainId]);
+	}, [user]);
 
 	if (user === undefined) {
 		return <Loading />;
