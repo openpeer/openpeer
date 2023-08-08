@@ -1,3 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import { useChains } from 'connectkit';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
@@ -6,6 +8,7 @@ import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
+import { arbitrum, optimism } from 'wagmi/chains';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
@@ -103,7 +106,16 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
 					const chain = chains.find((c) => c.id === chainId);
-					const chainToken = chain?.nativeCurrency;
+					const chainToken = chain
+						? chain.id === arbitrum.id
+							? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
+							: chain.id === optimism.id
+							? {
+									symbol: 'OPTMISM',
+									icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
+							  }
+							: chain.nativeCurrency
+						: undefined;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
