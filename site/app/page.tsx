@@ -149,8 +149,8 @@ export default function Home() {
 					))}
 				</div>
 
-				<div className="w-full md:w-2/3 m-auto flex flex-col md:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#00D4E5]/50 to-transparent p-8 rounded-xl">
-					<div className="text-center space-x-4 text-2xl mb-8 pt-4">
+				<div className="w-full md:w-2/3 m-auto flex flex-col md:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#020AD4]/50 to-transparent p-8 rounded-xl">
+					<div className="text-center space-x-4 text-2xl mb-10 pt-6">
 						Buy crypto directly to your wallet from your <br className="hidden md:block" /> bank account
 						with zero-fees.
 					</div>
