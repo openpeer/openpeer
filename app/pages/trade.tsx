@@ -37,7 +37,8 @@ const HomePage = () => {
 			currency: filters.currency ? filters.currency.id.toString() : undefined,
 			payment_method: filters.paymentMethod ? filters.paymentMethod.id.toString() : undefined,
 			token: filters.token ? filters.token.id.toString() : undefined,
-			fiat_amount: filters.fiatAmount ? filters.fiatAmount.toString() : undefined
+			fiat_amount: filters.fiatAmount ? filters.fiatAmount.toString() : undefined,
+			chain_id: filters.chain ? filters.chain.id.toString() : undefined
 		};
 
 		const search = Object.keys(params)

@@ -14,12 +14,13 @@ const TokenSelect = ({
 	minimal,
 	selectedIdOnLoad,
 	label = 'Choose token to list',
-	labelStyle = ''
+	labelStyle = '',
+	networkId
 }: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
+	const chainId = networkId || chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
 		if (!chainId) return;
@@ -47,6 +48,7 @@ const TokenSelect = ({
 	if (isLoading) {
 		return <Loading message="" big={false} />;
 	}
+
 	return tokens ? (
 		<Select
 			label={label}

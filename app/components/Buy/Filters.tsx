@@ -9,12 +9,15 @@ import { FiatCurrency, Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import NetworkSelect from 'components/Select/NetworkSelect';
+import { Chain } from 'wagmi';
 
 interface FilterProps {
 	onFilterUpdate: (filters: SearchFilters) => void;
 }
 
 const Filters = ({ onFilterUpdate }: FilterProps) => {
+	const [chain, setChain] = useState<Chain>();
 	const [amount, setAmount] = useState<number>();
 	const [token, setToken] = useState<Token>();
 	const [currency, setCurrency] = useState<FiatCurrency>();
@@ -22,8 +25,8 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	const [paymentMethod, setPaymentMethod] = useState<Option>();
 
 	useEffect(() => {
-		onFilterUpdate({ amount, currency, paymentMethod, token, fiatAmount });
-	}, [amount, fiatAmount, paymentMethod, token]);
+		onFilterUpdate({ amount, currency, paymentMethod, token, fiatAmount, chain });
+	}, [amount, fiatAmount, paymentMethod, token, chain]);
 
 	useEffect(() => {
 		const availableInTheNewCurrency =
@@ -33,7 +36,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 			(!paymentMethod.fiat_currency || paymentMethod.fiat_currency.id === currency.id);
 		const newPaymentMethod = availableInTheNewCurrency ? paymentMethod : undefined;
 		setPaymentMethod(newPaymentMethod);
-		onFilterUpdate({ amount, fiatAmount, currency, token, paymentMethod: newPaymentMethod });
+		onFilterUpdate({ amount, fiatAmount, currency, token, paymentMethod: newPaymentMethod, chain });
 	}, [currency]);
 
 	const reset = () => {
@@ -42,12 +45,22 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 		setCurrency(undefined);
 		setPaymentMethod(undefined);
 		setFiatAmount(undefined);
+		setChain(undefined);
 	};
 
 	return (
 		<div className="w-full flex flex-col lg:flex-row items-center lg:space-x-4">
 			<div className="w-full lg:w-auto">
-				<TokenSelect label="Token" onSelect={setToken} selected={token} labelStyle="text-sm truncate" />
+				<NetworkSelect selected={chain} onSelect={setChain} labelStyle="text-sm truncate" />
+			</div>
+			<div className="w-full lg:w-auto">
+				<TokenSelect
+					label="Token"
+					onSelect={setToken}
+					selected={token}
+					networkId={chain?.id}
+					labelStyle="text-sm truncate"
+				/>
 			</div>
 			<Input
 				label="Token Amount"

@@ -43,4 +43,5 @@ export interface TokenSelectProps {
 	selectedIdOnLoad?: string;
 	label?: string;
 	labelStyle?: string;
+	networkId?: number;
 }
