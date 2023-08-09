@@ -150,7 +150,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		address: CONTRACT_ADDRESS,
 		abi: VP2P,
 		functionName: 'claim',
-		args: [ROUND, amount, proof],
+		args: [CLOSED_ROUND, amount, proof],
 		gas: BigInt('150000'),
 		enabled: !wrongChain && !!address && !!proof.length
 	});
