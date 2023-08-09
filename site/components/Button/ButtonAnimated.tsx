@@ -11,8 +11,8 @@ const ButtonAnimated = ({ title, onClick, smallButton = false }: ButtonAnimatedP
 		<div
 			className={
 				smallButton
-					? 'relative inline-flex items-center px-10 py-2 overflow-hidden text-lg font-medium text-white border-2 border-white rounded-md hover:text-white hover:border-[#020AD4]  group hover:bg-[#020AD4]'
-					: 'relative inline-flex items-center px-12 py-4 bg-white overflow-hidden text-lg font-bold text-[#141414] border-2 rounded-md  hover:text-white hover:border-[#020AD4]  group hover:bg-[#020AD4]'
+					? 'w-full text-center relative md:w-auto md:inline-flex items-center px-12 py-2 overflow-hidden text-lg font-medium text-white border-2 border-white rounded-md hover:text-white hover:border-[#020AD4] group hover:bg-[#020AD4]'
+					: 'w-full relative md:inline-flex items-center px-12 py-4 bg-white overflow-hidden text-lg font-bold text-[#141414] border-2 rounded-md  hover:text-white hover:border-[#020AD4]  group hover:bg-[#020AD4]'
 			}
 		>
 			<span className="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
