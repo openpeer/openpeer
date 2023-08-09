@@ -56,6 +56,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 						customAvatar: CustomAvatar,
 						embedGoogleFonts: true
 					}}
+					mode="dark"
 				>
 					<TransactionFeedbackProvider>
 						<Head />
