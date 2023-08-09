@@ -260,6 +260,7 @@ const AirdropPage = () => {
 			buy_volume: '0',
 			sell_volume: '0'
 		};
+
 		closedRoundVolume = {
 			buy_volume: Number(addressVolume.buy_volume),
 			sell_volume: Number(addressVolume.sell_volume),
@@ -267,7 +268,7 @@ const AirdropPage = () => {
 		};
 	}
 
-	const { buy_volume: closedRoundBuyVolume = 0, sell_volume: closedRoundSellVolume = 0 } = volume;
+	const { buy_volume: closedRoundBuyVolume = 0, sell_volume: closedRoundSellVolume = 0 } = closedRoundVolume;
 	const closedRoundUsdTotal = (Number(closedRoundVolume.total || 0) || 0) * 2;
 	const closedRoundTokens =
 		address && closedRoundUsdTotal
