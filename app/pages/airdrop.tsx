@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
 import {
@@ -42,9 +42,10 @@ interface ClosedRound {
 	};
 }
 
-const ROUND = 2;
+const CLOSED_ROUND = 2;
+const ROUND = 3;
 const POOL = 1000000;
-const AIRDROP_START = 1690891200000;
+const AIRDROP_START = 1693569600000;
 const CHAIN = polygon;
 const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
 const CLOSED_ROUNDS: ClosedRound = {
@@ -136,12 +137,12 @@ const CallToActionButton = ({ address }: { address: `0x${string}` | undefined })
 
 const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 	const { chain } = useNetwork();
-	const { address } = useAccount();
+	const { address, isConnected } = useAccount();
 	const wrongChain = CHAIN.id !== chain?.id;
 	const amount = parseUnits(tokens.toString(), 18);
 	// @ts-expect-error
 	const merkleTree = StandardMerkleTree.load(roundTwoTree);
-	const index = address ? Object.keys(CLOSED_ROUNDS[ROUND].data).indexOf(address) : -1;
+	const index = address ? Object.keys(CLOSED_ROUNDS[CLOSED_ROUND].data).indexOf(address) : -1;
 	const proof = address && index >= 0 ? merkleTree.getProof(index) : [];
 	const { switchNetwork } = useSwitchNetwork();
 
@@ -175,67 +176,62 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		description: 'Claimed OpenPeer Rewards'
 	});
 
+	if (!isConnected) {
+		return <ConnectKitButton />;
+	}
+
 	return (
 		<Button
 			title={wrongChain ? `Switch to ${CHAIN.name}` : !proof.length ? 'No tokens to claim' : 'Claim Rewards'}
 			onClick={onClaimRewards}
-			disabled={isLoading || !proof.length}
+			disabled={isLoading || !proof.length || !!(!wrongChain && proof.length && !claim)}
 		/>
 	);
 };
 
-const AirdropCountdown = ({ address, tokens }: { address: `0x${string}` | undefined; tokens: number }) => {
+const AirdropCountdown = ({ address }: { address: `0x${string}` | undefined }) => {
 	const renderer = ({
 		days,
 		hours,
 		minutes,
-		seconds,
-		completed
+		seconds
 	}: {
 		days: number;
 		hours: number;
 		minutes: number;
 		seconds: number;
 		completed: boolean;
-	}) => {
-		if (completed) {
-			return (
-				<div className="my-4">
-					<ClaimRewardsButton tokens={tokens} />
-				</div>
-			);
-		}
-		// Render a countdown
-		return (
-			<>
-				<div className="mb-4 font-light text-zinc-500 md:text-xl">Time until the next airdrop</div>
+	}) => (
+		<div className="p-6">
+			<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Time until the next airdrop</div>
 
-				<div className="flex flex-row space-x-2">
-					{days > 0 && (
-						<div className="flex items-center justify-around space-x-2">
-							<span className="text-2xl md:text-3xl font-bold">{days}</span>
-							<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
-						</div>
-					)}
+			<div className="flex flex-row space-x-2 w-[300px]">
+				{days > 0 && (
 					<div className="flex items-center justify-around space-x-2">
-						<span className="text-2xl md:text-3xl font-bold">{hours}</span>
-						<span className="font-light">{hours === 1 ? 'hour' : 'hours'}</span>
+						<span className="text-2xl md:text-3xl font-bold">{days}</span>
+						<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
 					</div>
-					<div className="flex items-center justify-around space-x-2">
-						<span className="text-xl md:text-3xl font-bold">{minutes}</span>
-						<span className="font-light">{minutes === 1 ? 'min' : 'mins'}</span>
-					</div>
-					<div className="flex items-center justify-around space-x-2">
-						<span className="text-xl md:text-3xl font-bold">{seconds}</span>
-						<span className="font-light">{seconds === 1 ? 'sec' : 'secs'}</span>
-					</div>
+				)}
+				<div className="flex items-center justify-around space-x-2">
+					<span className="text-2xl md:text-3xl font-bold">{hours}</span>
+					<span className="font-light">{hours === 1 ? 'hour' : 'hours'}</span>
 				</div>
-				<div className="my-4">
+				<div className="flex items-center justify-around space-x-2">
+					<span className="text-xl md:text-3xl font-bold">{minutes}</span>
+					<span className="font-light">{minutes === 1 ? 'min' : 'mins'}</span>
+				</div>
+				<div className="flex items-center justify-around space-x-2">
+					<span className="text-xl md:text-3xl font-bold">{seconds}</span>
+					<span className="font-light">{seconds === 1 ? 'sec' : 'secs'}</span>
+				</div>
+			</div>
+			<div className="my-4 flex justify-center">
+				<div className="inline-block">
 					<CallToActionButton address={address} />
 				</div>
-			</>
-		);
-	};
+			</div>
+		</div>
+	);
 
 	return (
 		<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
@@ -245,29 +241,49 @@ const AirdropCountdown = ({ address, tokens }: { address: `0x${string}` | undefi
 };
 
 const AirdropPage = () => {
+	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
-	let volume: Airdrop = {
-		buy_volume: 0,
-		sell_volume: 0,
-		total: CLOSED_ROUNDS[ROUND].volume
-	};
-
-	if (address) {
-		const addressVolume = CLOSED_ROUNDS[ROUND].data[address] || {
-			buy_volume: '0',
-			sell_volume: '0'
-		};
-		volume = {
-			buy_volume: Number(addressVolume.buy_volume),
-			sell_volume: Number(addressVolume.sell_volume),
-			total: CLOSED_ROUNDS[ROUND].volume
-		};
-	}
 
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
 
 	const usdTotal = (Number(volume.total || 0) || 0) * 2; // times two because buyer and seller get the same amount
 	const tokens = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
+
+	let closedRoundVolume = {
+		buy_volume: 0,
+		sell_volume: 0,
+		total: CLOSED_ROUNDS[CLOSED_ROUND].volume
+	};
+
+	if (address) {
+		const addressVolume = CLOSED_ROUNDS[CLOSED_ROUND].data[address] || {
+			buy_volume: '0',
+			sell_volume: '0'
+		};
+		closedRoundVolume = {
+			buy_volume: Number(addressVolume.buy_volume),
+			sell_volume: Number(addressVolume.sell_volume),
+			total: CLOSED_ROUNDS[CLOSED_ROUND].volume
+		};
+	}
+
+	const { buy_volume: closedRoundBuyVolume = 0, sell_volume: closedRoundSellVolume = 0 } = volume;
+	const closedRoundUsdTotal = (Number(closedRoundVolume.total || 0) || 0) * 2;
+	const closedRoundTokens =
+		address && closedRoundUsdTotal
+			? ((Number(closedRoundBuyVolume) + Number(closedRoundSellVolume)) / closedRoundUsdTotal) * POOL
+			: 0;
+
+	useEffect(() => {
+		if (!address) return;
+		fetch(`/api/airdrop?address=${address}&round=${ROUND}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (!data.message) {
+					setVolume(data);
+				}
+			});
+	}, [address]);
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
@@ -275,7 +291,7 @@ const AirdropPage = () => {
 				<Image src={bgTopRight} alt="backgroud image" />
 			</div>
 			<div className="p-6 md:mt-8 md:px-16 flex flex-col md:flex-row md:space-x-16 text-zinc-800 relative text-center md:text-left">
-				<div className="w-full md:w-1/2 flex flex-col">
+				<div className="w-full md:w-2/3 m-auto text-center flex flex-col">
 					<span className="font-extrabold text-4xl md:text-5xl">Trade on OpenPeer</span>
 					<span className="font-extrabold text-transparent text-4xl md:text-5xl mb-4 bg-clip-text bg-gradient-to-r from-[#9B69F6] via-[#3CB5C9] to-[#3CB5C9]">
 						receive rewards
@@ -290,11 +306,8 @@ const AirdropPage = () => {
 						</Link>
 					</span>
 				</div>
-				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
-					<AirdropCountdown address={address} tokens={tokens} />
-				</div>
 			</div>
-			<div className="p-4 md:px-16 mt-4 flex flex-col text-[#25385A]">
+			<div className="p-4 md:px-16 flex flex-col text-[#25385A]">
 				<div className="w-full flex justify-between">
 					<div className="flex flex-row items-center space-x-2">
 						<span>
@@ -377,11 +390,25 @@ const AirdropPage = () => {
 						</div>
 					</div>
 				</div>
-				<div className="flex w-full md:w-1/4 m-auto py-8">
-					<CallToActionButton address={address} />
-				</div>
 				<div className="absolute bottom-40 left-0 -z-40">
 					<Image src={bgBottomLeft} alt="background image" />
+				</div>
+			</div>
+			<div className="p-6 md:px-16 flex flex-col md:flex-row md:space-x-10 text-zinc-800 relative text-center md:text-left">
+				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+					<AirdropCountdown address={address} />
+				</div>
+				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+					<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
+						<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Past rewards</div>
+						<div className="flex flex-row items-center space-x-2">
+							<span className="text-xl md:text-3xl font-bold">{closedRoundTokens}</span>
+							<span className="font-light">vP2P</span>
+						</div>
+						<div className="my-4">
+							<ClaimRewardsButton tokens={closedRoundTokens} />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
