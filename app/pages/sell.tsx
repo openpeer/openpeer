@@ -16,7 +16,7 @@ const DETAILS_STEP = 4;
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const DEFAULT_MARGIN_VALUE = 1;
 const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
-const DEFAULT_PAYMENT_TIME_LIMIT = 120;
+const DEFAULT_PAYMENT_TIME_LIMIT = 0;
 
 const defaultList = {
 	marginType: DEFAULT_MARGIN_TYPE,
