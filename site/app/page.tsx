@@ -61,8 +61,8 @@ export default function Home() {
 
 				{/* <div className="w-full lg:w-4/5 mb-40 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-r from-[#3C9AAA]/50 to-transparent transition-all duration-1000 hover:scale-105"> */}
 				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto border border-[#30353B] rounded-2xl transition-all duration-1000 hover:scale-105 backdrop-blur-lg">
-					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative space-x-4 items-center">
-						<div className="w-full md:w-1/2">
+					<div className="w-full flex flex-col-reverse lg:flex-row p-6 md:py-16 md:px-16 relative space-x-4 items-center">
+						<div className="w-full lg:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Decentralised</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Your Keys, Your Coins
@@ -72,20 +72,20 @@ export default function Home() {
 								self-custody wallet like Metamsk. No need to hold your funds on an exchange.
 							</p>
 						</div>
-						<div className="w-full md:w-1/2 md:self-end">
+						<div className="w-full lg:w-1/2 lg:self-end">
 							<Image className="md:ml-14" src={KeysImage} alt={''} />
 						</div>
 					</div>
 				</div>
 
 				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
-					<div className="w-full flex flex-col md:flex-row p-6 md:py-16 md:px-16 relative items-center">
-						<div className="w-full md:w-1/2">
-							<div className="relative md:absolute md:top-20 md:left-10">
+					<div className="w-full flex flex-col lg:flex-row p-6 md:py-16 md:px-16 relative items-center">
+						<div className="w-full lg:w-1/2">
+							<div className="relative flex justify-center lg:absolute lg:top-20 lg:left-10">
 								<Image src={GlobeImage} alt={''} />
 							</div>
 						</div>
-						<div className="w-full md:w-1/2">
+						<div className="w-full lg:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Any Place</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Global Availability
@@ -99,8 +99,8 @@ export default function Home() {
 				</div>
 
 				<div className="w-full lg:w-4/5 mb-16 md:mb-32 m-auto backdrop-blur-md border border-[#30353B] rounded-2xl transform bg-gradient-to-l from-transparent to-transparent transition-all duration-1000 hover:scale-105 hover:bg-gradient-to-l">
-					<div className="w-full flex flex-col-reverse md:flex-row p-6 md:py-16 md:px-16 relative">
-						<div className="w-full md:w-1/2">
+					<div className="w-full flex flex-col-reverse lg:flex-row p-6 md:py-16 md:px-16 relative">
+						<div className="w-full lg:w-1/2">
 							<div className="text-[#DBDBDB] text-xl mb-4">Any Chain</div>
 							<h3 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[#00D4E5] via-[#15B8DE]">
 								Multichain Settlement
@@ -111,8 +111,8 @@ export default function Home() {
 								choice.
 							</p>
 						</div>
-						<div className="w-full md:w-1/2">
-							<div className="relative md:absolute md:top-10 md:right-20">
+						<div className="w-full lg:w-1/2">
+							<div className="relative flex justify-center lg:absolute lg:top-10 lg:right-20">
 								<Image src={NoChainImage} alt={''} />
 							</div>
 						</div>
@@ -121,7 +121,7 @@ export default function Home() {
 
 				<Partners />
 
-				<div className="flex flex-col justify-around mx-2 md:mx-8 md:space-x-8 md:flex-row mb-24">
+				<div className="flex flex-col justify-around mx-2 lg:mx-8 lg:space-x-8 lg:flex-row mb-24">
 					{[
 						{
 							title: 'P2P Merchants',
@@ -149,7 +149,7 @@ export default function Home() {
 					))}
 				</div>
 
-				<div className="w-full md:w-2/3 m-auto flex flex-col md:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#020AD4]/50 to-transparent p-8 rounded-xl">
+				<div className="w-full lg:w-2/3 m-auto flex flex-col lg:flex-row items-center justify-center mb-24 md:space-x-10 bg-gradient-to-r from-[#020AD4]/50 to-transparent p-8 rounded-xl">
 					<div className="text-center space-x-4 text-2xl mb-10 pt-6">
 						Buy crypto directly to your wallet from your <br className="hidden md:block" /> bank account
 						with zero-fees.
