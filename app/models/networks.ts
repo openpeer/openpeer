@@ -25,6 +25,6 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 
 export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche];
 
-export const devChains = [...productionChains, polygonMumbai];
+const devChains = [polygonMumbai];
 
 export const allChains = [...productionChains, ...devChains];

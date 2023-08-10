@@ -5,7 +5,7 @@ import Head from 'app/head';
 import CustomAvatar from 'components/CustomAvatar';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
 import { TransactionFeedbackProvider } from 'contexts/TransactionFeedContext';
-import { devChains, productionChains } from 'models/networks';
+import { allChains, productionChains } from 'models/networks';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { siweClient } from 'utils/siweClient';
@@ -17,7 +17,7 @@ const Layout = dynamic(() => import('../components/layout'), { ssr: false });
 const NoAuthLayout = dynamic(() => import('../components/NoAuthLayout'), { ssr: false });
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!;
 
-const enabledChains = process.env.NODE_ENV === 'development' ? devChains : productionChains;
+const enabledChains = process.env.NODE_ENV === 'development' ? allChains : productionChains;
 
 const manrope = Manrope({
 	subsets: ['latin'],

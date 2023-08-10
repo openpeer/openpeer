@@ -1,5 +1,6 @@
+import { allChains } from 'models/networks';
 import React from 'react';
-import { Chain, useNetwork } from 'wagmi';
+import { Chain } from 'wagmi';
 
 import { arbitrum, optimism } from 'wagmi/chains';
 import Select from './Select';
@@ -16,12 +17,11 @@ const NetworkSelect = ({
 	error?: SelectProps['error'];
 	labelStyle?: SelectProps['labelStyle'];
 }) => {
-	const { chains } = useNetwork();
-
+	const chains = allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {
-			symbol: 'OPTMISM',
+			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
 		}
 	};

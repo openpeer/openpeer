@@ -1,6 +1,6 @@
 import { Avatar, Button, Flag } from 'components';
 import { countries } from 'models/countries';
-import { devChains } from 'models/networks';
+import { allChains } from 'models/networks';
 import { Order, Token as TokenModel } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
@@ -141,7 +141,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 							} = order;
 							const isSeller = address === seller.address;
 							const user = isSeller ? buyer : seller;
-							const network = devChains.find((chain) => chain.id === chainId);
+							const network = allChains.find((chain) => chain.id === chainId);
 
 							return (
 								<tr key={id} className="hover:bg-gray-50">
