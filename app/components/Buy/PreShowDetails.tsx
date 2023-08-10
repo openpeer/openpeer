@@ -8,7 +8,7 @@ const PreShowDetails = ({ timeLeft }: { timeLeft: number }) => (
 				<span className="text-neutral-500">The order will be cancelled in</span>
 				<span className="flex flex-row justify-between">
 					<Countdown
-						date={Date.now() + timeLeft * 60000}
+						date={Date.now() + timeLeft}
 						precision={2}
 						renderer={({ hours, minutes, seconds, completed }) => {
 							if (completed) {

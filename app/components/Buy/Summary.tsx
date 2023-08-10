@@ -27,8 +27,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		token,
 		total_available_amount: totalAvailableAmount,
 		terms,
-		type,
-		deposit_time_limit: depositTimeLimit
+		type
 	} = list!;
 
 	const { address } = useAccount();
@@ -37,6 +36,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
 	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
+	const depositTimeLimit = order.deposit_time_limit || list.deposit_time_limit;
+	const paymentTimeLimit = order.payment_time_limit || list.payment_time_limit;
 
 	return (
 		<div className="w-full lg:w-2/4 lg:inline-block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
@@ -87,7 +88,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							<div className="text-sm">Amount to pay</div>
 							<div className="font-bold text-sm">
 								{selling
-									? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
+									? `${tokenAmount} ${token.symbol}`
 									: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 							</div>
 						</div>
@@ -98,7 +99,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							<div className="font-bold text-sm">
 								{selling
 									? `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`
-									: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
+									: `${tokenAmount} ${token.symbol}`}
 							</div>
 						</div>
 					)}
@@ -142,6 +143,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						<div className="text-sm">Deposit Time Limit</div>
 						<div className="text-sm font-bold">
 							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}
+						</div>
+					</div>
+				)}
+				{!!paymentTimeLimit && (
+					<div className="w-full flex flex-row mb-4 space-x-2">
+						<div className="text-sm">Payment Time Limit</div>
+						<div className="text-sm font-bold">
+							{paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}
 						</div>
 					</div>
 				)}

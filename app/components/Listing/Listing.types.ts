@@ -25,6 +25,7 @@ export interface UIList {
 	quickSellSetupDone: boolean;
 	user?: User;
 	depositTimeLimit: number;
+	paymentTimeLimit: number;
 }
 
 export interface ListStepProps {

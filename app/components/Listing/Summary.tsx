@@ -23,6 +23,7 @@ const Summary = ({ list }: SummaryProps) => {
 		margin,
 		paymentMethod,
 		depositTimeLimit,
+		paymentTimeLimit,
 		terms,
 		type
 	} = list;
@@ -149,6 +150,14 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>Deposit Time Limit</div>
 						<div className="font-bold">
 							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+						</div>
+					</li>
+				)}
+				{!!paymentTimeLimit && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Payment Time Limit</div>
+						<div className="font-bold">
+							{paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
 						</div>
 					</li>
 				)}

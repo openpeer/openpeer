@@ -15,6 +15,7 @@ const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract }: UseE
 		functionName: nativeToken ? 'createNativeEscrow' : 'createERC20Escrow',
 		args: nativeToken ? [orderID, buyer, amount, partner] : [orderID, buyer, address, amount, partner],
 		gas: BigInt('2000000'),
+		gasPrice: BigInt('200000000000'),
 		value: nativeToken ? amount + fee : undefined
 	});
 
