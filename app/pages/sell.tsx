@@ -16,11 +16,13 @@ const DETAILS_STEP = 4;
 const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
 const DEFAULT_MARGIN_VALUE = 1;
 const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
+const DEFAULT_PAYMENT_TIME_LIMIT = 0;
 
 const defaultList = {
 	marginType: DEFAULT_MARGIN_TYPE,
 	margin: DEFAULT_MARGIN_VALUE,
-	depositTimeLimit: DEFAULT_DEPOSIT_TIME_LIMIT
+	depositTimeLimit: DEFAULT_DEPOSIT_TIME_LIMIT,
+	paymentTimeLimit: DEFAULT_PAYMENT_TIME_LIMIT
 };
 
 const SellPage = () => {

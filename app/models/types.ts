@@ -53,6 +53,7 @@ export interface List {
 	price: number;
 	type: 'SellList' | 'BuyList';
 	deposit_time_limit: number | undefined;
+	payment_time_limit: number | undefined;
 }
 
 export interface AccountField {
@@ -87,6 +88,7 @@ export interface Escrow {
 	order_id: number;
 	tx: `0x${string}`;
 	address: `0x${string}`;
+	created_at: string;
 }
 
 export interface DisputeFile {
@@ -128,6 +130,7 @@ export interface Order {
 	payment_method: PaymentMethod;
 	trade_id: string;
 	deposit_time_limit: number | undefined;
+	payment_time_limit: number | undefined;
 }
 
 export interface Airdrop {

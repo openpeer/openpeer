@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 
+import Countdown from 'react-countdown';
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
@@ -28,7 +29,8 @@ const Payment = ({ order }: BuyStepProps) => {
 		status,
 		seller,
 		payment_method: paymentMethod,
-		deposit_time_limit: depositTimeLimit
+		deposit_time_limit: depositTimeLimit,
+		payment_time_limit: paymentTimeLimit
 	} = order;
 	const { token, fiat_currency: currency } = list!;
 	const { bank, values = {} } = paymentMethod;
@@ -36,8 +38,19 @@ const Payment = ({ order }: BuyStepProps) => {
 	const selling = seller.address === address;
 
 	const timeLimit =
-		status === 'created' && depositTimeLimit && Number(depositTimeLimit) > 0 ? Number(depositTimeLimit) : 0;
-	const timeLeft = timeLimit - Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000);
+		status === 'created' && depositTimeLimit && Number(depositTimeLimit) > 0
+			? Number(depositTimeLimit) * 60 * 1000
+			: 0;
+
+	// time left will be the difference between now + the time limit and the order created_at
+	const timeLeft = timeLimit - (new Date().getTime() - new Date(order.created_at).getTime());
+
+	const timeLimitForPayment =
+		status === 'escrowed' && order.escrow && paymentTimeLimit && Number(paymentTimeLimit) > 0
+			? Number(paymentTimeLimit) * 60 * 1000
+			: 0;
+
+	const paymentTimeLeft = timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime());
 
 	return (
 		<StepLayout>
@@ -57,7 +70,7 @@ const Payment = ({ order }: BuyStepProps) => {
 				)}
 				{status === 'escrowed' && (
 					<div>
-						<span className={`flex flex-row mb-2 ${!!selling && 'text-yellow-600'}`}>
+						<span className="flex flex-row mb-2 text-yellow-600">
 							<HeaderH3 title={selling ? 'Awaiting Buyer Payment' : 'Pay Seller'} />
 						</span>
 						<p className="text-base">
@@ -72,7 +85,7 @@ const Payment = ({ order }: BuyStepProps) => {
 						<span className="text-sm mr-2">Amount to pay</span>
 						<span className="text-base font-medium">
 							{selling
-								? `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`
+								? `${tokenAmount} ${token.symbol}`
 								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
 						</span>
 					</div>
@@ -131,13 +144,31 @@ const Payment = ({ order }: BuyStepProps) => {
 								<ClipboardText itemValue={String(Number(id) * 10000)} />
 							</span>
 						</div>
-						<div className="border-b-2 border-dashed border-color-gray-400 mb-4 hidden" />
-						<div className="flex flex-row justify-between hidden">
-							<span className="text-neutral-500">Payment will expire in </span>
-							<span className="flex flex-row justify-between">
-								<span className="text-cyan-600">15m:20secs</span>
-							</span>
-						</div>
+						{paymentTimeLeft > 0 && (
+							<>
+								<div className="border-b-2 border-dashed border-color-gray-400 mt-4 mb-4" />
+								<div className="flex flex-row justify-between">
+									<span className="text-neutral-500">Payment will expire in </span>
+									<span className="flex flex-row justify-between">
+										<Countdown
+											date={Date.now() + paymentTimeLeft}
+											precision={2}
+											renderer={({ hours, minutes, seconds, completed }) => {
+												if (completed) {
+													return <span className="text-cyan-600">Time is up!</span>;
+												}
+												return (
+													<span className="text-cyan-600">
+														{hours > 0 ? `${hours}h:` : ''}
+														{minutes}m:{seconds}secs
+													</span>
+												);
+											}}
+										/>
+									</span>
+								</div>
+							</>
+						)}
 					</div>
 				)}
 

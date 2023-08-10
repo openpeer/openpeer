@@ -12,7 +12,7 @@ import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const { terms, depositTimeLimit, type } = list;
+	const { terms, depositTimeLimit, paymentTimeLimit, type } = list;
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
 	const router = useRouter();
@@ -83,6 +83,32 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					updateValue={(n) => updateList({ ...list, ...{ depositTimeLimit: n } })}
 					decimals={0}
 				/>
+				<div className="hidden">
+					<Label title="Payment Time Limit" />
+					<div className="mb-4">
+						<span className="text-sm text-gray-600">
+							{paymentTimeLimit > 0 ? (
+								<div>
+									Your order will be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} dont pay
+									after {paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
+									<strong>You can set this to 0 to disable this feature.</strong>
+								</div>
+							) : (
+								<div>
+									Your orders will not be cancelled automatically.{' '}
+									<strong>You can set this to 0 to disable this feature.</strong>
+								</div>
+							)}
+						</span>
+					</div>
+					<Selector
+						value={paymentTimeLimit}
+						suffix={paymentTimeLimit === 1 ? ' min' : ' mins'}
+						changeableAmount={1}
+						updateValue={(n) => updateList({ ...list, ...{ paymentTimeLimit: n } })}
+						decimals={0}
+					/>
+				</div>
 				<Textarea
 					label="Order Terms"
 					rows={4}
