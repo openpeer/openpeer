@@ -50,7 +50,10 @@ const Payment = ({ order }: BuyStepProps) => {
 			? Number(paymentTimeLimit) * 60 * 1000
 			: 0;
 
-	const paymentTimeLeft = timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime());
+	const paymentTimeLeft =
+		timeLimitForPayment > 0
+			? timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime())
+			: 0;
 
 	return (
 		<StepLayout>
