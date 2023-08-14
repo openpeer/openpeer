@@ -9,6 +9,7 @@ import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 import Chat from './Chat';
+import AvatarVerifiedBadge from 'components/AvatarVerifiedBadge';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const {
@@ -46,6 +47,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					<div className="flex flex-row items-center">
 						<Avatar user={user} className="w-10 aspect-square" />
 						<span className="ml-2 cursor-pointer">{user.name || smallWalletAddress(user.address)}</span>
+						{user.verified && <AvatarVerifiedBadge />}
 					</div>
 				</Link>
 				<div className="flex flex-row">

@@ -13,8 +13,9 @@ import {
 	CalendarIcon,
 	ChartBarIcon,
 	ChartBarSquareIcon,
+	CheckBadgeIcon,
 	StarIcon
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/solid';
 
 const Metric = ({
 	label,
@@ -147,7 +148,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 										>
 											{verified ? '' : 'Get'} Verified
 											<span className="ml-2">
-												<VerifiedIcon />
+												<CheckBadgeIcon width="18" height="18" className="text-blue-600" />
 											</span>
 										</button>
 									</>
