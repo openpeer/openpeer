@@ -342,7 +342,7 @@ const AirdropPage = () => {
 						)}
 					</span>
 				</div>
-				<div className="mt-4 w-full rounded-xl p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+				<div className="mt-4 w-full rounded-xl p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
 					<div className="flex flex-col p-8 justify-center items-center h-full bg-[#F4F6FB] text-white rounded-lg text-gray-800">
 						<div className="flex flex-col lg:flex-row lg:space-x-20 items-center">
 							<div>
@@ -396,10 +396,10 @@ const AirdropPage = () => {
 				</div>
 			</div>
 			<div className="p-6 md:px-16 flex flex-col md:flex-row md:space-x-10 text-zinc-800 relative text-center md:text-left">
-				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
 					<AirdropCountdown address={address} />
 				</div>
-				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-[#2A4BE3]">
+				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
 					<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
 						<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Past rewards</div>
 						<div className="flex flex-row items-center space-x-2">
