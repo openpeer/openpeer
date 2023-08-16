@@ -12,10 +12,10 @@ const ExplainerNotification = ({ title, content, info = false, disclamer = false
 	<div
 		className={
 			info
-				? 'bg-[#F7FBFC] text-[#3C9AAA] p-4 rounded'
+				? 'bg-[#F7FBFC] text-cyan-600 p-4 rounded'
 				: disclamer
 				? 'bg-[#FEFAF5] text-[#E37A00] p-4 rounded'
-				: 'bg-[#F7FBFC] text-[#3C9AAA] p-4 rounded'
+				: 'bg-[#F7FBFC] text-cyan-600 p-4 rounded'
 		}
 	>
 		<p className="text-sm font-bold mb-2">{title}</p>
