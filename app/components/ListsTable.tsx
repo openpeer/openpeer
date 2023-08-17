@@ -15,6 +15,7 @@ import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
 import Flag from './Flag/Flag';
 import Token from './Token/Token';
+import AvatarVerifiedBadge from './AvatarVerifiedBadge';
 
 interface ListsTableProps {
 	lists: List[];
@@ -121,13 +122,14 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						<tr key={id} className="hover:bg-gray-50">
 							<td className="pl-4 py-4">
 								<div className="w-full flex flex-row justify-around md:justify-start items-center">
-									<div className="w-3/5 mr-6">
+									<div className="w-full mr-6">
 										<Link href={`/${sellerAddress}`}>
 											<div className="flex flex-row items-center cursor-pointer">
 												<Avatar user={seller} className="w-5 md:w-10 aspect-square" />
 												<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 													{name || smallWalletAddress(sellerAddress)}
 												</div>
+												{seller.verified && <AvatarVerifiedBadge />}
 											</div>
 										</Link>
 										<div className="mt-1 flex flex-col text-gray-500 block lg:hidden">
