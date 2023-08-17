@@ -121,6 +121,7 @@ const Payment = ({ order }: BuyStepProps) => {
 									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
 									width={24}
 									height={24}
+									unoptimized
 								/>
 								<ClipboardText itemValue={bank.name} />
 							</span>

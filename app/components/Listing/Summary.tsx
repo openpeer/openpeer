@@ -120,6 +120,7 @@ const Summary = ({ list }: SummaryProps) => {
 											className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
 											width={24}
 											height={24}
+											unoptimized
 										/>
 										{paymentMethod.bank.name}
 									</div>
