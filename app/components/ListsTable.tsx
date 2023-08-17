@@ -9,6 +9,7 @@ import React from 'react';
 import { smallWalletAddress } from 'utils';
 import { useAccount } from 'wagmi';
 import { arbitrum, optimism } from 'wagmi/chains';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 import Avatar from './Avatar';
 import Button from './Button/Button';
@@ -53,12 +54,6 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Chain
-					</th>
-					<th
-						scope="col"
-						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-					>
 						Available
 					</th>
 					<th
@@ -72,6 +67,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
 						Min-Max Order
+					</th>
+					<th
+						scope="col"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+					>
+						Order time limit
 					</th>
 					<th
 						scope="col"
@@ -195,17 +196,17 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-1">
-									<Token token={chainToken! as TokenType} size={24} />
-									<span>{chain?.name}</span>
-								</div>
-							</td>
-							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-1">
-									<Token token={token} size={24} />
-									<span>
-										{amount} {symbol}
-									</span>
+								<div className="flex flex-col items-center">
+									<div className="flex flex-row mb-2 space-x-2 items-center">
+										<Token token={token} size={24} />
+										<span>
+											{amount} {symbol}
+										</span>
+									</div>
+									<div className="flex flex-row items-center space-x-1 bg-gray-100 px-2 rounded-full">
+										<Token token={chainToken! as TokenType} size={14} />
+										<span className="text-[10px]">{chain?.name}</span>
+									</div>
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
@@ -218,6 +219,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
+							</td>
+							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
+								<div className="flex flex-row items-center space-x-2">
+									<ClockIcon width={16} height={16} />
+									<span>6min</span>
+								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								<div className="flex flex-row items-center">
