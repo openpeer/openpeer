@@ -8,7 +8,7 @@ const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract }: UseE
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 	const partner = constants.AddressZero;
-	const sellerWaitingTime = 15 * 60;
+	const sellerWaitingTime = 24 * 60 * 60;
 
 	const { config } = usePrepareContractWrite({
 		address: contract,
