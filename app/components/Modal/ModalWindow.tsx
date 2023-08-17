@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { Manrope } from '@next/font/google';
 
 export interface ModalProps {
 	title: string | JSX.Element;
@@ -14,6 +15,11 @@ export interface ModalProps {
 	onAction: () => void;
 	actionDisabled?: boolean;
 }
+
+const manrope = Manrope({
+	subsets: ['latin'],
+	variable: '--font-manrope'
+});
 
 const ModalWindow = ({
 	title,
@@ -31,7 +37,7 @@ const ModalWindow = ({
 	};
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10" onClose={onClose}>
+			<Dialog as="div" className={`relative z-10 ${manrope.className}`} onClose={onClose}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -79,7 +85,10 @@ const ModalWindow = ({
 										)}
 									</div>
 									<div className="mt-3 text-center sm:mt-5">
-										<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+										<Dialog.Title
+											as="h3"
+											className={`text-lg font-medium leading-6 text-gray-900 ${manrope.variable}`}
+										>
 											{title}
 										</Dialog.Title>
 										<div className="mt-2 mb-4 md:mb-0">

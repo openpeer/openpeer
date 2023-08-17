@@ -11,6 +11,7 @@ interface Data {
 }
 
 const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
+	const sellerWaitingTime = 15 * 60;
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +38,8 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrow
 				buyer,
 				token.address,
 				amount,
-				partner
+				partner,
+				sellerWaitingTime
 			);
 			const txParams = {
 				data: transactionData,

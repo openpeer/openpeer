@@ -7,6 +7,12 @@ import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 import { Dialog, Transition } from '@headlessui/react';
 import { ArrowPathIcon, ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/24/solid';
+import { Manrope } from '@next/font/google';
+
+const manrope = Manrope({
+	subsets: ['latin'],
+	variable: '--font-manrope'
+});
 
 export interface TransactionFeedbackProps {
 	open: boolean;
@@ -34,7 +40,7 @@ const TransactionFeedback = ({ open, onClose, hash, description, onTransactionRe
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10" onClose={onClose}>
+			<Dialog as="div" className={`relative z-10 ${manrope.className}`} onClose={onClose}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"

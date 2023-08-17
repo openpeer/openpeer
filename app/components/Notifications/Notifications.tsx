@@ -50,7 +50,7 @@ const Notifications = () => {
 								{notifications.length === 0 ? (
 									<div className="p-4">
 										<div className="flex flex-row items-center">
-											<BellSnoozeIcon className="h-8 w-8 text-cyan-700" aria-hidden="true" />
+											<BellSnoozeIcon className="h-8 w-8 text-cyan-800" aria-hidden="true" />
 											<p className="pl-2">You have no notifications</p>
 										</div>
 									</div>

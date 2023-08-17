@@ -204,6 +204,11 @@
 				"internalType": "address payable",
 				"name": "_partner",
 				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "_sellerWaitingTime",
+				"type": "uint32"
 			}
 		],
 		"name": "createERC20Escrow",
@@ -232,6 +237,11 @@
 				"internalType": "address payable",
 				"name": "_partner",
 				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "_sellerWaitingTime",
+				"type": "uint32"
 			}
 		],
 		"name": "createNativeEscrow",
@@ -393,11 +403,6 @@
 				"internalType": "address payable",
 				"name": "_feeRecipient",
 				"type": "address"
-			},
-			{
-				"internalType": "uint32",
-				"name": "_sellerWaitingTime",
-				"type": "uint32"
 			},
 			{
 				"internalType": "address",
@@ -649,19 +654,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "sellerWaitingTime",
-		"outputs": [
-			{
-				"internalType": "uint32",
-				"name": "",
-				"type": "uint32"
 			}
 		],
 		"stateMutability": "view",
