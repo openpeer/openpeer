@@ -8,14 +8,16 @@ const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract }: UseE
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 	const partner = constants.AddressZero;
+	const sellerWaitingTime = 24 * 60 * 60;
 
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,
 		functionName: nativeToken ? 'createNativeEscrow' : 'createERC20Escrow',
-		args: nativeToken ? [orderID, buyer, amount, partner] : [orderID, buyer, address, amount, partner],
+		args: nativeToken
+			? [orderID, buyer, amount, partner, sellerWaitingTime]
+			: [orderID, buyer, address, amount, partner, sellerWaitingTime],
 		gas: BigInt('2000000'),
-		gasPrice: BigInt('200000000000'),
 		value: nativeToken ? amount + fee : undefined
 	});
 

@@ -33,7 +33,7 @@ const Steps = ({ currentStep, onStepClick, stepsCount }: StepsProps) => (
 							</div>
 							<button
 								type="button"
-								className={`${pastStep && 'group bg-cyan-600 hover:bg-cyan-900 text-white'} ${
+								className={`${pastStep && 'group bg-cyan-600 hover:bg-cyan-800 text-white'} ${
 									actualStep && 'border-2 border-cyan-600 bg-white text-cyan-600'
 								} ${
 									futureStep &&
