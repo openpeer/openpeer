@@ -1,4 +1,3 @@
-import { useSIWE } from 'connectkit';
 import { Notification } from 'models/notification';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -11,7 +10,7 @@ const useNotifications = () => {
 	const [token, setToken] = useState('');
 	const [client, setClient] = useState<Feed>();
 	const { address } = useAccount();
-	const { data: session } = useSIWE();
+	const { data: session } = { data: undefined }; // @TODO
 
 	const processPayload = ({ items }: FeedEventPayload) => {
 		// Concatenate the updated notifications with any existing notifications not in the payload

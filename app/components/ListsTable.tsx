@@ -1,6 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import { useChains } from 'connectkit';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Image from 'next/image';
@@ -40,7 +39,7 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) =>
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
-	const chains = useChains();
+	const chains = []; // @TODO
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">

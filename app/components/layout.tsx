@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { ConnectKitButton, useModal, useSIWE } from 'connectkit';
 import { User } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -70,7 +69,7 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 );
 
 const Unauthenticated = () => {
-	const { openSIWE } = useModal();
+	const { openSIWE } = { openSIWE: (a: boolean) => console.log(a) }; // @TODO: useModal();
 	return (
 		<div className="flex h-screen">
 			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
@@ -88,7 +87,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title, disableAuthentication } = pageProps;
 	const { address, isConnected } = useAccount();
-	const { data: session, isSignedIn } = useSIWE();
+	const { data: session, isSignedIn } = { data: { address: undefined }, isSignedIn: false }; // @TODO: useSIWE();
 	const authenticated = disableAuthentication || (isSignedIn && isConnected && session.address === address);
 
 	return (
@@ -194,7 +193,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												<Avatar user={{ address } as User} className="w-10 aspect-square" />
 											</Link>
 										)}
-										<ConnectKitButton />
+										{/* <ConnectKitButton /> */}
 									</div>
 								</Menu>
 							</div>

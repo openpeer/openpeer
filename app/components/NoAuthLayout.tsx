@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
@@ -163,9 +162,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 									Rewards
 								</span>
 							</Link>
-							<div className="relative ml-3">
-								<ConnectKitButton />
-							</div>
+							<div className="relative ml-3">{/* <ConnectKitButton /> */}</div>
 						</div>
 					</div>
 				</div>
