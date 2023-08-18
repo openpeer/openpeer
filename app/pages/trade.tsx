@@ -26,12 +26,12 @@ const HomePage = () => {
 	const [showFilters, setShowFilters] = useState(false);
 
 	const { address } = useAccount();
-	const { page, onNextPage, onPrevPage } = usePagination();
+	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
 
-	useEffect(() => {
+	const performSearch = async (selectedPage: number) => {
 		setLoading(true);
 		const params: { [key: string]: string | undefined } = {
-			page: page.toString(),
+			page: selectedPage.toString(),
 			type: type === 'Buy' ? 'SellList' : 'BuyList',
 			amount: filters.amount ? filters.amount.toString() : undefined,
 			currency: filters.currency ? filters.currency.id.toString() : undefined,
@@ -62,7 +62,16 @@ const HomePage = () => {
 				setLists(toBuyers);
 				setLoading(false);
 			});
-	}, [address, page, type, filters]);
+	};
+
+	useEffect(() => {
+		resetPage();
+		performSearch(1);
+	}, [address, type, filters]);
+
+	useEffect(() => {
+		performSearch(page);
+	}, [page]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
