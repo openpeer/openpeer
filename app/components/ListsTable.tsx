@@ -242,16 +242,13 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center">
-									<Image
-										src={bank.icon}
-										alt={bank.name}
-										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-										width={24}
-										height={24}
-										unoptimized
-									/>
-									<span>{bank.name}</span>
+								<div className="flex flex-row items-center mb-1">
+									<span className="bg-gray-500 w-1 h-3 rounded-full">&nbsp;</span>
+									<span className="pl-1">{bank.name}</span>
+								</div>
+								<div className="flex flex-row items-center mb-1">
+									<span className="bg-gray-500 w-1 h-3 rounded-full">&nbsp;</span>
+									<span className="pl-1">{bank.name}</span>
 								</div>
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
