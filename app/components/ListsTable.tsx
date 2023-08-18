@@ -16,6 +16,7 @@ import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
 import Flag from './Flag/Flag';
 import Token from './Token/Token';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 interface ListsTableProps {
 	lists: List[];
@@ -215,11 +216,17 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-1">
-									<Flag name={countries[countryCode!]} size={24} />
-									<span>
-										{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
-									</span>
+								<div className="flex flex-col">
+									<div className="flex flex-row space-x-2">
+										<Flag name={countries[countryCode!]} size={24} />
+										<span className="flex flex-col">
+											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
+											<div className="flex flex-row items-center justify-end space-x-1 text-green-500 text-xs">
+												<span>-2%</span>
+												<span>spot</span>
+											</div>
+										</span>
+									</div>
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
