@@ -16,7 +16,6 @@ import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
 import Flag from './Flag/Flag';
 import Token from './Token/Token';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 interface ListsTableProps {
 	lists: List[];
@@ -223,6 +222,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
 											<div className="flex flex-row items-center justify-end space-x-1 text-green-500 text-xs">
 												<span>-2%</span>
+												<span>spot</span>
+											</div>
+											<div className="flex flex-row items-center justify-end space-x-1 text-red-500 text-xs">
+												<span>+2%</span>
 												<span>spot</span>
 											</div>
 										</span>
