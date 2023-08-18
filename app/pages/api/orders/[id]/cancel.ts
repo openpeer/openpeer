@@ -2,6 +2,7 @@
 import { Order } from 'models/types';
 import { siweServer } from 'utils/siweServer';
 
+import jwt from 'jsonwebtoken';
 import { minkeApi } from '../../utils/utils';
 
 // eslint-disable-next-line import/order
@@ -21,11 +22,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		body,
 		query: { id }
 	} = req;
-	// @ts-expect-error
-	const { jwt } = await siweServer.getSession(req, res);
+	const { address } = await siweServer.getSession(req, res);
+
+	const encodedToken = jwt.sign(
+		{ sub: address, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+		process.env.NEXTAUTH_SECRET!,
+		{
+			algorithm: 'HS256'
+		}
+	);
 
 	try {
-		const result = await cancelOrder(id as string, body, jwt);
+		const result = await cancelOrder(id as string, body, encodedToken);
 		res.status(200).json(result);
 	} catch (err) {
 		res.status(500).json({} as Order);
