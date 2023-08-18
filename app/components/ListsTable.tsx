@@ -71,7 +71,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Order time limit
+						Deposit time limit
 					</th>
 					<th
 						scope="col"
@@ -99,7 +99,9 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_max: max,
 						price,
 						payment_method: paymentMethod,
-						chain_id: chainId
+						chain_id: chainId,
+						token_spot_price: tokenSpotPrice,
+						deposit_time_limit: depositTimeLimit
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const isSeller = sellerAddress === address;
@@ -116,6 +118,9 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							  }
 							: chain.nativeCurrency
 						: undefined;
+
+					const priceDifferencePercentage =
+						tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -175,12 +180,23 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<span className="pr-2 text-[11px]">{chain?.name}</span>
 												<Token token={chainToken! as TokenType} size={16} />
 											</div>
+											{depositTimeLimit && Number(depositTimeLimit) > 0 && (
+												<div className="flex flex-row items-center mb-2">
+													<span className="pr-2 text-[11px] text-gray-700">
+														Deposit time limit
+													</span>
+													<span className="pr-2 text-[11px] text-black">
+														{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+													</span>
+												</div>
+											)}
 											<div className="flex flex-row items-center mb-2">
-												<span className="pr-2 text-[11px] text-gray-700">Order time limit</span>
-												<span className="pr-2 text-[11px] text-black">10min</span>
-											</div>
-											<div className="flex flex-row items-center mb-2">
-												<span className="bg-gray-500 w-1 h-3 rounded-full">&nbsp;</span>
+												<span
+													className="bg-gray-500 w-1 h-3 rounded-full"
+													style={{ backgroundColor: bank.color || 'gray' }}
+												>
+													&nbsp;
+												</span>
 												<span className="pl-1 text-gray-700 text-[11px]">{bank.name}</span>
 											</div>
 										</div>
@@ -200,16 +216,18 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-col items-center">
+								<div className="flex flex-col">
 									<div className="flex flex-row mb-2 space-x-2 items-center">
 										<Token token={token} size={24} />
 										<span>
 											{amount} {symbol}
 										</span>
 									</div>
-									<div className="flex flex-row items-center space-x-1 bg-gray-100 px-2 rounded-full">
-										<Token token={chainToken! as TokenType} size={14} />
-										<span className="text-[10px]">{chain?.name}</span>
+									<div className="flex flex-row items-center">
+										<div className=" flex flex-row items-center space-x-1 bg-gray-100 px-2 rounded-full">
+											<Token token={chainToken! as TokenType} size={14} />
+											<span className="text-[10px]">{chain?.name}</span>
+										</div>
 									</div>
 								</div>
 							</td>
@@ -219,12 +237,15 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										<Flag name={countries[countryCode!]} size={24} />
 										<span className="flex flex-col">
 											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
-											<div className="flex flex-row items-center justify-end space-x-1 text-green-500 text-xs">
-												<span>-2%</span>
-												<span>spot</span>
-											</div>
-											<div className="flex flex-row items-center justify-end space-x-1 text-red-500 text-xs">
-												<span>+2%</span>
+											<div
+												className={`flex flex-row items-center justify-start space-x-1 text-${
+													priceDifferencePercentage < 0 ? 'green' : 'red'
+												}-500 text-xs`}
+											>
+												<span>
+													{priceDifferencePercentage > 0 ? '+' : ''}
+													{priceDifferencePercentage.toFixed(2)}%
+												</span>
 												<span>spot</span>
 											</div>
 										</span>
@@ -235,18 +256,23 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center space-x-2">
-									<ClockIcon width={16} height={16} />
-									<span>6min</span>
-								</div>
+								{depositTimeLimit && Number(depositTimeLimit) > 0 && (
+									<div className="flex flex-row items-center space-x-2">
+										<ClockIcon width={16} height={16} />
+										<span>
+											{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+										</span>
+									</div>
+								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								<div className="flex flex-row items-center mb-1">
-									<span className="bg-gray-500 w-1 h-3 rounded-full">&nbsp;</span>
-									<span className="pl-1">{bank.name}</span>
-								</div>
-								<div className="flex flex-row items-center mb-1">
-									<span className="bg-gray-500 w-1 h-3 rounded-full">&nbsp;</span>
+									<span
+										className="w-1 h-3 rounded-full"
+										style={{ backgroundColor: bank.color || 'gray' }}
+									>
+										&nbsp;
+									</span>
 									<span className="pl-1">{bank.name}</span>
 								</div>
 							</td>
