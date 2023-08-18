@@ -64,7 +64,7 @@ const BuyPage = ({ id }: { id: number }) => {
 					{step === AMOUNT_STEP && <Amount order={order} updateOrder={setOrder} price={price} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod order={order} updateOrder={setOrder} />}
 				</div>
-				<div className="hidden lg:contents">{!!order.list && <Summary order={order} />}</div>
+				{!!order.list && <Summary order={order} />}
 			</div>
 		</div>
 	);
