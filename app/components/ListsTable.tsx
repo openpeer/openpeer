@@ -3,7 +3,6 @@
 import { useChains } from 'connectkit';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
