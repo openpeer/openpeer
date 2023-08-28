@@ -15,6 +15,7 @@ import { useAccount } from 'wagmi';
 
 import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import FilesUploader from './FilesUploader';
 
 interface Upload {
@@ -74,7 +75,8 @@ const DisputeForm = ({ order, address, paidForDispute, fee }: DisputeFormParams)
 			const result = await fetch(`/api/orders/${uuid}/disputes`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${getAuthToken()}`
 				},
 				body: JSON.stringify(
 					snakecaseKeys(

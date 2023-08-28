@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import Loading from 'components/Loading/Loading';
 import { Bank } from 'models/types';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +24,11 @@ const BankSelect = ({
 
 	useEffect(() => {
 		setLoading(true);
-		fetch(`/api/banks?currency_id=${currencyId}`)
+		fetch(`/api/banks?currency_id=${currencyId}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setBanks(data);

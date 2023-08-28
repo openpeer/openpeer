@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import Loading from 'components/Loading/Loading';
 import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
@@ -26,7 +27,11 @@ const TokenSelect = ({
 		if (!chainId) return;
 
 		setLoading(true);
-		fetch(`/api/tokens?chain_id=${chainId}`)
+		fetch(`/api/tokens?chain_id=${chainId}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				const source: Token[] = minimal ? data.map((t: Token) => ({ ...t, ...{ name: t.symbol } })) : data;

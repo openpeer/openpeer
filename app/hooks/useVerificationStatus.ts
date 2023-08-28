@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { Verification } from 'models/verification';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
@@ -12,7 +13,11 @@ const useVerificationStatus = (address: `0x${string}` | undefined) => {
 		setVerification(result);
 
 		if (result.status !== 'VERIFIED') {
-			const userRequest = await fetch(`/api/users/${address}`);
+			const userRequest = await fetch(`/api/users/${address}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			});
 			const { verified } = await userRequest.json();
 			setVerification({
 				session_id: address as string,

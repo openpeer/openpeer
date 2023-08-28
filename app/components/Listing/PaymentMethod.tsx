@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
 
@@ -75,7 +76,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			return;
 		}
 
-		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`)
+		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setPaymentMethods(data);

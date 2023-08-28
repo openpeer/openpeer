@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
+import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
 
 import discord from '../public/discord.svg';
 import twitterLogo from '../public/twitter.svg';
@@ -162,7 +163,9 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 									Rewards
 								</span>
 							</Link>
-							<div className="relative ml-3">{/* <ConnectKitButton /> */}</div>
+							<div className="relative ml-3">
+								<DynamicWidget />
+							</div>
 						</div>
 					</div>
 				</div>

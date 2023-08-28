@@ -1,11 +1,10 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { Loading, Steps, WrongNetwork } from 'components';
 import { Cancelled, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
-import jwt from 'jsonwebtoken';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { siweServer } from 'utils/siweServer';
 import { useNetwork } from 'wagmi';
 
 const ERROR_STEP = 0;
@@ -24,12 +23,17 @@ const steps: { [key: string]: number } = {
 	error: ERROR_STEP
 };
 
-const OrderPage = ({ id, token }: { id: `0x${string}`; token: string }) => {
+const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const [order, setOrder] = useState<UIOrder>();
 	const { chain } = useNetwork();
+	const token = getAuthToken();
 
 	useEffect(() => {
-		fetch(`/api/orders/${id}`)
+		fetch(`/api/orders/${id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setOrder({ ...data, ...{ step: steps[data.status || 'error'] } });
@@ -89,15 +93,7 @@ const OrderPage = ({ id, token }: { id: `0x${string}`; token: string }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async ({ req, res, params }) => {
-	const { address } = await siweServer.getSession(req, res);
-	const encodedToken = jwt.sign(
-		{ sub: address, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
-		process.env.NEXTAUTH_SECRET!,
-		{
-			algorithm: 'HS256'
-		}
-	);
-	return { props: { title: 'Buy', id: String(params?.id), token: encodedToken } };
-};
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async ({ params }) => ({
+	props: { title: 'Buy', id: String(params?.id) }
+});
 export default OrderPage;

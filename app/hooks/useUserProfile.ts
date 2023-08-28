@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors } from 'models/errors';
 import { User } from 'models/types';
@@ -20,7 +21,11 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	useEffect(() => {
 		if (!address) return;
 
-		fetch(`/api/user_profiles/${address}`)
+		fetch(`/api/user_profiles/${address}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.errors) {
@@ -42,7 +47,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const updateUserProfile = async (profile: User, showNotification = true) => {
 		const result = await fetch(`/api/user_profiles/${address}`, {
 			method: 'PUT',
-			body: JSON.stringify({ user_profile: profile })
+			body: JSON.stringify({ user_profile: profile }),
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
 		});
 
 		const newUser = await result.json();

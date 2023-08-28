@@ -1,9 +1,9 @@
 import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
-import { useEthersSigner } from 'utils/ethers';
 import { useAccount, useNetwork } from 'wagmi';
 
 import { Biconomy } from '@biconomy/mexa';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 interface UseBiconomyProps {
 	contract: `0x${string}`;
@@ -16,7 +16,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const chainId = (chain || chains[0]).id;
 	const apiKey = networkApiKeys[chainId];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
-	const signer = useEthersSigner();
+	const { primaryWallet } = useDynamicContext();
 
 	const canSubmitGaslessTransaction = async () => {
 		if (apiKey && address) {
@@ -39,11 +39,15 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 
 	useEffect(() => {
 		const initBiconomy = async () => {
-			if (address && chain && signer?.provider && contract) {
+			if (address && chain && primaryWallet && contract) {
+				const signer = await primaryWallet.connector.getSigner();
+				if (!signer) return;
+
 				if (!apiKey) {
 					setBiconomy(null);
 					return;
 				}
+				// @ts-expect-error
 				const client = new Biconomy((signer.provider as any).provider, {
 					apiKey,
 					debug: true,
@@ -54,7 +58,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 			}
 		};
 		initBiconomy();
-	}, [address, chain, signer, contract, apiKey]);
+	}, [address, chain, contract, apiKey]);
 
 	useEffect(() => {
 		canSubmitGaslessTransaction();

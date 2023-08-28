@@ -21,6 +21,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
+import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import { CollapseButton } from './Navigation';
@@ -69,14 +70,14 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 );
 
 const Unauthenticated = () => {
-	const { openSIWE } = { openSIWE: (a: boolean) => console.log(a) }; // @TODO: useModal();
+	const { authenticateUser, isAuthenticating } = useAuthenticateConnectedUser();
 	return (
 		<div className="flex h-screen">
 			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
 				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
 				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
 				<span className="mb-4 m-auto">
-					<Button title="Sign in" onClick={() => openSIWE(false)} />
+					<Button title="Sign in" onClick={authenticateUser} disabled={isAuthenticating} />
 				</span>
 			</div>
 		</div>
@@ -87,8 +88,8 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title, disableAuthentication } = pageProps;
 	const { address, isConnected } = useAccount();
-	const { data: session, isSignedIn } = { data: { address: undefined }, isSignedIn: false }; // @TODO: useSIWE();
-	const authenticated = disableAuthentication || (isSignedIn && isConnected && session.address === address);
+	const { isAuthenticated } = useDynamicContext();
+	const authenticated = disableAuthentication || (isAuthenticated && isConnected);
 
 	return (
 		<div className={`${manrope.variable} font-sans`}>
@@ -193,7 +194,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												<Avatar user={{ address } as User} className="w-10 aspect-square" />
 											</Link>
 										)}
-										{/* <ConnectKitButton /> */}
+										<DynamicWidget />
 									</div>
 								</Menu>
 							</div>

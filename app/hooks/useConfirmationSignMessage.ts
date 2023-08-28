@@ -1,23 +1,31 @@
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { SignMessageArgs } from '@wagmi/core';
-import { verifyMessage } from 'ethers/lib/utils';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useSignMessage } from 'wagmi';
 
 interface UseConfirmationSignMessageProps {
 	onSuccess?: (data: `0x${string}`, variables: SignMessageArgs) => void;
 }
 
 const useConfirmationSignMessage = ({ onSuccess }: UseConfirmationSignMessageProps) => {
-	const { address } = useAccount();
+	const { primaryWallet } = useDynamicContext();
+	const [data, setData] = useState<`0x${string}`>();
+	const [variables, setVariables] = useState<SignMessageArgs>();
 
-	const { signMessage, data, variables } = useSignMessage({
-		onSuccess: async (d, v) => {
-			const signingAddress = verifyMessage(v.message, d);
-			if (signingAddress === address) {
-				onSuccess?.(d, v);
-			}
-		}
-	});
+	const signMessage = async (message: string) => {
+		if (!primaryWallet) return;
+
+		const signer = await primaryWallet.connector.getSigner();
+
+		if (!signer) return;
+
+		// @ts-expect-error
+		const signature = await signer.signMessage(message);
+		setData(signature);
+		setVariables({ message });
+
+		onSuccess?.(signature, { message });
+	};
 
 	const notifyAndSignMessage = async (args?: { message: string } | undefined) => {
 		toast.info('Sign the transaction in your wallet', {
@@ -30,7 +38,7 @@ const useConfirmationSignMessage = ({ onSuccess }: UseConfirmationSignMessagePro
 			draggable: false,
 			progress: undefined
 		});
-		signMessage(args);
+		signMessage((args || {}).message || '');
 	};
 
 	return { signMessage: notifyAndSignMessage, data, variables };

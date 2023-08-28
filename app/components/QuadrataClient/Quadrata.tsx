@@ -3,7 +3,6 @@ import '@quadrata/core-react/lib/cjs/quadrata-ui.min.css';
 import Loading from 'components/Loading/Loading';
 import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
-import { recoverMessageAddress } from 'viem';
 import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 import {
@@ -17,6 +16,7 @@ import {
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
 import { useConfirmationSignMessage } from 'hooks';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const quadConfig: QuadClientConfig = {
 	environment:
@@ -54,13 +54,7 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 	useEffect(() => {
 		(async () => {
 			if (variables?.message && signMessageData) {
-				const recoveredAddress = await recoverMessageAddress({
-					message: variables?.message,
-					signature: signMessageData
-				});
-				if (recoveredAddress === account) {
-					setSignature(signMessageData);
-				}
+				setSignature(signMessageData);
 			}
 		})();
 	}, [signMessageData, variables?.message]);
@@ -82,7 +76,10 @@ const Quadrata = ({ onFinish, open, onHide }: { onFinish: () => void; open: bool
 		hash: data?.hash,
 		onSuccess: async () => {
 			await fetch(`/api/user_profiles/${chainId}`, {
-				method: 'POST'
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
 			});
 			setMintComplete(true);
 			setMintParams(undefined);

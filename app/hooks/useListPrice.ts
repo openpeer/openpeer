@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { FiatCurrency, List, Token } from 'models/types';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -17,7 +18,11 @@ const useListPrice = (list: List | undefined) => {
 		if (!list) return;
 
 		if (marginType === 'percentage') {
-			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}`)
+			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			})
 				.then((res) => res.json())
 				.then((data) => {
 					const apiPrice: number = data[uuid!][code.toLowerCase()];

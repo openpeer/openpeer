@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -19,7 +20,11 @@ const BuyPage = ({ id }: { id: number }) => {
 	const { address } = useAccount();
 
 	useEffect(() => {
-		fetch(`/api/lists/${id}`)
+		fetch(`/api/lists/${id}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setOrder({

@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
@@ -64,7 +65,10 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 						},
 						{ deep: true }
 					)
-				)
+				),
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
 			});
 			const { uuid } = await result.json();
 			if (uuid) {
@@ -146,7 +150,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	useEffect(() => {
 		if (!address) return;
 
-		fetch(`/api/users/${address}`)
+		fetch(`/api/users/${address}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.errors) {
