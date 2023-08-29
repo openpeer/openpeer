@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
 

@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 interface PaginationMeta {
 	current_page: number;

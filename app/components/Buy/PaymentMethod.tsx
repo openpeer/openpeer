@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { BuyStepProps } from './Buy.types';
 
 const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {

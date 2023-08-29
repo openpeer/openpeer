@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps, WrongNetwork } from 'components';
 import { Amount, Details, PaymentMethod, Summary } from 'components/Listing';

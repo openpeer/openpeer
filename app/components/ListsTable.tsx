@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Image from 'next/image';

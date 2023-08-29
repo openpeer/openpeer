@@ -1,9 +1,6 @@
-import type { AppProps } from 'next/app';
 import 'tailwindcss/tailwind.css';
-import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
-import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
-import { MagicWalletConnectors } from '@dynamic-labs/magic';
-import { CoinbaseWalletConnectors } from '@dynamic-labs/coinbase';
+import type { AppProps } from 'next/app';
+import { DynamicContextProvider } from '@dynamic-labs/sdk-react';
 
 import Head from 'app/head';
 import { TransactionFeedbackProvider } from 'contexts/TransactionFeedContext';
@@ -19,8 +16,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 	return (
 		<DynamicContextProvider
 			settings={{
-				environmentId: 'b7101023-4109-4abd-9eb9-777ce3d77033',
-				walletConnectors: [EthereumWalletConnectors, MagicWalletConnectors, CoinbaseWalletConnectors],
+				environmentId: process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID!,
 				initialAuthenticationMode: simpleLayout ? 'connect-only' : 'connect-and-sign'
 			}}
 		>

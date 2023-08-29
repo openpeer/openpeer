@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
 import { useFormErrors } from 'hooks';

@@ -157,7 +157,8 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 										className="flex items-center py-2 px-6 border rounded"
 										target="_blank"
 									>
-										View on {chain.blockExplorers!.default.name}
+										View on{' '}
+										{chain.blockExplorers!.etherscan.name || chain.blockExplorers!.default.name}
 									</Link>
 								)}
 							</div>

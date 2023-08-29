@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { useConfirmationSignMessage } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';

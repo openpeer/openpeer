@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { HeaderMetrics, ListsTable, Loading } from 'components';
 import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';

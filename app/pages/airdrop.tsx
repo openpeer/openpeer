@@ -25,7 +25,7 @@ import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { parseUnits } from 'viem';
-import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import roundTwoTree from '../airdrop/roundTwoTree.json';
 
 interface RoundData {

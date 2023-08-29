@@ -21,7 +21,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
-import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import { CollapseButton } from './Navigation';
@@ -70,6 +70,7 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 );
 
 const Unauthenticated = () => {
+	const { address } = useAccount();
 	const { authenticateUser, isAuthenticating } = useAuthenticateConnectedUser();
 	return (
 		<div className="flex h-screen">
@@ -77,7 +78,11 @@ const Unauthenticated = () => {
 				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
 				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
 				<span className="mb-4 m-auto">
-					<Button title="Sign in" onClick={authenticateUser} disabled={isAuthenticating} />
+					{address ? (
+						<Button title="Sign in" onClick={authenticateUser} disabled={isAuthenticating} />
+					) : (
+						<DynamicWidget />
+					)}
 				</span>
 			</div>
 		</div>
@@ -87,9 +92,9 @@ const Unauthenticated = () => {
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title, disableAuthentication } = pageProps;
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
-	const authenticated = disableAuthentication || (isAuthenticated && isConnected);
+	const authenticated = disableAuthentication || isAuthenticated;
 
 	return (
 		<div className={`${manrope.variable} font-sans`}>

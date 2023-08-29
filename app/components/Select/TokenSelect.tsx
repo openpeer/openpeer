@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import Loading from 'components/Loading/Loading';
 import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';

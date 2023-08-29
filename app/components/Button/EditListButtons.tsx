@@ -4,7 +4,7 @@ import React from 'react';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useConfirmationSignMessage } from 'hooks';
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 const EditListButtons = ({ id }: { id: number }) => {
 	const router = useRouter();

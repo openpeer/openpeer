@@ -15,7 +15,7 @@ import { useAccount } from 'wagmi';
 
 import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import FilesUploader from './FilesUploader';
 
 interface Upload {

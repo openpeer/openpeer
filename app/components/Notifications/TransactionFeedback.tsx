@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import Avatar from 'components/Avatar';
 import { User } from 'models/types';
 import React, { Fragment, useEffect } from 'react';
@@ -118,22 +119,26 @@ const TransactionFeedback = ({ open, onClose, hash, description, onTransactionRe
 												{isSuccess && <span className="text-xs text-blue-600">Confirmed</span>}
 											</div>
 										</div>
-										{hash && chain && chain.blockExplorers?.default && (
-											<a
-												target="_blank"
-												href={`${chain.blockExplorers.default.url}/tx/${hash}`}
-												rel="noopener noreferrer"
-											>
-												<div className="mt-6 mb-2 flex flex-row justify-between">
-													<span className="text-xs">
-														View more on {chain.blockExplorers.default.name}
-													</span>
-													<span className="text-xs">
-														<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
-													</span>
-												</div>
-											</a>
-										)}
+										{hash &&
+											chain &&
+											(chain.blockExplorers?.etherscan || chain.blockExplorers?.default) && (
+												<a
+													target="_blank"
+													href={`${chain.blockExplorers.default.url}/tx/${hash}`}
+													rel="noopener noreferrer"
+												>
+													<div className="mt-6 mb-2 flex flex-row justify-between">
+														<span className="text-xs">
+															View more on{' '}
+															{chain.blockExplorers?.etherscan.name ||
+																chain.blockExplorers.default.name}
+														</span>
+														<span className="text-xs">
+															<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
+														</span>
+													</div>
+												</a>
+											)}
 									</div>
 								</div>
 							</Dialog.Panel>

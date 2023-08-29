@@ -14,7 +14,7 @@ import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 interface SellProps {
 	lists: List[];

@@ -1,4 +1,4 @@
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { SignMessageArgs } from '@wagmi/core';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -15,16 +15,13 @@ const useConfirmationSignMessage = ({ onSuccess }: UseConfirmationSignMessagePro
 	const signMessage = async (message: string) => {
 		if (!primaryWallet) return;
 
-		const signer = await primaryWallet.connector.getSigner();
+		const signature = (await primaryWallet.connector.signMessage(message)) as `0x${string}`;
+		if (signature) {
+			setData(signature);
+			setVariables({ message });
 
-		if (!signer) return;
-
-		// @ts-expect-error
-		const signature = await signer.signMessage(message);
-		setData(signature);
-		setVariables({ message });
-
-		onSuccess?.(signature, { message });
+			onSuccess?.(signature, { message });
+		}
 	};
 
 	const notifyAndSignMessage = async (args?: { message: string } | undefined) => {

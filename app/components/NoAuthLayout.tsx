@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
-import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
+import { DynamicWidget } from '@dynamic-labs/sdk-react';
 
 import discord from '../public/discord.svg';
 import twitterLogo from '../public/twitter.svg';

@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
