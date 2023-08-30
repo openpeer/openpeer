@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { ConnectKitButton, useModal, useSIWE } from 'connectkit';
 import { User } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +21,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
+import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import { CollapseButton } from './Navigation';
@@ -70,14 +70,19 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 );
 
 const Unauthenticated = () => {
-	const { openSIWE } = useModal();
+	const { address } = useAccount();
+	const { authenticateUser, isAuthenticating } = useAuthenticateConnectedUser();
 	return (
 		<div className="flex h-screen">
 			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
 				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
 				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
 				<span className="mb-4 m-auto">
-					<Button title="Sign in" onClick={() => openSIWE(false)} />
+					{address ? (
+						<Button title="Sign in" onClick={authenticateUser} disabled={isAuthenticating} />
+					) : (
+						<DynamicWidget />
+					)}
 				</span>
 			</div>
 		</div>
@@ -87,9 +92,9 @@ const Unauthenticated = () => {
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { title, disableAuthentication } = pageProps;
-	const { address, isConnected } = useAccount();
-	const { data: session, isSignedIn } = useSIWE();
-	const authenticated = disableAuthentication || (isSignedIn && isConnected && session.address === address);
+	const { address } = useAccount();
+	const { isAuthenticated } = useDynamicContext();
+	const authenticated = disableAuthentication || isAuthenticated;
 
 	return (
 		<div className={`${manrope.className} font-sans`}>
@@ -196,7 +201,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												<Avatar user={{ address } as User} className="w-10 aspect-square" />
 											</Link>
 										)}
-										<ConnectKitButton />
+										<DynamicWidget />
 									</div>
 								</Menu>
 							</div>

@@ -3,7 +3,6 @@
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { ConnectKitButton } from 'connectkit';
 import { useTransactionFeedback } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
@@ -26,6 +25,7 @@ import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { parseUnits } from 'viem';
+import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import roundTwoTree from '../airdrop/roundTwoTree.json';
 
 interface RoundData {
@@ -129,7 +129,7 @@ const CallToActionButton = ({ address }: { address: `0x${string}` | undefined })
 	const router = useRouter();
 
 	if (!address) {
-		return <ConnectKitButton />;
+		return <DynamicWidget />;
 	}
 
 	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
@@ -177,7 +177,7 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 	});
 
 	if (!isConnected) {
-		return <ConnectKitButton />;
+		return <DynamicWidget />;
 	}
 
 	return (
@@ -277,7 +277,11 @@ const AirdropPage = () => {
 
 	useEffect(() => {
 		if (!address) return;
-		fetch(`/api/airdrop?address=${address}&round=${ROUND}`)
+		fetch(`/api/airdrop?address=${address}&round=${ROUND}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (!data.message) {
@@ -338,7 +342,7 @@ const AirdropPage = () => {
 								</div>
 							</Link>
 						) : (
-							<ConnectKitButton />
+							<DynamicWidget />
 						)}
 					</span>
 				</div>

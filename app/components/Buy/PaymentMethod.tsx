@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { BuyStepProps } from './Buy.types';
 
 const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
@@ -60,7 +61,10 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 						},
 						{ deep: true }
 					)
-				)
+				),
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
 			});
 			const { uuid } = await result.json();
 			if (uuid) {
@@ -112,7 +116,11 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	useEffect(() => {
 		setLoading(true);
 
-		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`)
+		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data: PaymentMethodType[]) => {
 				const filtered = data.filter((pm) => pm.bank.id === list.bank.id);

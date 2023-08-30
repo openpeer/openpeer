@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
@@ -59,7 +60,8 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 			await fetch(`/api/orders/${uuid}/cancel`, {
 				method: 'PUT',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${getAuthToken()}`
 				},
 				body: JSON.stringify({
 					cancellation,

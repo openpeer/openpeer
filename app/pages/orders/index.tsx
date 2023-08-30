@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
@@ -11,7 +12,11 @@ const OrdersPage = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		fetch('/api/orders')
+		fetch('/api/orders', {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setOrders(data);

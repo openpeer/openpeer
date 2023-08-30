@@ -4,6 +4,7 @@ import React from 'react';
 
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useConfirmationSignMessage } from 'hooks';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 const EditListButtons = ({ id }: { id: number }) => {
 	const router = useRouter();
@@ -14,7 +15,10 @@ const EditListButtons = ({ id }: { id: number }) => {
 				`/api/lists/${id}`,
 
 				{
-					method: 'DELETE'
+					method: 'DELETE',
+					headers: {
+						Authorization: `Bearer ${getAuthToken()}`
+					}
 				}
 			);
 			router.reload();

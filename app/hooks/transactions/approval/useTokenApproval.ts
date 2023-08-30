@@ -11,6 +11,8 @@ const useTokenApproval = ({ address, spender, amount }: UseTokenApprovalParams) 
 		address,
 		abi: erc20ABI,
 		functionName: 'approve',
+		// gasPrice: BigInt(30000000000),
+		// gas: BigInt(50000),
 		args: [spender, amount]
 	});
 

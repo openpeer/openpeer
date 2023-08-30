@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { ListsTable, Loading } from 'components';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
@@ -11,7 +12,11 @@ const Ads = () => {
 	useEffect(() => {
 		if (!address) return;
 
-		fetch(`/api/lists?seller=${address}`)
+		fetch(`/api/lists?seller=${address}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setLists(data.data);

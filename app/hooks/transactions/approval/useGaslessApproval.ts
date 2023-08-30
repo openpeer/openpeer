@@ -14,7 +14,6 @@ interface ApproveTokenProps {
 	amount: bigint;
 }
 
-// @ts-expect-error
 const noncesAbi = parseAbi([
 	'function name() public view returns (string name)',
 	'function getNonce(address user) public view returns (uint256 nonce)',

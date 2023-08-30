@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { Button, Modal } from 'components';
 import { useCancelReasons, useConfirmationSignMessage } from 'hooks';
 import { Order } from 'models/types';
@@ -32,7 +33,8 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			const result = await fetch(`/api/orders/${uuid}/cancel`, {
 				method: 'PUT',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${getAuthToken()}`
 				},
 				body: JSON.stringify({
 					cancellation,

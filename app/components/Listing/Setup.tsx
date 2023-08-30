@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
 import { useFormErrors } from 'hooks';
@@ -45,7 +46,11 @@ const Setup = ({ list, updateList, tokenId, currencyId }: SetupListStepProps) =>
 	useEffect(() => {
 		if (!address) return;
 
-		fetch(`/api/users/${address}`)
+		fetch(`/api/users/${address}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.errors) {

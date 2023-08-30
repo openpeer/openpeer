@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { useConfirmationSignMessage } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -36,7 +37,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 							},
 							{ deep: true }
 						)
-					)
+					),
+					headers: {
+						Authorization: `Bearer ${getAuthToken()}`
+					}
 				}
 			);
 			const { id } = await result.json();

@@ -14,6 +14,7 @@ import { useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 interface SellProps {
 	lists: List[];
@@ -62,7 +63,11 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 			const filteredParams = Object.fromEntries(
 				Object.entries(params).filter(([, value]) => value !== undefined)
 			);
-			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`);
+			const response = await fetch(`/api/quickbuy?${new URLSearchParams(filteredParams).toString()}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			});
 			const searchLists: List[] = await response.json();
 			updateLists(searchLists);
 		} catch (error) {

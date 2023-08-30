@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import { useChains } from 'connectkit';
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Link from 'next/link';
@@ -40,7 +40,8 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) =>
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
-	const chains = useChains();
+	const { networkConfigurations } = useDynamicContext();
+	const chains = networkConfigurations?.evm || [];
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -107,11 +108,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					const isSeller = sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
-					const chain = chains.find((c) => c.id === chainId);
+					const chain = chains.find((c) => c.networkId === chainId);
 					const chainToken = chain
-						? chain.id === arbitrum.id
+						? chain.networkId === arbitrum.id
 							? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-							: chain.id === optimism.id
+							: chain.networkId === optimism.id
 							? {
 									symbol: 'OPTMISM',
 									icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'

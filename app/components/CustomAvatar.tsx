@@ -1,9 +1,8 @@
-import { Types } from 'connectkit';
 import makeBlockie from 'ethereum-blockies-base64';
 import Image from 'next/image';
 import React from 'react';
 
-const CustomAvatar = ({ address, ensImage }: Types.CustomAvatarProps) => {
+const CustomAvatar = ({ address, ensImage }: { address: `0x${string}`; ensImage: string }) => {
 	if (ensImage || address) {
 		return (
 			<Image src={ensImage || makeBlockie(address!)} alt="Avatar" width={96} height={96} unoptimized priority />

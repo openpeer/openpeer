@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 
 interface PaginationMeta {
 	current_page: number;
@@ -50,7 +51,11 @@ const HomePage = () => {
 			}, {} as { [key: string]: string });
 
 		const searchParams = new URLSearchParams(search);
-		fetch(`/api/lists?${searchParams.toString()}`)
+		fetch(`/api/lists?${searchParams.toString()}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((response: { data: List[]; meta: any }) => {
 				const { data, meta } = response;

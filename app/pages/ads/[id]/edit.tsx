@@ -1,3 +1,4 @@
+import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps, WrongNetwork } from 'components';
 import { Amount, Details, PaymentMethod, Summary } from 'components/Listing';
@@ -23,7 +24,11 @@ const EditTrade = ({ id }: { id: number }) => {
 	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
-		fetch(`/api/lists/${id}`)
+		fetch(`/api/lists/${id}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data: List) => {
 				const {

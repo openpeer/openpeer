@@ -1,9 +1,9 @@
-import { useSIWE } from 'connectkit';
 import { Notification } from 'models/notification';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import Knock, { Feed, FeedEventPayload, FeedItem } from '@knocklabs/client';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
 
 const useNotifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -11,7 +11,7 @@ const useNotifications = () => {
 	const [token, setToken] = useState('');
 	const [client, setClient] = useState<Feed>();
 	const { address } = useAccount();
-	const { data: session } = useSIWE();
+	const { user } = useDynamicContext();
 
 	const processPayload = ({ items }: FeedEventPayload) => {
 		// Concatenate the updated notifications with any existing notifications not in the payload
@@ -100,13 +100,17 @@ const useNotifications = () => {
 
 	useEffect(() => {
 		const fetchToken = async () => {
-			const response = await fetch('/api/knock');
+			const response = await fetch('/api/knock', {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			});
 			const { token: apiToken } = await response.json();
 			setToken(apiToken);
 		};
 
-		if (session) fetchToken();
-	}, [session]);
+		if (user) fetchToken();
+	}, [user]);
 
 	const markAsRead = async (id: FeedItem['id']) => {
 		const item = feedItems.find((i) => i.id === id);
