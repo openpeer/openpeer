@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const { headers } = req;
 
 	// convert the public key to base64 format
-	const publicKeyBase64 = process.env.NEXTAUTH_SECRET!;
+	const publicKeyBase64 = process.env.DYNAMIC_PUBLIC_KEY!;
 	const publicKey = atob(publicKeyBase64);
 
 	jwt.verify(headers.authorization!.split(' ')[1], publicKey, (_, decodedToken) => {
