@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { Order } from 'models/types';
 
+import jwt from 'jsonwebtoken';
 import { minkeApi } from '../../utils/utils';
 
 // eslint-disable-next-line import/order
