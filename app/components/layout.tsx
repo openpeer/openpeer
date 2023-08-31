@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
@@ -91,10 +91,28 @@ const Unauthenticated = () => {
 
 const Layout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [user, setUser] = useState<User | null>(null);
 	const { title, disableAuthentication } = pageProps;
 	const { address } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
 	const authenticated = disableAuthentication || isAuthenticated;
+
+	useEffect(() => {
+		if (!address) {
+			setUser(null);
+			return;
+		}
+
+		fetch(`/api/users/${address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [address]);
 
 	return (
 		<div className={`${manrope.className} font-sans`}>
@@ -198,7 +216,10 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
 												href={`/${address}`}
 											>
-												<Avatar user={{ address } as User} className="w-10 aspect-square" />
+												<Avatar
+													user={user || ({ address } as User)}
+													className="w-10 aspect-square"
+												/>
 											</Link>
 										)}
 										<DynamicWidget />

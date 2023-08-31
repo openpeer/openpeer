@@ -1,4 +1,3 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { HeaderMetrics, ListsTable, Loading } from 'components';
 import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
@@ -16,11 +15,7 @@ const Profile = ({ id }: { id: number }) => {
 	const { verification } = router.query;
 
 	useEffect(() => {
-		fetch(`/api/users/${id}`, {
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		})
+		fetch(`/api/users/${id}`)
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.errors) {
@@ -34,11 +29,7 @@ const Profile = ({ id }: { id: number }) => {
 	useEffect(() => {
 		if (!user) return;
 
-		fetch(`/api/lists?&seller=${user.address}`, {
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		})
+		fetch(`/api/lists?&seller=${user.address}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setLists(data.data);
