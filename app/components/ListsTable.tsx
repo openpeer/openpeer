@@ -40,7 +40,7 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) =>
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
-	const { networkConfigurations } = useDynamicContext();
+	const { networkConfigurations, primaryWallet } = useDynamicContext();
 	const chains = networkConfigurations?.evm || [];
 
 	return (
@@ -105,7 +105,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						deposit_time_limit: depositTimeLimit
 					} = list;
 					const { address: sellerAddress, name } = seller;
-					const isSeller = sellerAddress === address;
+					const isSeller = primaryWallet && sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
 					const chain = chains.find((c) => c.networkId === chainId);

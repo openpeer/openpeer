@@ -5,7 +5,6 @@ import { SearchFilters } from 'models/search';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
@@ -26,11 +25,12 @@ const HomePage = () => {
 	const [filters, setFilters] = useState<SearchFilters>({} as SearchFilters);
 	const [showFilters, setShowFilters] = useState(false);
 
-	const { address } = useAccount();
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
 
 	const performSearch = async (selectedPage: number) => {
 		setLoading(true);
+		if (Object.keys(filters).length === 0) return;
+
 		const params: { [key: string]: string | undefined } = {
 			page: selectedPage.toString(),
 			type: type === 'Buy' ? 'SellList' : 'BuyList',
@@ -72,7 +72,7 @@ const HomePage = () => {
 	useEffect(() => {
 		resetPage();
 		performSearch(1);
-	}, [address, type, filters]);
+	}, [type, filters]);
 
 	useEffect(() => {
 		performSearch(page);
