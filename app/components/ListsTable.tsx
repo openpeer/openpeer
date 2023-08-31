@@ -238,17 +238,19 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										<Flag name={countries[countryCode!]} size={24} />
 										<span className="flex flex-col">
 											{fiatSymbol} {Number(price).toFixed(2)} per {symbol}
-											<div
-												className={`flex flex-row items-center justify-start space-x-1 text-${
-													priceDifferencePercentage < 0 ? 'green' : 'red'
-												}-500 text-xs`}
-											>
-												<span>
-													{priceDifferencePercentage > 0 ? '+' : ''}
-													{priceDifferencePercentage.toFixed(2)}%
-												</span>
-												<span>spot</span>
-											</div>
+											{priceDifferencePercentage <= 5 && (
+												<div
+													className={`flex flex-row items-center justify-start space-x-1 text-${
+														priceDifferencePercentage < 0 ? 'green' : 'red'
+													}-500 text-xs`}
+												>
+													<span>
+														{priceDifferencePercentage > 0 ? '+' : ''}
+														{priceDifferencePercentage.toFixed(2)}%
+													</span>
+													<span>spot</span>
+												</div>
+											)}
 										</span>
 									</div>
 								</div>

@@ -13,7 +13,7 @@ const AMOUNT_STEP = 2;
 const PAYMENT_METHOD_STEP = 3;
 const DETAILS_STEP = 4;
 
-const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'percentage';
+const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'fixed';
 const DEFAULT_MARGIN_VALUE = 1;
 const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
 const DEFAULT_PAYMENT_TIME_LIMIT = 0;

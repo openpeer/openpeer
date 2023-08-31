@@ -163,8 +163,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			<Label title="Set Price Margin" />
 			<div className="mb-4">
 				<span className="text-sm text-gray-600">
-					Set how you want to price {type === 'BuyList' ? 'the' : 'your'} crypto. Above or below the spot
-					price or at a fixed price.
+					Set how you want to price {type === 'BuyList' ? 'the' : 'your'} crypto. At a fixed price or above or
+					below the spot price.
 				</span>
 			</div>
 			<MarginSwitcher
@@ -175,6 +175,7 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 				margin={margin}
 				updateMargin={updateMargin}
 				error={errors.margin}
+				price={price}
 			/>
 
 			<div className="w-full flex flex-row justify-between mb-8 hidden">
