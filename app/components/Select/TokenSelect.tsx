@@ -16,18 +16,20 @@ const TokenSelect = ({
 	selectedIdOnLoad,
 	label = 'Choose token to list',
 	labelStyle = '',
-	networkId
+	networkId,
+	allTokens = false
 }: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
 	const { chain, chains } = useNetwork();
-	const chainId = networkId || chain?.id || chains[0]?.id || polygon.id;
+	const chainId = allTokens ? undefined : networkId || chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
-		if (!chainId) return;
+		if (!chainId && !allTokens) return;
 
 		setLoading(true);
-		fetch(`/api/tokens?chain_id=${chainId}`, {
+
+		fetch(`/api/tokens?${new URLSearchParams({ chain_id: chainId ? chainId.toString() : '' }).toString()}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
@@ -35,7 +37,21 @@ const TokenSelect = ({
 			.then((res) => res.json())
 			.then((data) => {
 				const source: Token[] = minimal ? data.map((t: Token) => ({ ...t, ...{ name: t.symbol } })) : data;
-				setTokens(source);
+				if (allTokens) {
+					// remove symbol duplicates from the source array
+					const uniqueSymbols = new Set<string>();
+					const uniqueSource = source.filter((t) => {
+						if (uniqueSymbols.has(t.symbol)) {
+							return false;
+						}
+						uniqueSymbols.add(t.symbol);
+						return true;
+					});
+					setTokens(uniqueSource);
+				} else {
+					setTokens(source);
+				}
+
 				if (selectedIdOnLoad) {
 					if (!selected) {
 						const toSelect = source.find(({ id }) => String(id) === selectedIdOnLoad);

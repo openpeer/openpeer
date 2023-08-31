@@ -44,4 +44,5 @@ export interface TokenSelectProps {
 	label?: string;
 	labelStyle?: string;
 	networkId?: number;
+	allTokens?: boolean;
 }

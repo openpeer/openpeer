@@ -10,8 +10,6 @@ import debounce from 'lodash.debounce';
 import { FiatCurrency, List, Token } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
@@ -33,8 +31,6 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 	const { fee } = useEscrowFee({ token, tokenAmount });
 
 	const router = useRouter();
-	const { chain, chains } = useNetwork();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	const updateLoading = (l: boolean) => {
 		setLoading(l);
@@ -48,14 +44,13 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 		tokenValue: number | undefined;
 		fiatValue: number | undefined;
 	}) => {
-		if (!chainId || !token || !currency || (!tokenValue && !fiatValue)) return;
+		if (!token || !currency || (!tokenValue && !fiatValue)) return;
 		updateLoading(true);
 		try {
 			const params = {
 				type: 'BuyList',
-				chain_id: String(chainId),
 				fiat_currency_code: currency.code,
-				token_address: token.address,
+				token_symbol: token.symbol,
 				token_amount: String(tokenValue || ''),
 				fiat_amount: String(fiatValue || '')
 			};
@@ -82,13 +77,6 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 			search({ fiatValue: undefined, tokenValue: val });
 		}
 	};
-
-	useEffect(() => {
-		if (token) {
-			setToken(undefined);
-			updateLists([]);
-		}
-	}, [chainId]);
 
 	useEffect(() => {
 		search({ fiatValue: undefined, tokenValue: tokenAmount });
@@ -124,7 +112,7 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 						id="cryptoSell"
 						placeholder="Enter Amount"
 						extraStyle="h-16"
-						addOn={<TokenSelect onSelect={setToken} selected={token} minimal />}
+						addOn={<TokenSelect onSelect={setToken} selected={token} minimal allTokens />}
 						type="decimal"
 						decimalScale={token?.decimals}
 						onChangeNumber={debounce(onChangeToken, 1000)}
