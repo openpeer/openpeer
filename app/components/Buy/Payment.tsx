@@ -111,7 +111,7 @@ const Payment = ({ order }: BuyStepProps) => {
 
 				{status === 'created' && <PreShowDetails timeLeft={timeLeft} />}
 				{status === 'escrowed' && (
-					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
+					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6 mb-4">
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-neutral-500">Payment Method</span>
 							<span className="flex flex-row justify-between">

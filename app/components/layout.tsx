@@ -185,7 +185,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
 						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
 						<div className="w-full flex items-center justify-between px-4">
-							<h3 className="text-xl font-bold sm:px-6 md:px-4">{title}</h3>
+							<h3 className="text-xl font-bold sm:px-6 md:px-4 hidden">{title}</h3>
 							<div className="ml-4 flex items-center md:ml-6">
 								{/* Notifications */}
 								<Notifications />
