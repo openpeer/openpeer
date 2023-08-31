@@ -5,7 +5,13 @@ import { List } from '../../models/types';
 import { minkeApi } from './utils/utils';
 
 const fetchLists = async (params: NextApiRequest['query']): Promise<List[]> => {
+	// log start time
+	const start = new Date().getTime();
+	console.log(`fetchLists start time: ${start}`);
 	const { data } = await minkeApi.get('/lists', { params });
+	const end = new Date().getTime();
+	console.log(`fetchLists end time: ${end}`);
+	console.log(`fetchLists total time: ${end - start} ms`);
 	return data;
 };
 
