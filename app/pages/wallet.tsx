@@ -1,4 +1,5 @@
 import { useDynamicContext, useSendBalance } from '@dynamic-labs/sdk-react';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { Button, Loading, Token as TokenImage } from 'components';
 import SendFundsModal from 'components/Modal/SendFundsModal';
 import TransactionLink from 'components/TransactionLink';
@@ -32,17 +33,29 @@ const Wallet = () => {
 
 	const onSend = async (address: `0x${string}`, amount: number) => {
 		if (!token || !primaryWallet || !address || amount <= 0 || !chain || !walletClient) return;
+		const isNativeToken = token.address === zeroAddress;
 
 		setToken(undefined);
-		setHash(
-			await walletClient.writeContract({
-				address: token.address,
-				abi: erc20ABI,
-				functionName: 'transfer',
-				chain,
-				args: [address, parseUnits(amount.toString(), token.decimals)]
-			})
-		);
+		if (isNativeToken) {
+			setHash(
+				await walletClient.sendTransaction({
+					account: primaryWallet.address as `0x${string}`,
+					to: address,
+					chain,
+					value: parseUnits(amount.toString(), token.decimals)
+				})
+			);
+		} else {
+			setHash(
+				await walletClient.writeContract({
+					address: token.address,
+					abi: erc20ABI,
+					functionName: 'transfer',
+					chain,
+					args: [address, parseUnits(amount.toString(), token.decimals)]
+				})
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -143,15 +156,34 @@ const Wallet = () => {
 												`${formatUnits(balance, decimals)} ${symbol}`
 											)}
 										</td>
-										<td className="px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-											<div>
-												{(balance || BigInt(0)) > BigInt(0) && (
-													<Button
-														title="Send"
-														onClick={address === zeroAddress ? open : () => setToken(t)}
-													/>
-												)}
-											</div>
+										<td className="px-3.5 py-3.5 text-sm text-gray-500">
+											{(balance || BigInt(0)) > BigInt(0) && (
+												<>
+													<div className="hidden md:block flex justify-center">
+														<Button
+															title="Send"
+															onClick={
+																address === zeroAddress &&
+																primaryWallet?.connector?.canConnectViaEmail
+																	? open
+																	: () => setToken(t)
+															}
+														/>
+													</div>
+													<div
+														className="md:hidden bg-cyan-600 rounded p-1.5 cursor-pointer flex justify-center"
+														// @ts-expect-error
+														onClick={
+															address === zeroAddress &&
+															primaryWallet?.connector?.canConnectViaEmail
+																? open
+																: () => setToken(t)
+														}
+													>
+														<PaperAirplaneIcon width={20} height={20} color="white" />
+													</div>
+												</>
+											)}
 										</td>
 									</tr>
 								);
