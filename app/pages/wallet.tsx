@@ -1,5 +1,4 @@
 import { useDynamicContext, useSendBalance } from '@dynamic-labs/sdk-react';
-import { u } from '@wagmi/core/dist/index-35b6525c';
 import { Button, Loading, Token as TokenImage } from 'components';
 import SendFundsModal from 'components/Modal/SendFundsModal';
 import TransactionLink from 'components/TransactionLink';
