@@ -15,6 +15,7 @@ import Countdown from 'react-countdown';
 
 import {
 	useAccount,
+	useContractRead,
 	useContractWrite,
 	useNetwork,
 	usePrepareContractWrite,
@@ -24,9 +25,10 @@ import {
 import { polygon } from 'wagmi/chains';
 
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
-import { parseUnits } from 'viem';
+import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
-import roundTwoTree from '../airdrop/roundTwoTree.json';
+import roundTree from '../airdrop/roundThreeTree.json';
+import { bool } from 'aws-sdk/clients/signer';
 
 interface RoundData {
 	[key: `0x${string}`]: {
@@ -42,10 +44,10 @@ interface ClosedRound {
 	};
 }
 
-const CLOSED_ROUND = 2;
-const ROUND = 3;
+const CLOSED_ROUND = 3;
+const ROUND = 4;
 const POOL = 1000000;
-const AIRDROP_START = 1693569600000;
+const AIRDROP_START = 1696161600000;
 const CHAIN = polygon;
 const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
 const CLOSED_ROUNDS: ClosedRound = {
@@ -122,6 +124,33 @@ const CLOSED_ROUNDS: ClosedRound = {
 				sell_volume: '0.06135289139936206207451'
 			}
 		}
+	},
+	3: {
+		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+		volume: 1936.99951567847137282304,
+		data: {
+			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': {
+				buy_volume: '21.8420931635',
+				sell_volume: '1121.3745931635'
+			},
+			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
+				buy_volume: '1131.3703431635',
+				sell_volume: '661.9221647546536900425'
+			},
+			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': { buy_volume: '224.904375', sell_volume: '9.99575' },
+			'0x4F20CBb1149BE8839A3554189098b67c21BCb587': { buy_volume: '0', sell_volume: '76.7030877603176883642' },
+			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': {
+				buy_volume: '33.50196',
+				sell_volume: '33.50195999999999441634'
+			},
+			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': {
+				buy_volume: '33.50195999999999441634',
+				sell_volume: '33.50196'
+			},
+			'0x920EFA6f544FE9050a0Aa4181911C75CdD5F8a23': { buy_volume: '76.7030877603176883642', sell_volume: '0' },
+			'0xaea5a33Bdf3f33769026beea245c6394EEAdE67F': { buy_volume: '390.1863215911536900425', sell_volume: '0' },
+			'0x60D188c083D0027B8884b61a0Ec6F50A71BBE994': { buy_volume: '24.989375', sell_volume: '0' }
+		}
 	}
 };
 
@@ -141,10 +170,22 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 	const wrongChain = CHAIN.id !== chain?.id;
 	const amount = parseUnits(tokens.toString(), 18);
 	// @ts-expect-error
-	const merkleTree = StandardMerkleTree.load(roundTwoTree);
+	const merkleTree = StandardMerkleTree.load(roundTree);
 	const index = address ? Object.keys(CLOSED_ROUNDS[CLOSED_ROUND].data).indexOf(address) : -1;
 	const proof = address && index >= 0 ? merkleTree.getProof(index) : [];
 	const { switchNetwork } = useSwitchNetwork();
+
+	const {
+		isLoading: claimCheckLoading,
+		isSuccess: claimChecked,
+		data: claimed
+	} = useContractRead({
+		abi: VP2P,
+		address: CONTRACT_ADDRESS,
+		args: [CLOSED_ROUND, address],
+		functionName: 'redeemedBy',
+		enabled: !wrongChain && !!address
+	});
 
 	const { config } = usePrepareContractWrite({
 		address: CONTRACT_ADDRESS,
@@ -182,9 +223,23 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 
 	return (
 		<Button
-			title={wrongChain ? `Switch to ${CHAIN.name}` : !proof.length ? 'No tokens to claim' : 'Claim Rewards'}
+			title={
+				wrongChain
+					? `Switch to ${CHAIN.name}`
+					: !proof.length
+					? 'No tokens to claim'
+					: claimChecked && (claimed as boolean)
+					? 'Claimed'
+					: 'Claim Rewards'
+			}
 			onClick={onClaimRewards}
-			disabled={isLoading || !proof.length || !!(!wrongChain && proof.length && !claim)}
+			disabled={
+				isLoading ||
+				claimCheckLoading ||
+				!proof.length ||
+				!!(!wrongChain && proof.length && !claim) ||
+				(claimChecked && (claimed as boolean))
+			}
 		/>
 	);
 };
@@ -249,31 +304,11 @@ const AirdropPage = () => {
 	const usdTotal = (Number(volume.total || 0) || 0) * 2; // times two because buyer and seller get the same amount
 	const tokens = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
 
-	let closedRoundVolume = {
-		buy_volume: 0,
-		sell_volume: 0,
-		total: CLOSED_ROUNDS[CLOSED_ROUND].volume
-	};
+	const closedRoundTokensInfo = address ? roundTree.values.find((line) => line.value[0] === address) : undefined;
 
-	if (address) {
-		const addressVolume = CLOSED_ROUNDS[CLOSED_ROUND].data[address] || {
-			buy_volume: '0',
-			sell_volume: '0'
-		};
-
-		closedRoundVolume = {
-			buy_volume: Number(addressVolume.buy_volume),
-			sell_volume: Number(addressVolume.sell_volume),
-			total: CLOSED_ROUNDS[CLOSED_ROUND].volume
-		};
-	}
-
-	const { buy_volume: closedRoundBuyVolume = 0, sell_volume: closedRoundSellVolume = 0 } = closedRoundVolume;
-	const closedRoundUsdTotal = (Number(closedRoundVolume.total || 0) || 0) * 2;
-	const closedRoundTokens =
-		address && closedRoundUsdTotal
-			? ((Number(closedRoundBuyVolume) + Number(closedRoundSellVolume)) / closedRoundUsdTotal) * POOL
-			: 0;
+	const closedRoundTokens = closedRoundTokensInfo
+		? Number(formatUnits(BigInt(closedRoundTokensInfo.value[1]), 18))
+		: 0;
 
 	useEffect(() => {
 		if (!address) return;
