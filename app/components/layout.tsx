@@ -17,7 +17,8 @@ import {
 	PencilIcon,
 	PlusCircleIcon,
 	ShoppingBagIcon,
-	XMarkIcon
+	XMarkIcon,
+	WalletIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
@@ -45,7 +46,8 @@ const navigation = [
 	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
 	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
-	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon }
+	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon },
+	{ name: 'Wallet', href: '/wallet', icon: WalletIcon }
 ];
 
 const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => (
