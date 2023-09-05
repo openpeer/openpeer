@@ -22,6 +22,7 @@ import Selector from './Selector';
 import Steps from './Steps';
 import Textarea from './Textarea/Textarea';
 import WrongNetwork from './WrongNetwork';
+import Token from './Token/Token';
 
 export {
 	Button,
@@ -47,5 +48,6 @@ export {
 	Flag,
 	Accordion,
 	Pagination,
-	EditListButtons
+	EditListButtons,
+	Token
 };
