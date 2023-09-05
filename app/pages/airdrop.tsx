@@ -28,7 +28,6 @@ import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import roundTree from '../airdrop/roundThreeTree.json';
-import { bool } from 'aws-sdk/clients/signer';
 
 interface RoundData {
 	[key: `0x${string}`]: {
