@@ -19,9 +19,10 @@ export interface SendFundsModalProps {
 	onClose: () => void;
 	token: Token | undefined;
 	balance: bigint | undefined;
+	onSend: (address: `0x${string}`, amount: number) => void;
 }
 
-const SendFundsModal = ({ open, onClose, token, balance = BigInt(0) }: SendFundsModalProps) => {
+const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: SendFundsModalProps) => {
 	const [address, setAddress] = useState('');
 	const [amount, setAmount] = useState<number>();
 
@@ -113,12 +114,12 @@ const SendFundsModal = ({ open, onClose, token, balance = BigInt(0) }: SendFunds
 												<Button title="Cancel" outlined onClick={onClose} />
 												<Button
 													title="Send Funds"
-													onClick={onClose}
 													disabled={
 														!isAddress(address) ||
 														(amount || 0) <= 0 ||
 														(amount || 0) > maxAmount
 													}
+													onClick={() => onSend(address as `0x${string}`, amount || 0)}
 												/>
 											</div>
 										</div>
