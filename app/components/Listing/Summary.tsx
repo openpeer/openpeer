@@ -5,7 +5,7 @@ import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 import React from 'react';
 
-import coins from './coins.svg';
+import coins from './post-ad.png';
 import { UIList } from './Listing.types';
 
 interface SummaryProps {

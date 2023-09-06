@@ -175,30 +175,61 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
-				<Input
-					label={buyCrypto ? "Amount you'll receive" : 'Amount to buy'}
-					prefix={
-						<Prefix
-							label={currency!.symbol}
-							image={<Flag name={countries[currency.country_code]} size={24} />}
+				{buyCrypto ? (
+					<>
+						<Input
+							label="Amount to sell"
+							prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
+							id="amountToReceive"
+							value={tokenAmount}
+							onChangeNumber={(t) => onChangeToken(t)}
+							type="decimal"
+							decimalScale={token.decimals}
+							error={errors.tokenAmount}
 						/>
-					}
-					id="amountBuy"
-					value={fiatAmount}
-					onChangeNumber={(f) => onChangeFiat(f)}
-					type="decimal"
-					error={errors.fiatAmount}
-				/>
-				<Input
-					label={buyCrypto ? 'Amount to sell' : "Amount you'll receive"}
-					prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
-					id="amountToReceive"
-					value={tokenAmount}
-					onChangeNumber={(t) => onChangeToken(t)}
-					type="decimal"
-					decimalScale={token.decimals}
-					error={errors.tokenAmount}
-				/>
+						<Input
+							label="Amount you'll receive"
+							prefix={
+								<Prefix
+									label={currency!.symbol}
+									image={<Flag name={countries[currency.country_code]} size={24} />}
+								/>
+							}
+							id="amountBuy"
+							value={fiatAmount}
+							onChangeNumber={(f) => onChangeFiat(f)}
+							type="decimal"
+							error={errors.fiatAmount}
+						/>
+					</>
+				) : (
+					<>
+						<Input
+							label="Amount you'll receive"
+							prefix={
+								<Prefix
+									label={currency!.symbol}
+									image={<Flag name={countries[currency.country_code]} size={24} />}
+								/>
+							}
+							id="amountBuy"
+							value={fiatAmount}
+							onChangeNumber={(f) => onChangeFiat(f)}
+							type="decimal"
+							error={errors.fiatAmount}
+						/>
+						<Input
+							label="Amount to buy"
+							prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
+							id="amountToReceive"
+							value={tokenAmount}
+							onChangeNumber={(t) => onChangeToken(t)}
+							type="decimal"
+							decimalScale={token.decimals}
+							error={errors.tokenAmount}
+						/>
+					</>
+				)}
 			</div>
 		</StepLayout>
 	);
