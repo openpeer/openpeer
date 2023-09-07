@@ -5276,6 +5276,11 @@ dot-case@^3.0.4:
     no-case "^3.0.4"
     tslib "^2.0.3"
 
+dotenv@^16.3.1:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
+  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
+
 draht@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/draht/-/draht-1.0.1.tgz#c4c8879923d2130dfa9c5930e956c85d62b1e975"
@@ -8679,12 +8684,13 @@ react-toastify@^9.1.1:
   dependencies:
     clsx "^1.1.1"
 
-react-wallet-chat@^2.7.3:
-  version "2.7.3"
-  resolved "https://registry.yarnpkg.com/react-wallet-chat/-/react-wallet-chat-2.7.3.tgz#563d3bcd49130318a0915948162b1930de9cfa43"
-  integrity sha512-AGpj/oFeLCxT5OKLYjw0GeIV35mLoQxPOlRaDKqG3Bjqk8sgVdzMHVi/fh8f8cq6u+CwBIo49FeZCrf0qGrGlA==
+react-wallet-chat@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/react-wallet-chat/-/react-wallet-chat-2.7.4.tgz#cb4f65e56701f155a9b8c9203577ad0c1af66382"
+  integrity sha512-Sswu3TKGVte+NGfTP/4Ayo7+7mYZntMZHWdLztIsZlzaFh2t92dh/6aLU2ixARpxPEN4goNuQ3JTr8XwK0FjcA==
   dependencies:
     classnames "^2.3.2"
+    dotenv "^16.3.1"
 
 react@^18.2.0:
   version "18.2.0"
