@@ -37,7 +37,7 @@ const Summary = ({ list }: SummaryProps) => {
 					alt="coins image"
 					width={441}
 					height={385}
-					className="bg-gray-100 rounded-xl overflow-hidden md:ml-8 my-8 md:p-4 m-auto"
+					className="rounded-xl overflow-hidden md:ml-8 my-8 md:p-4 m-auto"
 				/>
 			</div>
 		);
