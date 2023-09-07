@@ -101,7 +101,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						price,
 						payment_method: paymentMethod,
 						chain_id: chainId,
-						token_spot_price: tokenSpotPrice,
+						// token_spot_price: tokenSpotPrice,
 						deposit_time_limit: depositTimeLimit
 					} = list;
 					const { address: sellerAddress, name } = seller;
@@ -120,8 +120,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							: chain.nativeCurrency
 						: undefined;
 
-					const priceDifferencePercentage =
-						tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
+					// const priceDifferencePercentage =
+					// tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
+
+					const priceDifferencePercentage = 100;
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">

@@ -54,7 +54,7 @@ export interface List {
 	type: 'SellList' | 'BuyList';
 	deposit_time_limit: number | undefined;
 	payment_time_limit: number | undefined;
-	token_spot_price: number;
+	// token_spot_price: number;
 }
 
 export interface AccountField {
