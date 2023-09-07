@@ -12,8 +12,8 @@
 	"dependencies": {
 		"@biconomy/mexa": "^3.0.6",
 		"@coingecko/cryptoformat": "^0.5.4",
-		"@dynamic-labs/sdk-react": "^0.18.100-viem.11",
-		"@dynamic-labs/wagmi-connector": "^0.18.100-viem.11",
+		"@dynamic-labs/sdk-react": "^0.18.100-viem.14",
+		"@dynamic-labs/wagmi-connector": "^0.18.100-viem.14",
 		"@ethersproject/providers": "^5.7.2",
 		"@headlessui/react": "^1.7.5",
 		"@heroicons/react": "^2.0.13",
