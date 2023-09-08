@@ -1,7 +1,7 @@
 import Button from 'components/Button/Button';
 import ChatProvider from 'providers/ChatProvider';
 import React from 'react';
-import { ChatWithOwner } from 'react-wallet-chat';
+import { ChatWithOwner } from 'react-wallet-chat-sso';
 
 import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 
