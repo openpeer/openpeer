@@ -64,8 +64,8 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		setupChannel();
 	}, [token]);
 
-	if (order?.list?.chain_id && chain && order.list.chain_id !== chain.id) {
-		return <WrongNetwork desiredChainId={order?.list.chain_id} />;
+	if (order?.chain_id && chain && order.chain_id !== chain.id) {
+		return <WrongNetwork desiredChainId={order?.chain_id} />;
 	}
 
 	if (!order) return <Loading />;

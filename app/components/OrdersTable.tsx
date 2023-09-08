@@ -131,17 +131,18 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 						{orders.map((order) => {
 							const {
 								id,
-								list: { fiat_currency: currency, token, chain_id: chainId },
+								list: { fiat_currency: currency, token },
 								price,
 								fiat_amount: fiatAmount,
 								token_amount: tokenAmount,
 								status,
 								buyer,
-								seller
+								seller,
+								chain_id: chainId
 							} = order;
 							const isSeller = address === seller.address;
 							const user = isSeller ? buyer : seller;
-							const network = allChains.find((chain) => chain.id === chainId);
+							const network = allChains.find((chain) => chain.id === Number(chainId));
 
 							return (
 								<tr key={id} className="hover:bg-gray-50">

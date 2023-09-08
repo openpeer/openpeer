@@ -26,6 +26,7 @@ export interface UIList {
 	user?: User;
 	depositTimeLimit: number;
 	paymentTimeLimit: number;
+	chainId: number;
 }
 
 export interface ListStepProps {

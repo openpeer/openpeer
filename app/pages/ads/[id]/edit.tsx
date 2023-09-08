@@ -1,6 +1,6 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
-import { Loading, Steps, WrongNetwork } from 'components';
+import { Loading, Steps } from 'components';
 import { Amount, Details, PaymentMethod, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import { Option } from 'components/Select/Select.types';
@@ -8,8 +8,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -19,9 +18,7 @@ const EditTrade = ({ id }: { id: number }) => {
 	const [list, setList] = useState<List>();
 	const [uiList, setUiList] = useState<UIList>();
 	const [showFilters, setShowFilters] = useState(false);
-	const { chain, chains } = useNetwork();
 	const { address } = useAccount();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	useEffect(() => {
 		fetch(`/api/lists/${id}`, {
@@ -43,7 +40,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					margin,
 					deposit_time_limit: depositTimeLimit,
 					payment_time_limit: paymentTimeLimit,
-					terms
+					terms,
+					chain_id: chainId
 				} = data;
 				setList(data);
 				const currency = {
@@ -65,11 +63,12 @@ const EditTrade = ({ id }: { id: number }) => {
 					terms: terms || '',
 					margin: margin ? Number(margin) : undefined,
 					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0,
-					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0
+					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0,
+					chainId
 				};
 				setUiList(ui);
 			});
-	}, [address, chainId]);
+	}, [address]);
 
 	if (address === undefined || list === undefined || uiList === undefined) {
 		return <Loading />;
@@ -77,10 +76,6 @@ const EditTrade = ({ id }: { id: number }) => {
 
 	if (list.seller.address !== address) {
 		return <ErrorPage statusCode={404} />;
-	}
-
-	if (list.chain_id !== chainId) {
-		return <WrongNetwork desiredChainId={list.chain_id} />;
 	}
 
 	const { step } = uiList;

@@ -3,9 +3,9 @@ import { useConfirmationSignMessage } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
+import { Token } from 'models/types';
 import Label from '../Label/Label';
 import Selector from '../Selector';
 import Textarea from '../Textarea/Textarea';
@@ -13,11 +13,9 @@ import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const { terms, depositTimeLimit, paymentTimeLimit, type } = list;
+	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token } = list;
 	const { address } = useAccount();
-	const { chain, chains } = useNetwork();
 	const router = useRouter();
-	const chainId = chain?.id || chains[0]?.id || polygon.id;
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data, variables) => {
@@ -29,7 +27,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					body: JSON.stringify(
 						snakecaseKeys(
 							{
-								chainId,
+								chainId: chainId || (token as Token).chain_id,
 								list,
 								data,
 								address,

@@ -26,6 +26,7 @@ export interface Token {
 	id: number;
 	address: `0x${string}`;
 	decimals: number;
+	chain_id: number;
 	symbol: string;
 	name: string;
 	coingecko_id: string;
@@ -133,6 +134,7 @@ export interface Order {
 	trade_id: string;
 	deposit_time_limit: number | undefined;
 	payment_time_limit: number | undefined;
+	chain_id: number;
 }
 
 export interface Airdrop {

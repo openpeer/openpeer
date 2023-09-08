@@ -10,12 +10,14 @@ const NetworkSelect = ({
 	onSelect,
 	selected,
 	error,
-	labelStyle = ''
+	labelStyle = '',
+	label = 'Chain'
 }: {
 	onSelect: (option: Chain | undefined) => void;
 	selected: Chain | undefined;
 	error?: SelectProps['error'];
 	labelStyle?: SelectProps['labelStyle'];
+	label?: string;
 }) => {
 	const chains = allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
@@ -34,7 +36,7 @@ const NetworkSelect = ({
 
 	return (
 		<Select
-			label="Chain"
+			label={label}
 			options={networks}
 			selected={selected as SelectProps['selected']}
 			onSelect={onSelect as SelectProps['onSelect']}
