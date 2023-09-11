@@ -9,4 +9,4 @@ ENV NPM_CONFIG_LOGLEVEL warn
 # ENV CUSTOM_REGISTRY https://registry.npmjs.org/ 
 # RUN npm config set strict-ssl false
 # RUN npm config set registry $CUSTOM_REGISTRY
-RUN npm install
+RUN yarn
