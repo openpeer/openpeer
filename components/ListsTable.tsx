@@ -10,6 +10,7 @@ import { useAccount } from 'wagmi';
 import { arbitrum, optimism } from 'wagmi/chains';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
+import { allChains } from 'models/networks';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
@@ -40,8 +41,8 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) =>
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
-	const { networkConfigurations, primaryWallet } = useDynamicContext();
-	const chains = networkConfigurations?.evm || [];
+	const { primaryWallet } = useDynamicContext();
+	const chains = allChains;
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -108,11 +109,11 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					const isSeller = primaryWallet && sellerAddress === address;
 					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
-					const chain = chains.find((c) => c.networkId === chainId);
+					const chain = chains.find((c) => c.id === chainId);
 					const chainToken = chain
-						? chain.networkId === arbitrum.id
+						? chain.id === arbitrum.id
 							? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-							: chain.networkId === optimism.id
+							: chain.id === optimism.id
 							? {
 									symbol: 'OPTMISM',
 									icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
