@@ -1,11 +1,11 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { Loading, Steps, WrongNetwork } from 'components';
-import { Cancelled, Completed, Payment, Release, Summary } from 'components/Buy';
+import { Cancelled, Chat, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 const ERROR_STEP = 0;
 const PAYMENT_METHOD_STEP = 2;
@@ -27,6 +27,7 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 	const [order, setOrder] = useState<UIOrder>();
 	const { chain } = useNetwork();
 	const token = getAuthToken();
+	const { address } = useAccount();
 
 	useEffect(() => {
 		fetch(`/api/orders/${id}`, {
@@ -68,13 +69,17 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 		return <WrongNetwork desiredChainId={order?.chain_id} />;
 	}
 
-	if (!order) return <Loading />;
+	if (!order?.id) return <Loading />;
 
 	const { step, list, dispute } = order;
 
 	if (!!dispute || order.status === 'dispute') {
 		return <Dispute order={order} />;
 	}
+
+	const seller = order.seller || list.seller;
+	const selling = seller.address === address;
+	const chatAddress = selling ? order.buyer.address : seller.address;
 
 	return (
 		<div className="pt-4 md:pt-6">
@@ -85,7 +90,15 @@ const OrderPage = ({ id }: { id: `0x${string}` }) => {
 					{step === RELEASE_STEP && <Release order={order} updateOrder={setOrder} />}
 					{step === COMPLETED_STEP && <Completed order={order} updateOrder={setOrder} />}
 					{step === CANCELLED_STEP && <Cancelled order={order} updateOrder={setOrder} />}
-					{step === ERROR_STEP && <p>We could not find this order</p>}
+					{step === ERROR_STEP ? (
+						<p>We could not find this order</p>
+					) : (
+						!!chatAddress && (
+							<div className="md:hidden">
+								<Chat address={chatAddress} label={selling ? 'buyer' : 'seller'} />
+							</div>
+						)
+					)}
 				</div>
 				{!!list && <Summary order={order} />}
 			</div>

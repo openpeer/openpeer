@@ -16,7 +16,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 
 	return (
 		<WalletChatProvider>
-			<div className="hidden md:block">
+			<div>
 				<WalletChatWidget
 					connectUrl="https://sso-fe.walletchat.fun"
 					requestSignature={!(signedMessage && messageToSign)}
