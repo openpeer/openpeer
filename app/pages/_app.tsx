@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import { DynamicWagmiConnector } from '@dynamic-labs/wagmi-connector';
 import { MessageContextProvider } from 'contexts/MessageContext';
+import ChatProvider from 'providers/ChatProvider';
 
 const Layout = dynamic(() => import('../components/layout'), { ssr: false });
 const NoAuthLayout = dynamic(() => import('../components/NoAuthLayout'), { ssr: false });
@@ -42,8 +43,10 @@ const App = ({ Component, pageProps }: AppProps) => {
 							// @ts-expect-error
 							<NoAuthLayout pageProps={pageProps} Component={Component} />
 						) : (
-							// @ts-expect-error
-							<Layout pageProps={pageProps} Component={Component} />
+							<ChatProvider>
+								{/* @ts-expect-error */}
+								<Layout pageProps={pageProps} Component={Component} />
+							</ChatProvider>
 						)}
 					</TransactionFeedbackProvider>
 				</MessageContextProvider>

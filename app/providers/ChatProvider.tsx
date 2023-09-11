@@ -13,8 +13,6 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 	const { address: account, connector } = useAccount();
 	const { chain } = useNetwork();
 	const { messageToSign, signedMessage } = useContext(MessageContext);
-	console.log('messageToSign', messageToSign);
-	console.log('signedMessage', signedMessage);
 
 	return (
 		<WalletChatProvider>
