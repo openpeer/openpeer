@@ -1,0 +1,25 @@
+FROM node:16
+
+WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV development
+
+RUN apt-get update -y \
+&& apt-get upgrade -y \
+&& apt-get install curl zip libvips-dev libvips-tools -y \
+&& rm -rf /var/lib/apt
+
+COPY . /app
+ENV NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID "$NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID"
+RUN yarn install
+
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else yarn install; \
+  fi
+
+COPY . .
+RUN yarn build
