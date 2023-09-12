@@ -29,7 +29,7 @@ const navigation = [
 ];
 const navigationItem = [
 	{ name: 'Docs', href: 'https://docs.openpeer.xyz/' },
-	{ name: 'Disclamer', href: 'https://openpeer.xyz/disclamer' },
+	{ name: 'Disclaimer', href: 'https://openpeer.xyz/disclaimer' },
 	{ name: 'Terms', href: 'https://openpeer.xyz/terms' },
 	{ name: 'Privacy Policy', href: 'https://openpeer.xyz/privacy-policy' },
 	{ name: 'Blog', href: 'https://blog.openpeer.xyz/' }
