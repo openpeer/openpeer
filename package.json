@@ -53,6 +53,7 @@
 		"react-query": "^3.39.3",
 		"react-toastify": "^9.1.1",
 		"react-wallet-chat-sso": "^2.8.2",
+		"sharp": "^0.32.5",
 		"siwe": "^2.1.4",
 		"snakecase-keys": "^5.4.4",
 		"tailwind": "^4.0.0",
