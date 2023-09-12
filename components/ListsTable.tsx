@@ -184,7 +184,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<span className="pr-2 text-[11px]">{chain?.name}</span>
 												<Token token={chainToken! as TokenType} size={16} />
 											</div>
-											{depositTimeLimit && Number(depositTimeLimit) > 0 && (
+											{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
 												<div className="flex flex-row items-center mb-2">
 													<span className="pr-2 text-[11px] text-gray-700">
 														Deposit time limit
@@ -262,7 +262,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{depositTimeLimit && Number(depositTimeLimit) > 0 && (
+								{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
 									<div className="flex flex-row items-center space-x-2">
 										<ClockIcon width={16} height={16} />
 										<span>
