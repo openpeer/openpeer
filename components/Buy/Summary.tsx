@@ -27,7 +27,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		token,
 		total_available_amount: totalAvailableAmount,
 		terms,
-		type
+		type,
+		accept_only_verified: acceptOnlyVerified
 	} = list!;
 
 	const { address } = useAccount();
@@ -158,6 +159,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					{!!terms && (
 						<div className="w-full flex flex-row mb-4 space-x-2">
 							<div className="text-sm">Terms</div>
+							<div className="text-sm font-bold">{terms}</div>
+						</div>
+					)}
+					{!!acceptOnlyVerified && (
+						<div className="w-full flex flex-row mb-4 space-x-2">
+							<div className="text-sm">
+								Accept only verified {type === 'SellList' ? 'buyers' : 'sellers'}
+							</div>
 							<div className="text-sm font-bold">{terms}</div>
 						</div>
 					)}

@@ -27,6 +27,7 @@ export interface UIList {
 	depositTimeLimit: number;
 	paymentTimeLimit: number;
 	chainId: number;
+	acceptOnlyVerified: boolean;
 }
 
 export interface ListStepProps {

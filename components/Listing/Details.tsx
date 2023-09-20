@@ -6,6 +6,7 @@ import snakecaseKeys from 'snakecase-keys';
 import { useAccount } from 'wagmi';
 
 import { Token } from 'models/types';
+import Checkbox from 'components/Checkbox/Checkbox';
 import Label from '../Label/Label';
 import Selector from '../Selector';
 import Textarea from '../Textarea/Textarea';
@@ -13,7 +14,7 @@ import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token } = list;
+	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified } = list;
 	const { address } = useAccount();
 	const router = useRouter();
 
@@ -85,6 +86,16 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					updateValue={(n) => updateList({ ...list, ...{ depositTimeLimit: n } })}
 					decimals={0}
 				/>
+
+				<div className="mb-4">
+					<Checkbox
+						content={`Accept only verified ${type === 'SellList' ? 'buyers' : 'sellers'}`}
+						id="verified"
+						name="verified"
+						checked={acceptOnlyVerified}
+						onChange={() => updateList({ ...list, ...{ acceptOnlyVerified: !acceptOnlyVerified } })}
+					/>
+				</div>
 				<div className="hidden">
 					<Label title="Payment Time Limit" />
 					<div className="mb-4">

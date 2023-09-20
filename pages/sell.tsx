@@ -4,7 +4,7 @@ import { UIList } from 'components/Listing/Listing.types';
 import { List } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 
@@ -33,7 +33,6 @@ const SellPage = () => {
 	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
 
 	const { address } = useAccount();
-	const { chain } = useNetwork();
 	const [list, setList] = useState<UIList>({
 		...{
 			step: quickSell || quickBuy ? AMOUNT_STEP : SETUP_STEP,
@@ -48,14 +47,6 @@ const SellPage = () => {
 			setList({ ...{ step: PAYMENT_METHOD_STEP }, ...defaultList } as UIList);
 		}
 	}, [address]);
-
-	useEffect(() => {
-		// need to reset the AD if the chain changed because the tokens will change
-		setList({
-			...{ step: SETUP_STEP, type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined },
-			...defaultList
-		} as UIList);
-	}, [chain]);
 
 	useEffect(() => {
 		if (!!list && (quickSell || quickBuy) && step === SETUP_STEP) {

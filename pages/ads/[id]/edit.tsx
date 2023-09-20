@@ -41,7 +41,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					deposit_time_limit: depositTimeLimit,
 					payment_time_limit: paymentTimeLimit,
 					terms,
-					chain_id: chainId
+					chain_id: chainId,
+					accept_only_verified: acceptOnlyVerified
 				} = data;
 				setList(data);
 				const currency = {
@@ -64,7 +65,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					margin: margin ? Number(margin) : undefined,
 					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0,
 					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0,
-					chainId
+					chainId,
+					acceptOnlyVerified
 				};
 				setUiList(ui);
 			});

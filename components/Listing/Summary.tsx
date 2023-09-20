@@ -25,7 +25,8 @@ const Summary = ({ list }: SummaryProps) => {
 		depositTimeLimit,
 		paymentTimeLimit,
 		terms,
-		type
+		type,
+		acceptOnlyVerified
 	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 
@@ -166,6 +167,11 @@ const Summary = ({ list }: SummaryProps) => {
 					<li className="w-full flex flex-row justify-between mb-4">
 						<div>Terms</div>
 						<div className="font-bold">{terms}</div>
+					</li>
+				)}
+				{!!acceptOnlyVerified && (
+					<li className="w-full flex flex-row justify-between mb-4">
+						<div>Accept only verified {type === 'SellList' ? 'buyers' : 'sellers'}</div>
 					</li>
 				)}
 			</ul>

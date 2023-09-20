@@ -56,6 +56,7 @@ export interface List {
 	deposit_time_limit: number | undefined;
 	payment_time_limit: number | undefined;
 	// token_spot_price: number;
+	accept_only_verified: boolean;
 }
 
 export interface AccountField {

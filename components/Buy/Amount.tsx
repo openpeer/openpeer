@@ -34,7 +34,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
-	const { fiat_currency: currency, token, type } = list;
+	const { fiat_currency: currency, token, type, accept_only_verified: acceptOnlyVerified } = list;
 
 	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
 		orderFiatAmount || quickBuyFiat ? Number(quickBuyFiat) : undefined
@@ -99,6 +99,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	};
 
 	const onProceed = () => {
+		if (acceptOnlyVerified && user && !user.verified) {
+			router.push(`/${user.address}`);
+			return;
+		}
+
 		if (list && price) {
 			if (!validate(resolver)) return;
 
@@ -165,17 +170,20 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			});
 	}, [address]);
 
-	const buyCrypto = list.type === 'BuyList';
-	const buttonText = buyCrypto ? '' : 'Sign and Continue';
-
 	if (!user?.email) {
 		return <AccountInfo setUser={setUser} />;
 	}
 
+	const buyCrypto = list.type === 'BuyList';
+	const verificationRequired = acceptOnlyVerified && !user.verified;
+	const buttonText = verificationRequired ? 'Verify' : buyCrypto ? '' : 'Sign and Continue';
+
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
-				{buyCrypto ? (
+				{verificationRequired ? (
+					<h1>Only verified users can interact with this ad.</h1>
+				) : buyCrypto ? (
 					<>
 						<Input
 							label="Amount to sell"
