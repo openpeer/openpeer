@@ -23,10 +23,10 @@ import {
 import { Manrope } from '@next/font/google';
 
 import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
-import Avatar from './Avatar';
-import Button from './Button/Button';
-import { CollapseButton } from './Navigation';
-import Notifications from './Notifications/Notifications';
+import Avatar from '../Avatar';
+import Button from '../Button/Button';
+import { CollapseButton } from '../Navigation';
+import Notifications from '../Notifications/Notifications';
 
 const manrope = Manrope({
 	subsets: ['latin'],

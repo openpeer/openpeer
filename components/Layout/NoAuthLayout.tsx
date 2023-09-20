@@ -12,9 +12,9 @@ import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from 
 import { Manrope } from '@next/font/google';
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
 
-import discord from '../public/discord.svg';
-import twitterLogo from '../public/twitter.svg';
-import { CollapseButton } from './Navigation';
+import discord from 'public/discord.svg';
+import twitterLogo from 'public/twitter.svg';
+import { CollapseButton } from '../Navigation';
 
 const manrope = Manrope({
 	subsets: ['latin'],
