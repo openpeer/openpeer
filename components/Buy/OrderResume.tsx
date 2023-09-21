@@ -1,5 +1,4 @@
 import Button from 'components/Button/Button';
-import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import { Order } from 'models/types';
 import React from 'react';
@@ -7,6 +6,7 @@ import { useAccount } from 'wagmi';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 
+import { formatUnits } from 'viem';
 import ClipboardText from './ClipboardText';
 
 interface OrderResumeParams {

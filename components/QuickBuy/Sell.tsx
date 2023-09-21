@@ -4,7 +4,6 @@ import Input from 'components/Input/Input';
 import Loading from 'components/Loading/Loading';
 import CurrencySelect from 'components/Select/CurrencySelect';
 import TokenSelect from 'components/Select/TokenSelect';
-import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import debounce from 'lodash.debounce';
 import { FiatCurrency, List, Token } from 'models/types';
@@ -13,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { formatUnits } from 'viem';
 
 interface SellProps {
 	lists: List[];

@@ -1,7 +1,7 @@
-import { formatUnits } from 'ethers/lib/utils';
 import { useEscrowFee } from 'hooks';
 import { Token } from 'models/types';
 import React from 'react';
+import { formatUnits } from 'viem';
 
 interface FeeDisplayParams {
 	escrow?: `0x${string}`;
@@ -12,7 +12,7 @@ interface FeeDisplayParams {
 const FeeDisplay = ({ escrow, tokenAmount, token }: FeeDisplayParams) => {
 	const { fee, isFetching } = useEscrowFee({ address: escrow, token, tokenAmount });
 
-	if (isFetching && !fee) return <></>;
+	if (isFetching || !fee) return <></>;
 
 	return (
 		<div className="flex flex-row items-center mb-1">
