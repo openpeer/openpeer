@@ -207,7 +207,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 									</div>
 									<div className="lg:hidden pb-3 pt-5">
 										{isSeller ? (
-											<EditListButtons id={list.id} />
+											<EditListButtons list={list} />
 										) : (
 											<BuyButton
 												id={list.id}
@@ -284,7 +284,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
 								{isSeller ? (
-									<EditListButtons id={list.id} />
+									<EditListButtons list={list} />
 								) : (
 									<BuyButton
 										id={list.id}

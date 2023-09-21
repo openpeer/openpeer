@@ -12,14 +12,14 @@ const Ads = () => {
 	useEffect(() => {
 		if (!address) return;
 
-		fetch(`/api/lists?seller=${address}`, {
+		fetch('/api/lists/ads', {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setLists(data.data);
+				setLists(data);
 			});
 	}, [address]);
 
