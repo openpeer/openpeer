@@ -16,6 +16,7 @@ import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
 import Flag from './Flag/Flag';
 import Token from './Token/Token';
+import IdVerificationNeeded from './IdVerificationNeeded';
 
 interface ListsTableProps {
 	lists: List[];
@@ -175,6 +176,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 															{amount} {symbol}
 														</span>
 													</div>
+													<IdVerificationNeeded />
 												</div>
 											</div>
 										</div>
@@ -233,6 +235,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 											<span className="text-[10px]">{chain?.name}</span>
 										</div>
 									</div>
+									<IdVerificationNeeded />
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
