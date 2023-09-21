@@ -79,6 +79,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 					onSelect={setCurrency}
 					selected={currency}
 					labelStyle="text-sm truncate"
+					selectByLocation
 				/>
 			</div>
 			<Input
