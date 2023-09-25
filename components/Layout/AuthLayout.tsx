@@ -18,11 +18,18 @@ import {
 	PlusCircleIcon,
 	ShoppingBagIcon,
 	XMarkIcon,
-	WalletIcon
+	WalletIcon,
+	ChatBubbleLeftIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
-import { DynamicWidget, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
+import {
+	DynamicConnectButton,
+	DynamicWidget,
+	useAuthenticateConnectedUser,
+	useDynamicContext
+} from '@dynamic-labs/sdk-react';
+import { ChatWithOwner } from 'react-wallet-chat-sso';
 import Avatar from '../Avatar';
 import Button from '../Button/Button';
 import { CollapseButton } from '../Navigation';
@@ -47,29 +54,95 @@ const navigation = [
 	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
 	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon },
-	{ name: 'Wallet', href: '/wallet', icon: WalletIcon }
+	{ name: 'Wallet', href: '/wallet', icon: WalletIcon },
+	{ name: 'Support', href: undefined, icon: ChatBubbleLeftIcon }
 ];
 
-const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => (
-	<div>
-		{navigation.map((item) => (
-			<Link
-				key={item.name}
-				href={item.href}
-				className={`${
-					selected === item.name ? 'bg-gray-700' : ''
-				} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium`}
-				onClick={onClick}
-			>
-				<item.icon
-					className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
-					aria-hidden="true"
-				/>
-				{item.name}
-			</Link>
-		))}
-	</div>
-);
+const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick?: () => void }) => {
+	const { isAuthenticated, primaryWallet } = useDynamicContext();
+	const { authenticateUser, isAuthenticating } = useAuthenticateConnectedUser();
+
+	const authenticate = () => {
+		if (primaryWallet?.address) {
+			authenticateUser();
+		}
+	};
+
+	return (
+		<div>
+			{navigation.map((item) => {
+				if (item.href) {
+					return (
+						<Link
+							key={item.name}
+							href={item.href}
+							className={`${
+								selected === item.name ? 'bg-gray-700' : ''
+							} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium`}
+							onClick={onClick}
+						>
+							<item.icon
+								className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+								aria-hidden="true"
+							/>
+							{item.name}
+						</Link>
+					);
+				}
+
+				return (
+					<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer">
+						{isAuthenticated ? (
+							<ChatWithOwner
+								ownerAddress="0x630220d00Cf136270f553c8577aF18300F7b812c"
+								key={item.name}
+								render={
+									<Button
+										title={
+											<div
+												className={`${
+													selected === item.name ? 'bg-gray-700' : ''
+												} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium cursor-pointer`}
+											>
+												<item.icon
+													className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+													aria-hidden="true"
+												/>
+												{item.name}
+											</div>
+										}
+										link
+									/>
+								}
+							/>
+						) : (
+							<DynamicConnectButton>
+								<Button
+									title={
+										<div
+											className={`${
+												selected === item.name ? 'bg-gray-700' : ''
+											} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium cursor-pointer`}
+										>
+											<item.icon
+												className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
+												aria-hidden="true"
+											/>
+											{item.name}
+										</div>
+									}
+									onClick={authenticate}
+									disabled={isAuthenticating}
+									link
+								/>
+							</DynamicConnectButton>
+						)}
+					</div>
+				);
+			})}
+		</div>
+	);
+};
 
 const Unauthenticated = () => {
 	const { address } = useAccount();

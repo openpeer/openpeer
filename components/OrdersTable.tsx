@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import Token from './Token/Token';
 
 interface OrdersTableProps {
@@ -47,7 +48,10 @@ const NextButton = ({
 	);
 };
 const OrdersTable = ({ orders }: OrdersTableProps) => {
-	const { address } = useAccount();
+	const { address: account } = useAccount();
+	const { primaryWallet } = useDynamicContext();
+	const address = account || primaryWallet?.address;
+
 	if (!orders) return <p>No orders</p>;
 
 	const orderStatus = (status: Order['status']) => {
