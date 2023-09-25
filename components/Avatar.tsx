@@ -8,7 +8,7 @@ const Avatar = ({ user, className = 'h-8 w-8 md:h-10 md:w-10' }: { user: User; c
 	const src = imageURL || (user.address ? makeBlockie(user.address) : 'https://placehold.co/24');
 	return (
 		<Image
-			className={`${className} rounded-full`}
+			className={`${className} object-cover rounded-full`}
 			src={src}
 			alt="Avatar"
 			width={32}
