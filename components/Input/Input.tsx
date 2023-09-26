@@ -1,5 +1,6 @@
 import React from 'react';
 import { NumericFormat, OnValueChange } from 'react-number-format';
+import Tooltip from 'components/Tooltip';
 
 export interface InputProps {
 	label: string;
@@ -19,6 +20,8 @@ export interface InputProps {
 	extraStyle?: string;
 	containerExtraStyle?: string;
 	labelStyle?: string;
+	showTooltip?: boolean;
+	tooltipContent?: string;
 }
 
 const Input = ({
@@ -38,7 +41,9 @@ const Input = ({
 	disabled = false,
 	extraStyle = '',
 	containerExtraStyle = '',
-	labelStyle = ''
+	labelStyle = '',
+	showTooltip = false,
+	tooltipContent
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -51,7 +56,10 @@ const Input = ({
 				<label htmlFor={id} className={`block text-base font-medium text-gray-700 mb-1 ${labelStyle}`}>
 					{label}
 				</label>
-				<span className="text-sm text-gray-500">{labelSideInfo}</span>
+				<span className="text-sm text-gray-500">
+					{labelSideInfo}
+					{showTooltip ? <Tooltip content={tooltipContent} /> : ''}
+				</span>
 			</div>
 			<div className="relative rounded-md shadow-sm">
 				{prefix}
