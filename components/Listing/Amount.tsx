@@ -133,8 +133,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 				type="decimal"
 				required
 				decimalScale={18}
-				showTooltip
-				tooltipContent="Test"
 				error={errors.totalAvailableAmount}
 			/>
 			<div>

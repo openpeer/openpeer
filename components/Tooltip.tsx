@@ -8,24 +8,17 @@ export interface TooltipProps {
 const Tooltip = ({ content }: TooltipProps) => {
 	const [showTooltip, setShowTooltip] = useState(false);
 
-	const handleIconHover = () => {
-		setShowTooltip(true);
-	};
-
-	const handleIconLeave = () => {
-		setShowTooltip(false);
-	};
 	return (
-		<div className="relative">
-			<div
-				className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer"
-				onMouseEnter={handleIconHover}
-				onMouseLeave={handleIconLeave}
-			>
+		<div
+			className="relative"
+			onClick={() => setShowTooltip(!showTooltip)}
+			onMouseLeave={() => setShowTooltip(false)}
+		>
+			<div className="absolute top-1/2 transform -translate-y-1/2 cursor-pointer">
 				<InformationCircleIcon width="20" height="20" className="text-gray-500" />
 			</div>
 			{showTooltip && (
-				<div className="absolute top-0 left-0 bg-gray-800 text-white p-2 rounded-lg z-50">{content}</div>
+				<div className="absolute top-4 left-0 bg-gray-800 text-white p-2 rounded-lg z-50">{content}</div>
 			)}
 		</div>
 	);
