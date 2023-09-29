@@ -1,5 +1,7 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
-import { ListsTable, Loading } from 'components';
+import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { Button, ListsTable, Loading } from 'components';
+import IconButton from 'components/Button/IconButton';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -29,7 +31,11 @@ const Ads = () => {
 
 	return (
 		<div className="py-6">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+			<div className="flex flex-col mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+				<div className="flex flex-row justify-end mb-4 space-x-4">
+					<IconButton outlined title="Settings" icon={<AdjustmentsHorizontalIcon width="20" height="20" />} />
+					<IconButton title="Create New Ad" icon={<PlusIcon width="20" height="20" />} />
+				</div>
 				<ListsTable lists={lists} />
 			</div>
 		</div>
