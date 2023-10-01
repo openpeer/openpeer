@@ -1,5 +1,5 @@
 import { useDynamicContext, useSendBalance } from '@dynamic-labs/sdk-react';
-import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { PaperAirplaneIcon, WalletIcon } from '@heroicons/react/24/outline';
 import { Button, Loading, Token as TokenImage } from 'components';
 import SendFundsModal from 'components/Modal/SendFundsModal';
 import TransactionLink from 'components/TransactionLink';
@@ -107,6 +107,13 @@ const Wallet = () => {
 		<>
 			<div className="mt-8">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+					<div className="flex flex-row items-center justify-between mb-6">
+						<h2 className="text-2xl font-bold">My assets</h2>
+						<div className="flex flex-row items-center space-x-2 text-gray-400">
+							<WalletIcon width="16" height="16" />
+							<span>Wallet</span>
+						</div>
+					</div>
 					<table className="w-full md:rounded-lg overflow-hidden">
 						<thead className="bg-gray-100">
 							<tr className="w-full">
