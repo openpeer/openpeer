@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Toggle from 'components/SwitchToggle/Toggle';
@@ -10,6 +11,7 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 
 const AdsSettings = () => {
 	const onSelect = [0, 1, 2];
+	const router = useRouter();
 
 	const [isDivVisible, setDivVisible] = useState(true);
 
@@ -67,9 +69,9 @@ const AdsSettings = () => {
 									<Input label="To:" id="to" containerExtraStyle="w-full my-2 text-gray-600" />
 								</div>
 							</div>
-							<div className="flex flex-col md:flex-row items-center space-x-6">
+							<div className="flex flex-col-reverse md:flex-row items-center md:space-x-6">
 								<Button outlined title="Cancel" />
-								<Button title="Save" />
+								<Button title="Save" onClick={() => router.push('/ads')} />
 							</div>
 						</div>
 					)}
