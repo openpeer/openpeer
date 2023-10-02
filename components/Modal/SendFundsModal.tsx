@@ -9,6 +9,7 @@ import Button from 'components/Button/Button';
 import { formatUnits, isAddress } from 'viem';
 import { useNetwork } from 'wagmi';
 import ClipboardText from 'components/Buy/ClipboardText';
+import Switcher from 'components/Button/Switcher';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -75,6 +76,14 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 										</span>
 									</div>
 									<div className="p-8">
+										<div className="w-full m-auto justify-center flex flex-row mb-4">
+											<Switcher
+												leftLabel="Send"
+												rightLabel="Deposit"
+												selected={' '}
+												onToggle={' '}
+											/>
+										</div>
 										{/* Deposit Funds */}
 										<div className="mt-2 mb-4 hidden">
 											<div className="text-2xl font-bold mb-4">Deposit Funds </div>
