@@ -60,18 +60,18 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 			<h2 className="text-xl mt-12 mb-2">Choose order type</h2>
 			<fieldset className="mb-4">
 				<Option
-					type="BuyList"
-					title="Buy Order"
-					description="I want to buy crypto in exchange for fiat"
-					onClick={setType}
-					selected={type === 'BuyList'}
-				/>
-				<Option
 					type="SellList"
 					title="Sell Order"
 					description="I want to sell crypto in exchange for fiat"
 					onClick={setType}
 					selected={type === 'SellList'}
+				/>
+				<Option
+					type="BuyList"
+					title="Buy Order"
+					description="I want to buy crypto in exchange for fiat"
+					onClick={setType}
+					selected={type === 'BuyList'}
 				/>
 			</fieldset>
 		</StepLayout>
