@@ -1,6 +1,5 @@
 import { Token } from 'models/types';
 import React, { Fragment, useEffect, useState } from 'react';
-
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { Manrope } from '@next/font/google';
@@ -8,6 +7,8 @@ import TokenImage from 'components/Token/Token';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import { formatUnits, isAddress } from 'viem';
+import { useNetwork } from 'wagmi';
+import ClipboardText from 'components/Buy/ClipboardText';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -25,6 +26,7 @@ export interface SendFundsModalProps {
 const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: SendFundsModalProps) => {
 	const [address, setAddress] = useState('');
 	const [amount, setAmount] = useState<number>();
+	const { chain } = useNetwork();
 
 	useEffect(() => {
 		setAddress('');
@@ -50,7 +52,7 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 					<div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
 				</Transition.Child>
 
-				<div className="fixed inset-0 z-10 overflow-y-auto">
+				<div className="fixed inset-0 z-10 overflow-y-auto mx-4">
 					<div className="flex min-h-full items-center justify-center text-center">
 						<Transition.Child
 							as={Fragment}
@@ -73,13 +75,54 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 										</span>
 									</div>
 									<div className="p-8">
-										<div className="mt-2 mb-4">
-											<div className="text-lg font-bold text-center">Send Funds</div>
-											<span className="text-base font-medium text-gray-700">Token</span>
-											<div className="mt-2">
-												<div className="flex flex-row items-center space-x-2">
-													<TokenImage token={token} size={32} />
-													<span>{token.name}</span>
+										{/* Deposit Funds */}
+										<div className="mt-2 mb-4 hidden">
+											<div className="text-2xl font-bold mb-4">Deposit Funds </div>
+											<div className="border border-gray-200 rounded-lg">
+												<div className="border-b border-gray-200 py-2 px-4">
+													<div className="flex flex-row items-center space-x-2">
+														<span className="text-sm font-bold text-gray-700">Asset</span>
+														<div className="flex flex-row items-center space-x-1">
+															<TokenImage token={token} size={16} />
+															<span className="text-sm">{token.name}</span>
+														</div>
+														<div className="text-sm text-gray-400"> / </div>
+														<div className="flex flex-row items-center space-x-2">
+															<span className="text-sm font-bold text-gray-700">
+																Network
+															</span>
+															<div className="flex flex-row items-center space-x-1">
+																<TokenImage token={token} size={16} />
+																<span className="text-sm">{chain?.name}</span>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div className="py-4 px-4">QR Code</div>
+												<div className="border-t border-gray-200 py-2 px-4">
+													<ClipboardText itemValue="address Marcos 02B02345c02ox84" />
+												</div>
+											</div>
+										</div>
+										{/* Send Funds */}
+										<div className="mt-2 mb-4 ">
+											<div className="text-2xl font-bold mb-4">Send Funds</div>
+											<div className="flex flex-row items-center justify-between border-b border-gray-200 py-2">
+												<span className="text-base font-bold text-gray-700">Network</span>
+												<div className="mt-2">
+													<div className="flex flex-row items-center space-x-2">
+														<TokenImage token={token} size={24} />
+														<span className="text-sm">{chain?.name}</span>
+													</div>
+												</div>
+											</div>
+											<div className="flex flex-row items-center justify-between py-2">
+												<span className="text-base font-bold text-gray-700">Asset</span>
+												<div className="mt-2">
+													<div className="flex flex-row items-center space-x-2">
+														<TokenImage token={token} size={24} />
+														<span className="text-sm">{token.name}</span>
+													</div>
 												</div>
 											</div>
 
