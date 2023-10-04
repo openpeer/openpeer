@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import { ArrowTrendingDownIcon, ArrowTrendingUpIcon } from '@heroicons/react/20/solid';
-
 import { ListStepProps, UIList } from './Listing.types';
 import StepLayout from './StepLayout';
 
