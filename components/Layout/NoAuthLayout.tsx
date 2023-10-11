@@ -60,13 +60,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 							<div className="flex">
 								<div className="flex flex-shrink-0 items-center">
 									<Link href="/">
-										<Image
-											src={darkLogo}
-											alt="openpeer logo"
-											className="h-10 w-auto"
-											width={104}
-											height={23}
-										/>
+										<Image src={darkLogo} alt="openpeer logo" className="h-7 w-auto" />
 									</Link>
 								</div>
 								<div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8 items-center">
