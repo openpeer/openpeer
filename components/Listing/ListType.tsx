@@ -49,14 +49,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 	return (
 		<StepLayout onProceed={onProceed}>
 			<h2 className="text-xl mt-12 mb-2">Choose order type</h2>
-			<fieldset className="mb-4">
-				<Option
-					type="BuyList"
-					title="Buy Order"
-					description="I want to buy crypto in exchange for fiat"
-					onClick={setType}
-					selected={type === 'BuyList'}
-				/>
+			<fieldset className="mb-2">
 				<Option
 					type="SellList"
 					title="Sell Order"
@@ -64,7 +57,37 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 					onClick={setType}
 					selected={type === 'SellList'}
 				/>
+				<Option
+					type="BuyList"
+					title="Buy Order"
+					description="I want to buy crypto in exchange for fiat"
+					onClick={setType}
+					selected={type === 'BuyList'}
+				/>
 			</fieldset>
+
+			{type === 'SellList' && (
+				<div>
+					<h2 className="text-xl mt-6 mb-2">Choose Sell order type</h2>
+					<fieldset className="mb-4">
+						<Option
+							type="SellInstant"
+							title="Instant Escrow (recommended)"
+							description="I want to hold funds in OpenPeer and have them escrowed instantly when an order is placed"
+							onClick={setType}
+							selected={type === 'SellInstant'}
+						/>
+						<Option
+							type="SellManual"
+							title="Manual Escrow"
+							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer 
+						when an order is placed"
+							onClick={setType}
+							selected={type === 'SellManual'}
+						/>
+					</fieldset>
+				</div>
+			)}
 		</StepLayout>
 	);
 };
