@@ -19,9 +19,9 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 		onClick={() => onClick(type)}
 	>
 		<div className="min-w-0 flex-1 text-sm pl-2">
-			<label htmlFor="buyOrder" className="font-medium text-gray-700">
-				{title}
-				<p id="order-description" className="text-gray-500">
+			<label htmlFor="buyOrder">
+				<span className="font-bold text-gray-800">{title}</span>
+				<p id="order-description" className="font-medium text-gray-500">
 					{description}
 				</p>
 			</label>
@@ -48,7 +48,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 
 	return (
 		<StepLayout onProceed={onProceed}>
-			<h2 className="text-xl mt-12 mb-2">Choose order type</h2>
+			<h2 className="text-lg mt-12 mb-2">Choose order type</h2>
 			<fieldset className="mb-2">
 				<Option
 					type="SellList"
@@ -68,7 +68,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 
 			{type === 'SellList' && (
 				<div>
-					<h2 className="text-xl mt-6 mb-2">Choose Sell order type</h2>
+					<h2 className="text-lg mt-6 mb-2">Choose Sell order type</h2>
 					<fieldset className="mb-4">
 						<Option
 							type="SellInstant"
