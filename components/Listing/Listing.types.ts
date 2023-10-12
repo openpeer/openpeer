@@ -9,7 +9,7 @@ export interface UIPaymentMethod {
 
 export interface UIList {
 	id: number | undefined;
-	type: 'BuyList' | 'SellList';
+	type: 'BuyList' | 'SellList' | 'SellInstant' | 'SellManual';
 	step: number;
 	token: Option | undefined;
 	tokenId: number | undefined;
