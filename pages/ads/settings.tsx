@@ -2,21 +2,19 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Toggle from 'components/SwitchToggle/Toggle';
-import Select from 'components/Select/Select';
-import { Option } from 'components/Select/Select.types';
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
+import { TimezoneSelect } from 'components';
 
 const AdsSettings = () => {
-	const onSelect = [0, 1, 2];
 	const router = useRouter();
 
-	const [isDivVisible, setDivVisible] = useState(true);
+	const [isVisible, setIsVisible] = useState(true);
 
 	const handleToggleChange = () => {
-		setDivVisible(true);
+		setIsVisible(!isVisible);
 	};
 
 	return (
@@ -30,8 +28,8 @@ const AdsSettings = () => {
 					<div className="flex flex-col">
 						<h2 className="text-2xl font-bold mb-4">Settings</h2>
 						<span className="w-auto text-gray-600">
-							You can set a time when you're online to complete your trades. By default it's UTC time
-							09:00 - 21:00
+							You can set a time when you&apos;re online to complete your trades. By default it&apos;s UTC
+							time 09:00 - 21:00
 						</span>
 					</div>
 				</div>
@@ -41,26 +39,19 @@ const AdsSettings = () => {
 							<div className="font-bold mb-2 text-base text-gray-600">Set your available Times</div>
 							<div className="text-gray-600 text-sm">
 								<span className="font-bold">
-									You can set a time when you're online to complete a trade.
+									You can set a time when you&apos;re online to complete a trade.{' '}
 								</span>
-								By default it's UTC time 09:00 - 21:00
+								By default it&apos;s UTC time 09:00 - 21:00
 							</div>
 						</div>
 						<div>
-							<Toggle onChange={handleToggleChange} />
+							<Toggle checked={isVisible} onChange={handleToggleChange} />
 						</div>
 					</div>
-					{!!isDivVisible && (
+					{isVisible && (
 						<div className="flex flex-col">
 							<div className="">
-								<Select
-									label="Select your Time Zone"
-									options={[]}
-									selected={undefined}
-									onSelect={function (option: Option | undefined): void {
-										throw new Error('Function not implemented.');
-									}}
-								/>
+								<TimezoneSelect onSelect={() => console.log('narcis')} selected={undefined} />
 							</div>
 							<div className="flex flex-col mb-4">
 								<div className="text-base font-medium text-gray-700 ">Select your available time</div>

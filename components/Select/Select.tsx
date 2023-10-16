@@ -51,7 +51,7 @@ export default function Select({
 									(token ? (
 										<Token token={selected as TokenModel} size={24} />
 									) : flag ? (
-										<Flag name={countries[selected.icon]} size={24} />
+										<Flag name={countries[selected.icon!]} size={24} />
 									) : (
 										selected.icon && (
 											<Image
@@ -111,7 +111,7 @@ export default function Select({
 													{token ? (
 														<Token token={option as TokenModel} size={24} />
 													) : flag ? (
-														<Flag name={countries[option.icon]} size={24} />
+														<Flag name={countries[option.icon!]} size={24} />
 													) : (
 														option.icon && (
 															<Image
