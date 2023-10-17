@@ -1,8 +1,7 @@
 import Button from 'components/Button/Button';
-import { useEscrowFee } from 'hooks';
+import { useEscrowFee, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import React from 'react';
-import { useAccount } from 'wagmi';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 

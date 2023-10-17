@@ -2,7 +2,7 @@ import StepLayout from 'components/Listing/StepLayout';
 import HeaderH3 from 'components/SectionHeading/h3';
 import Image from 'next/image';
 import React from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 

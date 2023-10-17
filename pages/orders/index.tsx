@@ -3,7 +3,7 @@ import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);

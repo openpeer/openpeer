@@ -1,10 +1,10 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import { useApproval } from 'hooks/transactions';
 import { Token } from 'models/types';
 import React, { useEffect } from 'react';
-import { erc20ABI, useAccount, useContractRead } from 'wagmi';
+import { erc20ABI, useContractRead } from 'wagmi';
 
 const ApproveTokenButton = ({
 	token,

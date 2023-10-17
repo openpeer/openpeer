@@ -3,7 +3,7 @@ import { ListsTable, Loading } from 'components';
 import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const Ads = () => {
 	const [lists, setLists] = useState<List[]>();
@@ -11,7 +11,6 @@ const Ads = () => {
 
 	useEffect(() => {
 		if (!address) return;
-
 		fetch('/api/lists/ads', {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`

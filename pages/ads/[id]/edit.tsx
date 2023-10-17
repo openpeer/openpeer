@@ -8,7 +8,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;

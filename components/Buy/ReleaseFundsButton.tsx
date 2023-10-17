@@ -1,11 +1,10 @@
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
-import { useAccount } from 'wagmi';
 
 interface ReleaseFundsButtonParams {
 	order: Order;

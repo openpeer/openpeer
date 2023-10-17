@@ -1,9 +1,8 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
-import { useConfirmationSignMessage } from 'hooks';
+import { useConfirmationSignMessage, useAccount } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount } from 'wagmi';
 
 import { Token } from 'models/types';
 import Checkbox from 'components/Checkbox/Checkbox';

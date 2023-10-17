@@ -1,10 +1,9 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { Button, Modal } from 'components';
-import { useCancelReasons, useConfirmationSignMessage } from 'hooks';
+import { useCancelReasons, useConfirmationSignMessage, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
 import CancelReasons from './CancelReasons';

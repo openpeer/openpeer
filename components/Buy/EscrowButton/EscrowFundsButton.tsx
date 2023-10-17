@@ -1,10 +1,9 @@
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import { useEscrowFunds } from 'hooks/transactions';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
-import { useAccount } from 'wagmi';
 
 import { EscrowFundsButtonProps } from './EscrowButton.types';
 

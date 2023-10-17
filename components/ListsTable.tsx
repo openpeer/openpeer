@@ -6,11 +6,11 @@ import { Token as TokenType, List } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
 import { arbitrum, optimism } from 'wagmi/chains';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
+import { useAccount } from 'hooks';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';

@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-curly-newline */
 import { BankSelect, Button, Input, Loading, Textarea } from 'components';
-import { useFormErrors } from 'hooks';
+import { useFormErrors, useAccount } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 

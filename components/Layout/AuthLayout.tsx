@@ -9,7 +9,7 @@ import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {

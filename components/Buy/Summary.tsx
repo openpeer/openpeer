@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 

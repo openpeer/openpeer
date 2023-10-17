@@ -2,14 +2,13 @@
 import { Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
-import { useConfirmationSignMessage, useFormErrors } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors, useAccount } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 

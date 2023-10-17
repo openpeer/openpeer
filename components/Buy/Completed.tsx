@@ -4,7 +4,7 @@ import StepLayout from 'components/Listing/StepLayout';
 import HeaderH2 from 'components/SectionHeading/h2';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 

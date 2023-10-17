@@ -1,9 +1,9 @@
 import { OpenPeerDeployer } from 'abis';
 import { constants } from 'ethers';
-import { useEscrowFee } from 'hooks';
+import { useEscrowFee, useAccount } from 'hooks';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import React, { useState } from 'react';
-import { useAccount, useContractRead, useNetwork } from 'wagmi';
+import { useContractRead, useNetwork } from 'wagmi';
 
 import ApproveTokenButton from './ApproveTokenButton';
 import DeploySellerContract from './DeploySellerContract';
