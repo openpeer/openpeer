@@ -41,10 +41,14 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					}
 				}
 			);
-			const { id } = await result.json();
+			const { id, escrowType } = await result.json();
 
 			if (id) {
-				router.push(`/${address}`);
+				if (escrowType === 'instant') {
+					router.push(`/${address}`);
+				} else {
+					router.push(`/${address}`);
+				}
 			}
 		}
 	});

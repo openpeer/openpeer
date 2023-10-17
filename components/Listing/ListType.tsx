@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { User } from 'models/types';
+import { useAccount } from 'hooks';
 import { ListStepProps, UIList } from './Listing.types';
 import StepLayout from './StepLayout';
+import AccountInfo from './AccountInfo';
 
 interface OptionProps {
-	type: UIList['type'];
+	type: string;
 	title: string;
 	description: string;
 	selected: boolean;
-	onClick: (type: UIList['type']) => void;
+	onClick: (type: string) => void;
 }
 
 const Option = ({ type, title, description, selected, onClick }: OptionProps) => (
@@ -19,9 +23,9 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 		onClick={() => onClick(type)}
 	>
 		<div className="min-w-0 flex-1 text-sm pl-2">
-			<label htmlFor="buyOrder">
+			<label htmlFor={type}>
 				<span className="font-bold text-gray-800">{title}</span>
-				<p id="order-description" className="font-medium text-gray-500">
+				<p id={type} className="font-medium text-gray-500">
 					{description}
 				</p>
 			</label>
@@ -40,11 +44,39 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 );
 
 const ListType = ({ updateList, list }: ListStepProps) => {
-	const [type, setType] = useState<UIList['type']>(list.type || 'SellList');
+	const [type, setType] = useState<string>(list.type || 'SellList');
+	const [escrowType, setEscrowType] = useState<string>(list.escrowType || 'instant');
+	const { address } = useAccount();
+	const [user, setUser] = useState<User | null>();
 
 	const onProceed = () => {
-		updateList({ ...list, ...{ type } });
+		updateList({
+			...list,
+			...{ type: type as UIList['type'], escrowType: escrowType as UIList['escrowType'], step: list.step + 1 }
+		});
 	};
+
+	useEffect(() => {
+		if (!address) return;
+
+		fetch(`/api/users/${address}`, {
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
+			});
+	}, [address]);
+
+	if (!user?.email) {
+		return <AccountInfo setUser={setUser} />;
+	}
 
 	return (
 		<StepLayout onProceed={onProceed}>
@@ -66,28 +98,26 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 				/>
 			</fieldset>
 
-			{type === 'SellList' && (
-				<div>
-					<h2 className="text-lg mt-6 mb-2">Choose Sell order type</h2>
-					<fieldset className="mb-4">
-						<Option
-							type="SellInstant"
-							title="Instant Escrow (recommended)"
-							description="I want to hold funds in OpenPeer and have them escrowed instantly when an order is placed"
-							onClick={setType}
-							selected={type === 'SellInstant'}
-						/>
-						<Option
-							type="SellManual"
-							title="Manual Escrow"
-							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer 
+			<div>
+				<h2 className="text-lg mt-6 mb-2">Choose the escrow type</h2>
+				<fieldset className="mb-4">
+					<Option
+						type="instant"
+						title="Instant Escrow (recommended)"
+						description="I want to hold funds in OpenPeer contracts and have them escrowed instantly when an order is placed"
+						onClick={setEscrowType}
+						selected={escrowType === 'instant'}
+					/>
+					<Option
+						type="manual"
+						title="Manual Escrow"
+						description="I want to manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer
 						when an order is placed"
-							onClick={setType}
-							selected={type === 'SellManual'}
-						/>
-					</fieldset>
-				</div>
-			)}
+						onClick={setEscrowType}
+						selected={escrowType === 'manual'}
+					/>
+				</fieldset>
+			</div>
 		</StepLayout>
 	);
 };

@@ -9,7 +9,7 @@ export interface UIPaymentMethod {
 
 export interface UIList {
 	id: number | undefined;
-	type: 'BuyList' | 'SellList' | 'SellInstant' | 'SellManual';
+	type: 'BuyList' | 'SellList';
 	step: number;
 	token: Option | undefined;
 	tokenId: number | undefined;
@@ -22,12 +22,12 @@ export interface UIList {
 	limitMax: number | undefined;
 	paymentMethod: UIPaymentMethod | undefined;
 	terms?: string | undefined;
-	quickSellSetupDone: boolean;
 	user?: User;
 	depositTimeLimit: number;
 	paymentTimeLimit: number;
 	chainId: number;
 	acceptOnlyVerified: boolean;
+	escrowType: List['escrow_type'];
 }
 
 export interface ListStepProps {
