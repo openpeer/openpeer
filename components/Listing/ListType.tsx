@@ -52,7 +52,11 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 	const onProceed = () => {
 		updateList({
 			...list,
-			...{ type: type as UIList['type'], escrowType: escrowType as UIList['escrowType'], step: list.step + 1 }
+			...{
+				type: type as UIList['type'],
+				escrowType: type === 'SellList' ? 'manual' : (escrowType as UIList['escrowType']),
+				step: list.step + 1
+			}
 		});
 	};
 
@@ -97,27 +101,28 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 					selected={type === 'BuyList'}
 				/>
 			</fieldset>
-
-			<div>
-				<h2 className="text-lg mt-6 mb-2">Choose the escrow type</h2>
-				<fieldset className="mb-4">
-					<Option
-						type="instant"
-						title="Instant Escrow (recommended)"
-						description="I want to hold funds in OpenPeer contracts and have them escrowed instantly when an order is placed"
-						onClick={setEscrowType}
-						selected={escrowType === 'instant'}
-					/>
-					<Option
-						type="manual"
-						title="Manual Escrow"
-						description="I want to manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer
+			{type === 'SellList' && (
+				<div>
+					<h2 className="text-lg mt-6 mb-2">Choose the escrow type</h2>
+					<fieldset className="mb-4">
+						<Option
+							type="instant"
+							title="Instant Escrow (recommended)"
+							description="I want to hold funds in OpenPeer contracts and have them escrowed instantly when an order is placed"
+							onClick={setEscrowType}
+							selected={escrowType === 'instant'}
+						/>
+						<Option
+							type="manual"
+							title="Manual Escrow"
+							description="I want to manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer
 						when an order is placed"
-						onClick={setEscrowType}
-						selected={escrowType === 'manual'}
-					/>
-				</fieldset>
-			</div>
+							onClick={setEscrowType}
+							selected={escrowType === 'manual'}
+						/>
+					</fieldset>
+				</div>
+			)}
 		</StepLayout>
 	);
 };

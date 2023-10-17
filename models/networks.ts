@@ -11,6 +11,10 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	// [gnosis.id]: process.env.NEXT_PUBLIC_GNOSIS_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
 };
 
+export const DEPLOYER_V2_CONTRACTS: { [key: number]: `0x${string}` } = {
+	[polygonMumbai.id]: '0xD50fd4542F9D71d7CF0D54e3d7234234545a9D1E'
+};
+
 export const networkApiKeys: { [key: number]: string } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_BICONOMY_MATIC_API_KEY!,
 	[polygonMumbai.id]: process.env.NEXT_PUBLIC_BICONOMY_MATICMUM_API_KEY!

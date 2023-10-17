@@ -1,19 +1,26 @@
+/* eslint-disable @typescript-eslint/indent */
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { useConfirmationSignMessage, useAccount } from 'hooks';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 
 import { Token } from 'models/types';
 import Checkbox from 'components/Checkbox/Checkbox';
+import { useContractRead } from 'wagmi';
+import { DEPLOYER_V2_CONTRACTS } from 'models/networks';
+import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
+import { parseUnits } from 'viem';
 import Label from '../Label/Label';
 import Selector from '../Selector';
 import Textarea from '../Textarea/Textarea';
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
+import FundEscrow from './FundEscrow';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified } = list;
+	const [fund, setFund] = useState(false);
+	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
 	const { address } = useAccount();
 	const router = useRouter();
 
@@ -41,29 +48,76 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					}
 				}
 			);
-			const { id, escrowType } = await result.json();
+			const { id } = await result.json();
 
 			if (id) {
-				if (escrowType === 'instant') {
-					router.push(`/${address}`);
-				} else {
-					router.push(`/${address}`);
-				}
+				router.push(`/${address}`);
 			}
 		}
 	});
-
-	const onProceed = () => {
-		const message = JSON.stringify(snakecaseKeys(list, { deep: true }), undefined, 4);
-		signMessage({ message });
-	};
 
 	const onTermsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		updateList({ ...list, ...{ terms: event.target.value } });
 	};
 
+	const { data: sellerContract } = useContractRead({
+		address: DEPLOYER_V2_CONTRACTS[chainId],
+		abi: OpenPeerDeployer,
+		functionName: 'sellerContracts',
+		args: [address],
+		// args: [address],
+		enabled: !!address && escrowType === 'instant',
+		watch: true
+	});
+
+	const { data: balance } = useContractRead({
+		address: sellerContract as `0x${string}`,
+		abi: OpenPeerEscrow,
+		functionName: 'balances',
+		args: [(token as Token).address],
+		enabled: !!sellerContract,
+		watch: true
+	});
+
+	const needToDeploy = !sellerContract;
+	const needToFund =
+		!balance ||
+		(balance as bigint) <
+			parseUnits(String(list.limitMax || list.totalAvailableAmount || 0), (token as Token)!.decimals);
+
+	const needToDeployOrFund = needToDeploy || needToFund;
+
+	const onProceed = () => {
+		if (needToDeployOrFund) {
+			setFund(true);
+		} else {
+			const message = JSON.stringify(snakecaseKeys(list, { deep: true }), undefined, 4);
+			signMessage({ message });
+		}
+	};
+
+	if (fund) {
+		return (
+			<FundEscrow
+				token={token as Token}
+				sellerContract={sellerContract as `0x${string}` | undefined}
+				chainId={chainId}
+				balance={(balance || 0) as bigint}
+			/>
+		);
+	}
+
 	return (
-		<StepLayout onProceed={onProceed} buttonText="Sign and Finish">
+		<StepLayout
+			onProceed={onProceed}
+			buttonText={
+				needToDeploy
+					? 'Deploy Escrow Contract'
+					: needToFund
+					? 'Deposit in the Escrow Contract'
+					: 'Sign and Finish'
+			}
+		>
 			<div className="my-8">
 				<Label title="Deposit Time Limit" />
 				<div className="mb-4">
