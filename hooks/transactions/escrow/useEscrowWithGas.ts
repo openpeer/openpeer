@@ -4,7 +4,7 @@ import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from
 
 import { UseEscrowFundsProps } from '../types';
 
-const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract }: UseEscrowFundsProps) => {
+const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract, instantEscrow }: UseEscrowFundsProps) => {
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 	const partner = constants.AddressZero;
@@ -15,8 +15,8 @@ const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract }: UseE
 		abi: OpenPeerEscrow,
 		functionName: nativeToken ? 'createNativeEscrow' : 'createERC20Escrow',
 		args: nativeToken
-			? [orderID, buyer, amount, partner, sellerWaitingTime]
-			: [orderID, buyer, address, amount, partner, sellerWaitingTime],
+			? [orderID, buyer, amount, partner, sellerWaitingTime, instantEscrow]
+			: [orderID, buyer, address, amount, partner, sellerWaitingTime, instantEscrow],
 		gas: BigInt('2000000'),
 		value: nativeToken ? amount + fee : undefined
 	});

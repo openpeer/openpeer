@@ -1,23 +1,23 @@
 import { Steps } from 'components';
 import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
-import { List } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'hooks';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
+import {
+	DEFAULT_DEPOSIT_TIME_LIMIT,
+	DEFAULT_ESCROW_TYPE,
+	DEFAULT_MARGIN_TYPE,
+	DEFAULT_MARGIN_VALUE,
+	DEFAULT_PAYMENT_TIME_LIMIT
+} from 'utils';
 
 const LIST_TYPE_STEP = 1;
 const SETUP_STEP = 2;
 const AMOUNT_STEP = 3;
 const PAYMENT_METHOD_STEP = 4;
 const DETAILS_STEP = 5;
-
-const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'fixed';
-const DEFAULT_MARGIN_VALUE = 1;
-const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
-const DEFAULT_PAYMENT_TIME_LIMIT = 0;
-const DEFAULT_ESCROW_TYPE: List['escrow_type'] = 'instant';
 
 const defaultList = {
 	marginType: DEFAULT_MARGIN_TYPE,

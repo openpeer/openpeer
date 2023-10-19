@@ -37,7 +37,7 @@ const BuyPage = ({ id }: { id: number }) => {
 		setOrder({ ...order, ...{ price } });
 	}, [price]);
 
-	const seller = order.seller || order.list?.seller;
+	const seller = order.seller || list?.seller;
 	const canBuy = seller && seller.address !== address;
 
 	if (!list) return <Loading />;

@@ -26,9 +26,11 @@ const Summary = ({ list }: SummaryProps) => {
 		paymentTimeLimit,
 		terms,
 		type,
-		acceptOnlyVerified
+		acceptOnlyVerified,
+		escrowType
 	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
+	const instantEscrow = escrowType === 'instant';
 
 	if (!token && !currency) {
 		return (
@@ -147,13 +149,19 @@ const Summary = ({ list }: SummaryProps) => {
 						</div>
 					</li>
 				)}
-				{!!depositTimeLimit && (
+				{instantEscrow ? (
 					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Deposit Time Limit</div>
-						<div className="font-bold">
-							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
-						</div>
+						<div className="font-bold">⚡ Instant deposit</div>
 					</li>
+				) : (
+					!!depositTimeLimit && (
+						<li className="w-full flex flex-row justify-between mb-4">
+							<div>Deposit Time Limit</div>
+							<div className="font-bold">
+								{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+							</div>
+						</li>
+					)
 				)}
 				{!!paymentTimeLimit && (
 					<li className="w-full flex flex-row justify-between mb-4">

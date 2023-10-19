@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface ExplainerNotificationProps {
-	title: string;
+	title?: string | JSX.Element;
 	content: string;
 	info?: boolean;
 	disclaimer?: boolean;
@@ -18,7 +18,7 @@ const ExplainerNotification = ({ title, content, info = false, disclaimer = fals
 				: 'bg-[#F7FBFC] text-cyan-600 p-4 rounded'
 		}
 	>
-		<p className="text-sm font-bold mb-2">{title}</p>
+		{title && <p className="text-sm font-bold mb-2">{title}</p>}
 		<p className="text-sm">{content}</p>
 	</div>
 );

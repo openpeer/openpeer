@@ -1,17 +1,16 @@
 import { OpenPeerEscrow } from 'abis';
-import { constants, Contract } from 'ethers';
+import { Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { UseEscrowTransactionProps } from '../types';
+import { UseDepositFundsProps } from '../types';
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscrow }: UseEscrowTransactionProps) => {
-	const sellerWaitingTime = 24 * 60 * 60;
+const useGaslessDepositFunds = ({ contract, token, amount }: UseDepositFundsProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -28,20 +27,11 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscr
 		return { isFetching: false, gaslessEnabled: false, isSuccess, isLoading, data };
 	}
 
-	const escrowFunds = async () => {
+	const depositFunds = async () => {
 		try {
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
-			const partner = constants.AddressZero;
-			const { data: transactionData } = await contractInstance.populateTransaction.createERC20Escrow(
-				orderID,
-				buyer,
-				token.address,
-				amount,
-				partner,
-				sellerWaitingTime,
-				instantEscrow
-			);
+			const { data: transactionData } = await contractInstance.populateTransaction.deposit(token.address, amount);
 			const txParams = {
 				data: transactionData,
 				to: contract,
@@ -73,7 +63,7 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscr
 			setIsSuccess(false);
 		}
 	};
-	return { isFetching: false, gaslessEnabled: true, isLoading, isSuccess, data, escrowFunds };
+	return { isFetching: false, gaslessEnabled: true, isLoading, isSuccess, data, depositFunds };
 };
 
-export default useGaslessEscrow;
+export default useGaslessDepositFunds;

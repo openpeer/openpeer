@@ -32,7 +32,7 @@ const Payment = ({ order }: BuyStepProps) => {
 		deposit_time_limit: depositTimeLimit,
 		payment_time_limit: paymentTimeLimit
 	} = order;
-	const { token, fiat_currency: currency } = list!;
+	const { token, fiat_currency: currency, escrow_type: escrowType } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
@@ -54,11 +54,25 @@ const Payment = ({ order }: BuyStepProps) => {
 		timeLimitForPayment > 0
 			? timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime())
 			: 0;
+	const instantEscrow = escrowType === 'instant';
 
 	return (
 		<StepLayout>
 			<div className="my-0 md:my-8">
-				{status === 'created' && (
+				{status === 'created' && instantEscrow && (
+					<div>
+						<span className="flex flex-row mb-2 text-yellow-600">
+							<ClockIcon className="w-8 mr-2" />
+							<HeaderH3 title="Instant Escrow" />
+						</span>
+						<p className="text-base">
+							{selling
+								? 'Please confirm the order.'
+								: 'Please confirm the order. Payments details will become visible after the order confirmation. '}
+						</p>
+					</div>
+				)}
+				{status === 'created' && !instantEscrow && (
 					<div>
 						<span className="flex flex-row mb-2 text-yellow-600">
 							<ClockIcon className="w-8 mr-2" />
@@ -109,7 +123,7 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				</div>
 
-				{status === 'created' && <PreShowDetails timeLeft={timeLeft} />}
+				{status === 'created' && !instantEscrow && <PreShowDetails timeLeft={timeLeft} />}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6 mb-4">
 						<div className="flex flex-row justify-between mb-4">
@@ -180,12 +194,14 @@ const Payment = ({ order }: BuyStepProps) => {
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>
-					{status === 'created' && selling && (
+					{status === 'created' && (selling || instantEscrow) && (
 						<EscrowButton
 							buyer={buyer!.address}
 							token={token}
 							tokenAmount={tokenAmount || 0}
 							uuid={uuid!}
+							instantEscrow={instantEscrow}
+							seller={seller.address}
 						/>
 					)}
 					{status === 'escrowed' &&

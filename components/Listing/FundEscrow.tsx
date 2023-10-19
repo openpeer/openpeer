@@ -1,26 +1,32 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import React from 'react';
+import React, { useState } from 'react';
 import { Token } from 'models/types';
-import Button from 'components/Button/Button';
 import { useQRCode } from 'next-qrcode';
-import Label from 'components/Label/Label';
 import { allChains } from 'models/networks';
 import { arbitrum, optimism } from 'wagmi/chains';
 import ClipboardText from 'components/Buy/ClipboardText';
-import { formatUnits } from 'viem';
+import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContract';
+import Input from 'components/Input/Input';
+import ExplainerNotification from 'components/Notifications/ExplainerNotification';
+import { formatUnits, parseUnits } from 'viem';
+import DepositFunds from 'components/DepositButton';
+import { constants } from 'ethers';
 import TokenImage from '../Token/Token';
 import StepLayout from './StepLayout';
-import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContract';
 
 interface FundsEscrowProps {
 	token: Token;
 	sellerContract: `0x${string}` | undefined;
 	chainId: number;
 	balance: bigint;
+	totalAvailableAmount: number;
 }
 
-const FundEscrow = ({ token, sellerContract, chainId, balance }: FundsEscrowProps) => {
+const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmount }: FundsEscrowProps) => {
+	const listTotal = parseUnits(totalAvailableAmount.toString(), token.decimals);
+	const toDeposit = Number(formatUnits(listTotal - balance, token.decimals));
+	const [depositAmount, setDepositAmount] = useState<number | undefined>(toDeposit);
 	const { SVG } = useQRCode();
 	const chain = allChains.find((c) => c.id === chainId);
 	const chainToken = chain
@@ -33,20 +39,23 @@ const FundEscrow = ({ token, sellerContract, chainId, balance }: FundsEscrowProp
 			  }
 			: chain.nativeCurrency
 		: undefined;
+	const sellerContractDeployed = !!sellerContract && sellerContract !== constants.AddressZero;
 
 	return (
 		<StepLayout buttonText={`Deposit ${token.name}`}>
-			<div className="my-8">
-				<div className="font-bold text-sm bg-gray-200 rounded-lg p-2 py-3 mb-2 flex flex-row justify-between">
+			<div className="my-4">
+				<div className="text-sm bg-gray-200 rounded-lg p-4 py-3 mb-4 flex flex-row justify-between">
 					<span>Balance Summary</span>
 					<span>
 						{formatUnits(balance, token.decimals)} {token.symbol}
 					</span>
 				</div>
-				<Label title={`${sellerContract ? 'Fund' : 'Deploy'} Escrow Contract`} extraStyle="font-bold" />
+				<h2 className="block text-xl font-medium mb-1 font-bold">
+					{`${sellerContractDeployed ? 'Fund' : 'Deploy'} Escrow Contract`}
+				</h2>
 				<div className="mb-4">
-					<div className="text-sm text-gray-600 mb-8">
-						{sellerContract && (
+					<div className="text-sm text-gray-600 mb-4">
+						{sellerContractDeployed && (
 							<>
 								Deposit {token.name} into your{' '}
 								<a
@@ -63,44 +72,61 @@ const FundEscrow = ({ token, sellerContract, chainId, balance }: FundsEscrowProp
 						receipt of funds before escrowed crypto is released on any trade.
 					</div>
 					<div className="flex flex-col space-y-2 justify-center items-center">
-						{sellerContract ? <Button title={`Deposit ${token.name}`} /> : <DeploySellerContract />}
-
-						<span className="text-sm text-gray-500">Funds can be withdrawn at any time</span>
+						{sellerContractDeployed ? (
+							<div className="w-full">
+								<Input
+									label="Amount"
+									id="depositAmount"
+									type="decimal"
+									placeholder="0.0"
+									decimalScale={token.decimals}
+									value={depositAmount}
+									onChangeNumber={setDepositAmount}
+									containerExtraStyle="mt-0 mb-2"
+								/>
+								<DepositFunds
+									contract={sellerContract}
+									token={token}
+									tokenAmount={depositAmount!}
+									disabled={(depositAmount || 0) < toDeposit}
+								/>
+							</div>
+						) : (
+							<DeploySellerContract />
+						)}
+						<span className="text-sm text-gray-500">Available funds can be withdrawn at any time</span>
 					</div>
-					{sellerContract && (
+					{sellerContractDeployed && (
 						<div className="mt-8">
-							<Label title={`or send ${token.symbol} from your exchange`} extraStyle="font-bold my-8" />
-							<div className="mt-2 mb-4">
-								<div className="border border-gray-200 rounded-lg">
-									<div className="py-4 px-8 flex justify-center items-center">
-										<SVG
-											text={sellerContract}
-											options={{
-												errorCorrectionLevel: 'L',
-												margin: 2,
-												width: 250,
-												quality: 1
-											}}
-											logo={{
-												src: 'https://openpeerpublic.s3.us-west-1.amazonaws.com/logo/oplogo.png',
-												options: {
-													width: 35
-												}
-											}}
-										/>
-									</div>
-									<div className="border-t border-gray-200 pt-6 px-8">
+							<h2 className="block text-xl font-medium mb-1 font-bold my-8">
+								{`or send ${token.symbol} from your exchange`}
+							</h2>
+							<div className="mt-2 mb-4 border border-gray-200 rounded-lg py-8 px-4 md:px-8  flex flex-col xl:flex-row items-center">
+								<SVG
+									text={sellerContract}
+									options={{
+										errorCorrectionLevel: 'L',
+										margin: 0,
+										width: 200,
+										quality: 1
+									}}
+								/>
+								<div className="p-4">
+									<div className="mb-4">
 										<span className="font-bold">Send to Address</span>
-										<ClipboardText itemValue={sellerContract} />
+										<ClipboardText itemValue={sellerContract} extraStyle="break-all" />
 									</div>
-									<div className="flex flex-row space-x-2 py-4 px-8">
-										<div className="flex flex-row space-x-2">
-											<TokenImage token={chainToken! as Token} size={20} />
-											<span className="text-sm">{chain?.name}</span>
-										</div>
-										<div className="text-sm font-bold">
-											Only send on the {chain?.name} network otherwise funds will be lost
-										</div>
+									<div className="text-sm font-bold">
+										<ExplainerNotification
+											title={
+												<div className="flex flex-row space-x-2">
+													<TokenImage token={chainToken! as Token} size={20} />
+													<span className="text-sm">{chain?.name}</span>
+												</div>
+											}
+											content={`Only send on the ${chain?.name} network otherwise funds will be lost`}
+											disclaimer
+										/>
 									</div>
 								</div>
 							</div>

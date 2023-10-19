@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { User } from 'models/types';
 import { useAccount } from 'hooks';
+import { DEFAULT_DEPOSIT_TIME_LIMIT } from 'utils';
 import { ListStepProps, UIList } from './Listing.types';
 import StepLayout from './StepLayout';
 import AccountInfo from './AccountInfo';
@@ -48,17 +49,30 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 	const [escrowType, setEscrowType] = useState<string>(list.escrowType || 'instant');
 	const { address } = useAccount();
 	const [user, setUser] = useState<User | null>();
+	const escrowSetting = type === 'BuyList' ? 'manual' : (escrowType as UIList['escrowType']);
 
 	const onProceed = () => {
 		updateList({
 			...list,
 			...{
 				type: type as UIList['type'],
-				escrowType: type === 'SellList' ? 'manual' : (escrowType as UIList['escrowType']),
+				escrowType: escrowSetting,
+				depositTimeLimit: escrowSetting === 'instant' ? 0 : DEFAULT_DEPOSIT_TIME_LIMIT,
 				step: list.step + 1
 			}
 		});
 	};
+
+	useEffect(() => {
+		updateList({
+			...list,
+			...{
+				type: type as UIList['type'],
+				depositTimeLimit: escrowSetting === 'instant' ? 0 : DEFAULT_DEPOSIT_TIME_LIMIT,
+				escrowType: escrowSetting
+			}
+		});
+	}, [type, escrowType]);
 
 	useEffect(() => {
 		if (!address) return;

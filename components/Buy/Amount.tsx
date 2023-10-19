@@ -13,6 +13,9 @@ import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
 import { truncate } from 'utils';
 
+import { useContractRead } from 'wagmi';
+import { OpenPeerEscrow } from 'abis';
+import { Abi, formatUnits, parseUnits } from 'viem';
 import { BuyStepProps, UIOrder } from './Buy.types';
 
 interface BuyAmountStepProps extends BuyStepProps {
@@ -30,20 +33,26 @@ const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => 
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
-	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token, type, accept_only_verified: acceptOnlyVerified } = list;
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
-		orderFiatAmount || quickBuyFiat ? Number(quickBuyFiat) : undefined
-	);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(
-		orderTokenAmount || quickBuyToken ? Number(quickBuyToken) : undefined
-	);
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || undefined);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || undefined);
 	const [user, setUser] = useState<User | null>();
 
 	const { errors, clearErrors, validate } = useFormErrors();
+
+	const instantEscrow = list?.escrow_type === 'instant';
+
+	const { data: balance } = useContractRead({
+		address: list?.contract,
+		abi: OpenPeerEscrow as Abi,
+		functionName: 'balances',
+		args: [list?.token?.address],
+		enabled: instantEscrow,
+		watch: true
+	});
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data, variables) => {
@@ -92,6 +101,16 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 		if (!tokenAmount) {
 			error.tokenAmount = 'Should be bigger than 0';
+		} else {
+			const escrowedBalance = (balance as bigint) || BigInt(0);
+			if (instantEscrow && escrowedBalance < parseUnits(String(tokenAmount), token.decimals)) {
+				error.tokenAmount = `Only ${formatUnits(escrowedBalance, token.decimals)} ${
+					token.symbol
+				} is available in the escrow contract. Should be less or equal ${formatUnits(
+					escrowedBalance,
+					token.decimals
+				)} ${token.symbol}.`;
+			}
 		}
 
 		return error;

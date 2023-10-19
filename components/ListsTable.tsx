@@ -11,6 +11,9 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
 import { useAccount } from 'hooks';
+import { useContractReads } from 'wagmi';
+import { OpenPeerEscrow } from 'abis';
+import { Abi, formatUnits } from 'viem';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
@@ -28,14 +31,15 @@ interface BuyButtonProps {
 	fiatAmount: number | undefined;
 	tokenAmount: number | undefined;
 	sellList: boolean;
+	escrowType: List['escrow_type'];
 }
 
-const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) => (
+const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType }: BuyButtonProps) => (
 	<Link
 		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
 		as={`/buy/${encodeURIComponent(id)}`}
 	>
-		<Button title={sellList ? 'Buy' : 'Sell'} />
+		<Button title={sellList ? (escrowType === 'instant' ? 'Buy ⚡' : 'Buy') : 'Sell'} />
 	</Link>
 );
 
@@ -43,6 +47,22 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 	const { address } = useAccount();
 	const { primaryWallet } = useDynamicContext();
 	const chains = allChains;
+
+	const contracts = lists
+		.filter(({ contract }) => !!contract)
+		.map((list) => ({ id: list.id, contract: list.contract, token: list.token.address, chainId: list.chain_id }));
+
+	const signatures = contracts.map((item) => {
+		const { contract, token, chainId } = item;
+		return {
+			address: contract,
+			abi: OpenPeerEscrow as Abi,
+			functionName: 'balances',
+			args: [token],
+			chainId
+		};
+	});
+	const { data, isLoading } = useContractReads({ contracts: signatures });
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -103,7 +123,8 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						payment_method: paymentMethod,
 						chain_id: chainId,
 						// token_spot_price: tokenSpotPrice,
-						deposit_time_limit: depositTimeLimit
+						deposit_time_limit: depositTimeLimit,
+						escrow_type: escrowType
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const isSeller = primaryWallet && sellerAddress === address;
@@ -125,6 +146,22 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					// tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
 
 					const priceDifferencePercentage = 100;
+					const instantEscrow = escrowType === 'instant';
+					let escrowedAmount = amount;
+
+					try {
+						if (instantEscrow && !isLoading && data) {
+							const dataIndex = contracts.findIndex((item) => item.id === id);
+							if (dataIndex !== -1) {
+								const { status, result } = data[dataIndex];
+								if (status === 'success') {
+									escrowedAmount = formatUnits(result as bigint, token.decimals);
+								}
+							}
+						}
+					} catch (err) {
+						console.log(err);
+					}
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -172,7 +209,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</div>
 													<div className="flex flex-row items-center">
 														<span className="mr-2 text-sm text-gray-800">
-															{amount} {symbol}
+															{escrowedAmount} {symbol}
 														</span>
 													</div>
 												</div>
@@ -184,7 +221,14 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<span className="pr-2 text-[11px]">{chain?.name}</span>
 												<Token token={chainToken! as TokenType} size={16} />
 											</div>
-											{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
+											{!!instantEscrow && (
+												<div className="flex flex-row items-center mb-2">
+													<span className="pr-2 text-[11px] text-gray-700">
+														Instant deposit ⚡
+													</span>
+												</div>
+											)}
+											{!!(depositTimeLimit && Number(depositTimeLimit) > 0 && !instantEscrow) && (
 												<div className="flex flex-row items-center mb-2">
 													<span className="pr-2 text-[11px] text-gray-700">
 														Deposit time limit
@@ -214,6 +258,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												fiatAmount={fiatAmount}
 												tokenAmount={tokenAmount}
 												sellList={list.type === 'SellList'}
+												escrowType={list.escrow_type}
 											/>
 										)}
 									</div>
@@ -224,7 +269,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 									<div className="flex flex-row mb-2 space-x-2 items-center">
 										<Token token={token} size={24} />
 										<span>
-											{amount} {symbol}
+											{escrowedAmount} {symbol}
 										</span>
 									</div>
 									<div className="flex flex-row items-center">
@@ -262,13 +307,19 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
+								{instantEscrow ? (
 									<div className="flex flex-row items-center space-x-2">
-										<ClockIcon width={16} height={16} />
-										<span>
-											{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
-										</span>
+										⚡<span> Instant deposit </span>
 									</div>
+								) : (
+									!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
+										<div className="flex flex-row items-center space-x-2">
+											<ClockIcon width={16} height={16} />
+											<span>
+												{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+											</span>
+										</div>
+									)
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
@@ -291,6 +342,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										fiatAmount={fiatAmount}
 										tokenAmount={tokenAmount}
 										sellList={list.type === 'SellList'}
+										escrowType={list.escrow_type}
 									/>
 								)}
 							</td>

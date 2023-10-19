@@ -9,6 +9,7 @@ export interface UseEscrowTransactionProps {
 }
 
 export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
+	instantEscrow: boolean;
 	fee: bigint;
 }
 
@@ -18,4 +19,10 @@ export interface UseOpenDisputeProps extends UseEscrowTransactionProps {
 
 export interface UseEscrowCancelProps extends UseEscrowTransactionProps {
 	isBuyer: boolean;
+}
+
+export interface UseDepositFundsProps {
+	amount: bigint;
+	token: Token;
+	contract: `0x${string}`;
 }

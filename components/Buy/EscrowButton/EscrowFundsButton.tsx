@@ -7,7 +7,15 @@ import { parseUnits } from 'viem';
 
 import { EscrowFundsButtonProps } from './EscrowButton.types';
 
-const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee, contract }: EscrowFundsButtonProps) => {
+const EscrowFundsButton = ({
+	uuid,
+	buyer,
+	token,
+	tokenAmount,
+	fee,
+	contract,
+	instantEscrow
+}: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = parseUnits(String(tokenAmount), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -19,7 +27,8 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee, contract }: E
 		buyer,
 		fee,
 		token,
-		contract
+		contract,
+		instantEscrow
 	});
 
 	const escrow = () => {
@@ -42,21 +51,25 @@ const EscrowFundsButton = ({ uuid, buyer, token, tokenAmount, fee, contract }: E
 		hash: data?.hash,
 		isSuccess,
 		Link: <TransactionLink hash={data?.hash} />,
-		description: 'Escrowed funds'
+		description: instantEscrow ? 'Confirmed the order' : 'Escrowed funds'
 	});
 
 	return (
 		<>
 			<Button
-				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Escrow funds'}
+				title={
+					isLoading ? 'Processing...' : isSuccess ? 'Done' : instantEscrow ? 'Confirm Order' : 'Escrow funds'
+				}
 				onClick={escrow}
 				processing={isLoading || isFetching}
 				disabled={isSuccess || isFetching}
 			/>
 			<Modal
 				actionButtonTitle="Yes, confirm"
-				title="Escrow funds?"
-				content={`The funds will be sent to your escrow contract (${contract}).`}
+				title={instantEscrow ? 'Confirm order?' : 'Escrow funds?'}
+				content={`The funds will be ${
+					instantEscrow ? 'locked in the' : 'sent to your'
+				} escrow contract (${contract}).`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}

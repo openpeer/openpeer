@@ -10,11 +10,11 @@ import DeploySellerContract from './DeploySellerContract';
 import { EscrowFundsParams } from './EscrowButton.types';
 import EscrowFundsButton from './EscrowFundsButton';
 
-const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) => {
+const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }: EscrowFundsParams) => {
 	const nativeToken = token.address === constants.AddressZero;
-	const [approved, setApproved] = useState(nativeToken);
+	const [approved, setApproved] = useState(nativeToken || instantEscrow);
 	const { chain } = useNetwork();
-	const deployer = DEPLOYER_CONTRACTS[chain!.id];
+	const deployer = chain ? DEPLOYER_CONTRACTS[chain.id] : undefined;
 	const { address } = useAccount();
 
 	const { isFetching, fee, totalAmount } = useEscrowFee({ token, tokenAmount });
@@ -22,14 +22,14 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 		address: deployer,
 		abi: OpenPeerDeployer,
 		functionName: 'sellerContracts',
-		args: [address],
+		args: [instantEscrow ? seller : address],
 		enabled: !!address,
 		watch: true
 	});
 
 	if (isFetching) return <></>;
 
-	const needsToDeploy = !sellerContract || sellerContract === constants.AddressZero;
+	const needsToDeploy = !instantEscrow && (!sellerContract || sellerContract === constants.AddressZero);
 
 	return (
 		<span className="w-full">
@@ -41,6 +41,8 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 					tokenAmount={tokenAmount}
 					uuid={uuid}
 					contract={sellerContract as `0x${string}`}
+					seller={seller}
+					instantEscrow={instantEscrow}
 				/>
 			) : needsToDeploy ? (
 				<DeploySellerContract />

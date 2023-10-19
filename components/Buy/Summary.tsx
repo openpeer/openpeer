@@ -28,7 +28,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		total_available_amount: totalAvailableAmount,
 		terms,
 		type,
-		accept_only_verified: acceptOnlyVerified
+		accept_only_verified: acceptOnlyVerified,
+		escrow_type: escrowType
 	} = list!;
 
 	const { address } = useAccount();
@@ -39,6 +40,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
 	const depositTimeLimit = order.deposit_time_limit || list.deposit_time_limit;
 	const paymentTimeLimit = order.payment_time_limit || list.payment_time_limit;
+	const instantEscrow = escrowType === 'instant';
 
 	return (
 		<div className="hidden lg:contents">
@@ -140,13 +142,19 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							</div>
 						</div>
 					)}
-					{!!depositTimeLimit && (
+					{instantEscrow ? (
 						<div className="w-full flex flex-row mb-4 space-x-2">
-							<div className="text-sm">Deposit Time Limit</div>
-							<div className="text-sm font-bold">
-								{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}
-							</div>
+							<div className="text-sm font-bold">⚡ Instant deposit</div>
 						</div>
+					) : (
+						!!depositTimeLimit && (
+							<div className="w-full flex flex-row mb-4 space-x-2">
+								<div className="text-sm">Deposit Time Limit</div>
+								<div className="text-sm font-bold">
+									{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}
+								</div>
+							</div>
+						)
 					)}
 					{!!paymentTimeLimit && (
 						<div className="w-full flex flex-row mb-4 space-x-2">

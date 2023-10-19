@@ -57,6 +57,7 @@ export interface List {
 	payment_time_limit: number | undefined;
 	accept_only_verified: boolean;
 	escrow_type: 'manual' | 'instant';
+	contract: `0x${string}` | undefined;
 }
 
 export interface AccountField {

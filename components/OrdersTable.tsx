@@ -54,10 +54,10 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 
 	if (!orders) return <p>No orders</p>;
 
-	const orderStatus = (status: Order['status']) => {
+	const orderStatus = (status: Order['status'], instantEscrow: boolean) => {
 		switch (status) {
 			case 'created': {
-				return 'Waiting seller deposit';
+				return instantEscrow ? 'Waiting order confirmation' : 'Waiting seller deposit';
 			}
 			case 'escrowed': {
 				return 'Waiting payment';
@@ -135,7 +135,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 						{orders.map((order) => {
 							const {
 								id,
-								list: { fiat_currency: currency, token },
+								list: { fiat_currency: currency, token, escrow_type: escrowType },
 								price,
 								fiat_amount: fiatAmount,
 								token_amount: tokenAmount,
@@ -147,6 +147,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 							const isSeller = address === seller.address;
 							const user = isSeller ? buyer : seller;
 							const network = allChains.find((chain) => chain.id === Number(chainId));
+							const instantEscrow = escrowType === 'instant';
 
 							return (
 								<tr key={id} className="hover:bg-gray-50">
@@ -197,7 +198,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 															<span className="pl-1 text-sm">{token.symbol}</span>
 														</div>
 														<span className="max-w-fit bg-gray-100 text-gray-400 text-xs m-0 py-1 px-2 rounded-md">
-															{orderStatus(status)}
+															{orderStatus(status, instantEscrow)}
 														</span>
 													</div>
 												</div>
@@ -238,7 +239,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 										</div>
 									</td>
 									<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-										{orderStatus(status)}
+										{orderStatus(status, instantEscrow)}
 									</td>
 									<td className="hidden text-right py-4 pr-4 lg:table-cell">
 										<NextButton order={order} address={address} />

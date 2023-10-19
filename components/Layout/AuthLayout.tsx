@@ -91,11 +91,13 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 				}
 
 				return (
-					<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer">
+					<div
+						className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer"
+						key={item.name}
+					>
 						{isAuthenticated ? (
 							<ChatWithOwner
 								ownerAddress="0x630220d00Cf136270f553c8577aF18300F7b812c"
-								key={item.name}
 								render={
 									<Button
 										title={

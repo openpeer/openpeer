@@ -1,6 +1,6 @@
 import { arbitrum, avalanche, bsc, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
-export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
+export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[avalanche.id]: process.env.NEXT_PUBLIC_AVAX_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[polygonMumbai.id]: process.env.NEXT_PUBLIC_MUMBAI_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -11,8 +11,8 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	// [gnosis.id]: process.env.NEXT_PUBLIC_GNOSIS_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`
 };
 
-export const DEPLOYER_V2_CONTRACTS: { [key: number]: `0x${string}` } = {
-	[polygonMumbai.id]: '0xD50fd4542F9D71d7CF0D54e3d7234234545a9D1E'
+export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
+	[polygonMumbai.id]: '0xc2D26E2C9C7f0a3D0A6B4458E5f4A7f999567CDC'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
