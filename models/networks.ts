@@ -1,4 +1,4 @@
-import { arbitrum, avalanche, bsc, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
+import { arbitrum, avalanche, bsc, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -13,7 +13,13 @@ export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygonMumbai.id]: '0xc2D26E2C9C7f0a3D0A6B4458E5f4A7f999567CDC',
-	[polygon.id]: '0x8E62e95E91eB6b650D4137b6CA687AaaC5B5F8E0'
+	[polygon.id]: '0x8E62e95E91eB6b650D4137b6CA687AaaC5B5F8E0',
+	[mainnet.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
+	[avalanche.id]: '0xE76Ea4d3E63ae8552fb582E8a58Ff353eB2F5434',
+	[arbitrum.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
+	[optimism.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
+	[bsc.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
+	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
@@ -28,7 +34,7 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
 
-export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche];
+export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis];
 
 const devChains = [polygonMumbai];
 
