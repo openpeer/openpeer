@@ -33,7 +33,7 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 	const tokenValue = `${tokenAmount} ${token.symbol}`;
 	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
 	const counterpart = isBuyer ? 'seller' : 'buyer';
-	const { fee } = useEscrowFee({ address: order?.escrow?.address, token, tokenAmount });
+	const { fee } = useEscrowFee({ address: order?.escrow?.address, token, tokenAmount, chainId: token.chain_id });
 	const date = new Date(createdAt);
 
 	return (
@@ -104,14 +104,16 @@ const DisputeStatus = ({ order, address }: DisputeStatusParams) => {
 					<div className="flex flex-row justify-between mb-2">
 						<span className="text-gray-500">Payment Method</span>
 						<span className="flex flex-row items-center">
-							<Image
-								src={bank.icon}
-								alt={bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
+							{!!bank.icon && (
+								<Image
+									src={bank.icon}
+									alt={bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+							)}
 							{bank.name}
 						</span>
 					</div>

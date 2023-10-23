@@ -4,10 +4,10 @@ import { Errors, Resolver } from 'models/errors';
 import { List, Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 
-import { AmountStepProps } from './Listing.types';
+import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
-const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
+const Amount = ({ list, updateList }: ListStepProps) => {
 	const {
 		token,
 		currency,
@@ -16,7 +16,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		limitMax,
 		marginType = 'fixed',
 		margin: savedMargin,
-		quickSellSetupDone,
 		type
 	} = list;
 	const percentage = marginType === 'percentage';
@@ -108,15 +107,6 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 			}
 		}
 	}, [fixedMargin, percentage, price]);
-
-	useEffect(() => {
-		const amount = Number(tokenAmount || '0');
-		if (amount && !totalAvailableAmount && !quickSellSetupDone) {
-			updateValue({ totalAvailableAmount: amount, quickSellSetupDone: true });
-		} else {
-			updateValue({ quickSellSetupDone: true });
-		}
-	}, [tokenAmount, totalAvailableAmount]);
 
 	if (!token || !currency) return <Loading />;
 

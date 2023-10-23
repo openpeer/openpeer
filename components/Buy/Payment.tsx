@@ -2,7 +2,7 @@ import StepLayout from 'components/Listing/StepLayout';
 import HeaderH3 from 'components/SectionHeading/h3';
 import Image from 'next/image';
 import React from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 
@@ -32,7 +32,7 @@ const Payment = ({ order }: BuyStepProps) => {
 		deposit_time_limit: depositTimeLimit,
 		payment_time_limit: paymentTimeLimit
 	} = order;
-	const { token, fiat_currency: currency } = list!;
+	const { token, fiat_currency: currency, escrow_type: escrowType } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
@@ -54,11 +54,25 @@ const Payment = ({ order }: BuyStepProps) => {
 		timeLimitForPayment > 0
 			? timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime())
 			: 0;
+	const instantEscrow = escrowType === 'instant';
 
 	return (
 		<StepLayout>
 			<div className="my-0 md:my-8">
-				{status === 'created' && (
+				{status === 'created' && instantEscrow && (
+					<div>
+						<span className="flex flex-row mb-2 text-yellow-600">
+							<ClockIcon className="w-8 mr-2" />
+							<HeaderH3 title="Instant Escrow" />
+						</span>
+						<p className="text-base">
+							{selling
+								? 'Please confirm the order. The funds will be locked in escrow as soon as you confirm the order. '
+								: 'Please confirm the order. Payments details will become visible after the order confirmation. '}
+						</p>
+					</div>
+				)}
+				{status === 'created' && !instantEscrow && (
 					<div>
 						<span className="flex flex-row mb-2 text-yellow-600">
 							<ClockIcon className="w-8 mr-2" />
@@ -109,20 +123,22 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				</div>
 
-				{status === 'created' && <PreShowDetails timeLeft={timeLeft} />}
+				{status === 'created' && !instantEscrow && <PreShowDetails timeLeft={timeLeft} />}
 				{status === 'escrowed' && (
 					<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6 mb-4">
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-neutral-500">Payment Method</span>
 							<span className="flex flex-row justify-between">
-								<Image
-									src={bank.icon}
-									alt={bank.name}
-									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-									width={24}
-									height={24}
-									unoptimized
-								/>
+								{!!bank.icon && (
+									<Image
+										src={bank.icon}
+										alt={bank.name}
+										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+										width={24}
+										height={24}
+										unoptimized
+									/>
+								)}
 								<ClipboardText itemValue={bank.name} />
 							</span>
 						</div>
@@ -180,12 +196,14 @@ const Payment = ({ order }: BuyStepProps) => {
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>
-					{status === 'created' && selling && (
+					{status === 'created' && (selling || instantEscrow) && (
 						<EscrowButton
 							buyer={buyer!.address}
 							token={token}
 							tokenAmount={tokenAmount || 0}
 							uuid={uuid!}
+							instantEscrow={instantEscrow}
+							seller={seller.address}
 						/>
 					)}
 					{status === 'escrowed' &&

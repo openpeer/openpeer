@@ -8,7 +8,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -42,7 +42,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					payment_time_limit: paymentTimeLimit,
 					terms,
 					chain_id: chainId,
-					accept_only_verified: acceptOnlyVerified
+					accept_only_verified: acceptOnlyVerified,
+					escrow_type: escrowType
 				} = data;
 				setList(data);
 				const currency = {
@@ -60,13 +61,13 @@ const EditTrade = ({ id }: { id: number }) => {
 					limitMin: limitMin ? Number(limitMin) : undefined,
 					limitMax: limitMax ? Number(limitMax) : undefined,
 					paymentMethod: paymentMethod || { bank, bankId: bank.id },
-					quickSellSetupDone: true,
 					terms: terms || '',
 					margin: margin ? Number(margin) : undefined,
 					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0,
 					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0,
 					chainId,
-					acceptOnlyVerified
+					acceptOnlyVerified,
+					escrowType
 				};
 				setUiList(ui);
 			});
@@ -108,7 +109,7 @@ const EditTrade = ({ id }: { id: number }) => {
 							<Summary list={uiList} />
 						</div>
 					)}
-					{step === AMOUNT_STEP && <Amount list={uiList} updateList={setUiList} tokenAmount={undefined} />}
+					{step === AMOUNT_STEP && <Amount list={uiList} updateList={setUiList} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={uiList} updateList={setUiList} />}
 					{step === DETAILS_STEP && <Details list={uiList} updateList={setUiList} />}
 				</div>

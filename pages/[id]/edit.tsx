@@ -1,11 +1,10 @@
 import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
 import ImageUploader from 'components/ImageUploader';
-import { useUserProfile } from 'hooks';
+import { useUserProfile, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from 'wagmi';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();

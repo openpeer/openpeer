@@ -2,14 +2,13 @@
 import { Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
-import { useConfirmationSignMessage, useFormErrors } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors, useAccount } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
@@ -152,14 +151,16 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 				>
 					<div className="w-full flex flex-row justify-between mb-4">
 						<div className="flex flex-row items-center">
-							<Image
-								src={pm.bank.icon}
-								alt={pm.bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
+							{!!pm.bank.icon && (
+								<Image
+									src={pm.bank.icon}
+									alt={pm.bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+							)}
 							<span>{pm.bank.name}</span>
 						</div>
 						<div onClick={(e) => enableEdit(e, pm)}>
@@ -190,14 +191,16 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 			{!id || edit ? (
 				<>
 					<div className="flex flex-row items-center mt-8">
-						<Image
-							src={list.bank.icon}
-							alt={list.bank.name}
-							className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-							width={24}
-							height={24}
-							unoptimized
-						/>
+						{!!list.bank.icon && (
+							<Image
+								src={list.bank.icon}
+								alt={list.bank.name}
+								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+								width={24}
+								height={24}
+								unoptimized
+							/>
+						)}
 						<span>{list.bank.name}</span>
 					</div>
 					{schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {

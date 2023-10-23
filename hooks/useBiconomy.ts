@@ -10,12 +10,13 @@ interface UseBiconomyProps {
 
 const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const [biconomy, setBiconomy] = useState<Biconomy | null>();
-	const { address } = useAccount();
+	const account = useAccount();
 	const { chain, chains } = useNetwork();
 	const chainId = (chain || chains[0])?.id;
 	const apiKey = networkApiKeys[chainId || 0];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
 	const { primaryWallet } = useDynamicContext();
+	const address = account.address || (primaryWallet?.address as `0x${string}`);
 
 	const canSubmitGaslessTransaction = async () => {
 		if (apiKey && address) {

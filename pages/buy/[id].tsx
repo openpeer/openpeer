@@ -1,10 +1,9 @@
 import { Loading, Steps } from 'components';
 import { Amount, PaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
-import { useListPrice } from 'hooks';
+import { useListPrice, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
@@ -38,7 +37,7 @@ const BuyPage = ({ id }: { id: number }) => {
 		setOrder({ ...order, ...{ price } });
 	}, [price]);
 
-	const seller = order.seller || order.list?.seller;
+	const seller = order.seller || list?.seller;
 	const canBuy = seller && seller.address !== address;
 
 	if (!list) return <Loading />;

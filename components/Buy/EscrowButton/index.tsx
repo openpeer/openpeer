@@ -1,35 +1,41 @@
 import { OpenPeerDeployer } from 'abis';
 import { constants } from 'ethers';
-import { useEscrowFee } from 'hooks';
+import { useEscrowFee, useAccount } from 'hooks';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import React, { useState } from 'react';
-import { useAccount, useContractRead, useNetwork } from 'wagmi';
+import { useContractRead, useNetwork } from 'wagmi';
 
 import ApproveTokenButton from './ApproveTokenButton';
 import DeploySellerContract from './DeploySellerContract';
 import { EscrowFundsParams } from './EscrowButton.types';
 import EscrowFundsButton from './EscrowFundsButton';
 
-const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) => {
+const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }: EscrowFundsParams) => {
 	const nativeToken = token.address === constants.AddressZero;
-	const [approved, setApproved] = useState(nativeToken);
+	const [approved, setApproved] = useState(nativeToken || instantEscrow);
 	const { chain } = useNetwork();
-	const deployer = DEPLOYER_CONTRACTS[chain!.id];
+	const deployer = chain ? DEPLOYER_CONTRACTS[chain.id] : undefined;
 	const { address } = useAccount();
 
-	const { isFetching, fee, totalAmount } = useEscrowFee({ token, tokenAmount });
 	const { data: sellerContract } = useContractRead({
 		address: deployer,
 		abi: OpenPeerDeployer,
 		functionName: 'sellerContracts',
-		args: [address],
+		args: [instantEscrow ? seller : address],
 		enabled: !!address,
 		watch: true
 	});
 
+	const { isFetching, fee, totalAmount } = useEscrowFee({
+		address: sellerContract as `0x${string}` | undefined,
+		token,
+		tokenAmount,
+		chainId: token.chain_id
+	}); // marcos
+
 	if (isFetching) return <></>;
 
-	const needsToDeploy = !sellerContract || sellerContract === constants.AddressZero;
+	const needsToDeploy = !instantEscrow && (!sellerContract || sellerContract === constants.AddressZero);
 
 	return (
 		<span className="w-full">
@@ -41,6 +47,8 @@ const EscrowButton = ({ token, tokenAmount, buyer, uuid }: EscrowFundsParams) =>
 					tokenAmount={tokenAmount}
 					uuid={uuid}
 					contract={sellerContract as `0x${string}`}
+					seller={seller}
+					instantEscrow={instantEscrow}
 				/>
 			) : needsToDeploy ? (
 				<DeploySellerContract />

@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-curly-newline */
 import { BankSelect, Button, Input, Loading, Textarea } from 'components';
-import { useFormErrors } from 'hooks';
+import { useFormErrors, useAccount } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
@@ -111,14 +110,16 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				>
 					<div className="w-full flex flex-row justify-between mb-4">
 						<div className="flex flex-row items-center">
-							<Image
-								src={pm.bank.icon}
-								alt={pm.bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
+							{!!pm.bank.icon && (
+								<Image
+									src={pm.bank.icon}
+									alt={pm.bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+							)}
 							<span>{pm.bank.name}</span>
 						</div>
 						<div onClick={(e) => enableEdit(e, pm)}>

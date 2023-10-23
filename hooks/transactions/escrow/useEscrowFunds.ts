@@ -4,7 +4,7 @@ import { UseEscrowFundsProps } from '../types';
 import useEscrowWithGas from './useEscrowWithGas';
 import useGaslessEscrow from './useGaslessEscrow';
 
-const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract }: UseEscrowFundsProps) => {
+const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract, instantEscrow }: UseEscrowFundsProps) => {
 	const nativeToken = token.address === constants.AddressZero;
 
 	const withGasCall = useEscrowWithGas({
@@ -13,7 +13,8 @@ const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract }: UseEsc
 		buyer,
 		amount,
 		token,
-		fee
+		fee,
+		instantEscrow
 	});
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, escrowFunds } = useGaslessEscrow({
@@ -21,14 +22,15 @@ const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract }: UseEsc
 		buyer,
 		contract,
 		orderID,
-		token
+		token,
+		instantEscrow
 	});
 
 	if (isFetching) {
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
 
-	if (!nativeToken && gaslessEnabled) {
+	if (gaslessEnabled && (!nativeToken || instantEscrow)) {
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 

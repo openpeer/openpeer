@@ -1,8 +1,7 @@
 import Button from 'components/Button/Button';
-import { useEscrowFee } from 'hooks';
+import { useEscrowFee, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import React from 'react';
-import { useAccount } from 'wagmi';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 
@@ -30,7 +29,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 
 	const tokenValue = `${tokenAmount} ${token.symbol}`;
 	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
-	const { fee } = useEscrowFee({ address: escrow?.address, token, tokenAmount });
+	const { fee } = useEscrowFee({ address: escrow?.address, token, tokenAmount, chainId: list.chain_id });
 	const date = new Date(createdAt);
 
 	return (

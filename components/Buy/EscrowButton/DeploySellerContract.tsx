@@ -1,9 +1,8 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import useDeploy from 'hooks/transactions/deploy/useDeploy';
 import React from 'react';
-import { useAccount } from 'wagmi';
 
 const DeploySellerContract = () => {
 	const { isConnected } = useAccount();

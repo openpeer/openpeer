@@ -3,7 +3,7 @@
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +14,6 @@ import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
 import {
-	useAccount,
 	useContractRead,
 	useContractWrite,
 	useNetwork,

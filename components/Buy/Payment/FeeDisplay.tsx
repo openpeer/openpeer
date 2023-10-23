@@ -10,7 +10,7 @@ interface FeeDisplayParams {
 }
 
 const FeeDisplay = ({ escrow, tokenAmount, token }: FeeDisplayParams) => {
-	const { fee, isFetching } = useEscrowFee({ address: escrow, token, tokenAmount });
+	const { fee, isFetching } = useEscrowFee({ address: escrow, token, tokenAmount, chainId: token.chain_id });
 
 	if (isFetching || !fee) return <></>;
 

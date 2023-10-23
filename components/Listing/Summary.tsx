@@ -26,9 +26,11 @@ const Summary = ({ list }: SummaryProps) => {
 		paymentTimeLimit,
 		terms,
 		type,
-		acceptOnlyVerified
+		acceptOnlyVerified,
+		escrowType
 	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
+	const instantEscrow = escrowType === 'instant';
 
 	if (!token && !currency) {
 		return (
@@ -112,7 +114,7 @@ const Summary = ({ list }: SummaryProps) => {
 					<li className="w-full flex flex-col md:flex-row justify-between mb-4">
 						<div>Payment Method</div>
 						<div className="w-full md:w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
-							{!!paymentMethod.bank && (
+							{!!paymentMethod.bank && !!paymentMethod.bank.icon && (
 								<>
 									<div className="flex flex-row items-center text-gray-500 text-sm mb-2">
 										<Image
@@ -147,13 +149,19 @@ const Summary = ({ list }: SummaryProps) => {
 						</div>
 					</li>
 				)}
-				{!!depositTimeLimit && (
+				{instantEscrow ? (
 					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Deposit Time Limit</div>
-						<div className="font-bold">
-							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
-						</div>
+						<div className="font-bold">⚡ Instant deposit</div>
 					</li>
+				) : (
+					!!depositTimeLimit && (
+						<li className="w-full flex flex-row justify-between mb-4">
+							<div>Deposit Time Limit</div>
+							<div className="font-bold">
+								{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+							</div>
+						</li>
+					)
 				)}
 				{!!paymentTimeLimit && (
 					<li className="w-full flex flex-row justify-between mb-4">
