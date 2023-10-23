@@ -67,7 +67,7 @@ const ReleaseFundsButton = ({
 			/>
 
 			<Modal
-				actionButtonTitle={dispute ? 'Yes, confirm' : 'Yes I have received funds'}
+				actionButtonTitle={dispute ? 'Yes, confirm' : 'Yes I have received'}
 				title={dispute ? 'Are you sure?' : 'Are you sure you have received this payment in your account?'}
 				content={
 					dispute

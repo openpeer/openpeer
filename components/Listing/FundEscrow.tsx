@@ -25,7 +25,7 @@ interface FundsEscrowProps {
 
 const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmount }: FundsEscrowProps) => {
 	const listTotal = parseUnits(totalAvailableAmount.toString(), token.decimals);
-	const toDeposit = Number(formatUnits(listTotal - balance, token.decimals));
+	const toDeposit = Number(formatUnits(listTotal - balance, token.decimals)) / 4;
 	const [depositAmount, setDepositAmount] = useState<number | undefined>(toDeposit);
 	const { SVG } = useQRCode();
 	const chain = allChains.find((c) => c.id === chainId);

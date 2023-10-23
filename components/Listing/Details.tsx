@@ -2,7 +2,7 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { useConfirmationSignMessage, useAccount } from 'hooks';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
 
 import { Token } from 'models/types';
@@ -20,7 +20,6 @@ import StepLayout from './StepLayout';
 import FundEscrow from './FundEscrow';
 
 const Details = ({ list, updateList }: ListStepProps) => {
-	const [fund, setFund] = useState(false);
 	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
 	const { address } = useAccount();
 	const router = useRouter();
@@ -82,27 +81,18 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const needToDeploy = escrowType === 'instant' && (!sellerContract || sellerContract === constants.AddressZero);
 	const needToFund =
 		!balance ||
-		(balance as bigint) <
-			parseUnits(String(list.limitMax || list.totalAvailableAmount || 0), (token as Token)!.decimals);
+		(balance as bigint) < parseUnits(String((list.totalAvailableAmount || 0) / 4), (token as Token)!.decimals);
 
 	const needToDeployOrFund = needToDeploy || needToFund;
 
-	useEffect(() => {
-		if (!needToDeployOrFund && fund) {
-			setFund(false);
-		}
-	}, [needToDeployOrFund]);
-
 	const onProceed = () => {
-		if (needToDeployOrFund) {
-			setFund(true);
-		} else {
+		if (!needToDeployOrFund) {
 			const message = JSON.stringify(snakecaseKeys(list, { deep: true }), undefined, 4);
 			signMessage({ message });
 		}
 	};
 
-	if (fund) {
+	if (needToDeployOrFund) {
 		return (
 			<FundEscrow
 				token={token as Token}

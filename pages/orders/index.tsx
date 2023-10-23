@@ -11,6 +11,8 @@ const OrdersPage = () => {
 	const { address } = useAccount();
 
 	useEffect(() => {
+		if (!address) return;
+
 		setLoading(true);
 		fetch('/api/orders', {
 			headers: {
@@ -19,7 +21,16 @@ const OrdersPage = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setOrders(data);
+				setOrders(
+					data.filter(
+						(order: Order) =>
+							!(
+								order.seller.address === address &&
+								order.list.escrow_type === 'instant' &&
+								order.status === 'created'
+							)
+					)
+				);
 				setLoading(false);
 			});
 	}, [address]);

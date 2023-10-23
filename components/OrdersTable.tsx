@@ -17,7 +17,13 @@ interface OrdersTableProps {
 }
 
 const NextButton = ({
-	order: { buyer: buyerUser, uuid, status, seller },
+	order: {
+		buyer: buyerUser,
+		uuid,
+		status,
+		seller,
+		list: { escrow_type: escrowType }
+	},
 	address
 }: {
 	order: Order;
@@ -32,7 +38,9 @@ const NextButton = ({
 	let label = 'Continue';
 	if (buyer) {
 		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
-			label = 'See Order';
+			if (status !== 'created' || escrowType !== 'instant') {
+				label = 'See Order';
+			}
 		}
 	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
 		// seller
