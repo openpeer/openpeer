@@ -130,14 +130,16 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						<div className="w-full flex flex-row mb-4 space-x-2">
 							<div className="text-sm">Payment method</div>
 							<div className="flex flex-row items-center font-bold">
-								<Image
-									src={bank.icon}
-									alt={bank.name}
-									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-									width={24}
-									height={24}
-									unoptimized
-								/>
+								{!!bank.icon && (
+									<Image
+										src={bank.icon}
+										alt={bank.name}
+										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+										width={24}
+										height={24}
+										unoptimized
+									/>
+								)}
 								{bank?.name}
 							</div>
 						</div>

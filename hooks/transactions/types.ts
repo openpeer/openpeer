@@ -8,6 +8,10 @@ export interface UseEscrowTransactionProps {
 	token: Token;
 }
 
+export interface UseGaslessEscrowFundsProps extends UseEscrowTransactionProps {
+	instantEscrow: boolean;
+}
+
 export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
 	instantEscrow: boolean;
 	fee: bigint;

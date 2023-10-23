@@ -45,7 +45,7 @@ const Cancelled = ({ order }: BuyStepProps) => {
 
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full">
-						<Button title="Back to Listings" onClick={() => router.push('/')} />
+						<Button title="Back to Listings" onClick={() => router.push('/trade')} />
 					</span>
 				</div>
 			</div>

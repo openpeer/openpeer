@@ -67,7 +67,7 @@ const Payment = ({ order }: BuyStepProps) => {
 						</span>
 						<p className="text-base">
 							{selling
-								? 'Please confirm the order.'
+								? 'Please confirm the order. The funds will be locked in escrow as soon as you confirm the order. '
 								: 'Please confirm the order. Payments details will become visible after the order confirmation. '}
 						</p>
 					</div>
@@ -129,14 +129,16 @@ const Payment = ({ order }: BuyStepProps) => {
 						<div className="flex flex-row justify-between mb-4">
 							<span className="text-neutral-500">Payment Method</span>
 							<span className="flex flex-row justify-between">
-								<Image
-									src={bank.icon}
-									alt={bank.name}
-									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-									width={24}
-									height={24}
-									unoptimized
-								/>
+								{!!bank.icon && (
+									<Image
+										src={bank.icon}
+										alt={bank.name}
+										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+										width={24}
+										height={24}
+										unoptimized
+									/>
+								)}
 								<ClipboardText itemValue={bank.name} />
 							</span>
 						</div>

@@ -1,16 +1,18 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import { OpenPeerEscrow } from 'abis';
 import { constants, Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { UseEscrowTransactionProps } from '../types';
+import { UseGaslessEscrowFundsProps } from '../types';
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscrow }: UseEscrowTransactionProps) => {
+const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscrow }: UseGaslessEscrowFundsProps) => {
 	const sellerWaitingTime = 24 * 60 * 60;
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -33,15 +35,25 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscr
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
 			const partner = constants.AddressZero;
-			const { data: transactionData } = await contractInstance.populateTransaction.createERC20Escrow(
-				orderID,
-				buyer,
-				token.address,
-				amount,
-				partner,
-				sellerWaitingTime,
-				instantEscrow
-			);
+			const { data: transactionData } =
+				token.address === constants.AddressZero
+					? await contractInstance.populateTransaction.createNativeEscrow(
+							orderID,
+							buyer,
+							amount,
+							partner,
+							sellerWaitingTime,
+							instantEscrow
+					  )
+					: await contractInstance.populateTransaction.createERC20Escrow(
+							orderID,
+							buyer,
+							token.address,
+							amount,
+							partner,
+							sellerWaitingTime,
+							instantEscrow
+					  );
 			const txParams = {
 				data: transactionData,
 				to: contract,

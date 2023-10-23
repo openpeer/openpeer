@@ -17,7 +17,6 @@ const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }
 	const deployer = chain ? DEPLOYER_CONTRACTS[chain.id] : undefined;
 	const { address } = useAccount();
 
-	const { isFetching, fee, totalAmount } = useEscrowFee({ token, tokenAmount });
 	const { data: sellerContract } = useContractRead({
 		address: deployer,
 		abi: OpenPeerDeployer,
@@ -26,6 +25,13 @@ const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }
 		enabled: !!address,
 		watch: true
 	});
+
+	const { isFetching, fee, totalAmount } = useEscrowFee({
+		address: sellerContract as `0x${string}` | undefined,
+		token,
+		tokenAmount,
+		chainId: token.chain_id
+	}); // marcos
 
 	if (isFetching) return <></>;
 

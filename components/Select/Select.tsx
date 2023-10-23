@@ -53,7 +53,7 @@ export default function Select({
 									) : flag ? (
 										<Flag name={countries[selected.icon]} size={24} />
 									) : (
-										selected.icon && (
+										!!selected.icon && (
 											<Image
 												src={selected.icon}
 												alt={selected.name}
@@ -113,7 +113,7 @@ export default function Select({
 													) : flag ? (
 														<Flag name={countries[option.icon]} size={24} />
 													) : (
-														option.icon && (
+														!!option.icon && (
 															<Image
 																src={option.icon}
 																alt={option.name}

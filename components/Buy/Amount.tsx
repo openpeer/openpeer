@@ -4,7 +4,7 @@ import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { useConfirmationSignMessage, useFormErrors, useAccount } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors, useAccount, useEscrowFee } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { List, User } from 'models/types';
@@ -14,8 +14,9 @@ import snakecaseKeys from 'snakecase-keys';
 import { truncate } from 'utils';
 
 import { useContractRead } from 'wagmi';
-import { OpenPeerEscrow } from 'abis';
+import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { Abi, formatUnits, parseUnits } from 'viem';
+import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { BuyStepProps, UIOrder } from './Buy.types';
 
 interface BuyAmountStepProps extends BuyStepProps {
@@ -45,13 +46,29 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	const instantEscrow = list?.escrow_type === 'instant';
 
+	const { data: sellerContract } = useContractRead({
+		address: DEPLOYER_CONTRACTS[list.chain_id],
+		abi: OpenPeerDeployer,
+		functionName: 'sellerContracts',
+		args: [list.seller.address],
+		enabled: instantEscrow,
+		watch: true
+	});
+
 	const { data: balance } = useContractRead({
-		address: list?.contract,
+		address: (sellerContract as `0x${string}`) || list?.contract,
 		abi: OpenPeerEscrow as Abi,
 		functionName: 'balances',
 		args: [list?.token?.address],
 		enabled: instantEscrow,
 		watch: true
+	});
+
+	const { fee } = useEscrowFee({
+		token,
+		address: sellerContract as `0x${string}`,
+		tokenAmount,
+		chainId: list.chain_id
 	});
 
 	const { signMessage } = useConfirmationSignMessage({
@@ -102,7 +119,9 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		if (!tokenAmount) {
 			error.tokenAmount = 'Should be bigger than 0';
 		} else {
-			const escrowedBalance = (balance as bigint) || BigInt(0);
+			const escrowFee = fee || BigInt(0);
+			const escrowedBalance = ((balance as bigint) || BigInt(0)) - escrowFee;
+
 			if (instantEscrow && escrowedBalance < parseUnits(String(tokenAmount), token.decimals)) {
 				error.tokenAmount = `Only ${formatUnits(escrowedBalance, token.decimals)} ${
 					token.symbol

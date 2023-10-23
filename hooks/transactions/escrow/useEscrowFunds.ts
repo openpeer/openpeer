@@ -30,7 +30,7 @@ const useEscrowFunds = ({ orderID, buyer, amount, token, fee, contract, instantE
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
 
-	if (!nativeToken && gaslessEnabled) {
+	if (gaslessEnabled && (!nativeToken || instantEscrow)) {
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 

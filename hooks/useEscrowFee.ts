@@ -3,18 +3,17 @@ import { constants } from 'ethers';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { Token } from 'models/types';
 import { Abi, parseUnits } from 'viem';
-import { useContractReads, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useContractReads } from 'wagmi';
 
 interface UseEscrowFeeParams {
+	chainId: number;
 	address?: `0x${string}`;
 	token: Token | undefined;
 	tokenAmount: number | undefined;
 }
 
-const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
-	const { chain, chains } = useNetwork();
-	const deployer = DEPLOYER_CONTRACTS[(chain || chains[0] || polygon).id];
+const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeeParams) => {
+	const deployer = DEPLOYER_CONTRACTS[chainId];
 	const contract = address || deployer;
 	const partner = constants.AddressZero;
 

@@ -126,9 +126,9 @@ const Details = ({ list, updateList }: ListStepProps) => {
 			}
 		>
 			<div className="my-8">
-				<Label title="Deposit Time Limit" />
 				{list.escrowType === 'manual' && (
 					<>
+						<Label title="Deposit Time Limit" />
 						<div className="mb-4">
 							<span className="text-sm text-gray-600">
 								{depositTimeLimit > 0 ? (

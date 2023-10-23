@@ -29,7 +29,7 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 
 	const tokenValue = `${tokenAmount} ${token.symbol}`;
 	const fiatValue = `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`;
-	const { fee } = useEscrowFee({ address: escrow?.address, token, tokenAmount });
+	const { fee } = useEscrowFee({ address: escrow?.address, token, tokenAmount, chainId: list.chain_id });
 	const date = new Date(createdAt);
 
 	return (

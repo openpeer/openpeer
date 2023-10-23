@@ -114,7 +114,7 @@ const Summary = ({ list }: SummaryProps) => {
 					<li className="w-full flex flex-col md:flex-row justify-between mb-4">
 						<div>Payment Method</div>
 						<div className="w-full md:w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
-							{!!paymentMethod.bank && (
+							{!!paymentMethod.bank && !!paymentMethod.bank.icon && (
 								<>
 									<div className="flex flex-row items-center text-gray-500 text-sm mb-2">
 										<Image

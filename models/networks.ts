@@ -12,7 +12,8 @@ export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 };
 
 export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
-	[polygonMumbai.id]: '0xc2D26E2C9C7f0a3D0A6B4458E5f4A7f999567CDC'
+	[polygonMumbai.id]: '0xc2D26E2C9C7f0a3D0A6B4458E5f4A7f999567CDC',
+	[polygon.id]: '0x8E62e95E91eB6b650D4137b6CA687AaaC5B5F8E0'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
