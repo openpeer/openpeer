@@ -6,14 +6,14 @@ import { Abi, parseUnits } from 'viem';
 import { useContractReads } from 'wagmi';
 
 interface UseEscrowFeeParams {
-	chainId: number;
+	chainId: number | undefined;
 	address?: `0x${string}`;
 	token: Token | undefined;
 	tokenAmount: number | undefined;
 }
 
 const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeeParams) => {
-	const deployer = DEPLOYER_CONTRACTS[chainId];
+	const deployer = DEPLOYER_CONTRACTS[chainId || 0];
 	const contract = address || deployer;
 	const partner = constants.AddressZero;
 
@@ -30,7 +30,8 @@ const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeePara
 				abi: OpenPeerDeployer as Abi,
 				functionName: 'openPeerFee'
 			}
-		]
+		],
+		enabled: !!token && !!chainId
 	});
 
 	if (isFetching || !token || !tokenAmount || !data) return { isFetching };
