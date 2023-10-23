@@ -13,7 +13,8 @@ const useDepositWithGas = ({ amount, token, contract }: UseDepositFundsProps) =>
 		abi: OpenPeerEscrow,
 		functionName: 'deposit',
 		args: [token.address, amount],
-		value: nativeToken ? amount : undefined
+		value: nativeToken ? amount : undefined,
+		gas: BigInt('400000')
 	});
 
 	const { data, write } = useContractWrite(config);
