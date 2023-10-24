@@ -2,7 +2,7 @@ import React from 'react';
 
 interface LoadingParams {
 	big?: boolean;
-	message?: string;
+	message?: string | JSX.Element;
 	row?: boolean;
 }
 

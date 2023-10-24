@@ -1,4 +1,4 @@
-import { Steps } from 'components';
+import { Loading, Steps } from 'components';
 import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import React, { useEffect, useState } from 'react';
@@ -10,7 +10,8 @@ import {
 	DEFAULT_ESCROW_TYPE,
 	DEFAULT_MARGIN_TYPE,
 	DEFAULT_MARGIN_VALUE,
-	DEFAULT_PAYMENT_TIME_LIMIT
+	DEFAULT_PAYMENT_TIME_LIMIT,
+	merchants
 } from 'utils';
 
 const LIST_TYPE_STEP = 1;
@@ -49,6 +50,18 @@ const SellPage = () => {
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
 	};
+
+	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
+		return (
+			<Loading
+				message={
+					<a href="https://forms.gle/qiAzsPeCphUhZgBM9" target="_blank" rel="noreferrer">
+						You need to be a verified merchant to post an ad on OpenPeer. Apply here!
+					</a>
+				}
+			/>
+		);
+	}
 
 	return (
 		<div className="pt-4 md:pt-6">
