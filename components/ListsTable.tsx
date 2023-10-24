@@ -93,7 +93,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Deposit time limit
+						Payment time limit
 					</th>
 					<th
 						scope="col"
@@ -123,7 +123,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						payment_method: paymentMethod,
 						chain_id: chainId,
 						// token_spot_price: tokenSpotPrice,
-						deposit_time_limit: depositTimeLimit,
+						payment_time_limit: paymentTimeLimit,
 						escrow_type: escrowType
 					} = list;
 					const { address: sellerAddress, name } = seller;
@@ -228,13 +228,13 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</span>
 												</div>
 											)}
-											{!!(depositTimeLimit && Number(depositTimeLimit) > 0 && !instantEscrow) && (
+											{!!(paymentTimeLimit && Number(paymentTimeLimit) > 0) && (
 												<div className="flex flex-row items-center mb-2">
 													<span className="pr-2 text-[11px] text-gray-700">
-														Deposit time limit
+														Payment time limit
 													</span>
 													<span className="pr-2 text-[11px] text-black">
-														{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+														{paymentTimeLimit} {paymentTimeLimit === 1 ? 'min' : 'mins'}
 													</span>
 												</div>
 											)}
@@ -307,19 +307,13 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{instantEscrow ? (
+								{!!(paymentTimeLimit && Number(paymentTimeLimit) > 0) && (
 									<div className="flex flex-row items-center space-x-2">
-										⚡<span> Instant deposit </span>
+										<ClockIcon width={16} height={16} />
+										<span>
+											{paymentTimeLimit} {paymentTimeLimit === 1 ? 'min' : 'mins'}
+										</span>
 									</div>
-								) : (
-									!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
-										<div className="flex flex-row items-center space-x-2">
-											<ClockIcon width={16} height={16} />
-											<span>
-												{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
-											</span>
-										</div>
-									)
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
