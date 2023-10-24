@@ -41,7 +41,7 @@ const EscrowButton = ({
 		chainId: token.chain_id
 	});
 
-	if (isFetching) return <></>;
+	if (isFetching || !fee) return <></>;
 
 	const needsToDeploy = !instantEscrow && (!sellerContract || sellerContract === constants.AddressZero);
 
@@ -50,7 +50,7 @@ const EscrowButton = ({
 			{(nativeToken || approved) && !needsToDeploy ? (
 				<EscrowFundsButton
 					buyer={buyer}
-					fee={fee!}
+					fee={fee}
 					token={token}
 					tokenAmount={tokenAmount}
 					uuid={uuid}
