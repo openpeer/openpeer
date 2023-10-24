@@ -40,7 +40,7 @@ const Payment = ({ order }: BuyStepProps) => {
 	const { address } = useAccount();
 	const selling = seller.address === address;
 
-	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
+	const { data: escrowData } = useContractRead({
 		address: escrow?.address,
 		abi: OpenPeerEscrow,
 		functionName: 'escrows',
