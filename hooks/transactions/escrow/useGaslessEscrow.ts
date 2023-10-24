@@ -12,8 +12,15 @@ interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrow = ({ contract, orderID, buyer, token, amount, instantEscrow }: UseGaslessEscrowFundsProps) => {
-	const sellerWaitingTime = 24 * 60 * 60;
+const useGaslessEscrow = ({
+	contract,
+	orderID,
+	buyer,
+	token,
+	amount,
+	instantEscrow,
+	sellerWaitingTime
+}: UseGaslessEscrowFundsProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);

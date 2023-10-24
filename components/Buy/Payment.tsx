@@ -7,6 +7,8 @@ import { useAccount } from 'hooks';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import Countdown from 'react-countdown';
+import { useContractRead } from 'wagmi';
+import { OpenPeerEscrow } from 'abis';
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
 import ClipboardText from './ClipboardText';
@@ -30,12 +32,20 @@ const Payment = ({ order }: BuyStepProps) => {
 		seller,
 		payment_method: paymentMethod,
 		deposit_time_limit: depositTimeLimit,
-		payment_time_limit: paymentTimeLimit
+		payment_time_limit: paymentTimeLimit,
+		trade_id: tradeId
 	} = order;
 	const { token, fiat_currency: currency, escrow_type: escrowType } = list!;
 	const { bank, values = {} } = paymentMethod;
 	const { address } = useAccount();
 	const selling = seller.address === address;
+
+	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
+		address: escrow?.address,
+		abi: OpenPeerEscrow,
+		functionName: 'escrows',
+		args: [tradeId]
+	});
 
 	const timeLimit =
 		status === 'created' && depositTimeLimit && Number(depositTimeLimit) > 0
@@ -44,17 +54,16 @@ const Payment = ({ order }: BuyStepProps) => {
 
 	// time left will be the difference between now + the time limit and the order created_at
 	const timeLeft = timeLimit - (new Date().getTime() - new Date(order.created_at).getTime());
-
-	const timeLimitForPayment =
-		status === 'escrowed' && order.escrow && paymentTimeLimit && Number(paymentTimeLimit) > 0
-			? Number(paymentTimeLimit) * 60 * 1000
-			: 0;
-
-	const paymentTimeLeft =
-		timeLimitForPayment > 0
-			? timeLimitForPayment - (new Date().getTime() - new Date(order.escrow!.created_at).getTime())
-			: 0;
 	const instantEscrow = escrowType === 'instant';
+
+	const [, sellerCanCancelAfter] = escrowData ? (escrowData as [boolean, bigint]) : [false, BigInt(0)];
+
+	const sellerCanCancelAfterSeconds = parseInt(sellerCanCancelAfter.toString(), 10);
+	const timeLimitForPayment =
+		status === 'escrowed' && order.escrow && sellerCanCancelAfter && sellerCanCancelAfterSeconds > 0
+			? sellerCanCancelAfterSeconds * 1000
+			: 0;
+	const paymentTimeLeft = timeLimitForPayment > 0 ? timeLimitForPayment - new Date().getTime() : 0;
 
 	return (
 		<StepLayout>
@@ -168,7 +177,7 @@ const Payment = ({ order }: BuyStepProps) => {
 							<>
 								<div className="border-b-2 border-dashed border-color-gray-400 mt-4 mb-4" />
 								<div className="flex flex-row justify-between">
-									<span className="text-neutral-500">Payment will expire in </span>
+									<span className="text-neutral-500">The seller can cancel in </span>
 									<span className="flex flex-row justify-between">
 										<Countdown
 											date={Date.now() + paymentTimeLeft}
@@ -204,6 +213,7 @@ const Payment = ({ order }: BuyStepProps) => {
 							uuid={uuid!}
 							instantEscrow={instantEscrow}
 							seller={seller.address}
+							sellerWaitingTime={Number(paymentTimeLimit) * 60}
 						/>
 					)}
 					{status === 'escrowed' &&

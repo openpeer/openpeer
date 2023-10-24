@@ -146,6 +146,30 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					</>
 				)}
 
+				<Label title="Payment Time Limit" />
+				<div className="mb-4">
+					<span className="text-sm text-gray-600">
+						{paymentTimeLimit > 0 ? (
+							<div>
+								Your order can be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} dont pay
+								after {paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
+								<strong>Minimum 15 minutes. Maximum 24 hours.</strong>
+							</div>
+						) : (
+							<div>Your orders will not be cancelled automatically. </div>
+						)}
+					</span>
+				</div>
+				<Selector
+					value={paymentTimeLimit}
+					suffix={paymentTimeLimit === 1 ? ' min' : ' mins'}
+					changeableAmount={1}
+					updateValue={(n) => updateList({ ...list, ...{ paymentTimeLimit: n } })}
+					decimals={0}
+					minValue={15}
+					maxValue={24 * 60}
+				/>
+
 				<div className="mb-4">
 					<Checkbox
 						content={`Accept only verified ${type === 'SellList' ? 'buyers' : 'sellers'}`}
@@ -153,32 +177,6 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						name="verified"
 						checked={acceptOnlyVerified}
 						onChange={() => updateList({ ...list, ...{ acceptOnlyVerified: !acceptOnlyVerified } })}
-					/>
-				</div>
-				<div className="hidden">
-					<Label title="Payment Time Limit" />
-					<div className="mb-4">
-						<span className="text-sm text-gray-600">
-							{paymentTimeLimit > 0 ? (
-								<div>
-									Your order will be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} dont pay
-									after {paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
-									<strong>You can set this to 0 to disable this feature.</strong>
-								</div>
-							) : (
-								<div>
-									Your orders will not be cancelled automatically.{' '}
-									<strong>You can set this to 0 to disable this feature.</strong>
-								</div>
-							)}
-						</span>
-					</div>
-					<Selector
-						value={paymentTimeLimit}
-						suffix={paymentTimeLimit === 1 ? ' min' : ' mins'}
-						changeableAmount={1}
-						updateValue={(n) => updateList({ ...list, ...{ paymentTimeLimit: n } })}
-						decimals={0}
 					/>
 				</div>
 				<Textarea

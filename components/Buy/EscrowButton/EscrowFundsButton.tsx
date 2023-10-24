@@ -14,7 +14,8 @@ const EscrowFundsButton = ({
 	tokenAmount,
 	fee,
 	contract,
-	instantEscrow
+	instantEscrow,
+	sellerWaitingTime
 }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
 	const amount = parseUnits(String(tokenAmount), token.decimals);
@@ -28,7 +29,8 @@ const EscrowFundsButton = ({
 		fee,
 		token,
 		contract,
-		instantEscrow
+		instantEscrow,
+		sellerWaitingTime
 	});
 
 	const escrow = () => {

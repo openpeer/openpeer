@@ -10,10 +10,12 @@ export interface UseEscrowTransactionProps {
 
 export interface UseGaslessEscrowFundsProps extends UseEscrowTransactionProps {
 	instantEscrow: boolean;
+	sellerWaitingTime: number; // in seconds
 }
 
 export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
 	instantEscrow: boolean;
+	sellerWaitingTime: number; // in seconds
 	fee: bigint;
 }
 

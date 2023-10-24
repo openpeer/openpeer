@@ -4,11 +4,19 @@ import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from
 
 import { UseEscrowFundsProps } from '../types';
 
-const useEscrowWithGas = ({ orderID, buyer, amount, token, fee, contract, instantEscrow }: UseEscrowFundsProps) => {
+const useEscrowWithGas = ({
+	orderID,
+	buyer,
+	amount,
+	token,
+	fee,
+	contract,
+	instantEscrow,
+	sellerWaitingTime
+}: UseEscrowFundsProps) => {
 	const { address } = token;
 	const nativeToken = address === constants.AddressZero;
 	const partner = constants.AddressZero;
-	const sellerWaitingTime = 24 * 60 * 60;
 	const { config } = usePrepareContractWrite({
 		address: contract,
 		abi: OpenPeerEscrow,

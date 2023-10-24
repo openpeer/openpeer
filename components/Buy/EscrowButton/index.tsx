@@ -10,7 +10,15 @@ import DeploySellerContract from './DeploySellerContract';
 import { EscrowFundsParams } from './EscrowButton.types';
 import EscrowFundsButton from './EscrowFundsButton';
 
-const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }: EscrowFundsParams) => {
+const EscrowButton = ({
+	token,
+	tokenAmount,
+	buyer,
+	seller,
+	uuid,
+	instantEscrow,
+	sellerWaitingTime
+}: EscrowFundsParams) => {
 	const nativeToken = token.address === constants.AddressZero;
 	const [approved, setApproved] = useState(nativeToken || instantEscrow);
 	const { chain } = useNetwork();
@@ -31,7 +39,7 @@ const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }
 		token,
 		tokenAmount,
 		chainId: token.chain_id
-	}); // marcos
+	});
 
 	if (isFetching) return <></>;
 
@@ -49,6 +57,7 @@ const EscrowButton = ({ token, tokenAmount, buyer, seller, uuid, instantEscrow }
 					contract={sellerContract as `0x${string}`}
 					seller={seller}
 					instantEscrow={instantEscrow}
+					sellerWaitingTime={sellerWaitingTime}
 				/>
 			) : needsToDeploy ? (
 				<DeploySellerContract />

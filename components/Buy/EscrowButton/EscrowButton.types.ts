@@ -7,6 +7,7 @@ export interface EscrowFundsParams {
 	token: Token;
 	tokenAmount: number;
 	instantEscrow: boolean;
+	sellerWaitingTime: number;
 }
 
 export interface EscrowFundsButtonProps extends EscrowFundsParams {

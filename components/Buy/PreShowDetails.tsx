@@ -47,7 +47,7 @@ const PreShowDetails = ({ timeLeft }: { timeLeft: number }) => (
 		<div className="flex flex-row justify-between hidden">
 			<span className="text-neutral-500 text-sm">Payment will expire in </span>
 			<span className="flex flex-row justify-between">
-				<span className="text-cyan-600 text-sm">15m:20secs</span>
+				<span className="text-cyan-600 text-sm">14m:20secs</span>
 			</span>
 		</div>
 	</div>

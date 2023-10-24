@@ -135,7 +135,7 @@ export interface Order {
 	payment_method: PaymentMethod;
 	trade_id: string;
 	deposit_time_limit: number | undefined;
-	payment_time_limit: number | undefined;
+	payment_time_limit: number;
 	chain_id: number;
 }
 

@@ -27,7 +27,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
 	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
-		address: escrow!.address,
+		address: escrow?.address,
 		abi: OpenPeerEscrow,
 		functionName: 'escrows',
 		args: [tradeId]
