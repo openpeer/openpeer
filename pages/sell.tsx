@@ -10,8 +10,7 @@ import {
 	DEFAULT_ESCROW_TYPE,
 	DEFAULT_MARGIN_TYPE,
 	DEFAULT_MARGIN_VALUE,
-	DEFAULT_PAYMENT_TIME_LIMIT,
-	merchants
+	DEFAULT_PAYMENT_TIME_LIMIT
 } from 'utils';
 
 const LIST_TYPE_STEP = 1;
@@ -29,6 +28,7 @@ const defaultList = {
 };
 
 const SellPage = () => {
+	const [merchants, setMerchants] = useState<`0x${string}`[] | undefined>();
 	const [showFilters, setShowFilters] = useState(false);
 
 	const { address } = useAccount();
@@ -42,6 +42,15 @@ const SellPage = () => {
 	const { step } = list;
 
 	useEffect(() => {
+		const fetchMerchants = async () => {
+			const res = await fetch('/api/merchants');
+			setMerchants(await res.json());
+		};
+
+		fetchMerchants();
+	}, []);
+
+	useEffect(() => {
 		if (list.step > 4) {
 			setList({ ...{ step: PAYMENT_METHOD_STEP }, ...defaultList } as UIList);
 		}
@@ -50,6 +59,8 @@ const SellPage = () => {
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
 	};
+
+	if (merchants === undefined) return <Loading message="Loading..." />;
 
 	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
 		return (
