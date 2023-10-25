@@ -66,6 +66,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		functionName: 'sellerContracts',
 		args: [address],
 		enabled: !!address && escrowType === 'instant',
+		chainId,
 		watch: true
 	});
 
@@ -75,6 +76,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		functionName: 'balances',
 		args: [(token as Token).address],
 		enabled: !!sellerContract && sellerContract !== constants.AddressZero,
+		chainId,
 		watch: true
 	});
 

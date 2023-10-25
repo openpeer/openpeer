@@ -12,6 +12,8 @@ import ExplainerNotification from 'components/Notifications/ExplainerNotificatio
 import { formatUnits, parseUnits } from 'viem';
 import DepositFunds from 'components/DepositButton';
 import { constants } from 'ethers';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+import Button from 'components/Button/Button';
 import TokenImage from '../Token/Token';
 import StepLayout from './StepLayout';
 
@@ -41,6 +43,10 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 			: chain.nativeCurrency
 		: undefined;
 	const sellerContractDeployed = !!sellerContract && sellerContract !== constants.AddressZero;
+	const { switchNetwork } = useSwitchNetwork();
+
+	const { chain: connectedChain } = useNetwork();
+	const wrongChain = chainId !== connectedChain?.id;
 
 	return (
 		<StepLayout buttonText={`Deposit ${token.name}`}>
@@ -85,13 +91,22 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 									onChangeNumber={setDepositAmount}
 									containerExtraStyle="mt-0 mb-2"
 								/>
-								<DepositFunds
-									contract={sellerContract}
-									token={token}
-									tokenAmount={depositAmount!}
-									disabled={(depositAmount || 0) < toDeposit}
-								/>
+								{wrongChain ? (
+									<Button
+										title={`Switch to ${chain?.name}`}
+										onClick={() => switchNetwork?.(chain?.id)}
+									/>
+								) : (
+									<DepositFunds
+										contract={sellerContract}
+										token={token}
+										tokenAmount={depositAmount!}
+										disabled={(depositAmount || 0) < toDeposit || chainId !== connectedChain?.id}
+									/>
+								)}
 							</div>
+						) : wrongChain ? (
+							<Button title={`Switch to ${chain?.name}`} onClick={() => switchNetwork?.(chain?.id)} />
 						) : (
 							<DeploySellerContract />
 						)}
