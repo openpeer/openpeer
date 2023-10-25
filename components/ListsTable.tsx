@@ -52,7 +52,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 		.filter(({ contract }) => !!contract)
 		.map((list) => ({ id: list.id, contract: list.contract, token: list.token.address, chainId: list.chain_id }));
 
-	const signatures = contracts.map((item) => {
+	let signatures = contracts.map((item) => {
 		const { contract, token, chainId } = item;
 		return {
 			address: contract,
@@ -62,6 +62,16 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 			chainId
 		};
 	});
+
+	// remove duplicates with the same address, args and chainId
+	signatures = signatures.filter(
+		(item, index, self) =>
+			index ===
+			self.findIndex(
+				(t) => t.address === item.address && t.args[0] === item.args[0] && t.chainId === item.chainId
+			)
+	);
+
 	const { data, isLoading } = useContractReads({ contracts: signatures });
 
 	return (
@@ -151,7 +161,9 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 
 					try {
 						if (instantEscrow && !isLoading && data) {
-							const dataIndex = contracts.findIndex((item) => item.id === id);
+							const dataIndex = signatures.findIndex(
+								(item) => item.address === list.contract && item.args[0] === list.token.address
+							);
 							if (dataIndex !== -1) {
 								const { status, result } = data[dataIndex];
 								if (status === 'success') {
