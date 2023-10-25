@@ -9,8 +9,8 @@ const createVerification = async (alias: string): Promise<Verification> => {
 };
 
 const fetchVerifications = async (alias: string): Promise<Verification[]> => {
-	const { data } = await synapsApi.get(`/session/alias?alias=${alias}`);
-	return data;
+	const { data } = await synapsApi.get('/session/alias', { params: { alias } });
+	return data || [];
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Verification>) {
@@ -20,6 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		const result = existingSession || (await createVerification(alias as string));
 		res.status(200).json(result);
 	} catch (err) {
-		res.status(500);
+		res.status(500).json({} as Verification);
 	}
 }
