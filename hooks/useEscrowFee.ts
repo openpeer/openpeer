@@ -23,12 +23,14 @@ const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeePara
 				address: contract,
 				abi: OpenPeerDeployer as Abi,
 				functionName: 'sellerFee',
-				args: [partner]
+				args: [partner],
+				chainId
 			},
 			{
 				address: contract,
 				abi: OpenPeerDeployer as Abi,
-				functionName: 'openPeerFee'
+				functionName: 'openPeerFee',
+				chainId
 			}
 		],
 		enabled: !!token && !!chainId && !!contract && contract !== constants.AddressZero

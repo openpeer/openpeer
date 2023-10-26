@@ -52,7 +52,8 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		functionName: 'sellerContracts',
 		args: [list.seller.address],
 		enabled: instantEscrow,
-		watch: true
+		watch: true,
+		chainId: list.chain_id
 	});
 
 	const { data: balance } = useContractRead({
@@ -61,12 +62,13 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		functionName: 'balances',
 		args: [list?.token?.address],
 		enabled: instantEscrow,
-		watch: true
+		watch: true,
+		chainId: list.chain_id
 	});
 
 	const { fee } = useEscrowFee({
 		token,
-		address: sellerContract as `0x${string}`,
+		address: (sellerContract as `0x${string}`) || list?.contract,
 		tokenAmount,
 		chainId: list.chain_id
 	});
