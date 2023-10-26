@@ -24,7 +24,13 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 
 export const networkApiKeys: { [key: number]: string } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_BICONOMY_MATIC_API_KEY!,
-	[polygonMumbai.id]: process.env.NEXT_PUBLIC_BICONOMY_MATICMUM_API_KEY!
+	[polygonMumbai.id]: process.env.NEXT_PUBLIC_BICONOMY_MATICMUM_API_KEY!,
+	[mainnet.id]: process.env.NEXT_PUBLIC_BICONOMY_ETHEREUM_API_KEY!,
+	[avalanche.id]: process.env.NEXT_PUBLIC_BICONOMY_AVALANCHE_API_KEY!,
+	[arbitrum.id]: process.env.NEXT_PUBLIC_BICONOMY_ARBITRUM_API_KEY!,
+	[optimism.id]: process.env.NEXT_PUBLIC_BICONOMY_OPTIMISM_API_KEY!,
+	[bsc.id]: process.env.NEXT_PUBLIC_BICONOMY_BSC_API_KEY!,
+	[gnosis.id]: process.env.NEXT_PUBLIC_BICONOMY_GNOSIS_API_KEY!
 };
 
 export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
@@ -39,3 +45,5 @@ export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, aval
 const devChains = [polygonMumbai];
 
 export const allChains = [...productionChains, ...devChains];
+
+export const FULL_GASLESS_CHAINS: number[] = [polygon.id, polygonMumbai.id];

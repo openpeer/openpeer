@@ -18,6 +18,7 @@ const useMarkAsPaid = ({ orderID, buyer, amount, token, contract }: UseEscrowTra
 	}
 
 	if (gaslessEnabled) {
+		// always enabled does not matter the chain
 		return { isLoading, isSuccess, data, markAsPaid, isFetching };
 	}
 
