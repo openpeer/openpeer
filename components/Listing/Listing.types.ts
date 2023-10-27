@@ -21,6 +21,7 @@ export interface UIList {
 	limitMin: number | undefined;
 	limitMax: number | undefined;
 	paymentMethod: UIPaymentMethod | undefined;
+	paymentMethods: UIPaymentMethod[];
 	terms?: string | undefined;
 	user?: User;
 	depositTimeLimit: number;
