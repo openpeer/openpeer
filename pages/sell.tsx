@@ -1,4 +1,4 @@
-import { Loading, Steps } from 'components';
+import { Button, Loading, Steps } from 'components';
 import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import React, { useEffect, useState } from 'react';
@@ -65,9 +65,18 @@ const SellPage = () => {
 	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
 		return (
 			<Loading
+				spinner={false}
 				message={
-					<a href="https://forms.gle/qiAzsPeCphUhZgBM9" target="_blank" rel="noreferrer">
-						You need to be a verified merchant to post an ad on OpenPeer. Apply here!
+					<a
+						className="flex flex-col items-center space-y-2"
+						href="https://forms.gle/qiAzsPeCphUhZgBM9"
+						target="_blank"
+						rel="noreferrer"
+					>
+						<div>You need to be a verified merchant to post an ad on OpenPeer.</div>
+						<div>
+							<Button title="Apply here!" />
+						</div>
 					</a>
 				}
 			/>

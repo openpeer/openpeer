@@ -41,7 +41,7 @@ const BuyPage = ({ id }: { id: number }) => {
 	const canBuy = seller && seller.address !== address;
 
 	if (!list) return <Loading />;
-	if (!canBuy) return <Loading message="You are not the seller of this order" />;
+	if (!canBuy) return <Loading spinner={false} message="You are not the seller of this order" />;
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
