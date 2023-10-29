@@ -27,12 +27,13 @@ export default function Select({
 	rounded = false,
 	flag = false,
 	token = false,
-	labelStyle = ''
+	labelStyle = '',
+	extraStyle = ''
 }: SelectProps) {
 	return (
 		<Listbox value={selected} onChange={onSelect}>
 			{({ open }) => (
-				<div className={`my-8 ${minimal ? 'pr-1.5' : ''}`}>
+				<div className={`my-8 ${minimal ? 'pr-1.5' : ''} ${extraStyle}`}>
 					{!minimal && (
 						<Listbox.Label className={`block text-base font-medium text-gray-700 ${labelStyle}`}>
 							{label}

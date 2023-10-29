@@ -35,12 +35,13 @@ const MyEscrow = () => (
 			<div className="w-full md:w-1/2 flex flex-col mb-16">
 				<HeaderH3 title="Deposit or Withdraw funds" />
 				<div className="border border-slate-300 mt-4 p-4 rounded">
-					<span>Begin by selecting the Chain</span>
 					<div>
 						<div className="flex flex-row justify-between items-center">
 							<div className="w-fit">
 								<Select
 									label="Chain"
+									extraStyle="my-0"
+									labelStyle="my-0"
 									options={[]}
 									selected={undefined}
 									onSelect={function (option: Option | undefined): void {
