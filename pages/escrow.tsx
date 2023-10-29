@@ -1,4 +1,4 @@
-import { Button } from 'components';
+import { Button, ListsTable } from 'components';
 import HeaderH3 from 'components/SectionHeading/h2';
 import Select from 'components/Select/Select';
 import { Option } from 'components/Select/Select.types';
