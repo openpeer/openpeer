@@ -2,14 +2,15 @@ import React from 'react';
 import { Button, HeaderH3, Input, Switcher } from 'components';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import ClipboardText from 'components/Buy/ClipboardText';
+import Link from 'next/link';
 
 const EscrowTransaction = () => (
 	<>
 		<div className="px-6 w-full flex flex-col items-center mt-4 pt-4 md:pt-6 text-gray-700 relative">
 			<div className="w-full md:w-1/2 flex flex-col justify-between mb-16">
-				<a href="/escrow" className="flex flex-row space-x-4 items-center mb-2">
+				<Link href="/escrow" className="flex flex-row space-x-4 items-center mb-2">
 					<ArrowLeftIcon className="w-4 h-4" /> <span className="text-sm">Back to Escrow</span>
-				</a>
+				</Link>
 				<div className="flex flex-col md:flex-row justify-between md:items-center space-y-4 md:space-y-0">
 					<HeaderH3 title="Deposit or Withdraw funds" />
 					<Switcher leftLabel="Deposit" rightLabel="Withdraw" selected={''} onToggle={''} />
@@ -38,8 +39,8 @@ const EscrowTransaction = () => (
 					<div className="flex flex-row space-x-4">
 						<div>QRCODE QRCODE QRCODE QRCODE</div>
 						<div>
-							<div>
-								<span className="text-sm">USDT Address</span>
+							<div className="mb-4">
+								<span className="text-sm font-bold">USDT Address</span>
 								<ClipboardText extraStyle="text-sm" itemValue={'AC32BiwPnQGtvNkQ9WVR9y6vLd222FUf3'} />
 							</div>
 							<div className="flex flex-row text-sm">
