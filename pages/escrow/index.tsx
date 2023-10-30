@@ -8,7 +8,7 @@ import React from 'react';
 const MyEscrow = () => (
 	<>
 		<div className="px-6 w-full flex flex-col items-center justify-center mt-4 pt-4 md:pt-6 text-gray-700">
-			<div className="w-full md:w-1/2 flex flex-col mb-16">
+			<div className="w-full lg:w-1/2 flex flex-col mb-16">
 				<HeaderH3 title="Deposit or Withdraw funds" />
 				<div className="border border-slate-300 mt-4 p-4 rounded">
 					<span>Begin by selecting the Chain</span>
@@ -32,7 +32,7 @@ const MyEscrow = () => (
 				</div>
 			</div>
 
-			<div className="w-full md:w-1/2 flex flex-col mb-16">
+			<div className="w-full lg:w-1/2 flex flex-col mb-16">
 				<HeaderH3 title="Deposit or Withdraw funds" />
 				<div className="border border-slate-300 mt-4 p-4 rounded">
 					<div>

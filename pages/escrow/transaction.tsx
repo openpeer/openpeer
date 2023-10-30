@@ -3,11 +3,12 @@ import { Button, HeaderH3, Input, Switcher } from 'components';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import ClipboardText from 'components/Buy/ClipboardText';
 import Link from 'next/link';
+import { InfoIcon } from '@dynamic-labs/sdk-react';
 
 const EscrowTransaction = () => (
 	<>
 		<div className="px-6 w-full flex flex-col items-center mt-4 pt-4 md:pt-6 text-gray-700 relative">
-			<div className="w-full md:w-1/2 flex flex-col justify-between mb-16">
+			<div className="w-full lg:w-1/2 flex flex-col justify-between mb-16">
 				<Link href="/escrow" className="flex flex-row space-x-4 items-center mb-2">
 					<ArrowLeftIcon className="w-4 h-4" /> <span className="text-sm">Back to Escrow</span>
 				</Link>
@@ -36,16 +37,23 @@ const EscrowTransaction = () => (
 						<span className="text-sm mt-2">Funds can be withdrawn at any time</span>
 					</div>
 					<div className="font-bold text-xl mb-4">Or deposit from your exchange</div>
-					<div className="flex flex-row space-x-4">
-						<div>QRCODE QRCODE QRCODE QRCODE</div>
-						<div>
-							<div className="mb-4">
+					<div className="w-full flex flex-col lg:flex-row lg:space-x-4">
+						<div className="my-4 lg:my-0">QRCODE QRCODE QRCODE QRCODE</div>
+						<div className="w-full flex flex-col">
+							<div className="mb-4 break-all">
 								<span className="text-sm font-bold">USDT Address</span>
 								<ClipboardText extraStyle="text-sm" itemValue={'AC32BiwPnQGtvNkQ9WVR9y6vLd222FUf3'} />
 							</div>
-							<div className="flex flex-row text-sm">
-								<span>Polygon</span>
-								<span>Only deposit on Polygon network otherwise funds will be lost</span>
+							<div className="flex flex-col lg:flex-row text-sm break-all">
+								<div className="flex flex-row space-x-2">
+									<span>
+										<InfoIcon className="w-4" />
+									</span>
+									<span>Polygon</span>
+								</div>
+								<span className="break-all">
+									Only deposit on Polygon network otherwise funds will be lost
+								</span>
 							</div>
 						</div>
 					</div>
