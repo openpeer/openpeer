@@ -48,7 +48,7 @@ const useEscrowFunds = ({
 	// polygon or mumbai deploy gasless non native tokens or instant escrows (no tokens transferred to escrow contract)
 	// other chains: deploy gasless if instant escrow (no tokens transferred to escrow contract)
 
-	if (gaslessEnabled && FULL_GASLESS_CHAINS.includes(chain.id) ? !nativeToken || instantEscrow : instantEscrow) {
+	if (gaslessEnabled && (FULL_GASLESS_CHAINS.includes(chain.id) ? !nativeToken || instantEscrow : instantEscrow)) {
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 
