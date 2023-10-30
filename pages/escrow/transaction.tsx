@@ -10,7 +10,7 @@ const EscrowTransaction = () => (
 				<a href="/escrow" className="flex flex-row space-x-4 items-center mb-2">
 					<ArrowLeftIcon className="w-4 h-4" /> <span className="text-sm">Back to Escrow</span>
 				</a>
-				<div className="flex flex-row justify-between items-center">
+				<div className="flex flex-col md:flex-row justify-between md:items-center space-y-4 md:space-y-0">
 					<HeaderH3 title="Deposit or Withdraw funds" />
 					<Switcher leftLabel="Deposit" rightLabel="Withdraw" selected={''} onToggle={''} />
 				</div>
@@ -30,19 +30,19 @@ const EscrowTransaction = () => (
 						<span>USDC</span>
 					</div>
 					<Input label="Deposit amount" id={''} />
-					<div>
+					<div className="flex flex-col items-center mb-4">
 						<Button title="Deposit" />
-						<span className="text-sm">Funds can be withdrawn at any time</span>
+						<span className="text-sm mt-2">Funds can be withdrawn at any time</span>
 					</div>
-					<div className="font-bold text-xl mb-2">Or deposit from your exchange</div>
-					<div className="flex flex-row">
+					<div className="font-bold text-xl mb-4">Or deposit from your exchange</div>
+					<div className="flex flex-row space-x-4">
 						<div>QRCODE QRCODE QRCODE QRCODE</div>
 						<div>
 							<div>
 								<span className="text-sm">USDT Address</span>
 								<ClipboardText extraStyle="text-sm" itemValue={'AC32BiwPnQGtvNkQ9WVR9y6vLd222FUf3'} />
 							</div>
-							<div className="flex flex-row">
+							<div className="flex flex-row text-sm">
 								<span>Polygon</span>
 								<span>Only deposit on Polygon network otherwise funds will be lost</span>
 							</div>
