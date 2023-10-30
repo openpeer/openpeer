@@ -5,6 +5,7 @@ import BankSelect from 'components/Select/BankSelect';
 import Textarea from 'components/Textarea/Textarea';
 import React from 'react';
 import { Bank, List } from 'models/types';
+import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { UIPaymentMethod } from './Listing.types';
 
@@ -25,6 +26,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 }) => {
 	const { bank, values = {} } = paymentMethod || ({} as UIPaymentMethod);
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
+	const { errors, validate } = useFormErrors();
 
 	const resolver: Resolver = () => {
 		const error: Errors = {};
@@ -46,16 +48,18 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 	};
 
 	const onSave = () => {
-		onFinish(paymentMethod);
+		if (validate(resolver)) {
+			onFinish(paymentMethod);
+		}
 	};
 
 	return (
 		<div className="mb-2">
 			<BankSelect
 				currencyId={currencyId}
-				onSelect={(b) => updatePaymentMethod({ ...paymentMethod, ...{ bank: b } })}
+				onSelect={(b) => updatePaymentMethod({ ...paymentMethod, ...{ bank: b, values: {} } })}
 				selected={bank}
-				// error={errors.bankId}
+				error={errors.bankId}
 			/>
 			{type === 'SellList' &&
 				schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
@@ -87,7 +91,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 									})
 								}
 								value={values[schemaId]}
-								// error={errors[schemaId]}
+								error={errors[schemaId]}
 							/>
 						);
 					}
@@ -109,7 +113,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 									}
 								})
 							}
-							// error={errors[schemaId]}
+							error={errors[schemaId]}
 							value={values[schemaId]}
 							required={required}
 						/>

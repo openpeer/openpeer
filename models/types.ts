@@ -48,7 +48,7 @@ export interface List {
 	status: 'created' | 'active' | 'closed';
 	terms: string | undefined | null;
 	token: Token;
-	payment_method: PaymentMethod;
+	payment_methods: PaymentMethod[];
 	bank: Bank;
 	total_available_amount: string;
 	price: number;
@@ -82,7 +82,6 @@ export interface Bank {
 
 export interface PaymentMethod {
 	id: number;
-	user: User;
 	bank: Bank;
 	bank_id: number;
 	values: AccountFieldValue;

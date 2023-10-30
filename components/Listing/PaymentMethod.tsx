@@ -1,4 +1,4 @@
-import { BankSelect, Button, Input, Loading, Textarea } from 'components';
+import { Button, Loading } from 'components';
 import { useAccount } from 'hooks';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
@@ -9,6 +9,7 @@ import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
+import PaymentMethodForm from './PaymentMethodForm';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
@@ -16,9 +17,17 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const [paymentMethodCreation, setPaymentMethodCreation] = useState<UIPaymentMethod>();
 
 	const onProceed = () => {
-		// if (validate(resolver)) {
-		updateList({ ...list, ...{ step: list.step + 1 } });
-		// }
+		if (paymentMethods.length > 0) {
+			// remove the id from the new payment methods
+			const filteredPaymentMethods = paymentMethods.map((pm) => {
+				if (pm.id && newPaymentMethods.find((npm) => npm.id === pm.id)) {
+					return { ...pm, ...{ id: undefined, bank_id: pm.bank!.id } };
+				}
+				return { ...pm, ...{ bank_id: pm.bank!.id } };
+			});
+
+			updateList({ ...list, ...{ step: list.step + 1, paymentMethods: filteredPaymentMethods } });
+		}
 	};
 
 	const [apiPaymentMethods, setApiPaymentMethods] = useState<PaymentMethodType[]>();
@@ -45,8 +54,6 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 
 	const savePaymentMethodCreation = () => {
 		if (paymentMethodCreation) {
-			// @TODO: validate
-
 			// edition - can be editing an existing payment method or a new one
 			if (paymentMethodCreation.id) {
 				// if existing, update it in the payment methods list
@@ -88,7 +95,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			return;
 		}
 
-		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`, {
+		fetch(`/api/payment-methods?currency_id=${currency!.id}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
@@ -98,9 +105,10 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				setApiPaymentMethods(data);
 				if (paymentMethods.length === 0) {
 					updatePaymentMethods(data);
-				} else if (!list.id) {
-					updatePaymentMethods([]);
 				}
+
+				// add as a new payment method if the paymentMethod is not inside data
+				setNewPaymentMethods(paymentMethods.filter((pm) => !data.find((d: UIPaymentMethod) => d.id === pm.id)));
 				setLoading(false);
 			});
 	}, [address, currency, type]);
@@ -120,7 +128,9 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const listPaymentMethods = [...existing, ...newPaymentMethods];
 
 	return (
-		<StepLayout onProceed={onProceed}>
+		<StepLayout
+			onProceed={paymentMethodCreation === undefined && paymentMethods.length > 0 ? onProceed : undefined}
+		>
 			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
 			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
 			{listPaymentMethods.map(
@@ -173,68 +183,13 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 					)
 			)}
 			{paymentMethodCreation !== undefined ? (
-				<div className="mb-2">
-					<BankSelect
-						currencyId={currency!.id}
-						onSelect={(b) => updatePaymentMethod({ ...paymentMethodCreation, ...{ bank: b } })}
-						selected={bank}
-						// error={errors.bankId}
-					/>
-					{type === 'SellList' &&
-						schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
-							if (schemaType === 'message') {
-								return (
-									<div className="mb-4" key={schemaId}>
-										<span className="text-sm">{label}</span>
-									</div>
-								);
-							}
-
-							if (schemaType === 'textarea') {
-								return (
-									<Textarea
-										rows={4}
-										key={schemaId}
-										label={label}
-										id={schemaId}
-										placeholder={placeholder}
-										onChange={(e) =>
-											updatePaymentMethod({
-												...paymentMethodCreation,
-												...{
-													values: {
-														...paymentMethodCreation.values,
-														...{ [schemaId]: e.target.value }
-													}
-												}
-											})
-										}
-										value={values[schemaId]}
-										// error={errors[schemaId]}
-									/>
-								);
-							}
-							return (
-								<Input
-									key={schemaId}
-									label={label}
-									type="text"
-									id={schemaId}
-									placeholder={placeholder}
-									onChange={(value) =>
-										updatePaymentMethod({
-											...paymentMethodCreation,
-											...{ values: { ...paymentMethodCreation.values, ...{ [schemaId]: value } } }
-										})
-									}
-									// error={errors[schemaId]}
-									value={values[schemaId]}
-									required={required}
-								/>
-							);
-						})}
-					<Button title="Save" onClick={savePaymentMethodCreation} />
-				</div>
+				<PaymentMethodForm
+					currencyId={currency!.id}
+					paymentMethod={paymentMethodCreation}
+					updatePaymentMethod={setPaymentMethodCreation}
+					onFinish={savePaymentMethodCreation}
+					type={type}
+				/>
 			) : (
 				<div>
 					<Button

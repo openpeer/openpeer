@@ -20,7 +20,6 @@ export interface UIList {
 	margin: number | undefined;
 	limitMin: number | undefined;
 	limitMax: number | undefined;
-	paymentMethod: UIPaymentMethod | undefined;
 	paymentMethods: UIPaymentMethod[];
 	terms?: string | undefined;
 	user?: User;

@@ -109,7 +109,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Payment Method
+						Payment Methods
 					</th>
 					<th
 						scope="col"
@@ -130,7 +130,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_min: min,
 						limit_max: max,
 						price,
-						payment_method: paymentMethod,
+						payment_methods: paymentMethods,
 						chain_id: chainId,
 						// token_spot_price: tokenSpotPrice,
 						payment_time_limit: paymentTimeLimit,
@@ -138,7 +138,6 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 					} = list;
 					const { address: sellerAddress, name } = seller;
 					const isSeller = primaryWallet && sellerAddress === address;
-					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
 					const chain = chains.find((c) => c.id === chainId);
 					const chainToken = chain
@@ -250,14 +249,20 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</span>
 												</div>
 											)}
-											<div className="flex flex-row items-center mb-2">
-												<span
-													className="bg-gray-500 w-1 h-3 rounded-full"
-													style={{ backgroundColor: bank.color || 'gray' }}
-												>
-													&nbsp;
-												</span>
-												<span className="pl-1 text-gray-700 text-[11px]">{bank.name}</span>
+											<div className="mb-2">
+												{paymentMethods.map((pm) => (
+													<div className="flex flex-row items-center" key={pm.id}>
+														<span
+															className="bg-gray-500 w-1 h-3 rounded-full"
+															style={{ backgroundColor: pm.bank.color || 'gray' }}
+														>
+															&nbsp;
+														</span>
+														<span className="pl-1 text-gray-700 text-[11px]">
+															{pm.bank.name}
+														</span>
+													</div>
+												))}
 											</div>
 										</div>
 									</div>
@@ -329,15 +334,17 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center mb-1">
-									<span
-										className="w-1 h-3 rounded-full"
-										style={{ backgroundColor: bank.color || 'gray' }}
-									>
-										&nbsp;
-									</span>
-									<span className="pl-1">{bank.name}</span>
-								</div>
+								{paymentMethods.map((pm) => (
+									<div className="flex flex-row items-center mb-1" key={pm.id}>
+										<span
+											className="w-1 h-3 rounded-full"
+											style={{ backgroundColor: pm.bank.color || 'gray' }}
+										>
+											&nbsp;
+										</span>
+										<span className="pl-1">{pm.bank.name}</span>
+									</div>
+								))}
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
 								{isSeller ? (
