@@ -40,8 +40,7 @@ const MyEscrow = () => (
 							<div className="w-fit">
 								<Select
 									label="Chain"
-									extraStyle="my-0"
-									labelStyle="my-0"
+									extraStyle="mt-2 mb-4"
 									options={[]}
 									selected={undefined}
 									onSelect={function (option: Option | undefined): void {
