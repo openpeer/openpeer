@@ -24,6 +24,7 @@ interface ListsTableProps {
 	lists: List[];
 	fiatAmount?: number;
 	tokenAmount?: number;
+	hideLowAmounts?: boolean;
 }
 
 interface BuyButtonProps {
@@ -43,7 +44,7 @@ const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType }: BuyBut
 	</Link>
 );
 
-const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
+const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTableProps) => {
 	const { address } = useAccount();
 	const { primaryWallet } = useDynamicContext();
 	const chains = allChains;
@@ -172,6 +173,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						}
 					} catch (err) {
 						console.log(err);
+					}
+
+					if (hideLowAmounts && Number(escrowedAmount) <= 0) {
+						return <></>;
 					}
 
 					return (

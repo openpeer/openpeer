@@ -1,6 +1,7 @@
 import { OpenPeerEscrow } from 'abis';
 import { constants } from 'ethers';
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { arbitrum } from 'wagmi/chains';
 
 import { UseEscrowFundsProps } from '../types';
 
@@ -24,7 +25,7 @@ const useEscrowWithGas = ({
 		args: nativeToken
 			? [orderID, buyer, amount, partner, sellerWaitingTime, instantEscrow]
 			: [orderID, buyer, address, amount, partner, sellerWaitingTime, instantEscrow],
-		gas: instantEscrow ? BigInt('200000') : BigInt('400000'),
+		gas: token.chain_id === arbitrum.id ? BigInt('1000000') : instantEscrow ? BigInt('200000') : BigInt('400000'),
 		value: nativeToken && !instantEscrow ? amount + fee : undefined
 	});
 
