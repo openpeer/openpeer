@@ -135,8 +135,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 						chain_id: chainId,
 						// token_spot_price: tokenSpotPrice,
 						payment_time_limit: paymentTimeLimit,
-						escrow_type: escrowType
+						escrow_type: escrowType,
+						type
 					} = list;
+					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
 					const isSeller = primaryWallet && sellerAddress === address;
 					const { symbol } = token;
@@ -255,16 +257,16 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 												</div>
 											)}
 											<div className="mb-2">
-												{paymentMethods.map((pm) => (
-													<div className="flex flex-row items-center" key={pm.id}>
+												{banks.map((bank) => (
+													<div className="flex flex-row items-center" key={bank.id}>
 														<span
 															className="bg-gray-500 w-1 h-3 rounded-full"
-															style={{ backgroundColor: pm.bank.color || 'gray' }}
+															style={{ backgroundColor: bank.color || 'gray' }}
 														>
 															&nbsp;
 														</span>
 														<span className="pl-1 text-gray-700 text-[11px]">
-															{pm.bank.name}
+															{bank.name}
 														</span>
 													</div>
 												))}
@@ -339,15 +341,15 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{paymentMethods.map((pm) => (
-									<div className="flex flex-row items-center mb-1" key={pm.id}>
+								{banks.map((bank) => (
+									<div className="flex flex-row items-center mb-1" key={id}>
 										<span
 											className="w-1 h-3 rounded-full"
-											style={{ backgroundColor: pm.bank.color || 'gray' }}
+											style={{ backgroundColor: bank.color || 'gray' }}
 										>
 											&nbsp;
 										</span>
-										<span className="pl-1">{pm.bank.name}</span>
+										<span className="pl-1">{bank.name}</span>
 									</div>
 								))}
 							</td>
