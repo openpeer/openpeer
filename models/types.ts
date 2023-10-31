@@ -49,7 +49,6 @@ export interface List {
 	terms: string | undefined | null;
 	token: Token;
 	payment_methods: PaymentMethod[];
-	bank: Bank;
 	total_available_amount: string;
 	price: number;
 	type: 'SellList' | 'BuyList';

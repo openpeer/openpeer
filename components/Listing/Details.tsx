@@ -27,7 +27,6 @@ const Details = ({ list, updateList }: ListStepProps) => {
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data) => {
-			console.log(list);
 			const result = await fetch(
 				list.id ? `/api/lists/${list.id}` : '/api/lists',
 

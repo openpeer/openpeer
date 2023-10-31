@@ -28,6 +28,7 @@ export interface UIList {
 	chainId: number;
 	acceptOnlyVerified: boolean;
 	escrowType: List['escrow_type'];
+	bankIds: number[];
 }
 
 export interface ListStepProps {

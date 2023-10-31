@@ -15,6 +15,7 @@ interface PaymentMethodFormProps {
 	paymentMethod: UIPaymentMethod;
 	updatePaymentMethod: (paymentMethod: UIPaymentMethod) => void;
 	onFinish: (paymentMethod: any) => void;
+	bankIds: number[];
 }
 
 const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
@@ -22,7 +23,8 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 	type,
 	paymentMethod,
 	updatePaymentMethod,
-	onFinish
+	onFinish,
+	bankIds
 }) => {
 	const { bank, values = {} } = paymentMethod || ({} as UIPaymentMethod);
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
@@ -42,6 +44,8 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 					error[field.id] = `${field.label} should be present`;
 				}
 			}
+		} else if (bank?.id && bankIds.includes(bank.id)) {
+			error.bankId = 'This method is already added';
 		}
 
 		return error;

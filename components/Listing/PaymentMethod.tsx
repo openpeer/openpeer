@@ -13,20 +13,24 @@ import PaymentMethodForm from './PaymentMethodForm';
 
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
+
 	const { currency, paymentMethods = [], type } = list;
 	const [paymentMethodCreation, setPaymentMethodCreation] = useState<UIPaymentMethod>();
 
 	const onProceed = () => {
 		if (paymentMethods.length > 0) {
-			// remove the id from the new payment methods
 			const filteredPaymentMethods = paymentMethods.map((pm) => {
 				if (pm.id && newPaymentMethods.find((npm) => npm.id === pm.id)) {
 					return { ...pm, ...{ id: undefined, bank_id: pm.bank!.id } };
 				}
 				return { ...pm, ...{ bank_id: pm.bank!.id } };
 			});
-
-			updateList({ ...list, ...{ step: list.step + 1, paymentMethods: filteredPaymentMethods } });
+			if (type === 'SellList') {
+				updateList({ ...list, ...{ step: list.step + 1, paymentMethods: filteredPaymentMethods } });
+			} else {
+				const bankIds = filteredPaymentMethods.map((pm) => pm.bank!.id);
+				updateList({ ...list, ...{ step: list.step + 1, bankIds } });
+			}
 		}
 	};
 
@@ -88,7 +92,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 		setLoading(true);
 		if (type === 'BuyList') {
 			if (!list.id) {
-				updatePaymentMethods([]);
+				if (paymentMethods.length > 0) {
+					setNewPaymentMethods(paymentMethods);
+				} else {
+					addNewPaymentMethod();
+				}
 			}
 			setApiPaymentMethods([]);
 			setLoading(false);
@@ -113,6 +121,10 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			});
 	}, [address, currency, type]);
 
+	const addNewPaymentMethod = () => {
+		setPaymentMethodCreation({} as UIPaymentMethod);
+	};
+
 	if (isLoading) {
 		return <Loading />;
 	}
@@ -131,7 +143,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 		<StepLayout
 			onProceed={paymentMethodCreation === undefined && paymentMethods.length > 0 ? onProceed : undefined}
 		>
-			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
+			<h2 className="text-xl mt-8 mb-2">Payment Methods</h2>
 			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
 			{listPaymentMethods.map(
 				(pm) =>
@@ -145,7 +157,9 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 							} w-full flex flex-col bg-gray-100 mt-8 py-4 p-8 rounded-md cursor-pointer`}
 							onClick={() => togglePaymentMethod(pm)}
 						>
-							<div className="w-full flex flex-row justify-between mb-4">
+							<div
+								className={`w-full flex flex-row justify-between ${type === 'SellList' ? 'mb-4' : ''}`}
+							>
 								<div className="flex flex-row items-center">
 									{!!pm.bank.icon && (
 										<Image
@@ -163,22 +177,24 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 									<PencilSquareIcon className="h-5 w-" aria-hidden="true" />
 								</div>
 							</div>
-							<div className="mb-4">
-								{Object.keys(pm.values || {}).map((key) => {
-									const { account_info_schema: schemaInfo } = pm.bank as Bank;
-									const field = schemaInfo.find((f) => f.id === key);
-									const value = (pm.values || {})[key];
-									if (!value) return <></>;
+							{Object.keys(pm.values || {}).length > 0 && (
+								<div className="mb-4">
+									{Object.keys(pm.values || {}).map((key) => {
+										const { account_info_schema: schemaInfo } = pm.bank as Bank;
+										const field = schemaInfo.find((f) => f.id === key);
+										const value = (pm.values || {})[key];
+										if (!value) return <></>;
 
-									return (
-										<div className="mb-2" key={key}>
-											<span>
-												{field?.label}: {value}
-											</span>
-										</div>
-									);
-								})}
-							</div>
+										return (
+											<div className="mb-2" key={key}>
+												<span>
+													{field?.label}: {value}
+												</span>
+											</div>
+										);
+									})}
+								</div>
+							)}
 						</div>
 					)
 			)}
@@ -189,14 +205,14 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 					updatePaymentMethod={setPaymentMethodCreation}
 					onFinish={savePaymentMethodCreation}
 					type={type}
+					bankIds={[
+						...paymentMethods.map((pm) => pm.bank!.id),
+						...newPaymentMethods.map((pm) => pm.bank!.id)
+					]}
 				/>
 			) : (
 				<div>
-					<Button
-						title="Add New Payment Method +"
-						outlined
-						onClick={() => setPaymentMethodCreation({} as UIPaymentMethod)}
-					/>
+					<Button title="Add New Payment Method +" outlined onClick={addNewPaymentMethod} />
 				</div>
 			)}
 		</StepLayout>
