@@ -247,7 +247,6 @@ const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
 		return <DynamicWidget />;
 	}
 
-	console.log({ claimChecked, claimed, isLoading, claimCheckLoading, proof, wrongChain });
 	return (
 		<Button
 			title={

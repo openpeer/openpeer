@@ -16,7 +16,6 @@ const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeePara
 	const deployer = DEPLOYER_CONTRACTS[chainId || 0];
 	const contract = !!address && address !== constants.AddressZero ? address : deployer;
 	const partner = constants.AddressZero;
-	console.log({ address, tokenAmount, token, chainId, deployer, contract, partner });
 	const { data, isFetching } = useContractReads({
 		contracts: [
 			{
@@ -37,7 +36,6 @@ const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeePara
 	});
 
 	if (isFetching || !token || !tokenAmount || !data) return { isFetching };
-	console.log({ data });
 
 	const [feeResult, openPeerFeeResult] = data || [];
 	const feeBps = feeResult.result as unknown;
