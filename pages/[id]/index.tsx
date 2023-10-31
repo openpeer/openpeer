@@ -60,7 +60,7 @@ const Profile = ({ id }: { id: number }) => {
 			{lists && lists.length > 0 && (
 				<div className="flex px-6">
 					<div className="w-full md:w-5/6 m-auto">
-						<ListsTable lists={lists} />
+						<ListsTable lists={lists} hideLowAmounts={!isLoggedUser} />
 					</div>
 				</div>
 			)}
