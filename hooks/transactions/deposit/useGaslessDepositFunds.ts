@@ -1,8 +1,8 @@
 import { OpenPeerEscrow } from 'abis';
 import { Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
+import useAccount from 'hooks/useAccount';
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { UseDepositFundsProps } from '../types';
 
@@ -37,7 +37,7 @@ const useGaslessDepositFunds = ({ contract, token, amount }: UseDepositFundsProp
 				to: contract,
 				from: address,
 				signatureType: 'EIP712_SIGN',
-				gasLimit: 400000
+				gasLimit: 500000
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);
