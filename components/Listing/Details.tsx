@@ -79,12 +79,12 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		watch: true
 	});
 
-	const needToDeploy = escrowType === 'instant' && (!sellerContract || sellerContract === constants.AddressZero);
+	const needToDeploy = !sellerContract || sellerContract === constants.AddressZero;
 	const needToFund =
 		!balance ||
 		(balance as bigint) < parseUnits(String((list.totalAvailableAmount || 0) / 4), (token as Token)!.decimals);
 
-	const needToDeployOrFund = needToDeploy || needToFund;
+	const needToDeployOrFund = escrowType === 'instant' && (needToDeploy || needToFund);
 
 	const onProceed = () => {
 		if (!needToDeployOrFund) {

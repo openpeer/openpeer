@@ -220,7 +220,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</div>
 													<div className="flex flex-row items-center">
 														<span className="mr-2 text-sm text-gray-800">
-															{escrowedAmount} {symbol}
+															{Number(escrowedAmount).toFixed(2)} {symbol}
 														</span>
 													</div>
 												</div>
@@ -286,7 +286,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 									<div className="flex flex-row mb-2 space-x-2 items-center">
 										<Token token={token} size={24} />
 										<span>
-											{escrowedAmount} {symbol}
+											{Number(escrowedAmount).toFixed(2)} {symbol}
 										</span>
 									</div>
 									<div className="flex flex-row items-center">
