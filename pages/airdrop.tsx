@@ -26,7 +26,7 @@ import { polygon } from 'wagmi/chains';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
-import roundTree from '../airdrop/roundFourTree.json';
+import roundTree from '../airdrop/roundFiveTree.json';
 
 interface RoundData {
 	[key: `0x${string}`]: {
@@ -42,10 +42,10 @@ interface ClosedRound {
 	};
 }
 
-const CLOSED_ROUND = 4;
-const ROUND = 5;
+const CLOSED_ROUND = 5;
+const ROUND = 6;
 const POOL = 1000000;
-const AIRDROP_START = 1698840000000;
+const AIRDROP_START = 1701432000000;
 const CHAIN = polygon;
 const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
 const CLOSED_ROUNDS: ClosedRound = {
@@ -176,6 +176,40 @@ const CLOSED_ROUNDS: ClosedRound = {
 			'0x871b62f813b5F6E12Dd7689606C0bE9855C06D7B': { buy_volume: '0', sell_volume: '0.4589414147780636469645' },
 			'0xBE42A09D29Bfa9Ee0f2f7d41eb25aC35a14627aa': { buy_volume: '0.4589414147780636469645', sell_volume: '0' },
 			'0x683287150dE08509909E7efA8e4609DA8E34360F': { buy_volume: '4.313738596110696590835', sell_volume: '0' }
+		}
+	},
+	5: {
+		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+		volume: 5375.38372451445252876644,
+		data: {
+			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': { buy_volume: '0', sell_volume: '0.227037872092404582' },
+			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
+				buy_volume: '1576.296191252592404582',
+				sell_volume: '1874.89372737458289576684'
+			},
+			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': {
+				buy_volume: '52.89545937881889576684',
+				sell_volume: '9.99867'
+			},
+			'0x4F20CBb1149BE8839A3554189098b67c21BCb587': {
+				buy_volume: '1369.068323153045',
+				sell_volume: '1950.6507751645522284176'
+			},
+			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': { buy_volume: '485.25477', sell_volume: '485.25477' },
+			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': { buy_volume: '485.25477', sell_volume: '485.25477' },
+			'0x920EFA6f544FE9050a0Aa4181911C75CdD5F8a23': { buy_volume: '30.015286937501322098', sell_volume: '0' },
+			'0x9518d5744E6e39842c6a8fbCfc616ca7B67f2cFa': { buy_volume: '0', sell_volume: '259.96542' },
+			'0x135133f344d0dD67e99C6106B1C0066A1B3EF263': { buy_volume: '199.9734', sell_volume: '0' },
+			'0xe172Bd02F842e98183cDBb8294Bf23f625588D9e': { buy_volume: '353.212205000119', sell_volume: '0' },
+			'0x85D3Af356773EC8614d596ca3540968Bd40FFd14': { buy_volume: '99.166484103225', sell_volume: '0' },
+			'0xE661b1030876F28FD2EAfdAe28d6280B3f198093': { buy_volume: '0', sell_volume: '99.166484103225' },
+			'0xeb2c2037017f93D22e2981061fEd4AE13F77E0d3': { buy_volume: '59.99202', sell_volume: '0' },
+			'0x6408F0b3313d9C63b5E234B4A6371Cba1A83a082': { buy_volume: '0', sell_volume: '9.99867' },
+			'0x87D5aF6B03178187489D8211feD16FCd3D56c7E0': { buy_volume: '9.99867', sell_volume: '0' },
+			'0x20FB270652138a12EC8607e93199A233A8c517f0': { buy_volume: '99.7177398426', sell_volume: '0' },
+			'0xcADD30BF714deE4a8496D09F9DF5aB9708e66600': { buy_volume: '359.422871120134695736', sell_volume: '0' },
+			'0xD22aE82D698740c151141F9e3e11768d42416d06': { buy_volume: '195.1155337264162105836', sell_volume: '0' },
+			'0xDc0981eaB09B6c27a02ce77a55d66e5C29f5cdB9': { buy_volume: '0', sell_volume: '199.9734' }
 		}
 	}
 };
