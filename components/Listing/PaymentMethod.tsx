@@ -28,8 +28,11 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			if (type === 'SellList') {
 				updateList({ ...list, ...{ step: list.step + 1, paymentMethods: filteredPaymentMethods } });
 			} else {
-				const bankIds = filteredPaymentMethods.map((pm) => pm.bank!.id);
-				updateList({ ...list, ...{ step: list.step + 1, bankIds } });
+				const banks = filteredPaymentMethods.map((pm) => pm.bank as Bank);
+				updateList({
+					...list,
+					...{ step: list.step + 1, banks }
+				});
 			}
 		}
 	};

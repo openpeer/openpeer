@@ -57,12 +57,12 @@ const SellPage = () => {
 	}, [address]);
 
 	useEffect(() => {
-		if (list.paymentMethods?.length > 0) {
+		if ((list.paymentMethods || []).length > 0) {
 			setList({ ...list, ...{ paymentMethods: [] } });
 		}
 
-		if (list.bankIds?.length > 0) {
-			setList({ ...list, ...{ bankIds: [] } });
+		if ((list.banks || []).length > 0) {
+			setList({ ...list, ...{ banks: [] } });
 		}
 	}, [list.type]);
 
