@@ -4,13 +4,12 @@ import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { useConfirmationSignMessage, useFormErrors, useAccount, useEscrowFee } from 'hooks';
+import { useFormErrors, useAccount, useEscrowFee } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { List, User } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import snakecaseKeys from 'snakecase-keys';
 import { truncate } from 'utils';
 
 import { useContractRead } from 'wagmi';
@@ -36,7 +35,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
-	const { fiat_currency: currency, token, type, accept_only_verified: acceptOnlyVerified } = list;
+	const { fiat_currency: currency, token, accept_only_verified: acceptOnlyVerified } = list;
 
 	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || undefined);
 	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || undefined);
@@ -71,37 +70,6 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		address: (sellerContract as `0x${string}`) || list?.contract,
 		tokenAmount,
 		chainId: list.chain_id
-	});
-
-	const { signMessage } = useConfirmationSignMessage({
-		onSuccess: async (data, variables) => {
-			const result = await fetch('/api/orders/', {
-				method: 'POST',
-				body: JSON.stringify(
-					snakecaseKeys(
-						{
-							order: {
-								listId: order.list.id,
-								fiatAmount,
-								tokenAmount,
-								price
-							},
-							data,
-							address,
-							message: variables.message
-						},
-						{ deep: true }
-					)
-				),
-				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
-				}
-			});
-			const { uuid } = await result.json();
-			if (uuid) {
-				router.push(`/orders/${uuid}`);
-			}
-		}
 	});
 
 	const resolver: Resolver = () => {
@@ -151,26 +119,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				...{ fiat_amount: fiatAmount!, token_amount: tokenAmount!, price }
 			};
 
-			if (type === 'SellList') {
-				updateOrder(newOrder);
-
-				const message = JSON.stringify(
-					snakecaseKeys(
-						{
-							listId: newOrder.list.id,
-							fiatAmount: newOrder.fiat_amount,
-							tokenAmount: newOrder.token_amount,
-							price
-						},
-						{ deep: true }
-					),
-					undefined,
-					4
-				);
-				signMessage({ message });
-			} else {
-				updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
-			}
+			updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
 		}
 	};
 
@@ -215,44 +164,27 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 
 	const buyCrypto = list.type === 'BuyList';
 	const verificationRequired = acceptOnlyVerified && !user.verified;
-	const buttonText = verificationRequired ? 'Verify' : buyCrypto ? '' : 'Sign and Continue';
+	const buttonText = verificationRequired ? 'Verify' : '';
 
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
 				{verificationRequired ? (
 					<h1>Only verified users can interact with this ad.</h1>
-				) : buyCrypto ? (
-					<>
-						<Input
-							label="Amount to sell"
-							prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
-							id="amountToReceive"
-							value={tokenAmount}
-							onChangeNumber={(t) => onChangeToken(t)}
-							type="decimal"
-							decimalScale={token.decimals}
-							error={errors.tokenAmount}
-						/>
-						<Input
-							label="Amount you'll receive"
-							prefix={
-								<Prefix
-									label={currency!.symbol}
-									image={<Flag name={countries[currency.country_code]} size={24} />}
-								/>
-							}
-							id="amountBuy"
-							value={fiatAmount}
-							onChangeNumber={(f) => onChangeFiat(f)}
-							type="decimal"
-							error={errors.fiatAmount}
-						/>
-					</>
 				) : (
 					<>
 						<Input
-							label="Amount you'll receive"
+							label={buyCrypto ? 'Amount to sell' : 'Amount to buy'}
+							prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
+							id="amountToReceive"
+							value={tokenAmount}
+							onChangeNumber={(t) => onChangeToken(t)}
+							type="decimal"
+							decimalScale={token.decimals}
+							error={errors.tokenAmount}
+						/>
+						<Input
+							label={buyCrypto ? "Amount you'll receive" : "Amount you'll pay"}
 							prefix={
 								<Prefix
 									label={currency!.symbol}
@@ -264,16 +196,6 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 							onChangeNumber={(f) => onChangeFiat(f)}
 							type="decimal"
 							error={errors.fiatAmount}
-						/>
-						<Input
-							label="Amount to buy"
-							prefix={<Prefix label={token!.name} image={<Token token={token} size={24} />} />}
-							id="amountToReceive"
-							value={tokenAmount}
-							onChangeNumber={(t) => onChangeToken(t)}
-							type="decimal"
-							decimalScale={token.decimals}
-							error={errors.tokenAmount}
 						/>
 					</>
 				)}

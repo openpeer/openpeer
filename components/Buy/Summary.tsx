@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import Avatar from 'components/Avatar';
 import Link from 'next/link';
 import React from 'react';
@@ -16,8 +17,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		fiat_amount: fiatAmount,
 		token_amount: tokenAmount,
 		buyer,
-		id
-		// payment_method: paymentMethod @TODO: use this
+		id,
+		payment_method: paymentMethod
 	} = order;
 	const {
 		fiat_currency: currency,
@@ -37,7 +38,11 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
-	const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
+	const banks = paymentMethod
+		? [paymentMethod.bank]
+		: type === 'BuyList'
+		? list.banks
+		: paymentMethods.map((pm) => pm.bank);
 	const depositTimeLimit = order.deposit_time_limit || list.deposit_time_limit;
 	const paymentTimeLimit = order.payment_time_limit || list.payment_time_limit;
 	const instantEscrow = escrowType === 'instant';

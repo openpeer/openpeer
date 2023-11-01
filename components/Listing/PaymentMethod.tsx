@@ -144,7 +144,7 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			onProceed={paymentMethodCreation === undefined && paymentMethods.length > 0 ? onProceed : undefined}
 		>
 			<h2 className="text-xl mt-8 mb-2">Payment Methods</h2>
-			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
+			<p>{type === 'SellList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
 			{listPaymentMethods.map(
 				(pm) =>
 					pm.bank && (

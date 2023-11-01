@@ -44,7 +44,9 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 					error[field.id] = `${field.label} should be present`;
 				}
 			}
-		} else if (bank?.id && bankIds.includes(bank.id)) {
+		}
+
+		if (bank?.id && bankIds.includes(bank.id)) {
 			error.bankId = 'This method is already added';
 		}
 
