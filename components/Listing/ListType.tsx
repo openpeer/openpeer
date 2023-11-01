@@ -129,8 +129,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 						<Option
 							type="manual"
 							title="Manual Escrow"
-							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer 
-							when an order is placed"
+							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer when an order is placed"
 							onClick={setEscrowType}
 							selected={escrowType === 'manual'}
 						/>
