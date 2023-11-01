@@ -41,8 +41,7 @@ const useGaslessMarkAsPaid = ({ orderID, buyer, amount, token, contract }: UseEs
 				data: transactionData,
 				to: contract,
 				from: address,
-				signatureType: 'EIP712_SIGN',
-				gasLimit: 200000
+				signatureType: 'EIP712_SIGN'
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);

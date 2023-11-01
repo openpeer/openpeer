@@ -28,7 +28,7 @@ const useEscrowCancel = ({ contract, orderID, buyer, token, amount, isBuyer }: U
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
 
-	if (gaslessEnabled && FULL_GASLESS_CHAINS.includes(chain.id)) {
+	if (gaslessEnabled && (FULL_GASLESS_CHAINS.includes(chain.id) || isBuyer)) {
 		return { isLoading, isSuccess, data, cancelOrder, isFetching };
 	}
 

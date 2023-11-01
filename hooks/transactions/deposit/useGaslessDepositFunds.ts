@@ -36,8 +36,7 @@ const useGaslessDepositFunds = ({ contract, token, amount }: UseDepositFundsProp
 				data: transactionData,
 				to: contract,
 				from: address,
-				signatureType: 'EIP712_SIGN',
-				gasLimit: 500000
+				signatureType: 'EIP712_SIGN'
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);
