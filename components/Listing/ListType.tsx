@@ -98,39 +98,39 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 
 	return (
 		<StepLayout onProceed={onProceed}>
-			<h2 className="text-lg mt-12 mb-2">Choose order type</h2>
+			<h2 className="text-lg mt-12 mb-2">Are you buying or selling crypto?</h2>
 			<fieldset className="mb-2">
 				<Option
 					type="SellList"
-					title="Sell Order"
-					description="I want to sell crypto in exchange for fiat"
+					title="Selling"
+					description="I want to sell crypto that I have in exchange for fiat"
 					onClick={setType}
 					selected={type === 'SellList'}
 				/>
 				<Option
 					type="BuyList"
-					title="Buy Order"
-					description="I want to buy crypto in exchange for fiat"
+					title="Buying"
+					description="I want to buy crypto in exchange for fiat that I have"
 					onClick={setType}
 					selected={type === 'BuyList'}
 				/>
 			</fieldset>
 			{type === 'SellList' && (
 				<div>
-					<h2 className="text-lg mt-6 mb-2">Choose the escrow type</h2>
+					<h2 className="text-lg mt-6 mb-2">Choose Sell order type</h2>
 					<fieldset className="mb-4">
 						<Option
 							type="instant"
 							title="Instant Escrow (recommended)"
-							description="I want to hold funds in OpenPeer contracts and have them escrowed instantly when an order is placed"
+							description="I want to hold funds in OpenPeer and have them escrowed instantly when an order is placed"
 							onClick={setEscrowType}
 							selected={escrowType === 'instant'}
 						/>
 						<Option
 							type="manual"
 							title="Manual Escrow"
-							description="I want to manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer
-						when an order is placed"
+							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer 
+							when an order is placed"
 							onClick={setEscrowType}
 							selected={escrowType === 'manual'}
 						/>
