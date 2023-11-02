@@ -35,7 +35,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					body: JSON.stringify(
 						snakecaseKeys(
 							{
-								list: { ...list, ...{ bankIds: list.banks.map((b) => b.id) } },
+								list: { ...list, ...{ bankIds: (list.banks || []).map((b) => b.id) } },
 								data
 							},
 							{ deep: true }
