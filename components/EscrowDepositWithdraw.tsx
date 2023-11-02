@@ -5,10 +5,10 @@ import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { Token } from 'models/types';
 import { allChains } from 'models/networks';
 import { useQRCode } from 'next-qrcode';
-import { arbitrum, optimism } from '@wagmi/chains';
 import { OpenPeerEscrow } from 'abis';
 import { useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 import { formatUnits } from 'viem';
+import { getChainToken } from 'utils';
 import ClipboardText from './Buy/ClipboardText';
 import HeaderH3 from './SectionHeading/h3';
 import Switcher from './Button/Switcher';
@@ -46,16 +46,7 @@ const EscrowDepositWithdraw = ({ token, contract, action, onBack }: EscrowDeposi
 	const [depositAmount, setDepositAmount] = useState<number>();
 
 	const chain = allChains.find((c) => c.id === token.chain_id);
-	const chainToken = chain
-		? chain.id === arbitrum.id
-			? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-			: chain.id === optimism.id
-			? {
-					symbol: 'OPTMISM',
-					icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-			  }
-			: chain.nativeCurrency
-		: undefined;
+	const chainToken = getChainToken(chain);
 
 	const deposit = type === 'Deposit';
 	const balance = data ? Number(formatUnits(data as bigint, token.decimals)) : 0;

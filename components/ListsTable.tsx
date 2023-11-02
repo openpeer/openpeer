@@ -5,8 +5,7 @@ import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
-import { smallWalletAddress } from 'utils';
-import { arbitrum, optimism } from 'wagmi/chains';
+import { getChainToken, smallWalletAddress } from 'utils';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
@@ -143,16 +142,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					const isSeller = primaryWallet && sellerAddress === address;
 					const { symbol } = token;
 					const chain = chains.find((c) => c.id === chainId);
-					const chainToken = chain
-						? chain.id === arbitrum.id
-							? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-							: chain.id === optimism.id
-							? {
-									symbol: 'OPTMISM',
-									icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-							  }
-							: chain.nativeCurrency
-						: undefined;
+					const chainToken = getChainToken(chain);
 
 					// const priceDifferencePercentage =
 					// tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;

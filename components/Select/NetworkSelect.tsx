@@ -2,7 +2,7 @@ import { allChains } from 'models/networks';
 import React from 'react';
 import { Chain } from 'wagmi';
 
-import { arbitrum, optimism } from 'wagmi/chains';
+import { arbitrum, gnosis, optimism } from 'wagmi/chains';
 import Select from './Select';
 import { SelectProps } from './Select.types';
 
@@ -25,7 +25,8 @@ const NetworkSelect = ({
 		[optimism.id]: {
 			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-		}
+		},
+		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-logo.png?v=026' }
 	};
 	const networks = chains.map((chain) => ({
 		id: chain.id,

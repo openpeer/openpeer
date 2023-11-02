@@ -1,7 +1,11 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
+import { arbitrum, gnosis, optimism } from '@wagmi/chains';
 import { UIList } from 'components/Listing/Listing.types';
 import { allChains } from 'models/networks';
 import { List, Token } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
+import { Chain } from 'wagmi';
 
 export const smallWalletAddress = (address: `0x${string}`, length = 4): string =>
 	`${address.substring(0, length)}..${address.substring(address.length - length)}`;
@@ -38,4 +42,23 @@ export const listToMessage = (list: UIList): string => {
 		undefined,
 		4
 	);
+};
+
+export const getChainToken = (chain: Chain | undefined) => {
+	if (chain) {
+		return chain.id === arbitrum.id
+			? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
+			: chain.id === optimism.id
+			? {
+					symbol: 'OPTMISM',
+					icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
+			  }
+			: chain.id === gnosis.id
+			? {
+					symbol: 'xDAI',
+					icon: 'https://cryptologos.cc/logos/gnosis-gno-logo.png?v=026'
+			  }
+			: chain.nativeCurrency;
+	}
+	return undefined;
 };

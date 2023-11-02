@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Token } from 'models/types';
 import { useQRCode } from 'next-qrcode';
 import { allChains } from 'models/networks';
-import { arbitrum, optimism } from 'wagmi/chains';
 import ClipboardText from 'components/Buy/ClipboardText';
 import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContract';
 import Input from 'components/Input/Input';
@@ -14,6 +13,7 @@ import DepositFunds from 'components/DepositButton';
 import { constants } from 'ethers';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import Button from 'components/Button/Button';
+import { getChainToken } from 'utils';
 import TokenImage from '../Token/Token';
 import StepLayout from './StepLayout';
 
@@ -32,16 +32,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 	const [depositAmount, setDepositAmount] = useState<number | undefined>(listTotalNumber);
 	const { SVG } = useQRCode();
 	const chain = allChains.find((c) => c.id === chainId);
-	const chainToken = chain
-		? chain.id === arbitrum.id
-			? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-			: chain.id === optimism.id
-			? {
-					symbol: 'OPTMISM',
-					icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-			  }
-			: chain.nativeCurrency
-		: undefined;
+	const chainToken = getChainToken(chain);
 	const sellerContractDeployed = !!sellerContract && sellerContract !== constants.AddressZero;
 	const { switchNetwork } = useSwitchNetwork();
 
