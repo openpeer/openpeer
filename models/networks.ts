@@ -44,7 +44,7 @@ export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, aval
 
 const devChains = [polygonMumbai];
 
-export const allChains = [...productionChains, ...devChains];
+export const allChains = process.env.NODE_ENV === 'production' ? productionChains : [...productionChains, ...devChains];
 
 export const FULL_GASLESS_CHAINS: number[] = [polygon.id, polygonMumbai.id];
 export const HARDCODED_GAS_CHAINS: number[] = [polygon.id, polygonMumbai.id];
