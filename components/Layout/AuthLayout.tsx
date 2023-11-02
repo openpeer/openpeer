@@ -20,6 +20,7 @@ import {
 	XMarkIcon,
 	WalletIcon,
 	ChatBubbleLeftIcon
+	// CreditCardIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
@@ -55,6 +56,7 @@ const navigation = [
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
 	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon },
 	{ name: 'Wallet', href: '/wallet', icon: WalletIcon },
+	// { name: 'My Escrows', href: '/escrows', icon: CreditCardIcon },
 	{ name: 'Support', href: undefined, icon: ChatBubbleLeftIcon }
 ];
 

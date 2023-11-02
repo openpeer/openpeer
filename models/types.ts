@@ -20,6 +20,7 @@ export interface User {
 	completion_rate: number | null;
 	created_at: string;
 	verified: boolean;
+	contracts: Contract[];
 }
 
 export interface Token {
@@ -142,4 +143,11 @@ export interface Airdrop {
 	buy_volume?: number;
 	sell_volume?: number;
 	total: number;
+}
+
+export interface Contract {
+	id: number;
+	address: `0x${string}`;
+	chain_id: number;
+	version: string;
 }

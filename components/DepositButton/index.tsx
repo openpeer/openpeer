@@ -2,7 +2,7 @@ import { constants } from 'ethers';
 import React, { useState } from 'react';
 
 import { parseUnits } from 'viem';
-import ApproveTokenButton from 'components/Buy/EscrowButton/ApproveTokenButton';
+import ApproveTokenButton from '../Buy/EscrowButton/ApproveTokenButton';
 import { DepositFundsParams } from './DepositFundsButton.types';
 import DepositFundsButton from './DepositFundsButton';
 

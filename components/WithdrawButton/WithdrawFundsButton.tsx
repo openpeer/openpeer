@@ -1,67 +1,67 @@
 import { useTransactionFeedback, useAccount } from 'hooks';
-import { useDepositFunds } from 'hooks/transactions';
+import { useWithdrawFunds } from 'hooks/transactions';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
 
 import TransactionLink from 'components/TransactionLink';
 import Button from 'components/Button/Button';
 import ModalWindow from 'components/Modal/ModalWindow';
-import { DepositFundsParams } from './DepositFundsButton.types';
+import { WithdrawFundsButtonProps } from './WithdrawFundsButton.types';
 
-const DepositFundsButton = ({ token, tokenAmount, contract, disabled }: DepositFundsParams) => {
-	const { isConnected } = useAccount();
+const WithdrawFundsButton = ({ token, tokenAmount, contract, disabled }: WithdrawFundsButtonProps) => {
+	const { isConnected, address } = useAccount();
 	const amount = parseUnits(String(tokenAmount || 0), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
-	const [depositConfirmed, setDepositConfirmed] = useState(false);
+	const [withdrawConfirmed, setWithdrawConfirmed] = useState(false);
 
-	const { isLoading, isSuccess, data, depositFunds, isFetching } = useDepositFunds({
+	const { isLoading, isSuccess, data, withdrawFunds, isFetching } = useWithdrawFunds({
 		amount,
 		token,
 		contract
 	});
 
-	const deposit = () => {
+	const withdraw = () => {
 		if (!isConnected) return;
 
-		if (!depositConfirmed) {
+		if (!withdrawConfirmed) {
 			setModalOpen(true);
 			return;
 		}
-		depositFunds?.();
+		withdrawFunds?.();
 	};
 
 	useEffect(() => {
-		if (depositConfirmed) {
-			deposit();
+		if (withdrawConfirmed) {
+			withdraw();
 		}
-	}, [depositConfirmed]);
+	}, [withdrawConfirmed]);
 
 	useTransactionFeedback({
 		hash: data?.hash,
 		isSuccess,
 		Link: <TransactionLink hash={data?.hash} />,
-		description: 'Deposited funds'
+		description: 'Withdrew funds'
 	});
 
 	return (
 		<>
 			<Button
-				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : `Deposit ${token.name}`}
-				onClick={deposit}
+				title={isLoading ? 'Processing...' : isSuccess ? 'Done' : `Withdraw ${token.name}`}
+				onClick={withdraw}
 				processing={isLoading || isFetching}
 				disabled={isSuccess || isFetching || disabled}
 			/>
 			<ModalWindow
 				actionButtonTitle="Yes, confirm"
-				title="Deposit funds?"
-				content={`The funds will be sent to your escrow contract (${contract}).`}
+				title="Withdraws funds?"
+				content={`The funds will be sent to your address (${address}).`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}
-				onAction={() => setDepositConfirmed(true)}
+				onAction={() => setWithdrawConfirmed(true)}
 			/>
 		</>
 	);
 };
 
-export default DepositFundsButton;
+export default WithdrawFundsButton;

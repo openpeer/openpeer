@@ -23,6 +23,7 @@ import Steps from './Steps';
 import Textarea from './Textarea/Textarea';
 import WrongNetwork from './WrongNetwork';
 import Token from './Token/Token';
+import EscrowDepositWithdraw from './EscrowDepositWithdraw';
 
 export {
 	Button,
@@ -49,5 +50,6 @@ export {
 	Accordion,
 	Pagination,
 	EditListButtons,
-	Token
+	Token,
+	EscrowDepositWithdraw
 };

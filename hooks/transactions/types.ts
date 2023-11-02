@@ -32,3 +32,9 @@ export interface UseDepositFundsProps {
 	token: Token;
 	contract: `0x${string}`;
 }
+
+export interface UseWithdrawFundsProps {
+	amount: bigint;
+	token: Token;
+	contract: `0x${string}`;
+}
