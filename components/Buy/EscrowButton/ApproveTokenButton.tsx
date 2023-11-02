@@ -44,7 +44,7 @@ const ApproveTokenButton = ({
 		args: [address!, spender]
 	});
 
-	const approved = (allowance || BigInt(0)) >= amount;
+	const approved = !!allowance && !!amount && allowance >= amount;
 
 	useEffect(() => {
 		if (isSuccess || approved) onTokenApproved();
