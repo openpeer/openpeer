@@ -23,7 +23,7 @@ const ContractTable = ({
 	beingUsed: boolean;
 	needToDeploy: boolean;
 	chain: Chain | undefined;
-	onSelectToken: (token: Token, contract: `0x${string}`, action: 'Withdraw' | 'Deposit') => void;
+	onSelectToken: (token: Token, contract: Contract, action: 'Withdraw' | 'Deposit') => void;
 }) => (
 	<div className="mt-4" key={contract.id}>
 		{beingUsed && (
@@ -66,7 +66,7 @@ const ContractTable = ({
 						<TokenRow
 							key={t.id}
 							token={t}
-							contract={contract.address}
+							contract={contract}
 							depositDisabled={!beingUsed || needToDeploy}
 							onSelectToken={onSelectToken}
 						/>
@@ -83,14 +83,14 @@ const TokenRow = ({
 	onSelectToken
 }: {
 	token: Token;
-	contract: `0x${string}`;
+	contract: Contract;
 	depositDisabled: boolean;
-	onSelectToken: (token: Token, contract: `0x${string}`, action: 'Withdraw' | 'Deposit') => void;
+	onSelectToken: (token: Token, contract: Contract, action: 'Withdraw' | 'Deposit') => void;
 }) => {
 	const { address } = useAccount();
 
 	const { data } = useContractRead({
-		address: contract,
+		address: contract.address,
 		abi: OpenPeerEscrow,
 		functionName: 'balances',
 		args: [token.address],
@@ -166,7 +166,7 @@ const MyEscrows = () => {
 	// deposit withdraw params
 	const [action, setAction] = useState<'Deposit' | 'Withdraw'>('Deposit');
 	const [token, setToken] = useState<Token>();
-	const [contract, setContract] = useState<`0x${string}`>();
+	const [contract, setContract] = useState<Contract>();
 
 	const deployer = DEPLOYER_CONTRACTS[chain?.id || 0];
 	const chainInUse = allChains.find((c) => c.id === chain?.id);
@@ -217,8 +217,12 @@ const MyEscrows = () => {
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
 	const needToDeploy = contracts.length === 0 || lastDeployedVersion < lastVersion;
 	const lastDeployedContract = sellerContract as `0x${string}` | undefined;
+	const contractInUse = contracts.find((c) => c.address.toLowerCase() === (lastDeployedContract || '').toLowerCase());
+	const otherContracts = contracts.filter(
+		(c) => c.address.toLowerCase() !== (lastDeployedContract || '').toLowerCase()
+	);
 
-	const onSelectToken = (t: Token, c: `0x${string}`, a: 'Withdraw' | 'Deposit') => {
+	const onSelectToken = (t: Token, c: Contract, a: 'Withdraw' | 'Deposit') => {
 		setToken(t);
 		setAction(a);
 		setContract(c);
@@ -231,13 +235,17 @@ const MyEscrows = () => {
 	};
 
 	if (action && token && contract) {
-		return <EscrowDepositWithdraw action={action} token={token} contract={contract} onBack={onBack} />;
+		return (
+			<EscrowDepositWithdraw
+				action={action}
+				token={token}
+				contract={contract.address}
+				onBack={onBack}
+				canDeposit={contract === contractInUse && !needToDeploy}
+				canWithdraw
+			/>
+		);
 	}
-
-	const contractInUse = contracts.find((c) => c.address.toLowerCase() === (lastDeployedContract || '').toLowerCase());
-	const otherContracts = contracts.filter(
-		(c) => c.address.toLowerCase() !== (lastDeployedContract || '').toLowerCase()
-	);
 
 	return (
 		<div className="px-6 w-full flex flex-col items-center justify-center mt-4 pt-4 md:pt-6 text-gray-700">

@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { Token } from 'models/types';
 import { allChains } from 'models/networks';
@@ -18,15 +18,25 @@ import DepositFunds from './DepositButton';
 import ExplainerNotification from './Notifications/ExplainerNotification';
 import Button from './Button/Button';
 import WithdrawFundsButton from './WithdrawButton/WithdrawFundsButton';
+import Loading from './Loading/Loading';
 
 interface EscrowDepositWithdrawProps {
 	token: Token;
 	contract: `0x${string}`;
 	action: 'Deposit' | 'Withdraw';
 	onBack: () => void;
+	canDeposit: boolean;
+	canWithdraw: boolean;
 }
 
-const EscrowDepositWithdraw = ({ token, contract, action, onBack }: EscrowDepositWithdrawProps) => {
+const EscrowDepositWithdraw = ({
+	token,
+	contract,
+	action,
+	onBack,
+	canDeposit,
+	canWithdraw
+}: EscrowDepositWithdrawProps) => {
 	const { SVG } = useQRCode();
 	const { switchNetwork } = useSwitchNetwork();
 	const { chain: connectedChain } = useNetwork();
@@ -51,6 +61,18 @@ const EscrowDepositWithdraw = ({ token, contract, action, onBack }: EscrowDeposi
 	const deposit = type === 'Deposit';
 	const balance = data ? Number(formatUnits(data as bigint, token.decimals)) : 0;
 
+	useEffect(() => {
+		if (canDeposit && !canWithdraw) {
+			setType('Deposit');
+		} else if (canWithdraw && !canDeposit) {
+			setType('Withdraw');
+		}
+	}, [canDeposit, canWithdraw]);
+
+	if (!canDeposit && !canWithdraw) {
+		return <Loading />;
+	}
+
 	return (
 		<div className="px-6 w-full flex flex-col items-center mt-4 pt-4 md:pt-6 text-gray-700 relative">
 			<div className="w-full lg:w-1/2 flex flex-col justify-between mb-16">
@@ -59,12 +81,14 @@ const EscrowDepositWithdraw = ({ token, contract, action, onBack }: EscrowDeposi
 				</div>
 				<div className="flex flex-col md:flex-row justify-between md:items-center space-y-4 md:space-y-0">
 					<HeaderH3 title={`${type} funds`} />
-					<Switcher
-						leftLabel="Deposit"
-						rightLabel="Withdraw"
-						selected={type}
-						onToggle={(t) => setType(t as 'Deposit' | 'Withdraw')}
-					/>
+					{canDeposit === canWithdraw && (
+						<Switcher
+							leftLabel="Deposit"
+							rightLabel="Withdraw"
+							selected={type}
+							onToggle={(t) => setType(t as 'Deposit' | 'Withdraw')}
+						/>
+					)}
 				</div>
 				<div className="flex flex-col border border-slate-300 mt-4 p-4 rounded">
 					<div className="font-bold text-xl mb-2">
@@ -109,7 +133,7 @@ const EscrowDepositWithdraw = ({ token, contract, action, onBack }: EscrowDeposi
 						<div className="flex flex-row justify-between text-sm py-4 border-b border-gray-200">
 							<span>Balance</span>
 							<div className="flex flex-row items-center space-x-1">
-								<span>
+								<span className="font-bold">
 									{balance} {token.symbol}
 								</span>
 							</div>
