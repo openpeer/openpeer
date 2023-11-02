@@ -1,4 +1,4 @@
-import { Button } from 'components';
+import Button from 'components/Button/Button';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback, useAccount } from 'hooks';
 import { useApproval } from 'hooks/transactions';

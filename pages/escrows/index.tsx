@@ -1,34 +1,62 @@
-import { OpenPeerDeployer } from 'abis';
-import { Button, Token as TokenImage } from 'components';
+import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
+import { Button, EscrowDepositWithdraw, Token as TokenImage } from 'components';
+import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContract';
 import HeaderH3 from 'components/SectionHeading/h2';
 import NetworkSelect from 'components/Select/NetworkSelect';
 import { constants } from 'ethers';
 import { useAccount, useUserProfile } from 'hooks';
-import { DEPLOYER_CONTRACTS } from 'models/networks';
+import { DEPLOYER_CONTRACTS, allChains } from 'models/networks';
 import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { Chain, useBalance, useContractRead, useNetwork } from 'wagmi';
+import { formatUnits } from 'viem';
+import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 
-const TokenRow = ({ token, deployer }: { token: Token; deployer: `0x${string}` }) => {
+const TokenRow = ({
+	token,
+	contract,
+	lastVersion,
+	onSelectToken
+}: {
+	token: Token;
+	contract: `0x${string}`;
+	lastVersion: boolean;
+	onSelectToken: (token: Token, contract: `0x${string}`, action: 'Withdraw' | 'Deposit') => void;
+}) => {
 	const { address } = useAccount();
-	const nativeToken = token.address === constants.AddressZero;
-	const { data } = useBalance({
-		address: deployer,
-		token: nativeToken ? undefined : token.address,
+
+	const { data } = useContractRead({
+		address: contract,
+		abi: OpenPeerEscrow,
+		functionName: 'balances',
+		args: [token.address],
 		enabled: !!address,
-		chainId: token.chain_id,
-		watch: true
+		chainId: token.chain_id
 	});
 
 	return (
 		<tr className="hover:bg-gray-50">
 			<div className="mt-2 flex flex-col text-gray-500 lg:hidden">
 				<div className="fw-full lex flex-col space-y-4">
-					<span className="pr-2 text-sm">Token</span>
-					<span>Balance</span>
+					<div className="flex flex-row items-center space-x-1">
+						<TokenImage size={24} token={token} />
+
+						<span className="text-sm">
+							{data === undefined
+								? token.symbol
+								: `${formatUnits(data as bigint, token.decimals)} ${token.symbol}`}
+						</span>
+					</div>
 					<span className="w-full flex flex-col space-y-4">
-						<Button title="Deposit" />
-						<Button title="Withdraw" />
+						<Button
+							title="Deposit"
+							disabled={!lastVersion}
+							onClick={() => onSelectToken(token, contract, 'Deposit')}
+						/>
+						<Button
+							title="Withdraw"
+							disabled={!data || (data as bigint) <= BigInt(0)}
+							onClick={() => onSelectToken(token, contract, 'Withdraw')}
+						/>
 					</span>
 				</div>
 			</div>
@@ -39,12 +67,20 @@ const TokenRow = ({ token, deployer }: { token: Token; deployer: `0x${string}` }
 				</div>
 			</td>
 			<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-				{data ? `${data.formatted} ${token.symbol}` : ''}
+				{data === undefined ? '' : `${formatUnits(data as bigint, token.decimals)} ${token.symbol}`}
 			</td>
 			<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 				<div className="w-full flex flex-row space-x-4">
-					<Button title="Deposit" />
-					<Button title="Withdraw" />
+					<Button
+						title="Deposit"
+						disabled={!lastVersion}
+						onClick={() => onSelectToken(token, contract, 'Deposit')}
+					/>
+					<Button
+						title="Withdraw"
+						disabled={!data || (data as bigint) <= BigInt(0)}
+						onClick={() => onSelectToken(token, contract, 'Withdraw')}
+					/>
 				</div>
 			</td>
 		</tr>
@@ -54,11 +90,21 @@ const TokenRow = ({ token, deployer }: { token: Token; deployer: `0x${string}` }
 const MyEscrows = () => {
 	const { address } = useAccount();
 	const { chain: connectedChain } = useNetwork();
+	const { switchNetwork } = useSwitchNetwork();
+
 	const [chain, setChain] = useState<Chain>();
+	const [loading, setLoading] = useState(false);
 	const { user } = useUserProfile({});
 	const [lastVersion, setLastVersion] = useState(0);
 	const [tokens, setTokens] = useState<Token[]>([]);
+
+	// deposit withdraw params
+	const [action, setAction] = useState<'Deposit' | 'Withdraw'>('Deposit');
+	const [token, setToken] = useState<Token>();
+	const [contract, setContract] = useState<`0x${string}`>();
+
 	const deployer = DEPLOYER_CONTRACTS[chain?.id || 0];
+	const chainInUse = allChains.find((c) => c.id === chain?.id);
 
 	const { data: sellerContract } = useContractRead({
 		address: deployer,
@@ -67,7 +113,8 @@ const MyEscrows = () => {
 		args: [address],
 		enabled: !!chain,
 		watch: true,
-		chainId: chain?.id
+		chainId: chain?.id,
+		account: address
 	});
 
 	useEffect(() => {
@@ -81,18 +128,15 @@ const MyEscrows = () => {
 	}, [connectedChain]);
 
 	useEffect(() => {
+		setLoading(true);
 		const fetchTokens = async () => {
-			if (!chain) {
-				setTokens([]);
-				return;
-			}
-
-			const response = await fetch(`/api/tokens?chain_id=${chain.id}`);
+			const response = await fetch('/api/tokens');
 			setTokens(await response.json());
+			setLoading(false);
 		};
 
 		fetchTokens();
-	}, [chain]);
+	}, []);
 
 	useEffect(() => {
 		const fetchSettings = async () => {
@@ -103,10 +147,39 @@ const MyEscrows = () => {
 		fetchSettings();
 	}, []);
 
-	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id);
+	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
+	if (
+		sellerContract &&
+		sellerContract !== constants.AddressZero &&
+		!contracts.find((c) => c.address === sellerContract)
+	) {
+		contracts.push({
+			id: new Date().getTime(),
+			address: sellerContract as `0x${string}`,
+			chain_id: chain?.id || 0,
+			version: String(lastVersion || 2)
+		});
+	}
+
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
 	const needToDeploy = lastDeployedVersion < lastVersion || contracts.length === 0;
 	const lastDeployedContract = sellerContract as `0x${string}` | undefined;
+
+	const onSelectToken = (t: Token, c: `0x${string}`, a: 'Withdraw' | 'Deposit') => {
+		setToken(t);
+		setAction(a);
+		setContract(c);
+	};
+
+	const onBack = () => {
+		setToken(undefined);
+		setContract(undefined);
+		setAction('Deposit');
+	};
+
+	if (action && token && contract) {
+		return <EscrowDepositWithdraw action={action} token={token} contract={contract} onBack={onBack} />;
+	}
 
 	return (
 		<div className="px-6 w-full flex flex-col items-center justify-center mt-4 pt-4 md:pt-6 text-gray-700">
@@ -126,25 +199,37 @@ const MyEscrows = () => {
 						)}
 						{needToDeploy && (
 							<div className="mt-4 mb-4">
-								<Button title="Deploy a new contract" />
+								{chain?.id === connectedChain?.id ? (
+									<DeploySellerContract label="Deploy a new contract" />
+								) : (
+									<Button title="Deploy a new contract" onClick={() => switchNetwork?.(chain!.id)} />
+								)}
 							</div>
 						)}
 					</div>
 					{!!user &&
+						!loading &&
 						contracts.length > 0 &&
-						contracts.map((contract) => (
-							<div className="mt-4" key={contract.id}>
-								<a
-									href={`${connectedChain?.blockExplorers?.etherscan?.url}/address/${contract.address}`}
-									className="text-cyan-600"
-									target="_blank"
-									rel="noreferrer"
-								>
-									<h1>
-										{contract.address}{' '}
-										{contract.address === lastDeployedContract ? '(being used)' : ''}
-									</h1>
-								</a>
+						contracts.map((deployedContract) => (
+							<div className="mt-4" key={deployedContract.id}>
+								<div className="flex flex-col md:flex-row md:items-center md:space-x-1">
+									<a
+										href={`${chainInUse?.blockExplorers?.etherscan?.url}/address/${deployedContract.address}`}
+										className="text-cyan-600"
+										target="_blank"
+										rel="noreferrer"
+									>
+										<h1>{deployedContract.address} </h1>
+									</a>
+									{lastDeployedVersion === lastVersion && (
+										<span className="text-sm"> latest version </span>
+									)}
+									<span className="text-sm">
+										{deployedContract.address.toLowerCase() === lastDeployedContract?.toLowerCase()
+											? '(being used)'
+											: ''}
+									</span>
+								</div>
 								<table className="w-full md:rounded-lg overflow-hidden mt-2">
 									<thead className="bg-gray-100">
 										<tr className="w-full relative">
@@ -169,9 +254,21 @@ const MyEscrows = () => {
 										</tr>
 									</thead>
 									<tbody className="divide-y divide-gray-200 bg-white">
-										{tokens.map((token) => (
-											<TokenRow key={token.id} token={token} deployer={deployer} />
-										))}
+										{tokens
+											.filter((t) => t.chain_id === chain?.id)
+											.map((t) => (
+												<TokenRow
+													key={t.id}
+													token={t}
+													contract={deployedContract.address}
+													lastVersion={
+														lastDeployedVersion === lastVersion &&
+														deployedContract.address.toLowerCase() ===
+															lastDeployedContract?.toLowerCase()
+													}
+													onSelectToken={onSelectToken}
+												/>
+											))}
 									</tbody>
 								</table>
 							</div>

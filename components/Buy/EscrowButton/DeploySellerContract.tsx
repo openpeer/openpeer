@@ -4,7 +4,7 @@ import { useTransactionFeedback, useAccount } from 'hooks';
 import useDeploy from 'hooks/transactions/deploy/useDeploy';
 import React from 'react';
 
-const DeploySellerContract = () => {
+const DeploySellerContract = ({ label = 'Create Escrow Contract' }: { label?: string }) => {
 	const { isConnected } = useAccount();
 
 	const { isFetching, isLoading, isSuccess, data, deploy } = useDeploy();
@@ -24,7 +24,7 @@ const DeploySellerContract = () => {
 
 	return (
 		<Button
-			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : 'Create Escrow Contract'}
+			title={isLoading ? 'Processing...' : isSuccess ? 'Done' : label}
 			onClick={deploySellerContract}
 			processing={isLoading || isFetching}
 			disabled={isSuccess || isFetching || isLoading}
