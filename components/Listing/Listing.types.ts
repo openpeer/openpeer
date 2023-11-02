@@ -1,5 +1,5 @@
 import { Option } from 'components/Select/Select.types';
-import { List, PaymentMethod, User } from 'models/types';
+import { Bank, List, PaymentMethod, User } from 'models/types';
 
 export interface UIPaymentMethod {
 	id: number | undefined;
@@ -20,7 +20,7 @@ export interface UIList {
 	margin: number | undefined;
 	limitMin: number | undefined;
 	limitMax: number | undefined;
-	paymentMethod: UIPaymentMethod | undefined;
+	paymentMethods: UIPaymentMethod[];
 	terms?: string | undefined;
 	user?: User;
 	depositTimeLimit: number;
@@ -28,6 +28,7 @@ export interface UIList {
 	chainId: number;
 	acceptOnlyVerified: boolean;
 	escrowType: List['escrow_type'];
+	banks: Bank[];
 }
 
 export interface ListStepProps {

@@ -41,7 +41,9 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 				})
 			});
 			const savedOrder = await result.json();
-			if (!savedOrder.uuid) {
+			if (savedOrder.uuid) {
+				window.location.reload();
+			} else {
 				toast.error('Error cancelling the order', {
 					theme: 'dark',
 					position: 'top-right',

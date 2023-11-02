@@ -120,7 +120,7 @@ const HomePage = () => {
 					<Loading />
 				) : (
 					<div className="py-4">
-						<ListsTable lists={lists} />
+						<ListsTable lists={lists} hideLowAmounts />
 						{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
 							<Pagination
 								length={lists.length}

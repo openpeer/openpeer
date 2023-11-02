@@ -35,15 +35,15 @@ const EditTrade = ({ id }: { id: number }) => {
 					total_available_amount: totalAvailableAmount,
 					limit_min: limitMin,
 					limit_max: limitMax,
-					bank,
-					payment_method: paymentMethod,
+					payment_methods: paymentMethods,
 					margin,
 					deposit_time_limit: depositTimeLimit,
 					payment_time_limit: paymentTimeLimit,
 					terms,
 					chain_id: chainId,
 					accept_only_verified: acceptOnlyVerified,
-					escrow_type: escrowType
+					escrow_type: escrowType,
+					banks
 				} = data;
 				setList(data);
 				const currency = {
@@ -60,14 +60,15 @@ const EditTrade = ({ id }: { id: number }) => {
 					totalAvailableAmount: Number(totalAvailableAmount),
 					limitMin: limitMin ? Number(limitMin) : undefined,
 					limitMax: limitMax ? Number(limitMax) : undefined,
-					paymentMethod: paymentMethod || { bank, bankId: bank.id },
+					paymentMethods,
 					terms: terms || '',
 					margin: margin ? Number(margin) : undefined,
 					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0,
 					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0,
 					chainId,
 					acceptOnlyVerified,
-					escrowType
+					escrowType,
+					banks
 				};
 				setUiList(ui);
 			});

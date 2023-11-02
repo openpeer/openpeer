@@ -1,5 +1,5 @@
 import { Loading, Steps } from 'components';
-import { Amount, PaymentMethod, Summary } from 'components/Buy';
+import { Amount, OrderPaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import { useListPrice, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
@@ -41,7 +41,14 @@ const BuyPage = ({ id }: { id: number }) => {
 	const canBuy = seller && seller.address !== address;
 
 	if (!list) return <Loading />;
-	if (!canBuy) return <Loading spinner={false} message="You are not the seller of this order" />;
+	if (!canBuy) {
+		return (
+			<Loading
+				spinner={false}
+				message={order.seller ? 'You are not the seller of this order' : 'You are the seller of this ad'}
+			/>
+		);
+	}
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
@@ -66,7 +73,7 @@ const BuyPage = ({ id }: { id: number }) => {
 					</div>
 					{showFilters && <div className="mt-4">{!!order.list && <Summary order={order} />}</div>}
 					{step === AMOUNT_STEP && <Amount order={order} updateOrder={setOrder} price={price} />}
-					{step === PAYMENT_METHOD_STEP && <PaymentMethod order={order} updateOrder={setOrder} />}
+					{step === PAYMENT_METHOD_STEP && <OrderPaymentMethod order={order} updateOrder={setOrder} />}
 				</div>
 				{!!order.list && <Summary order={order} />}
 			</div>
