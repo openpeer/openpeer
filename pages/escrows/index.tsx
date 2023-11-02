@@ -1,25 +1,90 @@
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
-import { Button, EscrowDepositWithdraw, Token as TokenImage } from 'components';
+import { Accordion, Button, EscrowDepositWithdraw, Token as TokenImage } from 'components';
 import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContract';
 import HeaderH3 from 'components/SectionHeading/h2';
 import NetworkSelect from 'components/Select/NetworkSelect';
-import { constants } from 'ethers';
 import { useAccount, useUserProfile } from 'hooks';
 import { DEPLOYER_CONTRACTS, allChains } from 'models/networks';
-import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { formatUnits } from 'viem';
 import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Contract, Token } from 'models/types';
+
+const ContractTable = ({
+	contract,
+	tokens,
+	beingUsed,
+	chain,
+	needToDeploy,
+	onSelectToken
+}: {
+	contract: Contract;
+	tokens: Token[];
+	beingUsed: boolean;
+	needToDeploy: boolean;
+	chain: Chain | undefined;
+	onSelectToken: (token: Token, contract: `0x${string}`, action: 'Withdraw' | 'Deposit') => void;
+}) => (
+	<div className="mt-4" key={contract.id}>
+		{beingUsed && (
+			<div className="flex flex-col md:flex-row md:items-center md:space-x-1">
+				<a
+					href={`${chain?.blockExplorers?.etherscan?.url}/address/${contract.address}`}
+					className="text-cyan-600"
+					target="_blank"
+					rel="noreferrer"
+				>
+					<h1>{contract.address} </h1>
+				</a>
+				<span className="text-sm">{beingUsed ? '(being used)' : ''}</span>
+			</div>
+		)}
+		<table className="w-full md:rounded-lg overflow-hidden mt-2">
+			<thead className="bg-gray-100">
+				<tr className="w-full relative">
+					<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+						Token
+					</th>
+					<th
+						scope="col"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+					>
+						Balance
+					</th>
+					<th
+						scope="col"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+					>
+						Action
+					</th>
+				</tr>
+			</thead>
+			<tbody className="divide-y divide-gray-200 bg-white">
+				{tokens
+					.filter((t) => t.chain_id === chain?.id)
+					.map((t) => (
+						<TokenRow
+							key={t.id}
+							token={t}
+							contract={contract.address}
+							depositDisabled={!beingUsed || needToDeploy}
+							onSelectToken={onSelectToken}
+						/>
+					))}
+			</tbody>
+		</table>
+	</div>
+);
 
 const TokenRow = ({
 	token,
 	contract,
-	lastVersion,
+	depositDisabled,
 	onSelectToken
 }: {
 	token: Token;
 	contract: `0x${string}`;
-	lastVersion: boolean;
+	depositDisabled: boolean;
 	onSelectToken: (token: Token, contract: `0x${string}`, action: 'Withdraw' | 'Deposit') => void;
 }) => {
 	const { address } = useAccount();
@@ -49,7 +114,7 @@ const TokenRow = ({
 					<span className="w-full flex flex-col space-y-4">
 						<Button
 							title="Deposit"
-							disabled={!lastVersion}
+							disabled={depositDisabled}
 							onClick={() => onSelectToken(token, contract, 'Deposit')}
 						/>
 						<Button
@@ -73,7 +138,7 @@ const TokenRow = ({
 				<div className="w-full flex flex-row space-x-4">
 					<Button
 						title="Deposit"
-						disabled={!lastVersion}
+						disabled={depositDisabled}
 						onClick={() => onSelectToken(token, contract, 'Deposit')}
 					/>
 					<Button
@@ -148,21 +213,9 @@ const MyEscrows = () => {
 	}, []);
 
 	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
-	if (
-		sellerContract &&
-		sellerContract !== constants.AddressZero &&
-		!contracts.find((c) => c.address.toLowerCase() === (sellerContract as `0x${string}`).toLowerCase())
-	) {
-		contracts.push({
-			id: new Date().getTime(),
-			address: sellerContract as `0x${string}`,
-			chain_id: chain?.id || 0,
-			version: String(lastVersion || 2)
-		});
-	}
 
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
-	const needToDeploy = lastDeployedVersion < lastVersion || contracts.length === 0;
+	const needToDeploy = contracts.length === 0 || lastDeployedVersion < lastVersion;
 	const lastDeployedContract = sellerContract as `0x${string}` | undefined;
 
 	const onSelectToken = (t: Token, c: `0x${string}`, a: 'Withdraw' | 'Deposit') => {
@@ -180,6 +233,11 @@ const MyEscrows = () => {
 	if (action && token && contract) {
 		return <EscrowDepositWithdraw action={action} token={token} contract={contract} onBack={onBack} />;
 	}
+
+	const contractInUse = contracts.find((c) => c.address.toLowerCase() === (lastDeployedContract || '').toLowerCase());
+	const otherContracts = contracts.filter(
+		(c) => c.address.toLowerCase() !== (lastDeployedContract || '').toLowerCase()
+	);
 
 	return (
 		<div className="px-6 w-full flex flex-col items-center justify-center mt-4 pt-4 md:pt-6 text-gray-700">
@@ -207,72 +265,44 @@ const MyEscrows = () => {
 							</div>
 						)}
 					</div>
-					{!!user &&
-						!loading &&
-						contracts.length > 0 &&
-						contracts.map((deployedContract) => (
-							<div className="mt-4" key={deployedContract.id}>
-								<div className="flex flex-col md:flex-row md:items-center md:space-x-1">
-									<a
-										href={`${chainInUse?.blockExplorers?.etherscan?.url}/address/${deployedContract.address}`}
-										className="text-cyan-600"
-										target="_blank"
-										rel="noreferrer"
-									>
-										<h1>{deployedContract.address} </h1>
-									</a>
-									{lastDeployedVersion === lastVersion && (
-										<span className="text-sm"> latest version </span>
-									)}
-									<span className="text-sm">
-										{deployedContract.address.toLowerCase() === lastDeployedContract?.toLowerCase()
-											? '(being used)'
-											: ''}
-									</span>
-								</div>
-								<table className="w-full md:rounded-lg overflow-hidden mt-2">
-									<thead className="bg-gray-100">
-										<tr className="w-full relative">
-											<th
-												scope="col"
-												className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-											>
-												Token
-											</th>
-											<th
-												scope="col"
-												className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-											>
-												Balance
-											</th>
-											<th
-												scope="col"
-												className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-											>
-												Action
-											</th>
-										</tr>
-									</thead>
-									<tbody className="divide-y divide-gray-200 bg-white">
-										{tokens
-											.filter((t) => t.chain_id === chain?.id)
-											.map((t) => (
-												<TokenRow
-													key={t.id}
-													token={t}
-													contract={deployedContract.address}
-													lastVersion={
-														lastDeployedVersion === lastVersion &&
-														deployedContract.address.toLowerCase() ===
-															lastDeployedContract?.toLowerCase()
-													}
-													onSelectToken={onSelectToken}
-												/>
-											))}
-									</tbody>
-								</table>
-							</div>
-						))}
+					{!!user && !loading && (
+						<>
+							{contractInUse && (
+								<ContractTable
+									contract={contractInUse}
+									tokens={tokens}
+									beingUsed
+									chain={chainInUse}
+									needToDeploy={needToDeploy}
+									onSelectToken={onSelectToken}
+								/>
+							)}
+							{otherContracts.map((c) => (
+								<Accordion
+									content={
+										<ContractTable
+											contract={c}
+											tokens={tokens}
+											beingUsed={false}
+											chain={chainInUse}
+											needToDeploy={needToDeploy}
+											onSelectToken={onSelectToken}
+										/>
+									}
+									title={
+										<a
+											href={`${chainInUse?.blockExplorers?.etherscan?.url}/address/${c.address}`}
+											className="text-cyan-600"
+											target="_blank"
+											rel="noreferrer"
+										>
+											<h1>{c.address} </h1>
+										</a>
+									}
+								/>
+							))}
+						</>
+					)}
 				</div>
 			</div>
 		</div>
