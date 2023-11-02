@@ -151,7 +151,7 @@ const MyEscrows = () => {
 	if (
 		sellerContract &&
 		sellerContract !== constants.AddressZero &&
-		!contracts.find((c) => c.address === sellerContract)
+		!contracts.find((c) => c.address.toLowerCase() === (sellerContract as `0x${string}`).toLowerCase())
 	) {
 		contracts.push({
 			id: new Date().getTime(),
