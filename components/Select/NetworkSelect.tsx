@@ -26,7 +26,7 @@ const NetworkSelect = ({
 			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
 		},
-		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-logo.png?v=026' }
+		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' }
 	};
 	const networks = chains.map((chain) => ({
 		id: chain.id,

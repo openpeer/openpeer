@@ -56,7 +56,7 @@ export const getChainToken = (chain: Chain | undefined) => {
 			: chain.id === gnosis.id
 			? {
 					symbol: 'xDAI',
-					icon: 'https://cryptologos.cc/logos/gnosis-gno-logo.png?v=026'
+					icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026'
 			  }
 			: chain.nativeCurrency;
 	}
