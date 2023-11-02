@@ -56,7 +56,7 @@ const navigation = [
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
 	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon },
 	{ name: 'Wallet', href: '/wallet', icon: WalletIcon },
-	{ name: 'My Escrow', href: '/escrow', icon: CreditCardIcon },
+	{ name: 'My Escrows', href: '/escrows', icon: CreditCardIcon },
 	{ name: 'Support', href: undefined, icon: ChatBubbleLeftIcon }
 ];
 
