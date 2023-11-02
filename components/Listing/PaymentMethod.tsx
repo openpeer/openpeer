@@ -14,7 +14,7 @@ import PaymentMethodForm from './PaymentMethodForm';
 const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 	const { address } = useAccount();
 
-	const { currency, paymentMethods = [], type } = list;
+	const { currency, paymentMethods = [], type, banks = [] } = list;
 	const [paymentMethodCreation, setPaymentMethodCreation] = useState<UIPaymentMethod>();
 
 	const onProceed = () => {
@@ -28,10 +28,9 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 			if (type === 'SellList') {
 				updateList({ ...list, ...{ step: list.step + 1, paymentMethods: filteredPaymentMethods } });
 			} else {
-				const banks = filteredPaymentMethods.map((pm) => pm.bank as Bank);
 				updateList({
 					...list,
-					...{ step: list.step + 1, banks }
+					...{ step: list.step + 1, banks: filteredPaymentMethods.map((pm) => pm.bank as Bank) }
 				});
 			}
 		}
@@ -100,7 +99,16 @@ const PaymentMethod = ({ list, updateList }: ListStepProps) => {
 				} else {
 					addNewPaymentMethod();
 				}
+			} else {
+				const savedPaymentMethods = banks.map((bank) => ({
+					bank,
+					id: new Date().getTime() + bank.id,
+					values: {}
+				}));
+				updatePaymentMethods(savedPaymentMethods);
+				setNewPaymentMethods(savedPaymentMethods);
 			}
+
 			setApiPaymentMethods([]);
 			setLoading(false);
 			return;

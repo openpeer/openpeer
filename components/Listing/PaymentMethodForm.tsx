@@ -46,7 +46,8 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 			}
 		}
 
-		if (bank?.id && bankIds.includes(bank.id)) {
+		// allow editing of existing payment method
+		if (!paymentMethod.id && bank?.id && bankIds.includes(bank.id)) {
 			error.bankId = 'This method is already added';
 		}
 
