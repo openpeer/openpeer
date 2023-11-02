@@ -12,6 +12,7 @@ import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { parseUnits } from 'viem';
 import { constants } from 'ethers';
+import { listToMessage } from 'utils';
 import Label from '../Label/Label';
 import Selector from '../Selector';
 import Textarea from '../Textarea/Textarea';
@@ -25,7 +26,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const router = useRouter();
 
 	const { signMessage } = useConfirmationSignMessage({
-		onSuccess: async (data, variables) => {
+		onSuccess: async (data) => {
 			const result = await fetch(
 				list.id ? `/api/lists/${list.id}` : '/api/lists',
 
@@ -34,11 +35,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					body: JSON.stringify(
 						snakecaseKeys(
 							{
-								chainId: chainId || (token as Token).chain_id,
-								list,
-								data,
-								address,
-								message: variables.message
+								list: { ...list, ...{ bankIds: (list.banks || []).map((b) => b.id) } },
+								data
 							},
 							{ deep: true }
 						)
@@ -89,7 +87,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 
 	const onProceed = () => {
 		if (!needToDeployOrFund) {
-			const message = JSON.stringify(snakecaseKeys(list, { deep: true }), undefined, 4);
+			const message = listToMessage(list);
 			signMessage({ message });
 		}
 	};

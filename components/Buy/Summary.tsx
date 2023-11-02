@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/indent */
 import Avatar from 'components/Avatar';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
@@ -29,7 +29,8 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		terms,
 		type,
 		accept_only_verified: acceptOnlyVerified,
-		escrow_type: escrowType
+		escrow_type: escrowType,
+		payment_methods: paymentMethods
 	} = list!;
 
 	const { address } = useAccount();
@@ -37,7 +38,11 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
 	const user = !!selling && !!buyer ? buyer : seller;
-	const bank = type === 'BuyList' || !paymentMethod ? list.bank : paymentMethod.bank;
+	const banks = paymentMethod
+		? [paymentMethod.bank]
+		: type === 'BuyList'
+		? list.banks
+		: paymentMethods.map((pm) => pm.bank);
 	const depositTimeLimit = order.deposit_time_limit || list.deposit_time_limit;
 	const paymentTimeLimit = order.payment_time_limit || list.payment_time_limit;
 	const instantEscrow = escrowType === 'instant';
@@ -126,22 +131,20 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							</div>
 						)}
 					</div>
-					{bank && (
+					{banks.length > 0 && (
 						<div className="w-full flex flex-row mb-4 space-x-2">
-							<div className="text-sm">Payment method</div>
-							<div className="flex flex-row items-center font-bold">
-								{!!bank.icon && (
-									<Image
-										src={bank.icon}
-										alt={bank.name}
-										className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-										width={24}
-										height={24}
-										unoptimized
-									/>
-								)}
-								{bank?.name}
-							</div>
+							<div className="text-sm">Payment methods</div>
+							{banks.map((bank) => (
+								<div className="flex flex-row items-center" key={bank.id}>
+									<span
+										className="bg-gray-500 w-1 h-3 rounded-full"
+										style={{ backgroundColor: bank.color || 'gray' }}
+									>
+										&nbsp;
+									</span>
+									<span className="pl-1 text-gray-700 text-[11px]">{bank.name}</span>
+								</div>
+							))}
 						</div>
 					)}
 					{instantEscrow ? (
