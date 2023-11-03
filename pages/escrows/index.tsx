@@ -10,7 +10,6 @@ import { formatUnits } from 'viem';
 import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 import { Contract, Token } from 'models/types';
 import { smallWalletAddress } from 'utils';
-import { WalletIcon } from '@heroicons/react/20/solid';
 
 const ContractTable = ({
 	contract,
