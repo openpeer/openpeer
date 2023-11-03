@@ -8,7 +8,6 @@ import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
 
@@ -22,12 +21,13 @@ const manrope = Manrope({
 });
 
 const navigation = [
-	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
-	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
-	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
+	{ name: 'Trade P2P', href: '/trade' },
+	{ name: 'Post Ad', href: '/sell' },
+	{ name: 'My Ads', href: '/ads' },
+	{ name: 'My Trades', href: '/orders' }
 ];
 const navigationItem = [
+	{ name: 'Escrows', href: '/escrows' },
 	{ name: 'Docs', href: 'https://docs.openpeer.xyz/' },
 	{ name: 'Disclaimer', href: 'https://openpeer.xyz/disclaimer' },
 	{ name: 'Terms', href: 'https://openpeer.xyz/terms' },
