@@ -217,13 +217,7 @@ const MyEscrows = () => {
 		fetchSettings();
 	}, []);
 
-	// const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
-	const contracts: Contract[] = [
-		{ id: 261, chain_id: 42161, address: '0x1b4a6d3123a6b2a11550ee37400fd0e9d31f74d7', version: '3' },
-		{ id: 256, chain_id: 137, address: '0x8a10dce557c11fa5c83ebc3a71b3f7028e49d6b3', version: '3' },
-		{ id: 257, chain_id: 56, address: '0xaab8ed21900504888707f49a0ca2af5afe861e13', version: '3' },
-		{ id: 251, chain_id: 56, address: '0xbbc2a1144baf9b447c1b66447ea00cb4ed479230', version: '2' }
-	];
+	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
 
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
 	const needToDeploy = contracts.length === 0 || lastDeployedVersion < lastVersion;
