@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits } from 'viem';
 import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 import { Contract, Token } from 'models/types';
+import { smallWalletAddress } from 'utils';
+import { WalletIcon } from '@heroicons/react/20/solid';
 
 const ContractTable = ({
 	contract,
@@ -42,7 +44,10 @@ const ContractTable = ({
 		<table className="w-full md:rounded-lg overflow-hidden mt-2">
 			<thead className="bg-gray-100">
 				<tr className="w-full relative">
-					<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+					<th
+						scope="col"
+						className="hidden py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:table-cell"
+					>
 						Token
 					</th>
 					<th
@@ -59,7 +64,7 @@ const ContractTable = ({
 					</th>
 				</tr>
 			</thead>
-			<tbody className="divide-y divide-gray-200 bg-white">
+			<tbody className="divide-y divide-gray-200">
 				{tokens
 					.filter((t) => t.chain_id === chain?.id)
 					.map((t) => (
@@ -111,7 +116,7 @@ const TokenRow = ({
 								: `${formatUnits(data as bigint, token.decimals)} ${token.symbol}`}
 						</span>
 					</div>
-					<span className="w-full flex flex-col space-y-4">
+					<span className="w-full flex flex-row space-x-4 pb-4">
 						<Button
 							title="Deposit"
 							disabled={depositDisabled}
@@ -212,7 +217,13 @@ const MyEscrows = () => {
 		fetchSettings();
 	}, []);
 
-	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
+	// const contracts = (user?.contracts || []).filter((c) => c.chain_id === chain?.id && Number(c.version) >= 2);
+	const contracts: Contract[] = [
+		{ id: 261, chain_id: 42161, address: '0x1b4a6d3123a6b2a11550ee37400fd0e9d31f74d7', version: '3' },
+		{ id: 256, chain_id: 137, address: '0x8a10dce557c11fa5c83ebc3a71b3f7028e49d6b3', version: '3' },
+		{ id: 257, chain_id: 56, address: '0xaab8ed21900504888707f49a0ca2af5afe861e13', version: '3' },
+		{ id: 251, chain_id: 56, address: '0xbbc2a1144baf9b447c1b66447ea00cb4ed479230', version: '2' }
+	];
 
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
 	const needToDeploy = contracts.length === 0 || lastDeployedVersion < lastVersion;
@@ -251,10 +262,12 @@ const MyEscrows = () => {
 		<div className="px-6 w-full flex flex-col items-center justify-center mt-4 pt-4 md:pt-6 text-gray-700">
 			<div className="w-full lg:w-1/2 flex flex-col mb-16">
 				<HeaderH3 title="Deposit or Withdraw funds" />
-				<div className="border border-slate-300 mt-4 p-4 rounded">
-					<span>Begin by selecting the chain</span>
-					<div className="w-fit">
-						<NetworkSelect onSelect={setChain} selected={chain} />
+				<div className="border border-slate-300 mt-4 rounded">
+					<div className="p-4">
+						<span>Begin by selecting the chain</span>
+						<div className="w-fit">
+							<NetworkSelect onSelect={setChain} selected={chain} />
+						</div>
 					</div>
 					<div>
 						{contracts.length > 0 && lastDeployedVersion < lastVersion && (
@@ -286,28 +299,33 @@ const MyEscrows = () => {
 								/>
 							)}
 							{otherContracts.map((c) => (
-								<Accordion
-									content={
-										<ContractTable
-											contract={c}
-											tokens={tokens}
-											beingUsed={false}
-											chain={chainInUse}
-											needToDeploy={needToDeploy}
-											onSelectToken={onSelectToken}
-										/>
-									}
-									title={
-										<a
-											href={`${chainInUse?.blockExplorers?.etherscan?.url}/address/${c.address}`}
-											className="text-cyan-600"
-											target="_blank"
-											rel="noreferrer"
-										>
-											<h1>{c.address} </h1>
-										</a>
-									}
-								/>
+								<div className="break-all text-left">
+									<Accordion
+										content={
+											<div className="px-4 pb-4">
+												<ContractTable
+													contract={c}
+													tokens={tokens}
+													beingUsed={false}
+													chain={chainInUse}
+													needToDeploy={needToDeploy}
+													onSelectToken={onSelectToken}
+												/>
+											</div>
+										}
+										title={
+											<a
+												href={`${chainInUse?.blockExplorers?.etherscan?.url}/address/${c.address}`}
+												className="text-cyan-600 flex flex-row items-center space-x-2"
+												target="_blank"
+												rel="noreferrer"
+											>
+												{/* <WalletIcon className="w-4 h-4" /> */}
+												<h1 className="text-left">{smallWalletAddress(c.address)}</h1>
+											</a>
+										}
+									/>
+								</div>
 							))}
 						</>
 					)}
