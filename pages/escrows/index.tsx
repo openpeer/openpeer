@@ -10,7 +10,6 @@ import { formatUnits } from 'viem';
 import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 import { Contract, Token } from 'models/types';
 import { smallWalletAddress } from 'utils';
-import { WalletIcon } from '@heroicons/react/20/solid';
 
 const ContractTable = ({
 	contract,
@@ -259,7 +258,7 @@ const MyEscrows = () => {
 				<div className="border border-slate-300 mt-4 rounded">
 					<div className="p-4">
 						<span>Begin by selecting the chain</span>
-						<div className="w-fit">
+						<div className="w-full lg:w-fit">
 							<NetworkSelect onSelect={setChain} selected={chain} />
 						</div>
 					</div>
