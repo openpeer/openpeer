@@ -41,10 +41,10 @@ export default function Select({
 					)}
 					<div className={`relative ${minimal ? '' : 'mt-1'}`}>
 						<Listbox.Button
-							className={`relative w-full cursor-default rounded-md py-2 pl-3 text-left sm:text-sm ${
+							className={`bg-gray-100 relative w-full cursor-default rounded-md py-2 pl-3 text-left sm:text-sm ${
 								minimal
 									? 'pr-7 h-12 bg-gray-100'
-									: `${height} pr-10 border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`
+									: `${height} pr-10 border border-gray-100 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`
 							}`}
 						>
 							<span className="flex items-center">
@@ -69,15 +69,15 @@ export default function Select({
 									{selected?.name || 'Select'}
 								</span>
 							</span>
-							<span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+							<span className="bg-gray-100 pointer-events-none rounded-md absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
 								{minimal ? (
 									open ? (
-										<ChevronUpIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+										<ChevronUpIcon className="h-5 w-5 text-gray-800" aria-hidden="true" />
 									) : (
-										<ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+										<ChevronDownIcon className="h-5 w-5 text-gray-800" aria-hidden="true" />
 									)
 								) : (
-									<ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+									<ChevronDownIcon className="h-5 w-5 text-gray-800" aria-hidden="true" />
 								)}
 							</span>
 						</Listbox.Button>
