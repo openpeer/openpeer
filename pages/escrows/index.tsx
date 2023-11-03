@@ -28,14 +28,14 @@ const ContractTable = ({
 }) => (
 	<div className="mt-4" key={contract.id}>
 		{beingUsed && (
-			<div className="flex flex-col md:flex-row md:items-center md:space-x-1">
+			<div className="flex flex-col md:flex-row md:items-center md:space-x-1 break-all">
 				<a
 					href={`${chain?.blockExplorers?.etherscan?.url}/address/${contract.address}`}
 					className="text-cyan-600"
 					target="_blank"
 					rel="noreferrer"
 				>
-					<h1>{contract.address} </h1>
+					<h1>{smallWalletAddress(contract.address, 14)} </h1>
 				</a>
 				<span className="text-sm">{beingUsed ? '(being used)' : ''}</span>
 			</div>
@@ -315,8 +315,7 @@ const MyEscrows = () => {
 												target="_blank"
 												rel="noreferrer"
 											>
-												{/* <WalletIcon className="w-4 h-4" /> */}
-												<h1 className="text-left">{smallWalletAddress(c.address)}</h1>
+												<h1 className="text-left">{smallWalletAddress(c.address, 14)}</h1>
 											</a>
 										}
 									/>
