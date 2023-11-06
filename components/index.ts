@@ -24,6 +24,7 @@ import Textarea from './Textarea/Textarea';
 import WrongNetwork from './WrongNetwork';
 import Token from './Token/Token';
 import TimezoneSelect from './Select/TimezoneSelect';
+import EscrowDepositWithdraw from './EscrowDepositWithdraw';
 
 export {
 	Button,
@@ -51,5 +52,6 @@ export {
 	Pagination,
 	EditListButtons,
 	Token,
-	TimezoneSelect
+	TimezoneSelect,
+	EscrowDepositWithdraw
 };

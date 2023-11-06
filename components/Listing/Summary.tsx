@@ -1,7 +1,7 @@
 import Flag from 'components/Flag/Flag';
 import Token from 'components/Token/Token';
 import { countries } from 'models/countries';
-import { FiatCurrency, PaymentMethod, Token as TokenModel } from 'models/types';
+import { Bank, FiatCurrency, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 import React from 'react';
 
@@ -21,14 +21,16 @@ const Summary = ({ list }: SummaryProps) => {
 		limitMax,
 		marginType,
 		margin,
-		paymentMethod,
+		paymentMethods = [],
 		depositTimeLimit,
 		paymentTimeLimit,
 		terms,
 		type,
-		acceptOnlyVerified
+		acceptOnlyVerified,
+		escrowType
 	} = list;
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
+	const instantEscrow = escrowType === 'instant';
 
 	if (!token && !currency) {
 		return (
@@ -102,58 +104,46 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>Your Price</div>
 						<div className="font-bold">
 							{marginType === 'fixed'
-								? `${currencySymbol} ${margin.toFixed(2)} per ${token?.name}`
-								: `Spot price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`}
+								? `${currencySymbol} ${margin.toFixed(3)} per ${token?.name}`
+								: `Market price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`}
 						</div>
 					</li>
 				)}
 				<div className="mt-6 mb-6 border-b-2 border-dashed border-color-gray-400" />
-				{!!paymentMethod && (
+				{paymentMethods.length > 0 && (
 					<li className="w-full flex flex-col md:flex-row justify-between mb-4">
-						<div>Payment Method</div>
+						<div>Payment Methods</div>
 						<div className="w-full md:w-2/4 flex flex-col bg-gray-50 border-cyan-200 rounded p-4">
-							{!!paymentMethod.bank && (
-								<>
-									<div className="flex flex-row items-center text-gray-500 text-sm mb-2">
-										<Image
-											src={paymentMethod.bank.icon}
-											alt={paymentMethod.bank.name}
-											className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-											width={24}
-											height={24}
-											unoptimized
-										/>
-										{paymentMethod.bank.name}
-									</div>
-									{Object.keys(paymentMethod.values || {}).map((key) => {
-										const {
-											bank: { account_info_schema: schema }
-										} = paymentMethod as PaymentMethod;
-										const field = schema.find(({ id }) => id === key);
-										const value = (paymentMethod.values || {})[key];
-										if (!value) return <></>;
-
-										return (
-											<div className="mb-2 flex flex-row items-center" key={key}>
-												<span className="mr-2">{field?.label}:</span>
-												<div className="flex flex-row justify-between">
-													<span>{value}</span>
-												</div>
-											</div>
-										);
-									})}
-								</>
+							{paymentMethods.map(
+								(pm) =>
+									pm.bank && (
+										<div className="flex flex-row items-center" key={pm.id}>
+											<span
+												className="bg-gray-500 w-1 h-3 rounded-full"
+												style={{ backgroundColor: (pm.bank as Bank).color || 'gray' }}
+											>
+												&nbsp;
+											</span>
+											<span className="pl-1 text-gray-700 text-[11px]">{pm.bank.name}</span>
+										</div>
+									)
 							)}
 						</div>
 					</li>
 				)}
-				{!!depositTimeLimit && (
+				{instantEscrow ? (
 					<li className="w-full flex flex-row justify-between mb-4">
-						<div>Deposit Time Limit</div>
-						<div className="font-bold">
-							{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
-						</div>
+						<div className="font-bold">⚡ Instant deposit</div>
 					</li>
+				) : (
+					!!depositTimeLimit && (
+						<li className="w-full flex flex-row justify-between mb-4">
+							<div>Deposit Time Limit</div>
+							<div className="font-bold">
+								{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+							</div>
+						</li>
+					)
 				)}
 				{!!paymentTimeLimit && (
 					<li className="w-full flex flex-row justify-between mb-4">

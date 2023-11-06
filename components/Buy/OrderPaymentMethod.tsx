@@ -1,25 +1,24 @@
 /* eslint-disable react/jsx-curly-newline */
-import { Button, Input, Loading, Textarea } from 'components';
+import { BankSelect, Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
-import { useConfirmationSignMessage, useFormErrors } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors, useAccount } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount } from 'wagmi';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { BuyStepProps } from './Buy.types';
 
-const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
+const OrderPaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	const { address } = useAccount();
-	const { list, paymentMethod = { bank: order.list.bank } as PaymentMethodType } = order;
-	const { fiat_currency: currency, type } = list;
+	const { list, paymentMethod = {} as PaymentMethodType } = order;
+	const { fiat_currency: currency, type, banks } = list;
 	const { id, bank, values = {} } = paymentMethod;
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -41,55 +40,58 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 		return error;
 	};
 
-	const { signMessage } = useConfirmationSignMessage({
-		onSuccess: async (data, variables) => {
-			const result = await fetch('/api/orders/', {
-				method: 'POST',
-				body: JSON.stringify(
-					snakecaseKeys(
-						{
-							order: {
-								listId: order.list.id,
-								fiatAmount: order.fiat_amount,
-								tokenAmount: order.token_amount,
-								price: order.price,
-								paymentMethod
-							},
-							data,
-							address,
-							message: variables.message
-						},
-						{ deep: true }
-					)
-				),
-				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
-				}
-			});
-			const { uuid } = await result.json();
-			if (uuid) {
-				router.push(`/orders/${uuid}`);
-			}
-		}
-	});
-
-	const onProceed = () => {
-		if (validate(resolver)) {
-			const message = JSON.stringify(
+	const createOrder = async () => {
+		const result = await fetch('/api/orders/', {
+			method: 'POST',
+			body: JSON.stringify(
 				snakecaseKeys(
 					{
-						listId: order.list.id,
-						fiatAmount: order.fiat_amount,
-						tokenAmount: order.token_amount,
-						price: order.price,
-						paymentMethod
+						order: {
+							listId: order.list.id,
+							fiatAmount: order.fiat_amount,
+							tokenAmount: order.token_amount,
+							price: order.price,
+							paymentMethod
+						}
 					},
 					{ deep: true }
-				),
-				undefined,
-				4
-			);
-			signMessage({ message });
+				)
+			),
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		});
+		const { uuid } = await result.json();
+		if (uuid) {
+			router.push(`/orders/${uuid}`);
+		}
+	};
+
+	const { signMessage } = useConfirmationSignMessage({
+		onSuccess: createOrder
+	});
+
+	const onProceed = async () => {
+		if (validate(resolver)) {
+			if (list.escrow_type === 'instant') {
+				await createOrder();
+			} else {
+				const message = JSON.stringify(
+					snakecaseKeys(
+						{
+							listId: order.list.id,
+							fiatAmount: order.fiat_amount,
+							tokenAmount: order.token_amount,
+							price: order.price,
+							paymentMethod: bank?.name
+						},
+						{ deep: true }
+					),
+					undefined,
+					4
+				);
+				signMessage({ message });
+			}
 		}
 	};
 
@@ -116,14 +118,15 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	useEffect(() => {
 		setLoading(true);
 
-		fetch(`/api/payment-methods?address=${address}&currency_id=${currency!.id}`, {
+		fetch(`/api/payment-methods?currency_id=${currency!.id}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
 		})
 			.then((res) => res.json())
 			.then((data: PaymentMethodType[]) => {
-				const filtered = data.filter((pm) => pm.bank.id === list.bank.id);
+				const listBankIds = banks.map((b) => b.id);
+				const filtered = data.filter((pm) => listBankIds.includes(pm.bank.id));
 				setPaymentMethods(filtered);
 				if (!paymentMethod.values) {
 					setPaymentMethod(filtered[0]);
@@ -139,9 +142,9 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	}
 
 	return (
-		<StepLayout onProceed={onProceed} buttonText="Sign and Continue">
-			<h2 className="text-xl mt-8 mb-2">Payment Method</h2>
-			<p>{type === 'BuyList' ? 'Choose how you want to pay' : 'Choose how you want to receive your money'}</p>
+		<StepLayout onProceed={onProceed} buttonText={list.escrow_type === 'instant' ? undefined : 'Sign and Continue'}>
+			<h2 className="text-xl mt-8 mb-2">Payment Methods</h2>
+			<p>Choose how you want to receive your money</p>
 			{(paymentMethods || []).map((pm) => (
 				<div
 					key={pm.id}
@@ -152,14 +155,16 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 				>
 					<div className="w-full flex flex-row justify-between mb-4">
 						<div className="flex flex-row items-center">
-							<Image
-								src={pm.bank.icon}
-								alt={pm.bank.name}
-								className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-								width={24}
-								height={24}
-								unoptimized
-							/>
+							{!!pm.bank.icon && (
+								<Image
+									src={pm.bank.icon}
+									alt={pm.bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+							)}
 							<span>{pm.bank.name}</span>
 						</div>
 						<div onClick={(e) => enableEdit(e, pm)}>
@@ -186,70 +191,75 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 					</div>
 				</div>
 			))}
-
 			{!id || edit ? (
-				<>
-					<div className="flex flex-row items-center mt-8">
-						<Image
-							src={list.bank.icon}
-							alt={list.bank.name}
-							className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
-							width={24}
-							height={24}
-							unoptimized
-						/>
-						<span>{list.bank.name}</span>
-					</div>
-					{schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
-						if (schemaType === 'message') {
-							return (
-								<div className="mb-4" key={schemaId}>
-									<span className="text-sm">{label}</span>
-								</div>
-							);
-						}
+				<div className="mb-2">
+					<BankSelect
+						currencyId={currency.id}
+						options={banks}
+						onSelect={(b) => updatePaymentMethod({ ...paymentMethod, bank: b, values: {} })}
+						selected={bank}
+						error={errors.bankId}
+					/>
+					<div>
+						{schema.map(({ id: schemaId, label, placeholder, type: schemaType = 'text', required }) => {
+							if (schemaType === 'message') {
+								return (
+									<div className="mb-4" key={schemaId}>
+										<span className="text-sm">{label}</span>
+									</div>
+								);
+							}
 
-						if (schemaType === 'textarea') {
+							if (schemaType === 'textarea') {
+								return (
+									<Textarea
+										rows={4}
+										key={schemaId}
+										label={label}
+										id={schemaId}
+										placeholder={placeholder}
+										onChange={(e) =>
+											updatePaymentMethod({
+												...paymentMethod,
+												...{
+													values: {
+														...paymentMethod.values,
+														...{ [schemaId]: e.target.value }
+													}
+												}
+											})
+										}
+										value={values[schemaId]}
+										error={errors[schemaId]}
+									/>
+								);
+							}
 							return (
-								<Textarea
-									rows={4}
+								<Input
 									key={schemaId}
 									label={label}
+									type="text"
 									id={schemaId}
 									placeholder={placeholder}
-									onChange={(e) =>
+									onChange={(value) =>
 										updatePaymentMethod({
 											...paymentMethod,
 											...{
-												values: { ...paymentMethod.values, ...{ [schemaId]: e.target.value } }
+												values: {
+													...paymentMethod.values,
+													...{ [schemaId]: value }
+												}
 											}
 										})
 									}
-									value={values[schemaId]}
 									error={errors[schemaId]}
+									value={values[schemaId]}
+									required={required}
 								/>
 							);
-						}
-						return (
-							<Input
-								key={schemaId}
-								label={label}
-								type="text"
-								id={schemaId}
-								placeholder={placeholder}
-								onChange={(value) =>
-									updatePaymentMethod({
-										...paymentMethod,
-										...{ values: { ...paymentMethod.values, ...{ [schemaId]: value } } }
-									})
-								}
-								error={errors[schemaId]}
-								value={values[schemaId]}
-								required={required}
-							/>
-						);
-					})}
-				</>
+						})}
+					</div>
+				</div>
 			) : (
 				<div>
 					<Button title="Add New Payment Method +" outlined onClick={() => updatePaymentMethod(undefined)} />
@@ -259,4 +269,4 @@ const PaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	);
 };
 
-export default PaymentMethod;
+export default OrderPaymentMethod;

@@ -1,17 +1,26 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable @typescript-eslint/indent */
 import { OpenPeerEscrow } from 'abis';
 import { constants, Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { UseEscrowTransactionProps } from '../types';
+import { UseGaslessEscrowFundsProps } from '../types';
 
 interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrowTransactionProps) => {
-	const sellerWaitingTime = 24 * 60 * 60;
+const useGaslessEscrow = ({
+	contract,
+	orderID,
+	buyer,
+	token,
+	amount,
+	instantEscrow,
+	sellerWaitingTime
+}: UseGaslessEscrowFundsProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -33,20 +42,30 @@ const useGaslessEscrow = ({ contract, orderID, buyer, token, amount }: UseEscrow
 			const provider = await biconomy.provider;
 			const contractInstance = new Contract(contract, OpenPeerEscrow, biconomy.ethersProvider);
 			const partner = constants.AddressZero;
-			const { data: transactionData } = await contractInstance.populateTransaction.createERC20Escrow(
-				orderID,
-				buyer,
-				token.address,
-				amount,
-				partner,
-				sellerWaitingTime
-			);
+			const { data: transactionData } =
+				token.address === constants.AddressZero
+					? await contractInstance.populateTransaction.createNativeEscrow(
+							orderID,
+							buyer,
+							amount,
+							partner,
+							sellerWaitingTime,
+							instantEscrow
+					  )
+					: await contractInstance.populateTransaction.createERC20Escrow(
+							orderID,
+							buyer,
+							token.address,
+							amount,
+							partner,
+							sellerWaitingTime,
+							instantEscrow
+					  );
 			const txParams = {
 				data: transactionData,
 				to: contract,
 				from: address,
-				signatureType: 'EIP712_SIGN',
-				gasLimit: 400000
+				signatureType: 'EIP712_SIGN'
 			};
 			// @ts-ignore
 			await provider.send('eth_sendTransaction', [txParams]);

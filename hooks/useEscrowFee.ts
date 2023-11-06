@@ -3,35 +3,36 @@ import { constants } from 'ethers';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { Token } from 'models/types';
 import { Abi, parseUnits } from 'viem';
-import { useContractReads, useNetwork } from 'wagmi';
-import { polygon } from 'wagmi/chains';
+import { useContractReads } from 'wagmi';
 
 interface UseEscrowFeeParams {
+	chainId: number | undefined;
 	address?: `0x${string}`;
 	token: Token | undefined;
 	tokenAmount: number | undefined;
 }
 
-const useEscrowFee = ({ address, tokenAmount, token }: UseEscrowFeeParams) => {
-	const { chain, chains } = useNetwork();
-	const deployer = DEPLOYER_CONTRACTS[(chain || chains[0] || polygon).id];
-	const contract = address || deployer;
+const useEscrowFee = ({ address, tokenAmount, token, chainId }: UseEscrowFeeParams) => {
+	const deployer = DEPLOYER_CONTRACTS[chainId || 0];
+	const contract = !!address && address !== constants.AddressZero ? address : deployer;
 	const partner = constants.AddressZero;
-
 	const { data, isFetching } = useContractReads({
 		contracts: [
 			{
 				address: contract,
 				abi: OpenPeerDeployer as Abi,
 				functionName: 'sellerFee',
-				args: [partner]
+				args: [partner],
+				chainId
 			},
 			{
 				address: contract,
 				abi: OpenPeerDeployer as Abi,
-				functionName: 'openPeerFee'
+				functionName: 'openPeerFee',
+				chainId
 			}
-		]
+		],
+		enabled: !!token && !!chainId && !!contract && contract !== constants.AddressZero
 	});
 
 	if (isFetching || !token || !tokenAmount || !data) return { isFetching };

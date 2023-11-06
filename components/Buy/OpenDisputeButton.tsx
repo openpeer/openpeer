@@ -2,13 +2,13 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useOpenDispute, useTransactionFeedback } from 'hooks';
+import { useOpenDispute, useTransactionFeedback, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Abi, formatUnits, parseUnits } from 'viem';
-import { useAccount, useBalance, useContractReads, useNetwork } from 'wagmi';
+import { useBalance, useContractReads, useNetwork } from 'wagmi';
 
 interface OpenDisputeButtonParams {
 	order: Order;
@@ -39,7 +39,8 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 	});
 
 	const { data: balance } = useBalance({
-		address: connectedAddress
+		address: connectedAddress,
+		enabled: !!connectedAddress
 	});
 	const [escrowDataResult, disputeFeeResult, paidForDisputeResult] = readData as { result: unknown }[];
 

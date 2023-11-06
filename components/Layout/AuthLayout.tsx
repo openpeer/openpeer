@@ -9,7 +9,7 @@ import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -19,7 +19,8 @@ import {
 	ShoppingBagIcon,
 	XMarkIcon,
 	WalletIcon,
-	ChatBubbleLeftIcon
+	ChatBubbleLeftIcon,
+	LockClosedIcon
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
@@ -55,6 +56,7 @@ const navigation = [
 	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon },
 	{ name: 'Airdrop', href: '/airdrop', icon: AirdropIcon },
 	{ name: 'Wallet', href: '/wallet', icon: WalletIcon },
+	{ name: 'My Escrows', href: '/escrows', icon: LockClosedIcon },
 	{ name: 'Support', href: undefined, icon: ChatBubbleLeftIcon }
 ];
 
@@ -91,11 +93,13 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 				}
 
 				return (
-					<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer">
+					<div
+						className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer"
+						key={item.name}
+					>
 						{isAuthenticated ? (
 							<ChatWithOwner
 								ownerAddress="0x630220d00Cf136270f553c8577aF18300F7b812c"
-								key={item.name}
 								render={
 									<Button
 										title={

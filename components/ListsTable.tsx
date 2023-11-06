@@ -5,12 +5,14 @@ import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
-import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
-import { arbitrum, optimism } from 'wagmi/chains';
+import { getChainToken, smallWalletAddress } from 'utils';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
+import { useAccount } from 'hooks';
+import { useContractReads } from 'wagmi';
+import { OpenPeerEscrow } from 'abis';
+import { Abi, formatUnits } from 'viem';
 import Avatar from './Avatar';
 import Button from './Button/Button';
 import EditListButtons from './Button/EditListButtons';
@@ -21,6 +23,7 @@ interface ListsTableProps {
 	lists: List[];
 	fiatAmount?: number;
 	tokenAmount?: number;
+	hideLowAmounts?: boolean;
 }
 
 interface BuyButtonProps {
@@ -28,21 +31,47 @@ interface BuyButtonProps {
 	fiatAmount: number | undefined;
 	tokenAmount: number | undefined;
 	sellList: boolean;
+	escrowType: List['escrow_type'];
 }
 
-const BuyButton = ({ id, fiatAmount, tokenAmount, sellList }: BuyButtonProps) => (
+const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType }: BuyButtonProps) => (
 	<Link
 		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
 		as={`/buy/${encodeURIComponent(id)}`}
 	>
-		<Button title={sellList ? 'Buy' : 'Sell'} />
+		<Button title={sellList ? (escrowType === 'instant' ? 'Buy ⚡' : 'Buy') : 'Sell'} />
 	</Link>
 );
 
-const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
+const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTableProps) => {
 	const { address } = useAccount();
 	const { primaryWallet } = useDynamicContext();
 	const chains = allChains;
+
+	const contracts = lists
+		.filter(({ contract }) => !!contract)
+		.map((list) => ({ id: list.id, contract: list.contract, token: list.token.address, chainId: list.chain_id }));
+
+	let signatures = contracts.map((item) => {
+		const { contract, token, chainId } = item;
+		return {
+			address: contract,
+			abi: OpenPeerEscrow as Abi,
+			functionName: 'balances',
+			args: [token],
+			chainId
+		};
+	});
+
+	// remove duplicates with the same address, args and chainId
+	signatures = signatures.filter(
+		(item, index, self) =>
+			index ===
+			self.findIndex(
+				(t) => t.address === item.address && t.args[0] === item.args[0] && t.chainId === item.chainId
+			)
+	);
+	const { data, isLoading } = useContractReads({ contracts: signatures });
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -73,13 +102,13 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Deposit time limit
+						Payment time limit
 					</th>
 					<th
 						scope="col"
 						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
 					>
-						Payment Method
+						Payment Methods
 					</th>
 					<th
 						scope="col"
@@ -100,31 +129,46 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 						limit_min: min,
 						limit_max: max,
 						price,
-						payment_method: paymentMethod,
+						payment_methods: paymentMethods,
 						chain_id: chainId,
 						// token_spot_price: tokenSpotPrice,
-						deposit_time_limit: depositTimeLimit
+						payment_time_limit: paymentTimeLimit,
+						escrow_type: escrowType,
+						type
 					} = list;
+					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
 					const isSeller = primaryWallet && sellerAddress === address;
-					const bank = paymentMethod?.bank || list.bank;
 					const { symbol } = token;
 					const chain = chains.find((c) => c.id === chainId);
-					const chainToken = chain
-						? chain.id === arbitrum.id
-							? { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' }
-							: chain.id === optimism.id
-							? {
-									symbol: 'OPTMISM',
-									icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-							  }
-							: chain.nativeCurrency
-						: undefined;
+					const chainToken = getChainToken(chain);
 
 					// const priceDifferencePercentage =
 					// tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
 
 					const priceDifferencePercentage = 100;
+					const instantEscrow = escrowType === 'instant';
+					let escrowedAmount = amount;
+
+					try {
+						if (instantEscrow && !isLoading && data) {
+							const dataIndex = signatures.findIndex(
+								(item) => item.address === list.contract && item.args[0] === list.token.address
+							);
+							if (dataIndex !== -1) {
+								const { status, result } = data[dataIndex];
+								if (status === 'success') {
+									escrowedAmount = formatUnits(result as bigint, token.decimals);
+								}
+							}
+						}
+					} catch (err) {
+						console.log(err);
+					}
+
+					if (hideLowAmounts && Number(escrowedAmount) <= 0) {
+						return <></>;
+					}
 
 					return (
 						<tr key={id} className="hover:bg-gray-50">
@@ -172,7 +216,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 													</div>
 													<div className="flex flex-row items-center">
 														<span className="mr-2 text-sm text-gray-800">
-															{amount} {symbol}
+															{Number(escrowedAmount).toFixed(2)} {symbol}
 														</span>
 													</div>
 												</div>
@@ -184,24 +228,37 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												<span className="pr-2 text-[11px]">{chain?.name}</span>
 												<Token token={chainToken! as TokenType} size={16} />
 											</div>
-											{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
+											{!!instantEscrow && (
 												<div className="flex flex-row items-center mb-2">
 													<span className="pr-2 text-[11px] text-gray-700">
-														Deposit time limit
-													</span>
-													<span className="pr-2 text-[11px] text-black">
-														{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+														Instant deposit ⚡
 													</span>
 												</div>
 											)}
-											<div className="flex flex-row items-center mb-2">
-												<span
-													className="bg-gray-500 w-1 h-3 rounded-full"
-													style={{ backgroundColor: bank.color || 'gray' }}
-												>
-													&nbsp;
-												</span>
-												<span className="pl-1 text-gray-700 text-[11px]">{bank.name}</span>
+											{!!(paymentTimeLimit && Number(paymentTimeLimit) > 0) && (
+												<div className="flex flex-row items-center mb-2">
+													<span className="pr-2 text-[11px] text-gray-700">
+														Payment time limit
+													</span>
+													<span className="pr-2 text-[11px] text-black">
+														{paymentTimeLimit} {paymentTimeLimit === 1 ? 'min' : 'mins'}
+													</span>
+												</div>
+											)}
+											<div className="mb-2">
+												{banks.map((bank) => (
+													<div className="flex flex-row items-center" key={bank.id}>
+														<span
+															className="bg-gray-500 w-1 h-3 rounded-full"
+															style={{ backgroundColor: bank.color || 'gray' }}
+														>
+															&nbsp;
+														</span>
+														<span className="pl-1 text-gray-700 text-[11px]">
+															{bank.name}
+														</span>
+													</div>
+												))}
 											</div>
 										</div>
 									</div>
@@ -214,6 +271,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 												fiatAmount={fiatAmount}
 												tokenAmount={tokenAmount}
 												sellList={list.type === 'SellList'}
+												escrowType={list.escrow_type}
 											/>
 										)}
 									</div>
@@ -224,7 +282,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 									<div className="flex flex-row mb-2 space-x-2 items-center">
 										<Token token={token} size={24} />
 										<span>
-											{amount} {symbol}
+											{Number(escrowedAmount).toFixed(2)} {symbol}
 										</span>
 									</div>
 									<div className="flex flex-row items-center">
@@ -262,25 +320,27 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 								{(!!min || !!max) && `${fiatSymbol} ${min || 10} - ${fiatSymbol}${max || '∞'}`}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{!!(depositTimeLimit && Number(depositTimeLimit) > 0) && (
+								{!!(paymentTimeLimit && Number(paymentTimeLimit) > 0) && (
 									<div className="flex flex-row items-center space-x-2">
 										<ClockIcon width={16} height={16} />
 										<span>
-											{depositTimeLimit} {depositTimeLimit === 1 ? 'min' : 'mins'}
+											{paymentTimeLimit} {paymentTimeLimit === 1 ? 'min' : 'mins'}
 										</span>
 									</div>
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								<div className="flex flex-row items-center mb-1">
-									<span
-										className="w-1 h-3 rounded-full"
-										style={{ backgroundColor: bank.color || 'gray' }}
-									>
-										&nbsp;
-									</span>
-									<span className="pl-1">{bank.name}</span>
-								</div>
+								{banks.map((bank) => (
+									<div className="flex flex-row items-center mb-1" key={id}>
+										<span
+											className="w-1 h-3 rounded-full"
+											style={{ backgroundColor: bank.color || 'gray' }}
+										>
+											&nbsp;
+										</span>
+										<span className="pl-1">{bank.name}</span>
+									</div>
+								))}
 							</td>
 							<td className="hidden text-right py-4 pr-4 lg:table-cell">
 								{isSeller ? (
@@ -291,6 +351,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount }: ListsTableProps) => {
 										fiatAmount={fiatAmount}
 										tokenAmount={tokenAmount}
 										sellList={list.type === 'SellList'}
+										escrowType={list.escrow_type}
 									/>
 								)}
 							</td>

@@ -8,7 +8,14 @@ export interface UseEscrowTransactionProps {
 	token: Token;
 }
 
+export interface UseGaslessEscrowFundsProps extends UseEscrowTransactionProps {
+	instantEscrow: boolean;
+	sellerWaitingTime: number; // in seconds
+}
+
 export interface UseEscrowFundsProps extends UseEscrowTransactionProps {
+	instantEscrow: boolean;
+	sellerWaitingTime: number; // in seconds
 	fee: bigint;
 }
 
@@ -18,4 +25,16 @@ export interface UseOpenDisputeProps extends UseEscrowTransactionProps {
 
 export interface UseEscrowCancelProps extends UseEscrowTransactionProps {
 	isBuyer: boolean;
+}
+
+export interface UseDepositFundsProps {
+	amount: bigint;
+	token: Token;
+	contract: `0x${string}`;
+}
+
+export interface UseWithdrawFundsProps {
+	amount: bigint;
+	token: Token;
+	contract: `0x${string}`;
 }

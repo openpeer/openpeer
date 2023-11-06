@@ -3,7 +3,7 @@ import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
@@ -11,6 +11,8 @@ const OrdersPage = () => {
 	const { address } = useAccount();
 
 	useEffect(() => {
+		if (!address) return;
+
 		setLoading(true);
 		fetch('/api/orders', {
 			headers: {
@@ -19,7 +21,16 @@ const OrdersPage = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setOrders(data);
+				setOrders(
+					data.filter(
+						(order: Order) =>
+							!(
+								order.seller.address === address &&
+								order.list.escrow_type === 'instant' &&
+								order.status === 'created'
+							)
+					)
+				);
 				setLoading(false);
 			});
 	}, [address]);

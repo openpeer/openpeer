@@ -1,13 +1,13 @@
 import { Input, Label, Loading, MarginSwitcher } from 'components';
 import { useFormErrors } from 'hooks';
 import { Errors, Resolver } from 'models/errors';
-import { List, Token } from 'models/types';
+import { FiatCurrency, List, Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 
-import { AmountStepProps } from './Listing.types';
+import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
-const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
+const Amount = ({ list, updateList }: ListStepProps) => {
 	const {
 		token,
 		currency,
@@ -16,8 +16,8 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 		limitMax,
 		marginType = 'fixed',
 		margin: savedMargin,
-		quickSellSetupDone,
-		type
+		type,
+		priceSource
 	} = list;
 	const percentage = marginType === 'percentage';
 	const [percentageMargin, setPercentageMargin] = useState<number>(percentage ? savedMargin || 1 : 1);
@@ -92,13 +92,18 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 
 	useEffect(() => {
 		if (!token || !currency) return;
-		const coingeckoId = (token as Token).coingecko_id;
-		fetch(`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}&tokenSymbol=${token.name}`)
+		const { coingecko_id: coingeckoId } = token as Token;
+
+		fetch(
+			`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}&tokenSymbol=${
+				token.name
+			}&priceSource=${priceSource}&type=${type === 'BuyList' ? 'SELL' : 'BUY'}`
+		)
 			.then((res) => res.json())
 			.then((data) => {
-				setPrice(data[coingeckoId][currency.name.toLowerCase()]);
+				setPrice(data[coingeckoId || token.name][currency.name.toLowerCase()]);
 			});
-	}, [token, currency]);
+	}, [token, currency, priceSource, type]);
 
 	useEffect(() => {
 		if (price) {
@@ -110,13 +115,10 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 	}, [fixedMargin, percentage, price]);
 
 	useEffect(() => {
-		const amount = Number(tokenAmount || '0');
-		if (amount && !totalAvailableAmount && !quickSellSetupDone) {
-			updateValue({ totalAvailableAmount: amount, quickSellSetupDone: true });
-		} else {
-			updateValue({ quickSellSetupDone: true });
+		if (price && marginType === 'fixed') {
+			updateMargin(price);
 		}
-	}, [tokenAmount, totalAvailableAmount]);
+	}, [price]);
 
 	if (!token || !currency) return <Loading />;
 
@@ -160,22 +162,24 @@ const Amount = ({ list, updateList, tokenAmount }: AmountStepProps) => {
 				</div>
 			</div>
 
-			<Label title="Set Price Margin" />
+			<Label title="Set Price" />
 			<div className="mb-4">
 				<span className="text-sm text-gray-600">
 					Set how you want to price {type === 'BuyList' ? 'the' : 'your'} crypto. At a fixed price or above or
-					below the spot price.
+					below the market price.
 				</span>
 			</div>
 			<MarginSwitcher
 				selected={marginType}
 				onSelect={onSelectType}
-				currency={currency.name}
-				token={token.name}
+				currency={currency as FiatCurrency}
+				token={token as Token}
 				margin={margin}
 				updateMargin={updateMargin}
 				error={errors.margin}
 				price={price}
+				listPriceSource={priceSource}
+				onUpdatePriceSource={(ps) => updateValue({ priceSource: ps })}
 			/>
 
 			<div className="w-full flex flex-row justify-between mb-8 hidden">

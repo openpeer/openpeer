@@ -6,7 +6,7 @@ import HeaderH3 from 'components/SectionHeading/h3';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { XCircleIcon } from '@heroicons/react/24/outline';
 
@@ -45,7 +45,7 @@ const Cancelled = ({ order }: BuyStepProps) => {
 
 				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full">
-						<Button title="Back to Listings" onClick={() => router.push('/')} />
+						<Button title="Back to Listings" onClick={() => router.push('/trade')} />
 					</span>
 				</div>
 			</div>

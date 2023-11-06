@@ -1,66 +1,97 @@
-import { Steps } from 'components';
-import { Amount, Details, PaymentMethod, Setup, Summary } from 'components/Listing';
+import { Button, Loading, Steps } from 'components';
+import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
-import { List } from 'models/types';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
+import {
+	DEFAULT_DEPOSIT_TIME_LIMIT,
+	DEFAULT_ESCROW_TYPE,
+	DEFAULT_MARGIN_TYPE,
+	DEFAULT_MARGIN_VALUE,
+	DEFAULT_PAYMENT_TIME_LIMIT
+} from 'utils';
 
-const SETUP_STEP = 1;
-const AMOUNT_STEP = 2;
-const PAYMENT_METHOD_STEP = 3;
-const DETAILS_STEP = 4;
-
-const DEFAULT_MARGIN_TYPE: List['margin_type'] = 'fixed';
-const DEFAULT_MARGIN_VALUE = 1;
-const DEFAULT_DEPOSIT_TIME_LIMIT = 60;
-const DEFAULT_PAYMENT_TIME_LIMIT = 0;
+const LIST_TYPE_STEP = 1;
+const SETUP_STEP = 2;
+const AMOUNT_STEP = 3;
+const PAYMENT_METHOD_STEP = 4;
+const DETAILS_STEP = 5;
 
 const defaultList = {
 	marginType: DEFAULT_MARGIN_TYPE,
 	margin: DEFAULT_MARGIN_VALUE,
 	depositTimeLimit: DEFAULT_DEPOSIT_TIME_LIMIT,
-	paymentTimeLimit: DEFAULT_PAYMENT_TIME_LIMIT
+	paymentTimeLimit: DEFAULT_PAYMENT_TIME_LIMIT,
+	escrowType: DEFAULT_ESCROW_TYPE
 };
 
 const SellPage = () => {
-	const router = useRouter();
+	const [merchants, setMerchants] = useState<`0x${string}`[] | undefined>();
 	const [showFilters, setShowFilters] = useState(false);
-	const { token, currency, tokenAmount, fiatAmount } = router.query;
-	const quickBuy = !!token && !!currency && !!Number(fiatAmount || '0');
-	const quickSell = !!token && !!currency && !!Number(tokenAmount || '0');
 
 	const { address } = useAccount();
 	const [list, setList] = useState<UIList>({
 		...{
-			step: quickSell || quickBuy ? AMOUNT_STEP : SETUP_STEP,
-			type: quickSell || quickBuy ? (quickBuy ? 'SellList' : 'BuyList') : undefined
+			step: LIST_TYPE_STEP,
+			type: 'SellList'
 		},
 		...defaultList
 	} as UIList);
 	const { step } = list;
 
 	useEffect(() => {
-		if (list.step > 3) {
+		const fetchMerchants = async () => {
+			const res = await fetch('/api/merchants');
+			setMerchants(await res.json());
+		};
+
+		fetchMerchants();
+	}, []);
+
+	useEffect(() => {
+		if (list.step > 4) {
 			setList({ ...{ step: PAYMENT_METHOD_STEP }, ...defaultList } as UIList);
 		}
 	}, [address]);
 
 	useEffect(() => {
-		if (!!list && (quickSell || quickBuy) && step === SETUP_STEP) {
-			const { totalAvailableAmount, quickSellSetupDone } = list;
-
-			if (!!list.currency && !!list.token && !totalAvailableAmount && !quickSellSetupDone) {
-				setList({ ...list, type: quickSell ? 'SellList' : 'BuyList', step: AMOUNT_STEP });
-			}
+		if ((list.paymentMethods || []).length > 0) {
+			setList({ ...list, ...{ paymentMethods: [] } });
 		}
-	}, [list]);
+
+		if ((list.banks || []).length > 0) {
+			setList({ ...list, ...{ banks: [] } });
+		}
+	}, [list.type]);
 
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
 	};
+
+	if (merchants === undefined) return <Loading message="Loading..." />;
+
+	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
+		return (
+			<Loading
+				spinner={false}
+				message={
+					<a
+						className="flex flex-col items-center space-y-2"
+						href="https://forms.gle/qiAzsPeCphUhZgBM9"
+						target="_blank"
+						rel="noreferrer"
+					>
+						<div>You need to be a verified merchant to post an ad on OpenPeer.</div>
+						<div>
+							<Button title="Apply here!" />
+						</div>
+					</a>
+				}
+			/>
+		);
+	}
 
 	return (
 		<div className="pt-4 md:pt-6">
@@ -68,7 +99,7 @@ const SellPage = () => {
 				<div className="w-full lg:w-2/4">
 					<Steps
 						currentStep={step}
-						stepsCount={3}
+						stepsCount={4}
 						onStepClick={(n) => setList({ ...list, ...{ step: n } })}
 					/>
 					<div className="flex flex-row justify-end md:hidden md:justify-end" onClick={handleToggleFilters}>
@@ -84,10 +115,9 @@ const SellPage = () => {
 							<Summary list={list} />
 						</div>
 					)}
-					{step === SETUP_STEP && (
-						<Setup list={list} updateList={setList} tokenId={token} currencyId={currency} />
-					)}
-					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} tokenAmount={tokenAmount} />}
+					{step === LIST_TYPE_STEP && <ListType list={list} updateList={setList} />}
+					{step === SETUP_STEP && <Setup list={list} updateList={setList} />}
+					{step === AMOUNT_STEP && <Amount list={list} updateList={setList} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={list} updateList={setList} />}
 					{step === DETAILS_STEP && <Details list={list} updateList={setList} />}
 				</div>
