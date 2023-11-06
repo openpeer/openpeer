@@ -30,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			);
 			if (result) {
 				res.status(200).json({ [token as string]: { [fiat as string]: Number(result) } });
+				return;
 			}
 		}
 

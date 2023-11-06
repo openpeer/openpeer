@@ -97,7 +97,7 @@ const Amount = ({ list, updateList }: ListStepProps) => {
 		fetch(
 			`/api/prices?token=${coingeckoId}&fiat=${currency.name.toLowerCase()}&tokenSymbol=${
 				token.name
-			}&priceSource=${priceSource}&type=${type === 'BuyList' ? 'BUY' : 'SELL'}`
+			}&priceSource=${priceSource}&type=${type === 'BuyList' ? 'SELL' : 'BUY'}`
 		)
 			.then((res) => res.json())
 			.then((data) => {

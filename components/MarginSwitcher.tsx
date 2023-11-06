@@ -102,6 +102,7 @@ const MarginSwitcher = ({
 							suffix={` ${currency.name} per ${token.name}`}
 							updateValue={updateMargin}
 							error={error}
+							decimals={3}
 						/>
 					))}
 				{selected === 'percentage' && (

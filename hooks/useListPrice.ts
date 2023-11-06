@@ -22,7 +22,7 @@ const useListPrice = (list: List | undefined) => {
 		if (marginType === 'percentage') {
 			fetch(
 				`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}&priceSource=${priceSource}&type=${
-					type === 'SellList' ? 'SELL' : 'BUY'
+					type === 'SellList' ? 'BUY' : 'SELL'
 				}`,
 				{
 					headers: {
