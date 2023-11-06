@@ -7,6 +7,8 @@ export interface FiatCurrency {
 	icon: string;
 	country_code: CountriesType;
 	symbol: string;
+	allow_binance_rates: boolean;
+	default_price_source: PriceSource;
 }
 
 export interface User {
@@ -34,7 +36,10 @@ export interface Token {
 	icon: string;
 	gasless: boolean;
 	minimum_amount?: number;
+	allow_binance_rates: boolean;
 }
+
+export type PriceSource = 'coingecko' | 'binance_median' | 'binance_min' | 'binance_max';
 
 export interface List {
 	id: number;
@@ -59,6 +64,7 @@ export interface List {
 	accept_only_verified: boolean;
 	escrow_type: 'manual' | 'instant';
 	contract: `0x${string}` | undefined;
+	price_source: PriceSource;
 }
 
 export interface AccountField {

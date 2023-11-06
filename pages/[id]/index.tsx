@@ -1,4 +1,4 @@
-import { HeaderMetrics, ListsTable, Loading } from 'components';
+import { HeaderMetrics, Label, ListsTable, Loading } from 'components';
 import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
@@ -45,6 +45,8 @@ const Profile = ({ id }: { id: number }) => {
 
 	const isLoggedUser = address === user.address;
 	const hasEmail = !!user.email;
+	const buyLists = lists.filter((l) => l.type === 'BuyList');
+	const sellLists = lists.filter((l) => l.type === 'SellList');
 
 	return (
 		<>
@@ -60,7 +62,24 @@ const Profile = ({ id }: { id: number }) => {
 			{lists && lists.length > 0 && (
 				<div className="flex px-6">
 					<div className="w-full md:w-5/6 m-auto">
-						<ListsTable lists={lists} hideLowAmounts={!isLoggedUser} />
+						{sellLists.length > 0 && (
+							<div className="mb-4">
+								<Label title="Buy Ads" />
+								<ListsTable
+									lists={lists.filter((l) => l.type === 'SellList')}
+									hideLowAmounts={!isLoggedUser}
+								/>
+							</div>
+						)}
+						{buyLists.length > 0 && (
+							<div>
+								<Label title="Sell Ads" />
+								<ListsTable
+									lists={lists.filter((l) => l.type === 'BuyList')}
+									hideLowAmounts={!isLoggedUser}
+								/>
+							</div>
+						)}
 					</div>
 				</div>
 			)}

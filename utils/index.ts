@@ -25,7 +25,7 @@ export const listToMessage = (list: UIList): string => {
 	const price =
 		marginType === 'fixed'
 			? `${currency?.name} ${margin.toFixed(2)} per ${token?.name}`
-			: `Spot price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`;
+			: `Market price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`;
 
 	return JSON.stringify(
 		snakecaseKeys(

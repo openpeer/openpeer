@@ -6,7 +6,7 @@ import Image from 'next/image';
 import React, { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronDownIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import SearchBar from './SearchBar';
 import { SelectProps } from './Select.types';

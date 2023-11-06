@@ -104,8 +104,8 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>Your Price</div>
 						<div className="font-bold">
 							{marginType === 'fixed'
-								? `${currencySymbol} ${margin.toFixed(2)} per ${token?.name}`
-								: `Spot price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`}
+								? `${currencySymbol} ${margin.toFixed(3)} per ${token?.name}`
+								: `Market price ${margin > 0 ? '+' : '-'} ${Math.abs(margin).toFixed(2)}%`}
 						</div>
 					</li>
 				)}

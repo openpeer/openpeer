@@ -8,7 +8,9 @@ const useListPrice = (list: List | undefined) => {
 		fiat_currency: currency = {} as FiatCurrency,
 		id,
 		margin,
-		margin_type: marginType
+		margin_type: marginType,
+		price_source: priceSource,
+		type = 'SellList'
 	} = list || {};
 	const [price, setPrice] = useState<number | undefined>(marginType === 'fixed' ? margin : undefined);
 	const { coingecko_id: uuid, symbol } = token;
@@ -18,11 +20,16 @@ const useListPrice = (list: List | undefined) => {
 		if (!list) return;
 
 		if (marginType === 'percentage') {
-			fetch(`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}`, {
-				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
+			fetch(
+				`/api/prices?token=${uuid}&fiat=${code.toLowerCase()}&tokenSymbol=${symbol}&priceSource=${priceSource}&type=${
+					type === 'SellList' ? 'BUY' : 'SELL'
+				}`,
+				{
+					headers: {
+						Authorization: `Bearer ${getAuthToken()}`
+					}
 				}
-			})
+			)
 				.then((res) => res.json())
 				.then((data) => {
 					const apiPrice: number = data[uuid!][code.toLowerCase()];
@@ -32,7 +39,7 @@ const useListPrice = (list: List | undefined) => {
 		} else {
 			setPrice(margin);
 		}
-	}, [list, code, margin, marginType, uuid]);
+	}, [list, code, margin, marginType, uuid, priceSource, type]);
 
 	useEffect(() => {
 		updatePrice();
