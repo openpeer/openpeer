@@ -130,6 +130,22 @@ const Payment = ({ order }: BuyStepProps) => {
 								: `${Number(tokenAmount)?.toFixed(2)} ${token.symbol}`}
 						</span>
 					</div>
+					{status === 'created' && (
+						<div className="flex flex-row items-center mb-1">
+							<span className="text-sm mr-2">Payment Method</span>
+							{bank.icon && (
+								<Image
+									src={bank.icon}
+									alt={bank.name}
+									className="h-6 w-6 flex-shrink-0 rounded-full mr-1"
+									width={24}
+									height={24}
+									unoptimized
+								/>
+							)}
+							<span className="text-base font-medium">{paymentMethod.bank.name}</span>
+						</div>
+					)}
 				</div>
 
 				{status === 'created' && !instantEscrow && <PreShowDetails timeLeft={timeLeft} />}

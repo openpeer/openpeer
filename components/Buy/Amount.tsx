@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
@@ -7,15 +8,17 @@ import Token from 'components/Token/Token';
 import { useFormErrors, useAccount, useEscrowFee } from 'hooks';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
-import { List, User } from 'models/types';
+import { Bank, List, Order, User } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { truncate } from 'utils';
 
+import snakecaseKeys from 'snakecase-keys';
 import { useContractRead } from 'wagmi';
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { Abi, formatUnits, parseUnits } from 'viem';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
+import BankSelect from 'components/Select/BankSelect';
 import { BuyStepProps, UIOrder } from './Buy.types';
 
 interface BuyAmountStepProps extends BuyStepProps {
@@ -40,9 +43,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || undefined);
 	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || undefined);
 	const [user, setUser] = useState<User | null>();
+	const [bank, setBank] = useState<Bank>();
 
 	const { errors, clearErrors, validate } = useFormErrors();
 
+	const banks = list.payment_methods.map((pm) => ({ ...pm.bank, id: pm.id }));
 	const instantEscrow = list?.escrow_type === 'instant';
 
 	const { data: sellerContract } = useContractRead({
@@ -102,10 +107,41 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			}
 		}
 
+		if (list.type === 'SellList' && !bank?.id) {
+			error.bankId = 'Should be present';
+		}
+
 		return error;
 	};
 
-	const onProceed = () => {
+	const createOrder = async (newOrder: Order) => {
+		const result = await fetch('/api/orders/', {
+			method: 'POST',
+			body: JSON.stringify(
+				snakecaseKeys(
+					{
+						order: {
+							listId: newOrder.list.id,
+							fiatAmount: newOrder.fiat_amount,
+							tokenAmount: newOrder.token_amount,
+							price: newOrder.price,
+							paymentMethod: { id: bank?.id }
+						}
+					},
+					{ deep: true }
+				)
+			),
+			headers: {
+				Authorization: `Bearer ${getAuthToken()}`
+			}
+		});
+		const { uuid } = await result.json();
+		if (uuid) {
+			router.push(`/orders/${uuid}`);
+		}
+	};
+
+	const onProceed = async () => {
 		if (acceptOnlyVerified && user && !user.verified) {
 			router.push(`/${user.address}`);
 			return;
@@ -119,7 +155,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				...{ fiat_amount: fiatAmount!, token_amount: tokenAmount!, price }
 			};
 
-			updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
+			if (list.type === 'SellList') {
+				await createOrder(newOrder);
+			} else {
+				updateOrder({ ...newOrder, ...{ step: newOrder.step + 1 } });
+			}
 		}
 	};
 
@@ -137,8 +177,18 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	}
 
 	useEffect(() => {
-		updateOrder({ ...order, ...{ fiatAmount, tokenAmount } });
+		updateOrder({
+			...order,
+			...{ fiatAmount, tokenAmount }
+		});
 	}, [tokenAmount, fiatAmount]);
+
+	useEffect(() => {
+		updateOrder({
+			...order,
+			...{ paymentMethod: bank ? { id: bank.id, bank, values: {} } : undefined }
+		});
+	}, [bank]);
 
 	useEffect(() => {
 		if (!address) return;
@@ -157,6 +207,12 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 				}
 			});
 	}, [address]);
+
+	useEffect(() => {
+		if (list.type === 'SellList' && banks.length > 0 && !bank) {
+			setBank(banks[0]);
+		}
+	}, [banks]);
 
 	if (!user?.email) {
 		return <AccountInfo setUser={setUser} />;
@@ -197,6 +253,16 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 							type="decimal"
 							error={errors.fiatAmount}
 						/>
+
+						{!buyCrypto && (
+							<BankSelect
+								currencyId={currency.id}
+								onSelect={(b) => setBank(b as Bank)}
+								selected={bank}
+								options={banks}
+								error={errors.bankId}
+							/>
+						)}
 					</>
 				)}
 			</div>

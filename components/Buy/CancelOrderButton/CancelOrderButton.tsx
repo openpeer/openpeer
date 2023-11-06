@@ -15,7 +15,7 @@ interface CancelOrderButtonParams {
 }
 
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
-	const { seller, buyer, uuid } = order;
+	const { seller, buyer, uuid, status } = order;
 
 	const { address } = useAccount();
 	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
@@ -42,7 +42,9 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 			});
 			const savedOrder = await result.json();
 			if (savedOrder.uuid) {
-				window.location.reload();
+				if (status !== 'cancelled') {
+					window.location.reload();
+				}
 			} else {
 				toast.error('Error cancelling the order', {
 					theme: 'dark',
