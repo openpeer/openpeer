@@ -25,7 +25,7 @@ const useEscrowWithGas = ({
 		args: nativeToken
 			? [orderID, buyer, amount, partner, sellerWaitingTime, instantEscrow]
 			: [orderID, buyer, address, amount, partner, sellerWaitingTime, instantEscrow],
-		gas: token.chain_id === arbitrum.id ? BigInt('1000000') : instantEscrow ? BigInt('200000') : BigInt('400000'),
+		gas: token.chain_id === arbitrum.id ? undefined : instantEscrow ? BigInt('200000') : BigInt('400000'),
 		value: nativeToken && !instantEscrow ? amount + fee : undefined
 	});
 
