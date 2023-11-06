@@ -71,7 +71,6 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 				(t) => t.address === item.address && t.args[0] === item.args[0] && t.chainId === item.chainId
 			)
 	);
-
 	const { data, isLoading } = useContractReads({ contracts: signatures });
 
 	return (

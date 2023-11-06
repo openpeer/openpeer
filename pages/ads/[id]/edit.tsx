@@ -43,7 +43,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					chain_id: chainId,
 					accept_only_verified: acceptOnlyVerified,
 					escrow_type: escrowType,
-					banks
+					banks,
+					price_source: priceSource
 				} = data;
 				setList(data);
 				const currency = {
@@ -68,7 +69,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					chainId,
 					acceptOnlyVerified,
 					escrowType,
-					banks
+					banks,
+					priceSource
 				};
 				setUiList(ui);
 			});

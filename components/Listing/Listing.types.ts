@@ -1,5 +1,5 @@
 import { Option } from 'components/Select/Select.types';
-import { Bank, List, PaymentMethod, User } from 'models/types';
+import { Bank, List, PaymentMethod, PriceSource, User } from 'models/types';
 
 export interface UIPaymentMethod {
 	id: number | undefined;
@@ -29,6 +29,7 @@ export interface UIList {
 	acceptOnlyVerified: boolean;
 	escrowType: List['escrow_type'];
 	banks: Bank[];
+	priceSource: PriceSource | undefined;
 }
 
 export interface ListStepProps {

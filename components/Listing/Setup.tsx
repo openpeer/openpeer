@@ -2,7 +2,7 @@ import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
 import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
-import { Token } from 'models/types';
+import { FiatCurrency, Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { Chain, useNetwork } from 'wagmi';
 
@@ -67,7 +67,8 @@ const Setup = ({ list, updateList }: ListStepProps) => {
 				token: lastToken,
 				tokenId: lastToken?.id,
 				margin: list.marginType === 'fixed' ? undefined : list.margin,
-				chainId: chain?.id || list.chainId
+				chainId: chain?.id || list.chainId,
+				priceSource: (lastCurrency as FiatCurrency)?.default_price_source
 			}
 		});
 	}, [lastToken, lastCurrency, chain]);
@@ -105,11 +106,13 @@ const Setup = ({ list, updateList }: ListStepProps) => {
 				error={errors.currency}
 				label={type === 'BuyList' ? 'Choose Fiat currency to pay with' : undefined}
 			/>
-			<NetworkSelect
-				selected={chain}
-				onSelect={setChain}
-				label={`Select the chain you want to ${type === 'BuyList' ? 'receive' : 'sell'} funds on`}
-			/>
+			<div className="mb-8">
+				<NetworkSelect
+					selected={chain}
+					onSelect={setChain}
+					label={`Select the chain you want to ${type === 'BuyList' ? 'receive' : 'sell'} funds on`}
+				/>
+			</div>
 		</StepLayout>
 	);
 };
