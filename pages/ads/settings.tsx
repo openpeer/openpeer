@@ -56,8 +56,16 @@ const AdsSettings = () => {
 							<div className="flex flex-col">
 								<div className="text-base font-medium text-gray-700 ">Select your available time</div>
 								<div className="w-full flex flex-row space-x-4">
-									<Input label="From:" id="from" containerExtraStyle="w-full my-2 text-gray-600" />
-									<Input label="To:" id="to" containerExtraStyle="w-full my-2 text-gray-600" />
+									<Input
+										label="From:"
+										id="from"
+										containerExtraStyle="w-full my-2 md:my-1.5 text-gray-600"
+									/>
+									<Input
+										label="To:"
+										id="to"
+										containerExtraStyle="w-full my-2 md:my-1.5 text-gray-600"
+									/>
 								</div>
 							</div>
 							<div className="flex flex-col mb-4">
