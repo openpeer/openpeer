@@ -6,7 +6,7 @@ import { TimezoneSelectProps } from './Select.types';
 
 const TimezoneSelect = ({ onSelect, selected }: TimezoneSelectProps) => {
 	const [search, setSearch] = useState('');
-	const { options, parseTimezone } = useTimezoneSelect({ labelStyle: 'original', timezones: allTimezones });
+	const { options } = useTimezoneSelect({ labelStyle: 'original', timezones: allTimezones });
 
 	let results = options;
 	if (search) {
@@ -24,7 +24,7 @@ const TimezoneSelect = ({ onSelect, selected }: TimezoneSelectProps) => {
 			options={results.map((option, index) => ({
 				id: index,
 				name: option.label,
-				value: parseTimezone(option.value)
+				value: option.value
 			}))}
 			selected={selected}
 			onSelect={handleSelect}

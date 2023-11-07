@@ -2,16 +2,18 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import Toggle from 'components/SwitchToggle/Toggle';
-import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { Checkbox, TimezoneSelect } from 'components';
+import { Option } from 'components/Select/Select.types';
+import Select from 'components/Select/Select';
 
 const AdsSettings = () => {
 	const router = useRouter();
 
 	const [isVisible, setIsVisible] = useState(true);
+	const [timezone, setTimezone] = useState<Option>();
 
 	const handleToggleChange = () => {
 		setIsVisible(!isVisible);
@@ -51,20 +53,22 @@ const AdsSettings = () => {
 					{isVisible && (
 						<div className="flex flex-col">
 							<div className="">
-								<TimezoneSelect onSelect={() => console.log('narcis')} selected={undefined} />
+								<TimezoneSelect onSelect={setTimezone} selected={timezone} />
 							</div>
 							<div className="flex flex-col">
 								<div className="text-base font-medium text-gray-700 ">Select your available time</div>
 								<div className="w-full flex flex-row space-x-4">
-									<Input
+									<Select
+										onSelect={() => {}}
+										selected={undefined}
 										label="From:"
-										id="from"
-										containerExtraStyle="w-full my-2 md:my-1.5 text-gray-600"
-									/>
-									<Input
-										label="To:"
-										id="to"
-										containerExtraStyle="w-full my-2 md:my-1.5 text-gray-600"
+										options={Array.from({ length: 24 }, (_, i) => ({
+											id: `${i}:00`,
+											name: `${i}:00`,
+											value: `${i}:00`
+										}))}
+										error="Please select a time"
+										extraStyle="w-full my-2 md:my-1.5 text-gray-600"
 									/>
 								</div>
 							</div>
@@ -72,7 +76,7 @@ const AdsSettings = () => {
 								<Checkbox content="Disable online on weekends" id="" name="" onChange="" key="" />
 							</div>
 							<div className="flex flex-col-reverse md:flex-row items-center md:space-x-6">
-								<Button outlined title="Cancel" />
+								<Button outlined title="Cancel" onClick={() => router.push('/ads')} />
 								<Button title="Save" onClick={() => router.push('/ads')} />
 							</div>
 						</div>

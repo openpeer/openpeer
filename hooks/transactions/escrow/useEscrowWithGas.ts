@@ -25,8 +25,9 @@ const useEscrowWithGas = ({
 		args: nativeToken
 			? [orderID, buyer, amount, partner, sellerWaitingTime, instantEscrow]
 			: [orderID, buyer, address, amount, partner, sellerWaitingTime, instantEscrow],
-		gas: token.chain_id === arbitrum.id ? BigInt('1000000') : instantEscrow ? BigInt('200000') : BigInt('400000'),
-		value: nativeToken && !instantEscrow ? amount + fee : undefined
+		// gas: token.chain_id === arbitrum.id ? BigInt('1500000') : instantEscrow ? BigInt('200000') : BigInt('400000'),
+		value: nativeToken && !instantEscrow ? amount + fee : undefined,
+		account: '0xeDf2cfD0A8da2891eA0f2b187EBa298A366A100d'
 	});
 
 	const { data, write } = useContractWrite(config);
