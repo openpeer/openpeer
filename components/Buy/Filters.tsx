@@ -51,12 +51,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	return (
 		<div className="w-full flex flex-col lg:flex-row items-center lg:space-x-4">
 			<div className="w-full lg:w-auto">
-				<NetworkSelect
-					selected={chain}
-					onSelect={setChain}
-					extraStyle="my-0 mt-4"
-					labelStyle="text-sm truncate"
-				/>
+				<NetworkSelect selected={chain} onSelect={setChain} extraStyle="my-0" labelStyle="text-sm truncate" />
 			</div>
 			<div className="w-full lg:w-auto">
 				<TokenSelect
