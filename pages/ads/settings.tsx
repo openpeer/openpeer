@@ -6,7 +6,7 @@ import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
-import { TimezoneSelect } from 'components';
+import { Checkbox, TimezoneSelect } from 'components';
 
 const AdsSettings = () => {
 	const router = useRouter();
@@ -33,7 +33,7 @@ const AdsSettings = () => {
 						</span>
 					</div>
 				</div>
-				<div className="flex flex-col bg-gray-100 border border-gray-200 rounded-md p-4">
+				<div className="flex flex-col border border-gray-200 rounded-md p-4">
 					<div className="flex flex-row">
 						<div className="flex flex-col">
 							<div className="font-bold mb-2 text-base text-gray-600">Set your available Times</div>
@@ -53,12 +53,15 @@ const AdsSettings = () => {
 							<div className="">
 								<TimezoneSelect onSelect={() => console.log('narcis')} selected={undefined} />
 							</div>
-							<div className="flex flex-col mb-4">
+							<div className="flex flex-col">
 								<div className="text-base font-medium text-gray-700 ">Select your available time</div>
 								<div className="w-full flex flex-row space-x-4">
 									<Input label="From:" id="from" containerExtraStyle="w-full my-2 text-gray-600" />
 									<Input label="To:" id="to" containerExtraStyle="w-full my-2 text-gray-600" />
 								</div>
+							</div>
+							<div className="flex flex-col mb-4">
+								<Checkbox content="Disable online on weekends" id="" name="" onChange="" key="" />
 							</div>
 							<div className="flex flex-col-reverse md:flex-row items-center md:space-x-6">
 								<Button outlined title="Cancel" />
