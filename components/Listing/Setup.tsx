@@ -110,6 +110,7 @@ const Setup = ({ list, updateList }: ListStepProps) => {
 				<NetworkSelect
 					selected={chain}
 					onSelect={setChain}
+					extraStyle="my-0 mt-4"
 					label={`Select the chain you want to ${type === 'BuyList' ? 'receive' : 'sell'} funds on`}
 				/>
 			</div>
