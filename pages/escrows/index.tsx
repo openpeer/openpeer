@@ -259,7 +259,7 @@ const MyEscrows = () => {
 					<div className="p-4">
 						<span>Begin by selecting the chain</span>
 						<div className="w-full lg:w-fit">
-							<NetworkSelect onSelect={setChain} selected={chain} />
+							<NetworkSelect extraStyle="my-0 mt-4" onSelect={setChain} selected={chain} />
 						</div>
 					</div>
 					<div>

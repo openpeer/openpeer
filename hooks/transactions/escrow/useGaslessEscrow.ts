@@ -64,7 +64,7 @@ const useGaslessEscrow = ({
 			const txParams = {
 				data: transactionData,
 				to: contract,
-				from: '0xeDf2cfD0A8da2891eA0f2b187EBa298A366A100d',
+				from: address,
 				signatureType: 'EIP712_SIGN'
 			};
 			// @ts-ignore
