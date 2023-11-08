@@ -47,4 +47,4 @@ export interface TokenSelectProps {
 	allTokens?: boolean;
 }
 
-export type TimezoneSelectProps = Pick<SelectProps, 'selected' | 'onSelect'>;
+export type TimezoneSelectProps = Pick<SelectProps, 'selected' | 'onSelect' | 'error'>;

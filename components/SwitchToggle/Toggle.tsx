@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Switch } from '@headlessui/react';
 
@@ -12,6 +12,10 @@ const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (enabled: b
 		setEnabled(!enabled);
 		onChange(!enabled);
 	};
+
+	useEffect(() => {
+		setEnabled(!!checked);
+	}, [checked]);
 
 	return (
 		<Switch

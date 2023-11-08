@@ -31,22 +31,6 @@ const Ads = () => {
 		return <Loading />;
 	}
 
-	if (lists.length === 0) {
-		return (
-			<Loading
-				spinner={false}
-				message={
-					<Link className="flex flex-col items-center space-y-2" href="/sell">
-						<div>You do not have any ads yet</div>
-						<div>
-							<Button title="Create an ad" />
-						</div>
-					</Link>
-				}
-			/>
-		);
-	}
-
 	const settingsPath = () => {
 		router.push('/ads/settings');
 	};
@@ -74,17 +58,33 @@ const Ads = () => {
 						onClick={createAddPath}
 					/>
 				</div>
-				{sellLists.length > 0 && (
-					<div className="mb-4">
-						<Label title="Buy Ads" />
-						<ListsTable lists={lists.filter((l) => l.type === 'SellList')} />
-					</div>
-				)}
-				{buyLists.length > 0 && (
-					<div>
-						<Label title="Sell Ads" />
-						<ListsTable lists={lists.filter((l) => l.type === 'BuyList')} />
-					</div>
+				{lists.length > 0 ? (
+					<>
+						{sellLists.length > 0 && (
+							<div className="mb-4">
+								<Label title="Buy Ads" />
+								<ListsTable lists={lists.filter((l) => l.type === 'SellList')} />
+							</div>
+						)}
+						{buyLists.length > 0 && (
+							<div>
+								<Label title="Sell Ads" />
+								<ListsTable lists={lists.filter((l) => l.type === 'BuyList')} />
+							</div>
+						)}
+					</>
+				) : (
+					<Loading
+						spinner={false}
+						message={
+							<Link className="flex flex-col items-center space-y-2" href="/sell">
+								<div>You do not have any ads yet</div>
+								<div>
+									<Button title="Create an Ad" />
+								</div>
+							</Link>
+						}
+					/>
 				)}
 			</div>
 		</div>

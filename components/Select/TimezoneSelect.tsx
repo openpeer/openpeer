@@ -4,7 +4,7 @@ import { useTimezoneSelect, allTimezones } from 'react-timezone-select';
 import Select from './Select';
 import { TimezoneSelectProps } from './Select.types';
 
-const TimezoneSelect = ({ onSelect, selected }: TimezoneSelectProps) => {
+const TimezoneSelect = ({ onSelect, selected, error }: TimezoneSelectProps) => {
 	const [search, setSearch] = useState('');
 	const { options } = useTimezoneSelect({ labelStyle: 'original', timezones: allTimezones });
 
@@ -29,6 +29,7 @@ const TimezoneSelect = ({ onSelect, selected }: TimezoneSelectProps) => {
 			selected={selected}
 			onSelect={handleSelect}
 			onSearch={setSearch}
+			error={error}
 		/>
 	);
 };

@@ -23,6 +23,11 @@ export interface User {
 	created_at: string;
 	verified: boolean;
 	contracts: Contract[];
+	timezone: string | null;
+	available_from: number | null;
+	available_to: number | null;
+	weekend_offline: boolean;
+	online: boolean | null;
 }
 
 export interface Token {
