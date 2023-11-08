@@ -182,6 +182,15 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 													<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
 														{name || smallWalletAddress(sellerAddress)}
 													</div>
+													{seller.online !== null && (
+														<div className="pl-1 md:pl-2 text-sm">
+															{seller.online ? (
+																<li className="text-green-600 text-xs">Online</li>
+															) : (
+																<li className="text-red-600 text-xs">Not online now</li>
+															)}
+														</div>
+													)}
 												</div>
 											</Link>
 											<div className="mt-2 flex flex-col text-gray-500 lg:hidden">
