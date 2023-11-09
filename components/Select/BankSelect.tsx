@@ -11,18 +11,24 @@ const BankSelect = ({
 	onSelect,
 	selected,
 	error,
-	labelStyle = ''
+	labelStyle = '',
+	options
 }: {
 	currencyId: number;
 	onSelect: SelectProps['onSelect'];
 	selected: SelectProps['selected'];
 	error?: SelectProps['error'];
 	labelStyle?: SelectProps['labelStyle'];
+	options?: Bank[] | undefined;
 }) => {
-	const [banks, setBanks] = useState<Bank[]>();
+	const [banks, setBanks] = useState<Bank[] | undefined>(options);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
+		if (options) {
+			return;
+		}
+
 		setLoading(true);
 		fetch(`/api/banks?currency_id=${currencyId}`, {
 			headers: {

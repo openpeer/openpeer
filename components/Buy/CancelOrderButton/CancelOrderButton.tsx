@@ -1,10 +1,9 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { Button, Modal } from 'components';
-import { useCancelReasons, useConfirmationSignMessage } from 'hooks';
+import { useCancelReasons, useConfirmationSignMessage, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount } from 'wagmi';
 
 import BlockchainCancelButton from './BlockchainCancelButton';
 import CancelReasons from './CancelReasons';
@@ -16,7 +15,7 @@ interface CancelOrderButtonParams {
 }
 
 const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: CancelOrderButtonParams) => {
-	const { seller, buyer, uuid } = order;
+	const { seller, buyer, uuid, status } = order;
 
 	const { address } = useAccount();
 	const { cancellation, otherReason, setOtherReason, toggleCancellation } = useCancelReasons();
@@ -42,7 +41,11 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 				})
 			});
 			const savedOrder = await result.json();
-			if (!savedOrder.uuid) {
+			if (savedOrder.uuid) {
+				if (status !== 'cancelled') {
+					window.location.reload();
+				}
+			} else {
 				toast.error('Error cancelling the order', {
 					theme: 'dark',
 					position: 'top-right',

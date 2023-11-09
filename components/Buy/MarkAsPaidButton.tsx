@@ -1,11 +1,10 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useAccount } from 'hooks';
 import { useMarkAsPaid } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React from 'react';
 import { parseUnits } from 'viem';
-import { useAccount } from 'wagmi';
 
 interface MarkAsPaidButtonParams {
 	order: Order;

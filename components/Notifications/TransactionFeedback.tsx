@@ -3,6 +3,7 @@ import Avatar from 'components/Avatar';
 import { User } from 'models/types';
 import React, { Fragment, useEffect } from 'react';
 import { smallWalletAddress } from 'utils';
+
 import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 
 import { Dialog, Transition } from '@headlessui/react';

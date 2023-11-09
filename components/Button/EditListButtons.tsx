@@ -3,11 +3,10 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { PencilSquareIcon, TrashIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline';
-import { useConfirmationSignMessage } from 'hooks';
+import { useConfirmationSignMessage, useAccount } from 'hooks';
 import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { List } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
-import { useAccount } from 'wagmi';
 
 const EditListButtons = ({ list }: { list: List }) => {
 	const { id, status } = list;

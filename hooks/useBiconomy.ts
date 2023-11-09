@@ -2,7 +2,7 @@ import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { Biconomy } from '@biconomy/mexa';
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
 
 interface UseBiconomyProps {
 	contract: `0x${string}`;
@@ -10,12 +10,13 @@ interface UseBiconomyProps {
 
 const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const [biconomy, setBiconomy] = useState<Biconomy | null>();
-	const { address } = useAccount();
+	const account = useAccount();
 	const { chain, chains } = useNetwork();
 	const chainId = (chain || chains[0])?.id;
 	const apiKey = networkApiKeys[chainId || 0];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
 	const { primaryWallet } = useDynamicContext();
+	const address = account.address || (primaryWallet?.address as `0x${string}`);
 
 	const canSubmitGaslessTransaction = async () => {
 		if (apiKey && address) {
@@ -28,7 +29,24 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 						}
 					})
 				).json();
-				return setGaslessEnabled(!!allowed);
+
+				let settingIsEnabled = true;
+				try {
+					const response = await fetch('/api/settings', {
+						headers: {
+							Authorization: `Bearer ${getAuthToken()}`
+						}
+					});
+
+					const settings: { [key: string]: string } = await response.json();
+					if (settings[`gasless_enabled_${chainId}`] === 'false' || settings.gasless_enabled === 'false') {
+						settingIsEnabled = false;
+					}
+				} catch (_) {
+					settingIsEnabled = false;
+				}
+
+				return setGaslessEnabled(!!allowed && settingIsEnabled);
 			} catch {
 				return setGaslessEnabled(false);
 			}
@@ -46,6 +64,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 					setBiconomy(null);
 					return;
 				}
+
 				const client = new Biconomy(provider, {
 					apiKey,
 					debug: true,
