@@ -165,8 +165,29 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 												<Link href={`/${user.address}`}>
 													<div className="flex flex-row items-center cursor-pointer">
 														<Avatar user={user} className="w-5 md:w-10 aspect-square" />
-														<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
-															{user.name || smallWalletAddress(user.address)}
+														<div className="flex flex-col">
+															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
+																{user.name || smallWalletAddress(user.address)}
+															</div>
+															{user.online !== null && (
+																<div className="pl-1 md:pl-2 text-sm">
+																	{user.online ? (
+																		<div className="flex flex-row items-center space-x-1">
+																			<div className="w-2 h-2 bg-green-500 rounded-full" />
+																			<span className="text-green-500 text-xs">
+																				Online
+																			</span>
+																		</div>
+																	) : (
+																		<div className="flex flex-row items-center space-x-1">
+																			<div className="w-2 h-2 bg-orange-500 rounded-full" />
+																			<span className="text-orange-500 text-xs">
+																				Not online
+																			</span>
+																		</div>
+																	)}
+																</div>
+															)}
 														</div>
 														{user.verified && (
 															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">

@@ -109,17 +109,34 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 	return (
 		<>
 			<div className="w-full justify-center flex flex-col md:flex-row mb-8 md:mt-8 px-6 pt-6 md:p-0">
-				<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-8 mr-6 mb-6 md:mb-0">
+				<div className="w-full md:w-1/4 flex justify-center items-center text-center rounded-lg bg-white border border-1 p-4 mr-6 mb-6 md:mb-0">
 					<div className="flex flex-col items-center">
 						<span className="m-auto flex items-center justify-center bg-gray-50 w-24 h-24 rounded-full">
 							<Avatar user={user} className="inline-block h-20 w-20" />
 						</span>
-						<div className="flex items-center pl-4 text-lg mb-2 mt-4">
-							<span className="mr-2">{name || smallWalletAddress(address)}</span>
-							{verified && (
-								<span>
-									<VerifiedIcon />
-								</span>
+						<div className="flex flex-col mb-2">
+							<div className="flex items-center pl-4 text-lg my-2">
+								<span className="mr-2">{name || smallWalletAddress(address)}</span>
+								{verified && (
+									<span>
+										<VerifiedIcon />
+									</span>
+								)}
+							</div>
+							{user.online !== null && (
+								<div className="flex justify-center text-sm">
+									{user.online ? (
+										<div className="flex flex-row items-center space-x-1">
+											<div className="w-2 h-2 bg-green-500 rounded-full" />
+											<span className="text-green-500 text-xs">Online</span>
+										</div>
+									) : (
+										<div className="flex flex-row items-center space-x-1">
+											<div className="w-2 h-2 bg-orange-500 rounded-full" />
+											<span className="text-orange-500 text-xs">Not online now</span>
+										</div>
+									)}
+								</div>
 							)}
 						</div>
 						{!!twitter && (

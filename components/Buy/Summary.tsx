@@ -55,6 +55,21 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 						<div className="flex flex-row items-center">
 							<Avatar user={user} className="w-10 aspect-square" />
 							<span className="ml-2 cursor-pointer">{user.name || smallWalletAddress(user.address)}</span>
+							{user.online !== null && (
+								<div className="pl-1 md:pl-2 text-sm">
+									{user.online ? (
+										<div className="flex flex-row items-center space-x-1">
+											<div className="w-2 h-2 bg-green-500 rounded-full" />
+											<span className="text-green-500 text-xs">Online</span>
+										</div>
+									) : (
+										<div className="flex flex-row items-center space-x-1">
+											<div className="w-2 h-2 bg-orange-500 rounded-full" />
+											<span className="text-orange-500 text-xs">Not online</span>
+										</div>
+									)}
+								</div>
+							)}
 						</div>
 					</Link>
 					<div className="flex flex-row">

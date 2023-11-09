@@ -67,9 +67,7 @@ const Summary = ({ list }: SummaryProps) => {
 						<div>Fiat</div>
 						<div>
 							<div className="flex flex-row">
-								<span>
-									<Flag name={countries[currency.icon]} size={24} />
-								</span>
+								<span>{!!currency.icon && <Flag name={countries[currency.icon]} size={24} />}</span>
 								<span className="font-bold ml-2"> {currency.name}</span>
 							</div>
 						</div>
