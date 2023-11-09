@@ -85,7 +85,7 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 											/>
 										</div>
 										{/* Deposit Funds */}
-										<div className="mt-2 mb-4 hidden">
+										<div className="mt-2 mb-4 ">
 											<div className="text-2xl font-bold mb-4">Deposit Funds </div>
 											<div className="border border-gray-200 rounded-lg">
 												<div className="border-b border-gray-200 py-2 px-4">
@@ -114,7 +114,7 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 											</div>
 										</div>
 										{/* Send Funds */}
-										<div className="mt-2 mb-4 ">
+										<div className="mt-2 mb-4 hidden">
 											<div className="text-2xl font-bold mb-4">Send Funds</div>
 											<div className="flex flex-row items-center justify-between border-b border-gray-200 py-2">
 												<span className="text-base font-bold text-gray-700">Network</span>
@@ -137,7 +137,7 @@ const SendFundsModal = ({ open, onClose, token, onSend, balance = BigInt(0) }: S
 
 											<Input
 												id="address"
-												label="Address"
+												label="Receiving Address"
 												placeholder="0x..."
 												value={address}
 												onChange={setAddress}
