@@ -14,6 +14,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [username, setUsername] = useState<string>();
 	const [email, setEmail] = useState<string>();
 	const [twitter, setTwitter] = useState<string>();
+	const [timezone, setTimezone] = useState<string>();
+	const [availableFrom, setAvailableFrom] = useState<number>();
+	const [availableTo, setAvailableTo] = useState<number>();
+	const [weekendOffline, setWeekendOffline] = useState<boolean>();
 	const [errors, setErrors] = useState<Errors>({});
 
 	const { address } = useAccount();
@@ -41,6 +45,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			setUsername(user.name || '');
 			setEmail(user.email || '');
 			setTwitter(user.twitter || '');
+			setTimezone(user.timezone || undefined);
+			setAvailableFrom(user.available_from || undefined);
+			setAvailableTo(user.available_to || undefined);
+			setWeekendOffline(user.weekend_offline);
 		}
 	}, [user]);
 
@@ -92,7 +100,16 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		email,
 		setEmail,
 		twitter,
-		setTwitter
+		setTwitter,
+		timezone,
+		setTimezone,
+		availableFrom,
+		setAvailableFrom,
+		availableTo,
+		setAvailableTo,
+		weekendOffline,
+		setWeekendOffline,
+		updateUserProfile
 	};
 };
 
