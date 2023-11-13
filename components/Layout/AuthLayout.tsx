@@ -115,7 +115,9 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 													className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
 													aria-hidden="true"
 												/>
-												{item.name}
+												<span className="nav-item h-6 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity lg:duration-150 lg:visibility-hidden lg:group-hover:visibility-visible">
+													{item.name}
+												</span>
 											</div>
 										}
 										link
@@ -135,7 +137,9 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 												className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
 												aria-hidden="true"
 											/>
-											{item.name}
+											<span className="nav-item h-6 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity lg:duration-150 lg:visibility-hidden lg:group-hover:visibility-visible">
+												{item.name}
+											</span>
 										</div>
 									}
 									onClick={authenticate}
@@ -267,7 +271,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 
 				{/* Static sidebar for desktop */}
 				<div className="flex flex-row">
-					<div className="hidden lg:block w-14 hover:w-64 transition-all duration-150 group">
+					<div className="hidden lg:block w-14 hover:w-64 transition-all duration-150 group bg-black">
 						{/* Sidebar component, swap this element with another sidebar if you like */}
 						<div className="flex min-h-0 flex-1 flex-col bg-black">
 							<div className="flex h-16 flex-shrink-0 items-center px-4">
