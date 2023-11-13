@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import OpenpeerAirdrop from 'public/airdrop/openpeerAirdrop.svg';
 import logo from 'public/logo.svg';
+import logoSmall from 'public/smallLightLogo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { useAccount } from 'hooks';
@@ -87,7 +88,9 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 								className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
 								aria-hidden="true"
 							/>
-							{item.name}
+							<span className="nav-item h-6 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity lg:duration-150 lg:visibility-hidden lg:group-hover:visibility-visible">
+								{item.name}
+							</span>
 						</Link>
 					);
 				}
@@ -263,54 +266,61 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 				</Transition.Root>
 
 				{/* Static sidebar for desktop */}
-				<div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-					{/* Sidebar component, swap this element with another sidebar if you like */}
-					<div className="flex min-h-0 flex-1 flex-col bg-black">
-						<div className="flex h-16 flex-shrink-0 items-center px-4">
-							<Link href="/">
-								<Image src={logo} alt="openpeer logo" className="w-48" />
-							</Link>
-						</div>
-						<div className="flex flex-1 flex-col overflow-y-auto">
-							<nav className="flex-1 space-y-1 py-4">
-								<NavItems selected={title} onClick={() => setSidebarOpen(false)} />
-							</nav>
-						</div>
-					</div>
-				</div>
-				<div className="flex flex-col lg:pl-64">
-					<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
-						<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
-						<div className="w-full flex items-center justify-between px-4">
-							<h3 className="text-xl font-bold sm:px-6 md:px-4 hidden sm:block">{title}</h3>
-							<div className="ml-4 flex items-center md:ml-6">
-								{/* Notifications */}
-								<Notifications />
-
-								{/* Profile dropdown */}
-								<Menu as="div" className="relative">
-									<div className="flex flex-row items-center">
-										{address && (
-											<Link
-												className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
-												href={`/${address}`}
-											>
-												<Avatar
-													user={user || ({ address } as User)}
-													className="w-10 aspect-square"
-												/>
-											</Link>
-										)}
-										<DynamicWidget />
-									</div>
-								</Menu>
+				<div className="flex flex-row">
+					<div className="hidden lg:block w-14 hover:w-64 transition-all duration-150 group">
+						{/* Sidebar component, swap this element with another sidebar if you like */}
+						<div className="flex min-h-0 flex-1 flex-col bg-black">
+							<div className="flex h-16 flex-shrink-0 items-center px-4">
+								<Link href="/">
+									<span className="lg:group-hover:hidden">
+										<Image src={logoSmall} alt="openpeer logo" className="w-64" />
+									</span>
+									<span className="hidden lg:group-hover:block transition-all duration-150 ease-in">
+										<Image src={logo} alt="openpeer logo" className="w-48" />
+									</span>
+								</Link>
+							</div>
+							<div className="flex flex-1 flex-col overflow-y-auto">
+								<nav className="flex-1 space-y-1 py-4">
+									<NavItems selected={title} onClick={() => setSidebarOpen(false)} />
+								</nav>
 							</div>
 						</div>
 					</div>
+					<div className="w-full">
+						<div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
+							<CollapseButton open={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
+							<div className="w-full flex items-center justify-between px-4">
+								<h3 className="text-xl font-bold sm:px-6 md:px-4 hidden sm:block">{title}</h3>
+								<div className="ml-4 flex items-center md:ml-6">
+									{/* Notifications */}
+									<Notifications />
 
-					<main className="flex-1 min-h-screen">
-						{authenticated ? <Component {...pageProps} /> : <Unauthenticated />}
-					</main>
+									{/* Profile dropdown */}
+									<Menu as="div" className="relative">
+										<div className="flex flex-row items-center">
+											{address && (
+												<Link
+													className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
+													href={`/${address}`}
+												>
+													<Avatar
+														user={user || ({ address } as User)}
+														className="w-10 aspect-square"
+													/>
+												</Link>
+											)}
+											<DynamicWidget />
+										</div>
+									</Menu>
+								</div>
+							</div>
+						</div>
+
+						<main className="flex-1 min-h-screen">
+							{authenticated ? <Component {...pageProps} /> : <Unauthenticated />}
+						</main>
+					</div>
 				</div>
 			</div>
 			<ToastContainer />
