@@ -158,12 +158,6 @@ const Summary = ({ list }: SummaryProps) => {
 							</div>
 						</li>
 					)}
-					{/* {!!terms && (
-						<li className="w-full flex flex-row justify-between mb-4">
-							<div>Terms</div>
-							<div className="font-bold">{terms}</div>
-						</li>
-					)} */}
 					{!!acceptOnlyVerified && (
 						<li className="w-full flex flex-row justify-between mb-4">
 							<div>Accept only verified {type === 'SellList' ? 'buyers' : 'sellers'}</div>
@@ -171,22 +165,26 @@ const Summary = ({ list }: SummaryProps) => {
 					)}
 				</ul>
 			</div>
-			<div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
-				<div className="font-bold mb-2">Merchant's Terms</div>
-				<div className={`break-words mb-4 ${isTermsContentExpanded ? 'h-auto' : 'h-24'} overflow-hidden`}>
-					{terms}
+			{!!terms && (
+				<div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
+					<div className="font-bold mb-2">Merchant's Terms</div>
+					<div className={`break-words mb-4 ${isTermsContentExpanded ? 'h-auto' : 'h-24'} overflow-hidden`}>
+						{terms}
+					</div>
+					<div className="flex flex-row items-center cursor-pointer" onClick={toggleTerms}>
+						<span className="text-sm underline pr-1">
+							{isTermsContentExpanded ? 'Show Less' : 'Read More'}
+						</span>
+						<span>
+							{isTermsContentExpanded ? (
+								<ChevronUpIcon className="w-4 h-4 font-bold" />
+							) : (
+								<ChevronDownIcon className="w-4 h-4 font-bold" />
+							)}
+						</span>
+					</div>
 				</div>
-				<div className="flex flex-row items-center cursor-pointer" onClick={toggleTerms}>
-					<span className="text-sm underline pr-1">{isTermsContentExpanded ? 'Show Less' : 'Read More'}</span>
-					<span>
-						{isTermsContentExpanded ? (
-							<ChevronUpIcon className="w-4 h-4 font-bold" />
-						) : (
-							<ChevronDownIcon className="w-4 h-4 font-bold" />
-						)}
-					</span>
-				</div>
-			</div>
+			)}
 		</div>
 	);
 };
