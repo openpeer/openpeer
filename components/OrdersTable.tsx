@@ -91,7 +91,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 
 	return (
 		<div>
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+			<div className="mx-auto px-4 sm:px-6 md:px-8">
 				<table className="w-full md:rounded-lg overflow-hidden">
 					<thead className="bg-gray-100">
 						<tr className="w-full relative">

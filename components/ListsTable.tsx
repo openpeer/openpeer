@@ -32,14 +32,15 @@ interface BuyButtonProps {
 	tokenAmount: number | undefined;
 	sellList: boolean;
 	escrowType: List['escrow_type'];
+	token: string;
 }
 
-const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType }: BuyButtonProps) => (
+const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType, token }: BuyButtonProps) => (
 	<Link
 		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
 		as={`/buy/${encodeURIComponent(id)}`}
 	>
-		<Button title={sellList ? (escrowType === 'instant' ? 'Buy ⚡' : 'Buy') : 'Sell'} />
+		<Button title={sellList ? (escrowType === 'instant' ? `Buy ${token} ⚡` : `Buy ${token}`) : `Sell ${token}`} />
 	</Link>
 );
 
@@ -293,6 +294,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 												tokenAmount={tokenAmount}
 												sellList={list.type === 'SellList'}
 												escrowType={list.escrow_type}
+												token={token.symbol}
 											/>
 										)}
 									</div>
@@ -373,6 +375,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 										tokenAmount={tokenAmount}
 										sellList={list.type === 'SellList'}
 										escrowType={list.escrow_type}
+										token={token.symbol}
 									/>
 								)}
 							</td>
