@@ -13,12 +13,15 @@ import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { parseUnits } from 'viem';
 import { constants } from 'ethers';
 import { listToMessage } from 'utils';
+import dynamic from 'next/dynamic';
 import Label from '../Label/Label';
 import Selector from '../Selector';
-import Textarea from '../Textarea/Textarea';
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 import FundEscrow from './FundEscrow';
+import 'react-quill/dist/quill.snow.css';
+
+const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const Details = ({ list, updateList }: ListStepProps) => {
 	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
@@ -54,8 +57,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		}
 	});
 
-	const onTermsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		updateList({ ...list, ...{ terms: event.target.value } });
+	const onTermsChange = (value: string) => {
+		updateList({ ...list, ...{ terms: value } });
 	};
 
 	const { data: sellerContract } = useContractRead({
@@ -179,13 +182,11 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						onChange={() => updateList({ ...list, ...{ acceptOnlyVerified: !acceptOnlyVerified } })}
 					/>
 				</div>
-				<Textarea
-					label="Order Terms"
-					rows={4}
-					id="terms"
-					placeholder="Write the terms and conditions for your listing here"
+				<Label title="Order Terms" />
+				<QuillEditor
 					value={terms}
 					onChange={onTermsChange}
+					placeholder="Write the terms and conditions for your listing here"
 				/>
 			</div>
 		</StepLayout>

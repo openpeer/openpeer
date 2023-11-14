@@ -76,6 +76,10 @@ const EditTrade = ({ id }: { id: number }) => {
 			});
 	}, [address]);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [uiList?.step]);
+
 	if (address === undefined || list === undefined || uiList === undefined) {
 		return <Loading />;
 	}
