@@ -1,4 +1,5 @@
 import 'tailwindcss/tailwind.css';
+import 'react-toastify/dist/ReactToastify.css';
 import type { AppProps } from 'next/app';
 import { DynamicContextProvider } from '@dynamic-labs/sdk-react';
 
@@ -12,9 +13,10 @@ import ChatProvider from 'providers/ChatProvider';
 
 const AuthLayout = dynamic(() => import('./AuthLayout'), { ssr: false });
 const NoAuthLayout = dynamic(() => import('./NoAuthLayout'), { ssr: false });
+const TronLayout = dynamic(() => import('./tron/TronLayout'), { ssr: false });
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const { simpleLayout } = pageProps;
+	const { simpleLayout, tron } = pageProps;
 	const [messageToSign, setMessageToSign] = useState('');
 	const [signedMessage, setSignedMessage] = useState('');
 
@@ -39,7 +41,10 @@ const App = ({ Component, pageProps }: AppProps) => {
 				<MessageContextProvider messageToSign={messageToSign} signedMessage={signedMessage}>
 					<TransactionFeedbackProvider>
 						<Head />
-						{simpleLayout ? (
+						{tron ? (
+							// @ts-expect-error
+							<TronLayout pageProps={pageProps} Component={Component} />
+						) : simpleLayout ? (
 							// @ts-expect-error
 							<NoAuthLayout pageProps={pageProps} Component={Component} />
 						) : (

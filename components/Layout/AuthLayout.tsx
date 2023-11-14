@@ -1,7 +1,4 @@
 import type { AppProps } from 'next/app';
-
-import 'react-toastify/dist/ReactToastify.css';
-
 import { User } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';

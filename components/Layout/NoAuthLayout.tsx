@@ -1,7 +1,5 @@
 import type { AppProps } from 'next/app';
 
-import 'react-toastify/dist/ReactToastify.css';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import darkLogo from 'public/smallDarkLogo.svg';
