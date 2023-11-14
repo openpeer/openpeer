@@ -4,7 +4,8 @@ import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { MessageContext } from 'contexts/MessageContext';
 import React, { useContext } from 'react';
 import { WalletChatProvider, WalletChatWidget } from 'react-wallet-chat-sso';
-import { useAccount, useNetwork } from 'wagmi';
+import { useNetwork } from 'wagmi';
+import { useAccount } from 'hooks';
 
 interface ChatProviderProps {
 	children: React.ReactNode;

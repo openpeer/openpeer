@@ -4,7 +4,7 @@ import { MinusIcon } from '@heroicons/react/20/solid';
 import { PlusIcon } from '@heroicons/react/24/solid';
 
 interface AccordionProps {
-	title: string;
+	title: string | JSX.Element;
 	content: React.ReactNode;
 	open?: boolean;
 }

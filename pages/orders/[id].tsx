@@ -4,8 +4,9 @@ import { Cancelled, Chat, Completed, Payment, Release, Summary } from 'component
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
 import { GetServerSideProps } from 'next';
+import { useAccount } from 'hooks';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useNetwork } from 'wagmi';
 
 const ERROR_STEP = 0;
 const PAYMENT_METHOD_STEP = 2;

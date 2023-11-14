@@ -28,7 +28,7 @@ const Sell = ({ lists, updateLists, onSeeOptions, onLoading }: SellProps) => {
 	const [creatingAd, setCreatingAd] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	const { fee } = useEscrowFee({ token, tokenAmount });
+	const { fee } = useEscrowFee({ token, tokenAmount, chainId: token?.chain_id });
 
 	const router = useRouter();
 

@@ -2,12 +2,12 @@ import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { OpenPeerEscrow } from 'abis';
 import { Button, Modal } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useCancelReasons, useTransactionFeedback } from 'hooks';
+import { useCancelReasons, useTransactionFeedback, useAccount } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
-import { useAccount, useContractRead } from 'wagmi';
+import { useContractRead } from 'wagmi';
 
 import CancelReasons from './CancelReasons';
 
@@ -27,7 +27,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 	const [cancelConfirmed, setCancelConfirmed] = useState(false);
 
 	const { data: escrowData, isFetching: isFetchingEscrowData } = useContractRead({
-		address: escrow!.address,
+		address: escrow?.address,
 		abi: OpenPeerEscrow,
 		functionName: 'escrows',
 		args: [tradeId]

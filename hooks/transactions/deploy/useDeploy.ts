@@ -1,4 +1,4 @@
-import { DEPLOYER_CONTRACTS } from 'models/networks';
+import { DEPLOYER_CONTRACTS, FULL_GASLESS_CHAINS } from 'models/networks';
 import { useNetwork } from 'wagmi';
 
 import useDeployWithGas from './useDeployWithGas';
@@ -16,11 +16,11 @@ const useDeploy = () => {
 		contract
 	});
 
-	if (isFetching) {
+	if (isFetching || !chain) {
 		return { isLoading: false, isSuccess: false, isFetching };
 	}
 
-	if (gaslessEnabled) {
+	if (gaslessEnabled && FULL_GASLESS_CHAINS.includes(chain.id)) {
 		return { isLoading, isSuccess, data, deploy };
 	}
 

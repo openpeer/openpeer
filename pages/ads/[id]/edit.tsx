@@ -8,7 +8,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -35,14 +35,16 @@ const EditTrade = ({ id }: { id: number }) => {
 					total_available_amount: totalAvailableAmount,
 					limit_min: limitMin,
 					limit_max: limitMax,
-					bank,
-					payment_method: paymentMethod,
+					payment_methods: paymentMethods,
 					margin,
 					deposit_time_limit: depositTimeLimit,
 					payment_time_limit: paymentTimeLimit,
 					terms,
 					chain_id: chainId,
-					accept_only_verified: acceptOnlyVerified
+					accept_only_verified: acceptOnlyVerified,
+					escrow_type: escrowType,
+					banks,
+					price_source: priceSource
 				} = data;
 				setList(data);
 				const currency = {
@@ -59,18 +61,24 @@ const EditTrade = ({ id }: { id: number }) => {
 					totalAvailableAmount: Number(totalAvailableAmount),
 					limitMin: limitMin ? Number(limitMin) : undefined,
 					limitMax: limitMax ? Number(limitMax) : undefined,
-					paymentMethod: paymentMethod || { bank, bankId: bank.id },
-					quickSellSetupDone: true,
+					paymentMethods,
 					terms: terms || '',
 					margin: margin ? Number(margin) : undefined,
 					depositTimeLimit: depositTimeLimit ? Number(depositTimeLimit) : 0,
 					paymentTimeLimit: paymentTimeLimit ? Number(paymentTimeLimit) : 0,
 					chainId,
-					acceptOnlyVerified
+					acceptOnlyVerified,
+					escrowType,
+					banks,
+					priceSource
 				};
 				setUiList(ui);
 			});
 	}, [address]);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [uiList?.step]);
 
 	if (address === undefined || list === undefined || uiList === undefined) {
 		return <Loading />;
@@ -108,7 +116,7 @@ const EditTrade = ({ id }: { id: number }) => {
 							<Summary list={uiList} />
 						</div>
 					)}
-					{step === AMOUNT_STEP && <Amount list={uiList} updateList={setUiList} tokenAmount={undefined} />}
+					{step === AMOUNT_STEP && <Amount list={uiList} updateList={setUiList} />}
 					{step === PAYMENT_METHOD_STEP && <PaymentMethod list={uiList} updateList={setUiList} />}
 					{step === DETAILS_STEP && <Details list={uiList} updateList={setUiList} />}
 				</div>

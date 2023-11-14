@@ -40,7 +40,12 @@ const Quick = () => {
 							</div>
 						</div>
 						<div className="py-4">
-							<ListsTable lists={selectedLists} fiatAmount={buyFiatAmount} tokenAmount={buyTokenAmount} />
+							<ListsTable
+								lists={selectedLists}
+								fiatAmount={buyFiatAmount}
+								tokenAmount={buyTokenAmount}
+								hideLowAmounts
+							/>
 						</div>
 					</div>
 				</div>

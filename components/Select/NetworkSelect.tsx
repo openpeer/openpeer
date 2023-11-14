@@ -2,7 +2,7 @@ import { allChains } from 'models/networks';
 import React from 'react';
 import { Chain } from 'wagmi';
 
-import { arbitrum, optimism } from 'wagmi/chains';
+import { arbitrum, gnosis, optimism } from 'wagmi/chains';
 import Select from './Select';
 import { SelectProps } from './Select.types';
 
@@ -11,13 +11,15 @@ const NetworkSelect = ({
 	selected,
 	error,
 	labelStyle = '',
-	label = 'Chain'
+	label = 'Chain',
+	extraStyle = ''
 }: {
 	onSelect: (option: Chain | undefined) => void;
 	selected: Chain | undefined;
 	error?: SelectProps['error'];
 	labelStyle?: SelectProps['labelStyle'];
 	label?: string;
+	extraStyle?: string;
 }) => {
 	const chains = allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
@@ -25,7 +27,8 @@ const NetworkSelect = ({
 		[optimism.id]: {
 			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
-		}
+		},
+		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' }
 	};
 	const networks = chains.map((chain) => ({
 		id: chain.id,
@@ -42,6 +45,8 @@ const NetworkSelect = ({
 			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
 			labelStyle={labelStyle}
+			// extraStyle="my-0 mt-4"
+			extraStyle={extraStyle}
 			token
 		/>
 	);

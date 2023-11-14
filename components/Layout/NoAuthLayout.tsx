@@ -8,7 +8,6 @@ import darkLogo from 'public/smallDarkLogo.svg';
 import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import { ChartBarSquareIcon, PencilIcon, PlusCircleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
 
@@ -22,12 +21,13 @@ const manrope = Manrope({
 });
 
 const navigation = [
-	{ name: 'Trade P2P', href: '/trade', icon: ChartBarSquareIcon },
-	{ name: 'Post Ad', href: '/sell', icon: PlusCircleIcon },
-	{ name: 'My Ads', href: '/ads', icon: PencilIcon },
-	{ name: 'My Trades', href: '/orders', icon: ShoppingBagIcon }
+	{ name: 'Trade P2P', href: '/trade' },
+	{ name: 'Post Ad', href: '/sell' },
+	{ name: 'My Ads', href: '/ads' },
+	{ name: 'My Trades', href: '/orders' }
 ];
 const navigationItem = [
+	{ name: 'Escrows', href: '/escrows' },
 	{ name: 'Docs', href: 'https://docs.openpeer.xyz/' },
 	{ name: 'Disclaimer', href: 'https://openpeer.xyz/disclaimer' },
 	{ name: 'Terms', href: 'https://openpeer.xyz/terms' },
@@ -60,13 +60,7 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 							<div className="flex">
 								<div className="flex flex-shrink-0 items-center">
 									<Link href="/">
-										<Image
-											src={darkLogo}
-											alt="openpeer logo"
-											className="h-10 w-auto"
-											width={104}
-											height={23}
-										/>
+										<Image src={darkLogo} alt="openpeer logo" className="h-7 w-auto" />
 									</Link>
 								</div>
 								<div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8 items-center">

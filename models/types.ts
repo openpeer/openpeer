@@ -7,6 +7,8 @@ export interface FiatCurrency {
 	icon: string;
 	country_code: CountriesType;
 	symbol: string;
+	allow_binance_rates: boolean;
+	default_price_source: PriceSource;
 }
 
 export interface User {
@@ -20,6 +22,12 @@ export interface User {
 	completion_rate: number | null;
 	created_at: string;
 	verified: boolean;
+	contracts: Contract[];
+	timezone: string | null;
+	available_from: number | null;
+	available_to: number | null;
+	weekend_offline: boolean;
+	online: boolean | null;
 }
 
 export interface Token {
@@ -33,7 +41,10 @@ export interface Token {
 	icon: string;
 	gasless: boolean;
 	minimum_amount?: number;
+	allow_binance_rates: boolean;
 }
+
+export type PriceSource = 'coingecko' | 'binance_median' | 'binance_min' | 'binance_max';
 
 export interface List {
 	id: number;
@@ -48,15 +59,17 @@ export interface List {
 	status: 'created' | 'active' | 'closed';
 	terms: string | undefined | null;
 	token: Token;
-	payment_method: PaymentMethod;
-	bank: Bank;
+	payment_methods: PaymentMethod[];
+	banks: Bank[];
 	total_available_amount: string;
 	price: number;
 	type: 'SellList' | 'BuyList';
 	deposit_time_limit: number | undefined;
 	payment_time_limit: number | undefined;
-	// token_spot_price: number;
 	accept_only_verified: boolean;
+	escrow_type: 'manual' | 'instant';
+	contract: `0x${string}` | undefined;
+	price_source: PriceSource;
 }
 
 export interface AccountField {
@@ -81,7 +94,6 @@ export interface Bank {
 
 export interface PaymentMethod {
 	id: number;
-	user: User;
 	bank: Bank;
 	bank_id: number;
 	values: AccountFieldValue;
@@ -134,7 +146,7 @@ export interface Order {
 	payment_method: PaymentMethod;
 	trade_id: string;
 	deposit_time_limit: number | undefined;
-	payment_time_limit: number | undefined;
+	payment_time_limit: number;
 	chain_id: number;
 }
 
@@ -142,4 +154,11 @@ export interface Airdrop {
 	buy_volume?: number;
 	sell_volume?: number;
 	total: number;
+}
+
+export interface Contract {
+	id: number;
+	address: `0x${string}`;
+	chain_id: number;
+	version: string;
 }

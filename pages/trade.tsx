@@ -94,7 +94,7 @@ const HomePage = () => {
 
 	return (
 		<div className="py-6">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+			<div className="mx-auto px-4 sm:px-6 md:px-8">
 				<div className="flex flex-row items-center justify-between relative">
 					<div className="lg:mt-6">
 						<Switcher leftLabel="Buy" rightLabel="Sell" selected={type} onToggle={setType} />
@@ -120,7 +120,7 @@ const HomePage = () => {
 					<Loading />
 				) : (
 					<div className="py-4">
-						<ListsTable lists={lists} />
+						<ListsTable lists={lists} hideLowAmounts />
 						{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
 							<Pagination
 								length={lists.length}

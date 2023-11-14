@@ -5,9 +5,10 @@ import { ClipboardDocumentCheckIcon, ClipboardDocumentIcon } from '@heroicons/re
 
 interface ClipboardTextProps {
 	itemValue: string;
+	extraStyle?: string;
 }
 
-const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
+const ClipboardText = ({ itemValue, extraStyle }: ClipboardTextProps) => {
 	const [checked, setChecked] = useState(false);
 	const copyText = () => {
 		navigator.clipboard.writeText(itemValue);
@@ -17,7 +18,7 @@ const ClipboardText = ({ itemValue }: ClipboardTextProps) => {
 
 	return (
 		<div className="flex flex-row justify-between">
-			<span className="mr-2 text">{itemValue}</span>
+			<span className={`mr-2 text ${extraStyle}`}>{itemValue}</span>
 			<Button
 				onClick={copyText}
 				title={

@@ -5,10 +5,11 @@ import { Order, Token as TokenModel } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'wagmi';
+import { useAccount } from 'hooks';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import Token from './Token/Token';
 
 interface OrdersTableProps {
@@ -16,7 +17,13 @@ interface OrdersTableProps {
 }
 
 const NextButton = ({
-	order: { buyer: buyerUser, uuid, status, seller },
+	order: {
+		buyer: buyerUser,
+		uuid,
+		status,
+		seller,
+		list: { escrow_type: escrowType }
+	},
 	address
 }: {
 	order: Order;
@@ -31,7 +38,9 @@ const NextButton = ({
 	let label = 'Continue';
 	if (buyer) {
 		if (['created', 'release', 'cancelled', 'closed'].includes(status)) {
-			label = 'See Order';
+			if (status !== 'created' || escrowType !== 'instant') {
+				label = 'See Order';
+			}
 		}
 	} else if (['escrowed', 'cancelled', 'closed'].includes(status)) {
 		// seller
@@ -47,13 +56,16 @@ const NextButton = ({
 	);
 };
 const OrdersTable = ({ orders }: OrdersTableProps) => {
-	const { address } = useAccount();
+	const { address: account } = useAccount();
+	const { primaryWallet } = useDynamicContext();
+	const address = account || primaryWallet?.address;
+
 	if (!orders) return <p>No orders</p>;
 
-	const orderStatus = (status: Order['status']) => {
+	const orderStatus = (status: Order['status'], instantEscrow: boolean) => {
 		switch (status) {
 			case 'created': {
-				return 'Waiting seller deposit';
+				return instantEscrow ? 'Waiting order confirmation' : 'Waiting seller deposit';
 			}
 			case 'escrowed': {
 				return 'Waiting payment';
@@ -79,7 +91,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 
 	return (
 		<div>
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+			<div className="mx-auto px-4 sm:px-6 md:px-8">
 				<table className="w-full md:rounded-lg overflow-hidden">
 					<thead className="bg-gray-100">
 						<tr className="w-full relative">
@@ -131,7 +143,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 						{orders.map((order) => {
 							const {
 								id,
-								list: { fiat_currency: currency, token },
+								list: { fiat_currency: currency, token, escrow_type: escrowType },
 								price,
 								fiat_amount: fiatAmount,
 								token_amount: tokenAmount,
@@ -143,6 +155,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 							const isSeller = address === seller.address;
 							const user = isSeller ? buyer : seller;
 							const network = allChains.find((chain) => chain.id === Number(chainId));
+							const instantEscrow = escrowType === 'instant';
 
 							return (
 								<tr key={id} className="hover:bg-gray-50">
@@ -152,8 +165,29 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 												<Link href={`/${user.address}`}>
 													<div className="flex flex-row items-center cursor-pointer">
 														<Avatar user={user} className="w-5 md:w-10 aspect-square" />
-														<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
-															{user.name || smallWalletAddress(user.address)}
+														<div className="flex flex-col">
+															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
+																{user.name || smallWalletAddress(user.address)}
+															</div>
+															{user.online !== null && (
+																<div className="pl-1 md:pl-2 text-sm">
+																	{user.online ? (
+																		<div className="flex flex-row items-center space-x-1">
+																			<div className="w-2 h-2 bg-green-500 rounded-full" />
+																			<span className="text-green-500 text-xs">
+																				Online
+																			</span>
+																		</div>
+																	) : (
+																		<div className="flex flex-row items-center space-x-1">
+																			<div className="w-2 h-2 bg-orange-500 rounded-full" />
+																			<span className="text-orange-500 text-xs">
+																				Not online
+																			</span>
+																		</div>
+																	)}
+																</div>
+															)}
 														</div>
 														{user.verified && (
 															<div className="pl-1 md:pl-2 text-sm text-gray-900 text-ellipsis overflow-hidden">
@@ -193,7 +227,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 															<span className="pl-1 text-sm">{token.symbol}</span>
 														</div>
 														<span className="max-w-fit bg-gray-100 text-gray-400 text-xs m-0 py-1 px-2 rounded-md">
-															{orderStatus(status)}
+															{orderStatus(status, instantEscrow)}
 														</span>
 													</div>
 												</div>
@@ -234,7 +268,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 										</div>
 									</td>
 									<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-										{orderStatus(status)}
+										{orderStatus(status, instantEscrow)}
 									</td>
 									<td className="hidden text-right py-4 pr-4 lg:table-cell">
 										<NextButton order={order} address={address} />

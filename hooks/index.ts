@@ -10,6 +10,7 @@ import useTransactionFeedback from './useTransactionFeedback';
 import useUserProfile from './useUserProfile';
 import useVerificationStatus from './useVerificationStatus';
 import useConfirmationSignMessage from './useConfirmationSignMessage';
+import useAccount from './useAccount';
 
 export {
 	useListPrice,
@@ -23,5 +24,6 @@ export {
 	usePagination,
 	useVerificationStatus,
 	useCancelReasons,
-	useConfirmationSignMessage
+	useConfirmationSignMessage,
+	useAccount
 };

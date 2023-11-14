@@ -3,7 +3,7 @@ import { FiatCurrency, Token } from 'models/types';
 export interface Option {
 	id: number;
 	name: string;
-	icon: string;
+	icon?: string;
 }
 
 export interface SelectProps {
@@ -46,3 +46,5 @@ export interface TokenSelectProps {
 	networkId?: number;
 	allTokens?: boolean;
 }
+
+export type TimezoneSelectProps = Pick<SelectProps, 'selected' | 'onSelect' | 'error'>;
