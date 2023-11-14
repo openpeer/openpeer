@@ -187,7 +187,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 					{!!terms && (
 						<div className="w-full flex flex-row mb-4 space-x-2">
 							<div className="text-sm">Terms</div>
-							<div className="text-sm font-bold">{terms}</div>
+							<div className="text-sm font-bold" dangerouslySetInnerHTML={{ __html: terms }} />
 						</div>
 					)}
 					{!!acceptOnlyVerified && (

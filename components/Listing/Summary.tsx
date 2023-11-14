@@ -1,10 +1,10 @@
+/* eslint-disable react/no-danger */
 import Flag from 'components/Flag/Flag';
 import Token from 'components/Token/Token';
 import { countries } from 'models/countries';
 import { Bank, FiatCurrency, Token as TokenModel } from 'models/types';
 import Image from 'next/image';
 import React, { useState } from 'react';
-
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import coins from './post-ad.png';
 import { UIList } from './Listing.types';
@@ -167,10 +167,11 @@ const Summary = ({ list }: SummaryProps) => {
 			</div>
 			{!!terms && (
 				<div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
-					<div className="font-bold mb-2">Merchant's Terms</div>
-					<div className={`break-words mb-4 ${isTermsContentExpanded ? 'h-auto' : 'h-24'} overflow-hidden`}>
-						{terms}
-					</div>
+					<div className="font-bold mb-2">Merchant&apos;s Terms</div>
+					<div
+						className={`break-words mb-4 ${isTermsContentExpanded ? 'h-auto' : 'h-24'} overflow-hidden`}
+						dangerouslySetInnerHTML={{ __html: terms }}
+					/>
 					<div className="flex flex-row items-center cursor-pointer" onClick={toggleTerms}>
 						<span className="text-sm underline pr-1">
 							{isTermsContentExpanded ? 'Show Less' : 'Read More'}

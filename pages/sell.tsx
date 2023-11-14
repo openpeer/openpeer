@@ -66,6 +66,10 @@ const SellPage = () => {
 		}
 	}, [list.type]);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [list.step]);
+
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
 	};
