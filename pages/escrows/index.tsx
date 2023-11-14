@@ -264,10 +264,10 @@ const MyEscrows = () => {
 					</div>
 					<div>
 						{contracts.length > 0 && lastDeployedVersion < lastVersion && (
-							<span>
+							<p className="px-4">
 								A new version of OpenPeer is available. Please withdraw your assets and deploy a new
 								escrow contract
-							</span>
+							</p>
 						)}
 						{needToDeploy && (
 							<div className="mt-4 mb-4 px-4">

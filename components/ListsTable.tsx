@@ -9,7 +9,7 @@ import { getChainToken, smallWalletAddress } from 'utils';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
-import { useAccount } from 'hooks';
+import { useAccount, useUserProfile } from 'hooks';
 import { useContractReads } from 'wagmi';
 import { OpenPeerEscrow } from 'abis';
 import { Abi, formatUnits } from 'viem';
@@ -49,6 +49,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 	const { address } = useAccount();
 	const { primaryWallet } = useDynamicContext();
 	const chains = allChains;
+	const { user } = useUserProfile({});
 
 	const contracts = lists
 		.filter(({ contract }) => !!contract)
@@ -74,6 +75,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 			)
 	);
 	const { data, isLoading } = useContractReads({ contracts: signatures });
+	const showVerification = user && !user.verified;
 
 	return (
 		<table className="w-full md:rounded-lg overflow-hidden">
@@ -136,7 +138,8 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 						// token_spot_price: tokenSpotPrice,
 						payment_time_limit: paymentTimeLimit,
 						escrow_type: escrowType,
-						type
+						type,
+						accept_only_verified: acceptOnlyVerified
 					} = list;
 					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
@@ -242,7 +245,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 															{Number(escrowedAmount).toFixed(2)} {symbol}
 														</span>
 													</div>
-													<IdVerificationNeeded />
+													{showVerification && acceptOnlyVerified && <IdVerificationNeeded />}
 												</div>
 											</div>
 										</div>
@@ -316,7 +319,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 											<span className="text-[10px]">{chain?.name}</span>
 										</div>
 									</div>
-									<IdVerificationNeeded />
+									{showVerification && acceptOnlyVerified && <IdVerificationNeeded />}
 								</div>
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">

@@ -15,6 +15,7 @@ export interface ModalProps {
 	onAction: () => void;
 	actionDisabled?: boolean;
 	icon?: string | JSX.Element;
+	closeAfterAction?: boolean;
 }
 
 const manrope = Manrope({
@@ -31,11 +32,12 @@ const ModalWindow = ({
 	onClose,
 	onAction,
 	actionDisabled = false,
-	icon
+	icon,
+	closeAfterAction = true
 }: ModalProps) => {
 	const confirmAction = () => {
 		onAction();
-		onClose();
+		if (closeAfterAction) onClose();
 	};
 	return (
 		<Transition.Root show={open} as={Fragment}>

@@ -18,6 +18,7 @@ import { useContractRead } from 'wagmi';
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { Abi, formatUnits, parseUnits } from 'viem';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
+import ModalWindow from 'components/Modal/ModalWindow';
 import BankSelect from 'components/Select/BankSelect';
 import { BuyStepProps, UIOrder } from './Buy.types';
 
@@ -226,7 +227,21 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
 			<div className="my-8">
 				{verificationRequired ? (
-					<h1>Only verified users can interact with this ad.</h1>
+					<ModalWindow
+						title="ID Verification Needed"
+						content={
+							<div className="py-4">
+								You&apos;re almost set. Please, take a moment to verify some information before
+								continue, we use Quadrata a secure service.
+							</div>
+						}
+						type="confirmation"
+						actionButtonTitle="Verify ID"
+						open
+						onClose={() => router.back()}
+						onAction={() => router.push(`/${address}`)}
+						closeAfterAction={false}
+					/>
 				) : (
 					<>
 						<Input
