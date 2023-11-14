@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable @typescript-eslint/indent */
 import Avatar from 'components/Avatar';
 import Link from 'next/link';
@@ -184,18 +185,17 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							</div>
 						</div>
 					)}
-					{!!terms && (
-						<div className="w-full flex flex-row mb-4 space-x-2">
-							<div className="text-sm">Terms</div>
-							<div className="text-sm font-bold" dangerouslySetInnerHTML={{ __html: terms }} />
-						</div>
-					)}
 					{!!acceptOnlyVerified && (
 						<div className="w-full flex flex-row mb-4 space-x-2">
 							<div className="text-sm">
 								Accept only verified {type === 'SellList' ? 'buyers' : 'sellers'}
 							</div>
-							<div className="text-sm font-bold">{terms}</div>
+						</div>
+					)}
+					{!!terms && (
+						<div className="w-full flex flex-row mb-4 space-x-2">
+							<div className="text-sm">Terms</div>
+							<div className="text-sm font-bold" dangerouslySetInnerHTML={{ __html: terms }} />
 						</div>
 					)}
 				</div>

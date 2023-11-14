@@ -14,6 +14,8 @@ export interface ModalProps {
 	onClose: () => void;
 	onAction: () => void;
 	actionDisabled?: boolean;
+	icon?: string | JSX.Element;
+	closeAfterAction?: boolean;
 }
 
 const manrope = Manrope({
@@ -29,11 +31,13 @@ const ModalWindow = ({
 	open,
 	onClose,
 	onAction,
-	actionDisabled = false
+	actionDisabled = false,
+	icon,
+	closeAfterAction = true
 }: ModalProps) => {
 	const confirmAction = () => {
 		onAction();
-		onClose();
+		if (closeAfterAction) onClose();
 	};
 	return (
 		<Transition.Root show={open} as={Fragment}>
@@ -66,6 +70,7 @@ const ModalWindow = ({
 									<div>
 										{type === 'confirmation' ? (
 											<div className="mx-auto flex h-12 w-12 items-center justify-center">
+												{icon}
 												<QuestionMarkCircleIcon
 													className="h-12 w-12 text-cyan-600"
 													aria-hidden="true"

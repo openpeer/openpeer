@@ -6,7 +6,7 @@ import { User } from 'models/types';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { smallWalletAddress } from 'utils';
-import { useNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 import {
 	CalendarDaysIcon,
@@ -15,6 +15,7 @@ import {
 	ChartBarSquareIcon,
 	StarIcon
 } from '@heroicons/react/24/outline';
+import { polygon } from '@wagmi/chains';
 
 const Metric = ({
 	label,
@@ -82,7 +83,16 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 	const [verificationModal, setVerificationModal] = useState(verificationOpen);
 	const { chain } = useNetwork();
 	const { address: connectedAddress } = useAccount();
+	const { switchNetwork } = useSwitchNetwork();
 	const { verified, fetchVerificationStatus } = useVerificationStatus(address);
+
+	const openVerificationModal = () => {
+		if (chain?.id === polygon.id) {
+			setVerificationModal(true);
+		} else {
+			switchNetwork?.(polygon.id);
+		}
+	};
 
 	useEffect(() => {
 		const fetchWalletAge = async () => {
@@ -160,7 +170,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 										<button
 											type="button"
 											className="flex items-center py-2 px-6 border rounded ml-2 cursor-pointer"
-											onClick={() => setVerificationModal(true)}
+											onClick={openVerificationModal}
 										>
 											{verified ? '' : 'Get'} Verified
 											<span className="ml-2">
