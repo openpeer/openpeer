@@ -28,22 +28,39 @@ interface ListsTableProps {
 }
 
 interface BuyButtonProps {
-	id: number;
 	fiatAmount: number | undefined;
 	tokenAmount: number | undefined;
-	sellList: boolean;
-	escrowType: List['escrow_type'];
-	token: string;
+	list: List;
 }
 
-const BuyButton = ({ id, fiatAmount, tokenAmount, sellList, escrowType, token }: BuyButtonProps) => (
-	<Link
-		href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount, tokenAmount } }}
-		as={`/buy/${encodeURIComponent(id)}`}
-	>
-		<Button title={sellList ? (escrowType === 'instant' ? `Buy ${token} ⚡` : `Buy ${token}`) : `Sell ${token}`} />
-	</Link>
-);
+const BuyButton = ({ fiatAmount, tokenAmount, list }: BuyButtonProps) => {
+	const {
+		id,
+		escrow_type: escrowType,
+		token: { symbol },
+		type
+	} = list;
+	const sellList = type === 'SellList';
+	let fiat = fiatAmount;
+	let token = tokenAmount;
+
+	if (token) {
+		fiat = Number(token) * Number(list.price);
+	} else if (fiat) {
+		token = Number(fiat) / Number(list.price);
+	}
+
+	return (
+		<Link
+			href={{ pathname: `/buy/${encodeURIComponent(id)}`, query: { fiatAmount: fiat, tokenAmount: token } }}
+			as={`/buy/${encodeURIComponent(id)}`}
+		>
+			<Button
+				title={sellList ? (escrowType === 'instant' ? `Buy ${symbol} ⚡` : `Buy ${symbol}`) : `Sell ${symbol}`}
+			/>
+		</Link>
+	);
+};
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTableProps) => {
 	const { address } = useAccount();
@@ -293,14 +310,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 										{isSeller ? (
 											<EditListButtons list={list} />
 										) : (
-											<BuyButton
-												id={list.id}
-												fiatAmount={fiatAmount}
-												tokenAmount={tokenAmount}
-												sellList={list.type === 'SellList'}
-												escrowType={list.escrow_type}
-												token={token.symbol}
-											/>
+											<BuyButton fiatAmount={fiatAmount} tokenAmount={tokenAmount} list={list} />
 										)}
 									</div>
 								</div>
@@ -375,14 +385,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 								{isSeller ? (
 									<EditListButtons list={list} />
 								) : (
-									<BuyButton
-										id={list.id}
-										fiatAmount={fiatAmount}
-										tokenAmount={tokenAmount}
-										sellList={list.type === 'SellList'}
-										escrowType={list.escrow_type}
-										token={token.symbol}
-									/>
+									<BuyButton fiatAmount={fiatAmount} tokenAmount={tokenAmount} list={list} />
 								)}
 							</td>
 						</tr>

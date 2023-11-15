@@ -37,12 +37,18 @@ const Prefix = ({ label, image }: { label: string; image: React.ReactNode }) => 
 
 const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const router = useRouter();
+	const { fiatAmount: quickBuyFiat, tokenAmount: quickBuyToken } = router.query;
+
 	const { list = {} as List, token_amount: orderTokenAmount, fiat_amount: orderFiatAmount } = order;
 	const { address } = useAccount();
 	const { fiat_currency: currency, token, accept_only_verified: acceptOnlyVerified } = list;
 
-	const [fiatAmount, setFiatAmount] = useState<number | undefined>(orderFiatAmount || undefined);
-	const [tokenAmount, setTokenAmount] = useState<number | undefined>(orderTokenAmount || undefined);
+	const [fiatAmount, setFiatAmount] = useState<number | undefined>(
+		orderFiatAmount || (quickBuyFiat ? Number(quickBuyFiat) : undefined)
+	);
+	const [tokenAmount, setTokenAmount] = useState<number | undefined>(
+		orderTokenAmount || (quickBuyToken ? Number(quickBuyToken) : undefined)
+	);
 	const [user, setUser] = useState<User | null>();
 	const [bank, setBank] = useState<Bank>();
 
