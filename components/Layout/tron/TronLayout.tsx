@@ -46,9 +46,7 @@ const TronLayout = ({ Component, pageProps }: AppProps) => {
 	}
 	const adapters = useMemo(() => {
 		const tronLinkAdapter = new TronLinkAdapter();
-		const ledger = new LedgerAdapter({
-			accountNumber: 2
-		});
+		const ledger = new LedgerAdapter();
 		const walletConnectAdapter = new WalletConnectAdapter({
 			network: 'Mainnet',
 			options: {
