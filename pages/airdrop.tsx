@@ -27,6 +27,7 @@ import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import roundTree from '../airdrop/roundFiveTree.json';
+import { constants } from 'ethers';
 
 interface RoundData {
 	[key: `0x${string}`]: {
@@ -371,8 +372,7 @@ const AirdropPage = () => {
 		: 0;
 
 	useEffect(() => {
-		if (!address) return;
-		fetch(`/api/airdrop?address=${address}&round=${ROUND}`, {
+		fetch(`/api/airdrop?address=${address || constants.AddressZero}&round=${ROUND}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
