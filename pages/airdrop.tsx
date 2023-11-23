@@ -26,6 +26,7 @@ import { polygon } from 'wagmi/chains';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
+import { constants } from 'ethers';
 import roundTree from '../airdrop/roundFiveTree.json';
 
 interface RoundData {
@@ -371,8 +372,7 @@ const AirdropPage = () => {
 		: 0;
 
 	useEffect(() => {
-		if (!address) return;
-		fetch(`/api/airdrop?address=${address}&round=${ROUND}`, {
+		fetch(`/api/airdrop?address=${address || constants.AddressZero}&round=${ROUND}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}

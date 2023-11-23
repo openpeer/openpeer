@@ -161,7 +161,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
 					const isSeller = primaryWallet && sellerAddress === address;
-					const { symbol, minimum_amount: minimumAmount } = token;
+					const { symbol, minimum_amount: minimumAmount = 0 } = token;
 					const chain = chains.find((c) => c.id === chainId);
 					const chainToken = getChainToken(chain);
 
@@ -188,7 +188,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 						console.log(err);
 					}
 
-					if (hideLowAmounts && Number(escrowedAmount) <= Number(minimumAmount || '0')) {
+					if (hideLowAmounts && Number(escrowedAmount) < Number(minimumAmount)) {
 						return <></>;
 					}
 
