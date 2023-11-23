@@ -163,7 +163,7 @@ const MyEscrows = () => {
 
 	const [chain, setChain] = useState<Chain>();
 	const [loading, setLoading] = useState(false);
-	const { user } = useUserProfile({});
+	const { user, fetchUserProfile } = useUserProfile({});
 	const [lastVersion, setLastVersion] = useState(0);
 	const [tokens, setTokens] = useState<Token[]>([]);
 
@@ -225,6 +225,17 @@ const MyEscrows = () => {
 	const otherContracts = contracts.filter(
 		(c) => c.address.toLowerCase() !== (lastDeployedContract || '').toLowerCase()
 	);
+
+	useEffect(() => {
+		if (lastDeployedContract && contracts.length > 0) {
+			const deployed = contracts.find(
+				(cont) => cont.address.toLowerCase() === lastDeployedContract.toLowerCase()
+			);
+			if (!deployed) {
+				fetchUserProfile();
+			}
+		}
+	}, [lastDeployedContract, contracts]);
 
 	const onSelectToken = (t: Token, c: Contract, a: 'Withdraw' | 'Deposit') => {
 		setToken(t);

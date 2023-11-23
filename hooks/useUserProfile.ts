@@ -22,7 +22,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const { address } = useAccount();
 
-	useEffect(() => {
+	const fetchUserProfile = async () => {
 		if (!address) return;
 
 		fetch(`/api/user_profiles/${address}`, {
@@ -38,6 +38,9 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					setUser(data);
 				}
 			});
+	};
+	useEffect(() => {
+		fetchUserProfile();
 	}, [address]);
 
 	useEffect(() => {
@@ -109,7 +112,8 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		setAvailableTo,
 		weekendOffline,
 		setWeekendOffline,
-		updateUserProfile
+		updateUserProfile,
+		fetchUserProfile
 	};
 };
 
