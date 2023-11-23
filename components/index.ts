@@ -11,7 +11,7 @@ import ListsTable from './ListsTable';
 import Loading from './Loading/Loading';
 import MarginSwitcher from './MarginSwitcher';
 import HeaderMetrics from './MerchantAccount/HeaderMetrics';
-import Modal from './Modal/ModalWindow';
+import ModalWindow from './Modal/ModalWindow';
 import NotificationHeader from './Notifications/NotificationHeader';
 import Pagination from './Pagination/Pagination';
 import HeaderH3 from './SectionHeading/h3';
@@ -26,6 +26,8 @@ import Token from './Token/Token';
 import IdVerificationNeeded from './IdVerificationNeeded';
 import TimezoneSelect from './Select/TimezoneSelect';
 import EscrowDepositWithdraw from './EscrowDepositWithdraw';
+import ConnectionWidget from './ConnectionWidget';
+import Modal from './Modal';
 
 export {
 	Button,
@@ -47,7 +49,7 @@ export {
 	WrongNetwork,
 	NotificationHeader,
 	Switcher,
-	Modal,
+	ModalWindow,
 	Flag,
 	Accordion,
 	Pagination,
@@ -55,5 +57,7 @@ export {
 	Token,
 	IdVerificationNeeded,
 	TimezoneSelect,
-	EscrowDepositWithdraw
+	EscrowDepositWithdraw,
+	ConnectionWidget,
+	Modal
 };

@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-no-bind */
 import React, { useMemo } from 'react';
 import '@tronweb3/tronwallet-adapter-react-ui/style.css';
-import { WalletProvider, useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
-import { WalletActionButton, WalletModalProvider } from '@tronweb3/tronwallet-adapter-react-ui';
-import { AppProps } from 'next/app';
+import { WalletProvider } from '@tronweb3/tronwallet-adapter-react-hooks';
+import { WalletModalProvider } from '@tronweb3/tronwallet-adapter-react-ui';
 import { WalletDisconnectedError, WalletError, WalletNotFoundError } from '@tronweb3/tronwallet-abstract-adapter';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
 	BitKeepAdapter,
 	LedgerAdapter,
@@ -15,28 +14,7 @@ import {
 	WalletConnectAdapter
 } from '@tronweb3/tronwallet-adapters';
 
-function ConnectComponent() {
-	return <WalletActionButton />;
-}
-
-function Profile() {
-	const { address, connected, wallet } = useWallet();
-	return (
-		<div>
-			<p>
-				<span>Connection Status:</span> {connected ? 'Connected' : 'Disconnected'}
-			</p>
-			<p>
-				<span>Your selected Wallet:</span> {wallet?.adapter.name}
-			</p>
-			<p>
-				<span>Your Address:</span> {address}
-			</p>
-		</div>
-	);
-}
-
-const TronLayout = ({ Component, pageProps }: AppProps) => {
+const TronProvider = ({ children }: { children: React.ReactNode }) => {
 	function onError(e: WalletError) {
 		if (e instanceof WalletNotFoundError) {
 			toast.error(e.message);
@@ -51,13 +29,12 @@ const TronLayout = ({ Component, pageProps }: AppProps) => {
 			network: 'Mainnet',
 			options: {
 				relayUrl: 'wss://relay.walletconnect.com',
-				// example WC app project ID
 				projectId: '5fc507d8fc7ae913fff0b8071c7df231',
 				metadata: {
-					name: 'Test DApp',
-					description: 'JustLend WalletConnect',
-					url: 'https://your-dapp-url.org/',
-					icons: ['https://your-dapp-url.org/mainLogo.svg']
+					name: 'OpenPeer',
+					description: 'Self-Custody P2P Crypto Trading',
+					url: 'https://app.openpeer.xyz/',
+					icons: ['https://openpeerpublic.s3.us-west-1.amazonaws.com/logo/oplogo.png']
 				}
 			},
 			web3ModalConfig: {
@@ -75,14 +52,9 @@ const TronLayout = ({ Component, pageProps }: AppProps) => {
 
 	return (
 		<WalletProvider onError={onError} adapters={adapters}>
-			<WalletModalProvider>
-				<ConnectComponent />
-				<Profile />
-				<Component {...pageProps} />
-				<ToastContainer />
-			</WalletModalProvider>
+			<WalletModalProvider>{children}</WalletModalProvider>
 		</WalletProvider>
 	);
 };
 
-export default TronLayout;
+export default TronProvider;

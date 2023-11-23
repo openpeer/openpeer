@@ -11,6 +11,7 @@ import useUserProfile from './useUserProfile';
 import useVerificationStatus from './useVerificationStatus';
 import useConfirmationSignMessage from './useConfirmationSignMessage';
 import useAccount from './useAccount';
+import useSignInWithTron from './tron/useSignInWithTron';
 
 export {
 	useListPrice,
@@ -25,5 +26,6 @@ export {
 	useVerificationStatus,
 	useCancelReasons,
 	useConfirmationSignMessage,
-	useAccount
+	useAccount,
+	useSignInWithTron
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { OpenPeerEscrow } from 'abis';
-import { Button, Modal } from 'components';
+import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useOpenDispute, useTransactionFeedback, useAccount } from 'hooks';
 import { Order } from 'models/types';
@@ -133,7 +133,7 @@ const OpenDisputeButton = ({ order, outlined = true, title = 'Open a dispute' }:
 				onClick={onOpenDispute}
 				outlined={outlined}
 			/>
-			<Modal
+			<ModalWindow
 				actionButtonTitle="Yes, confirm"
 				title="Dispute Trade"
 				content={`Once you dispute the trade the other party will have 24 hours to counter the dispute and send it to arbitration. A small fee of ${formatUnits(

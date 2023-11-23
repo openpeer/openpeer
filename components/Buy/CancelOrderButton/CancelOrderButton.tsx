@@ -1,5 +1,5 @@
 import { getAuthToken } from '@dynamic-labs/sdk-react';
-import { Button, Modal } from 'components';
+import { Button, ModalWindow } from 'components';
 import { useCancelReasons, useConfirmationSignMessage, useAccount } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
@@ -87,7 +87,7 @@ const CancelOrderButton = ({ order, outlined = true, title = 'Cancel Order' }: C
 	return simpleCancel ? (
 		<>
 			<Button title={title} onClick={onCancelOrder} outlined={outlined} />
-			<Modal
+			<ModalWindow
 				actionButtonTitle="Yes, confirm"
 				title="Cancel Order?"
 				content={

@@ -3,13 +3,14 @@ import { useAccount as useWagmiAccount } from 'wagmi';
 
 const useAccount = () => {
 	const { address, isConnected, isConnecting, connector } = useWagmiAccount();
-	const { primaryWallet } = useDynamicContext();
+	const { primaryWallet, handleLogOut } = useDynamicContext();
 
 	return {
 		address: address || (primaryWallet?.address as `0x${string}` | undefined),
 		isConnected,
 		isConnecting,
-		connector
+		connector,
+		handleLogOut
 	};
 };
 

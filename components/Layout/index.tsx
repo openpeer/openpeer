@@ -1,5 +1,5 @@
-import 'tailwindcss/tailwind.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'tailwindcss/tailwind.css';
 import type { AppProps } from 'next/app';
 import { DynamicContextProvider } from '@dynamic-labs/sdk-react';
 
@@ -10,13 +10,13 @@ import React, { useState } from 'react';
 import { DynamicWagmiConnector } from '@dynamic-labs/wagmi-connector';
 import { MessageContextProvider } from 'contexts/MessageContext';
 import ChatProvider from 'providers/ChatProvider';
+import TronProvider from 'providers/TronProvider';
 
 const AuthLayout = dynamic(() => import('./AuthLayout'), { ssr: false });
 const NoAuthLayout = dynamic(() => import('./NoAuthLayout'), { ssr: false });
-const TronLayout = dynamic(() => import('./tron/TronLayout'), { ssr: false });
 
 const App = ({ Component, pageProps }: AppProps) => {
-	const { simpleLayout, tron } = pageProps;
+	const { simpleLayout } = pageProps;
 	const [messageToSign, setMessageToSign] = useState('');
 	const [signedMessage, setSignedMessage] = useState('');
 
@@ -38,23 +38,22 @@ const App = ({ Component, pageProps }: AppProps) => {
 			}}
 		>
 			<DynamicWagmiConnector>
-				<MessageContextProvider messageToSign={messageToSign} signedMessage={signedMessage}>
-					<TransactionFeedbackProvider>
-						<Head />
-						{tron ? (
-							// @ts-expect-error
-							<TronLayout pageProps={pageProps} Component={Component} />
-						) : simpleLayout ? (
-							// @ts-expect-error
-							<NoAuthLayout pageProps={pageProps} Component={Component} />
-						) : (
-							<ChatProvider>
-								{/* @ts-expect-error */}
-								<AuthLayout pageProps={pageProps} Component={Component} />
-							</ChatProvider>
-						)}
-					</TransactionFeedbackProvider>
-				</MessageContextProvider>
+				<TronProvider>
+					<MessageContextProvider messageToSign={messageToSign} signedMessage={signedMessage}>
+						<TransactionFeedbackProvider>
+							<Head />
+							{simpleLayout ? (
+								// @ts-expect-error
+								<NoAuthLayout pageProps={pageProps} Component={Component} />
+							) : (
+								<ChatProvider>
+									{/* @ts-expect-error */}
+									<AuthLayout pageProps={pageProps} Component={Component} />
+								</ChatProvider>
+							)}
+						</TransactionFeedbackProvider>
+					</MessageContextProvider>
+				</TronProvider>
 			</DynamicWagmiConnector>
 		</DynamicContextProvider>
 	);

@@ -1,4 +1,4 @@
-import { Button, Modal } from 'components';
+import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback, useAccount } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
@@ -66,7 +66,7 @@ const ReleaseFundsButton = ({
 				outlined={outlined}
 			/>
 
-			<Modal
+			<ModalWindow
 				actionButtonTitle={dispute ? 'Yes, confirm' : 'Yes I have received'}
 				title={dispute ? 'Are you sure?' : 'Are you sure you have received this payment in your account?'}
 				content={

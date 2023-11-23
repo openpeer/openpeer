@@ -7,7 +7,7 @@ import logo from 'public/logo.svg';
 import logoSmall from 'public/smallLightLogo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useAccount } from 'hooks';
+import { useAccount, useSignInWithTron } from 'hooks';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -22,13 +22,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
-import {
-	DynamicConnectButton,
-	DynamicWidget,
-	useAuthenticateConnectedUser,
-	useDynamicContext
-} from '@dynamic-labs/sdk-react';
+import { DynamicConnectButton, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
 import { ChatWithOwner } from 'react-wallet-chat-sso';
+import ConnectionWidget from 'components/ConnectionWidget';
+import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 import Avatar from '../Avatar';
 import Button from '../Button/Button';
 import { CollapseButton } from '../Navigation';
@@ -153,18 +150,33 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 };
 
 const Unauthenticated = () => {
-	const { address } = useAccount();
-	const { authenticateUser, isAuthenticating } = useAuthenticateConnectedUser();
+	const evm = useAccount();
+	const evmAuth = useAuthenticateConnectedUser();
+
+	const tron = useWallet();
+	const tronAuth = useSignInWithTron();
+	console.log('Inside Unauthenticated', tronAuth);
+
 	return (
 		<div className="flex h-screen">
 			<div className="px-6 m-auto flex flex-col justify-items-center content-center text-center">
 				<span className="mb-6 text-xl">You are not signed in to OpenPeer.</span>
 				<span className="mb-6 text-gray-500 text-xl">Sign In With your wallet to continue.</span>
 				<span className="mb-4 m-auto">
-					{address ? (
-						<Button title="Sign in" onClick={authenticateUser} disabled={isAuthenticating} />
+					{evm.address ? (
+						<Button
+							title="Sign in"
+							onClick={evmAuth.authenticateUser}
+							disabled={evmAuth.isAuthenticating}
+						/>
+					) : tron.address ? (
+						<Button
+							title="Sign in"
+							onClick={tronAuth.authenticateUser}
+							disabled={tronAuth.isAuthenticating}
+						/>
 					) : (
-						<DynamicWidget />
+						<ConnectionWidget />
 					)}
 				</span>
 			</div>
@@ -172,13 +184,18 @@ const Unauthenticated = () => {
 	);
 };
 
-const Layout = ({ Component, pageProps }: AppProps) => {
+const AuthLayout = ({ Component, pageProps }: AppProps) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [user, setUser] = useState<User | null>(null);
+
 	const { title, disableAuthentication } = pageProps;
-	const { address } = useAccount();
+
+	const evm = useAccount();
+	const tron = useWallet();
+	const address = evm.address || tron.address;
 	const { isAuthenticated } = useDynamicContext();
-	const authenticated = disableAuthentication || isAuthenticated;
+	const tronAuth = useSignInWithTron();
+	const authenticated = disableAuthentication || isAuthenticated || tronAuth.isAuthenticated;
 
 	useEffect(() => {
 		if (!address) {
@@ -299,7 +316,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 
 									{/* Profile dropdown */}
 									<Menu as="div" className="relative">
-										<div className="flex flex-row items-center">
+										<div className="flex flex-row items-center pl-2">
 											{address && (
 												<Link
 													className="pr-4 pl-2 text-gray-400 hover:text-gray-500 w-14"
@@ -311,7 +328,7 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 													/>
 												</Link>
 											)}
-											<DynamicWidget />
+											<ConnectionWidget outlined />
 										</div>
 									</Menu>
 								</div>
@@ -329,4 +346,4 @@ const Layout = ({ Component, pageProps }: AppProps) => {
 	);
 };
 
-export default Layout;
+export default AuthLayout;

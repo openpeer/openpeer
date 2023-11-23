@@ -1,4 +1,4 @@
-import { Button, Modal } from 'components';
+import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback, useAccount } from 'hooks';
 import { useEscrowFunds } from 'hooks/transactions';
@@ -66,7 +66,7 @@ const EscrowFundsButton = ({
 				processing={isLoading || isFetching}
 				disabled={isSuccess || isFetching}
 			/>
-			<Modal
+			<ModalWindow
 				actionButtonTitle="Yes, confirm"
 				title={instantEscrow ? 'Confirm order?' : 'Escrow funds?'}
 				content={`The funds will be ${

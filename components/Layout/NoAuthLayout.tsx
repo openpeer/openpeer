@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { Manrope } from '@next/font/google';
-import { DynamicWidget } from '@dynamic-labs/sdk-react';
 
 import discord from 'public/discord.svg';
 import twitterLogo from 'public/twitter.svg';
@@ -155,9 +154,6 @@ const NoAuthLayout = ({ Component, pageProps }: AppProps) => {
 									Rewards
 								</span>
 							</Link>
-							<div className="relative ml-3">
-								<DynamicWidget />
-							</div>
 						</div>
 					</div>
 				</div>
