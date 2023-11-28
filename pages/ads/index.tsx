@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Button, Label, ListsTable, Loading } from 'components';
 import IconButton from 'components/Button/IconButton';
@@ -6,7 +6,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAccount } from 'wagmi';
+import useAccount from 'hooks/useAccount';
 import Link from 'next/link';
 
 const Ads = () => {

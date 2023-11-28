@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { getAuthToken } from '@dynamic-labs/sdk-react';
-import { useConfirmationSignMessage, useAccount } from 'hooks';
+import getAuthToken from 'utils/getAuthToken';
+import { useConfirmationSignMessage } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
 import snakecaseKeys from 'snakecase-keys';
@@ -13,6 +13,7 @@ import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { parseUnits } from 'viem';
 import { constants } from 'ethers';
 import { listToMessage } from 'utils';
+import useAccount from 'hooks/useAccount';
 import dynamic from 'next/dynamic';
 import Label from '../Label/Label';
 import Selector from '../Selector';

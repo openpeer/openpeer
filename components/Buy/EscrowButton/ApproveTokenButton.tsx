@@ -1,7 +1,8 @@
 import Button from 'components/Button/Button';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
 import { useApproval } from 'hooks/transactions';
+import useAccount from 'hooks/useAccount';
 import { Token } from 'models/types';
 import React, { useEffect } from 'react';
 import { erc20ABI, useContractRead } from 'wagmi';

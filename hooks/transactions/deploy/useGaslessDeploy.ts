@@ -2,7 +2,7 @@ import { OpenPeerDeployer } from 'abis';
 import { Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import useAccount from 'hooks/useAccount';
 
 interface UseGaslessDeployProps {
 	contract: `0x${string}`;

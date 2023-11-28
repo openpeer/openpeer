@@ -6,7 +6,7 @@ import HeaderH3 from 'components/SectionHeading/h3';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 import { XCircleIcon } from '@heroicons/react/24/outline';
 

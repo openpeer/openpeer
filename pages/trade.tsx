@@ -7,7 +7,7 @@ import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 
 interface PaginationMeta {
 	current_page: number;

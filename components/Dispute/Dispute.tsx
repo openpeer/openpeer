@@ -5,7 +5,7 @@ import Token from 'components/Token/Token';
 import { Order } from 'models/types';
 import React from 'react';
 import { formatUnits } from 'viem';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { useContractRead, useNetwork } from 'wagmi';
 
 interface DisputeParams {

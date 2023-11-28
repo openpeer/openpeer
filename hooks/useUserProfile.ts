@@ -1,9 +1,9 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
 import { S3 } from 'aws-sdk';
 import { Errors } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import useAccount from 'hooks/useAccount';
+import getAuthToken from 'utils/getAuthToken';
 
 interface ErrorObject {
 	[fieldName: string]: string[];

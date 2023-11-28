@@ -1,6 +1,7 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { useMarkAsPaid } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React from 'react';

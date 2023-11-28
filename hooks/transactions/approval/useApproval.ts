@@ -1,5 +1,6 @@
 import { Token } from 'models/types';
-import { useAccount, useNetwork } from 'wagmi';
+import useAccount from 'hooks/useAccount';
+import { useNetwork } from 'wagmi';
 
 import useGaslessApproval from './useGaslessApproval';
 import useTokenApproval from './useTokenApproval';

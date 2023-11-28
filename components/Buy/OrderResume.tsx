@@ -1,10 +1,11 @@
 import Button from 'components/Button/Button';
-import { useEscrowFee, useAccount } from 'hooks';
+import { useEscrowFee } from 'hooks';
 import { Order } from 'models/types';
 import React from 'react';
 
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 
+import useAccount from 'hooks/useAccount';
 import { formatUnits } from 'viem';
 import ClipboardText from './ClipboardText';
 

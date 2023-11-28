@@ -9,7 +9,8 @@ import { getChainToken, smallWalletAddress } from 'utils';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
-import { useAccount, useUserProfile } from 'hooks';
+import useAccount from 'hooks/useAccount';
+import { useUserProfile } from 'hooks';
 import { useContractReads } from 'wagmi';
 import { OpenPeerEscrow } from 'abis';
 import { Abi, formatUnits } from 'viem';

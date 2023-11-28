@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import Loading from 'components/Loading/Loading';
 import { Bank } from 'models/types';
 import React, { useEffect, useState } from 'react';

@@ -1,10 +1,10 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { Loading, Steps, WrongNetwork } from 'components';
 import { Cancelled, Chat, Completed, Payment, Release, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import Dispute from 'components/Dispute/Dispute';
 import { GetServerSideProps } from 'next';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import React, { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 

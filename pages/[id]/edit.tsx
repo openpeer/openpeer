@@ -1,6 +1,7 @@
 import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
 import ImageUploader from 'components/ImageUploader';
-import { useUserProfile, useAccount } from 'hooks';
+import { useUserProfile } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React from 'react';

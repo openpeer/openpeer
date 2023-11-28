@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { Verification } from 'models/verification';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';

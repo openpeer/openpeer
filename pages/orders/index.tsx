@@ -1,9 +1,9 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<Order[]>([]);

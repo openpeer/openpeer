@@ -1,7 +1,8 @@
 import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
 import { useReleaseFunds } from 'hooks/transactions';
+import useAccount from 'hooks/useAccount';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';

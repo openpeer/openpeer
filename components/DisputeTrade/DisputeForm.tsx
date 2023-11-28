@@ -5,7 +5,7 @@ import ReleaseFundsButton from 'components/Buy/ReleaseFundsButton';
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import Textarea from 'components/Textarea/Textarea';
-import { useFormErrors, useAccount } from 'hooks';
+import { useFormErrors } from 'hooks';
 import { Errors } from 'models/errors';
 import { Order } from 'models/types';
 import Image from 'next/image';
@@ -14,7 +14,8 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import useAccount from 'hooks/useAccount';
+import getAuthToken from 'utils/getAuthToken';
 import FilesUploader from './FilesUploader';
 
 interface Upload {

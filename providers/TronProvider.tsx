@@ -13,6 +13,7 @@ import {
 	TronLinkAdapter,
 	WalletConnectAdapter
 } from '@tronweb3/tronwallet-adapters';
+import { TronAuthenticationProvider } from 'contexts/TronAuthenticationContext';
 
 const TronProvider = ({ children }: { children: React.ReactNode }) => {
 	function onError(e: WalletError) {
@@ -52,7 +53,9 @@ const TronProvider = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<WalletProvider onError={onError} adapters={adapters}>
-			<WalletModalProvider>{children}</WalletModalProvider>
+			<WalletModalProvider>
+				<TronAuthenticationProvider>{children}</TronAuthenticationProvider>
+			</WalletModalProvider>
 		</WalletProvider>
 	);
 };

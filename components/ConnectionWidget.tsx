@@ -3,7 +3,7 @@ import { Dialog } from '@headlessui/react';
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
 import { WalletActionButton } from '@tronweb3/tronwallet-adapter-react-ui';
 import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
-import { useAccount } from 'hooks';
+import { useAccount } from 'wagmi';
 import Button from './Button/Button';
 import Modal from './Modal';
 

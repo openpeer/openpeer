@@ -4,7 +4,7 @@ import { OpenPeerEscrow } from 'abis';
 import { constants, Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import useAccount from 'hooks/useAccount';
 
 import { UseGaslessEscrowFundsProps } from '../types';
 

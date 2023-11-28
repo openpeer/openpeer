@@ -5,14 +5,14 @@ import { MessageContext } from 'contexts/MessageContext';
 import React, { useContext } from 'react';
 import { WalletChatProvider, WalletChatWidget } from 'react-wallet-chat-sso';
 import { useNetwork } from 'wagmi';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 interface ChatProviderProps {
 	children: React.ReactNode;
 }
 
 const ChatProvider = ({ children }: ChatProviderProps) => {
-	const { address: account, connector } = useAccount();
+	const { address: account, walletName } = useAccount();
 	const { chain } = useNetwork();
 	const { messageToSign, signedMessage } = useContext(MessageContext);
 	const { isAuthenticated } = useDynamicContext();
@@ -24,9 +24,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 				<WalletChatWidget
 					connectUrl="https://sso-fe.walletchat.fun"
 					requestSignature={!signInformation}
-					connectedWallet={
-						account && chain ? { walletName: connector?.name || '', account, chainId: chain.id } : undefined
-					}
+					connectedWallet={account && chain ? { walletName, account, chainId: chain.id } : undefined}
 					signedMessageData={
 						signedMessage && messageToSign
 							? {

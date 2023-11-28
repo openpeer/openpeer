@@ -7,7 +7,9 @@ import logo from 'public/logo.svg';
 import logoSmall from 'public/smallLightLogo.svg';
 import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useAccount, useSignInWithTron } from 'hooks';
+import useAccount from 'hooks/useAccount';
+import { useAccount as useEVMAccount } from 'wagmi';
+import { useSignInWithTron } from 'hooks';
 
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -26,6 +28,7 @@ import { DynamicConnectButton, useAuthenticateConnectedUser, useDynamicContext }
 import { ChatWithOwner } from 'react-wallet-chat-sso';
 import ConnectionWidget from 'components/ConnectionWidget';
 import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
+import { useTronAuthenticationContext } from 'contexts/TronAuthenticationContext';
 import Avatar from '../Avatar';
 import Button from '../Button/Button';
 import { CollapseButton } from '../Navigation';
@@ -150,12 +153,11 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 };
 
 const Unauthenticated = () => {
-	const evm = useAccount();
+	const evm = useEVMAccount();
 	const evmAuth = useAuthenticateConnectedUser();
 
 	const tron = useWallet();
 	const tronAuth = useSignInWithTron();
-	console.log('Inside Unauthenticated', tronAuth);
 
 	return (
 		<div className="flex h-screen">
@@ -190,12 +192,10 @@ const AuthLayout = ({ Component, pageProps }: AppProps) => {
 
 	const { title, disableAuthentication } = pageProps;
 
-	const evm = useAccount();
-	const tron = useWallet();
-	const address = evm.address || tron.address;
+	const { address } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
-	const tronAuth = useSignInWithTron();
-	const authenticated = disableAuthentication || isAuthenticated || tronAuth.isAuthenticated;
+	const { isAuthenticated: isAuthenticatedTron } = useTronAuthenticationContext();
+	const authenticated = disableAuthentication || isAuthenticated || isAuthenticatedTron;
 
 	useEffect(() => {
 		if (!address) {
@@ -336,6 +336,7 @@ const AuthLayout = ({ Component, pageProps }: AppProps) => {
 						</div>
 
 						<main className="flex-1 min-h-screen">
+							<h1>Address: {address}</h1>
 							{authenticated ? <Component {...pageProps} /> : <Unauthenticated />}
 						</main>
 					</div>

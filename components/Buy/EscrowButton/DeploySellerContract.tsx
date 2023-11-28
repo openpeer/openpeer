@@ -1,7 +1,8 @@
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
 import useDeploy from 'hooks/transactions/deploy/useDeploy';
+import useAccount from 'hooks/useAccount';
 import React from 'react';
 
 const DeploySellerContract = ({ label = 'Create Escrow Contract' }: { label?: string }) => {

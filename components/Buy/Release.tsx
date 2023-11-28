@@ -3,7 +3,7 @@
 import StepLayout from 'components/Listing/StepLayout';
 import HeaderH3 from 'components/SectionHeading/h3';
 import React from 'react';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
 

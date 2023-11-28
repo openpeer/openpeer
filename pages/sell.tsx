@@ -2,7 +2,7 @@ import { Button, Loading, Steps } from 'components';
 import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import {
@@ -74,7 +74,7 @@ const SellPage = () => {
 		setShowFilters(!showFilters);
 	};
 
-	if (merchants === undefined) return <Loading message="Loading..." />;
+	if (merchants === undefined) return <Loading message="Loading" />;
 
 	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
 		return (

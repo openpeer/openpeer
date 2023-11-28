@@ -1,10 +1,11 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { Button, ModalWindow } from 'components';
-import { useCancelReasons, useConfirmationSignMessage, useAccount } from 'hooks';
+import { useCancelReasons, useConfirmationSignMessage } from 'hooks';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import useAccount from 'hooks/useAccount';
 import BlockchainCancelButton from './BlockchainCancelButton';
 import CancelReasons from './CancelReasons';
 

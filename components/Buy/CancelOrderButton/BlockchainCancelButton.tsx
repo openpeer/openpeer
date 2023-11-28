@@ -1,12 +1,13 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { OpenPeerEscrow } from 'abis';
-import { Button, Modal } from 'components';
+import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useCancelReasons, useTransactionFeedback, useAccount } from 'hooks';
+import { useCancelReasons, useTransactionFeedback } from 'hooks';
 import { useEscrowCancel } from 'hooks/transactions';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
+import useAccount from 'hooks/useAccount';
 import { useContractRead } from 'wagmi';
 
 import CancelReasons from './CancelReasons';
@@ -108,7 +109,7 @@ const BlockchainCancelButton = ({ order, outlined, title = 'Cancel Order' }: Blo
 				outlined={outlined}
 			/>
 			<>
-				<Modal
+				<ModalWindow
 					actionButtonTitle="Yes, confirm"
 					title={
 						<div className="flex flex-col">

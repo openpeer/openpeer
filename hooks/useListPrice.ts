@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { FiatCurrency, List, Token } from 'models/types';
 import { useCallback, useEffect, useState } from 'react';
 

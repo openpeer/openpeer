@@ -4,7 +4,7 @@ import Avatar from 'components/Avatar';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 

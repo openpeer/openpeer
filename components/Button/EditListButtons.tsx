@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { PencilSquareIcon, TrashIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline';
-import { useConfirmationSignMessage, useAccount } from 'hooks';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { useConfirmationSignMessage } from 'hooks';
+import useAccount from 'hooks/useAccount';
+import getAuthToken from 'utils/getAuthToken';
 import { List } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
 

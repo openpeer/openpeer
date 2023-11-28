@@ -1,12 +1,12 @@
 import { Button, Loading } from 'components';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
 import PaymentMethodForm from './PaymentMethodForm';

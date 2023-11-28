@@ -1,7 +1,8 @@
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
 import { useWithdrawFunds } from 'hooks/transactions';
 import React, { useEffect, useState } from 'react';
 import { parseUnits } from 'viem';
+import useAccount from 'hooks/useAccount';
 
 import TransactionLink from 'components/TransactionLink';
 import Button from 'components/Button/Button';

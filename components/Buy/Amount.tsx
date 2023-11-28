@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-curly-newline */
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { useFormErrors, useAccount, useEscrowFee } from 'hooks';
+import { useFormErrors, useEscrowFee } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, List, Order, User } from 'models/types';

@@ -5,7 +5,7 @@ import { Order, Token as TokenModel } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 

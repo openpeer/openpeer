@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { User } from 'models/types';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { DEFAULT_DEPOSIT_TIME_LIMIT } from 'utils';
 import { ListStepProps, UIList } from './Listing.types';
 import StepLayout from './StepLayout';

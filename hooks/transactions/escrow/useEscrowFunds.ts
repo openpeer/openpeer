@@ -49,7 +49,6 @@ const useEscrowFunds = ({
 	// other chains: deploy gasless if instant escrow (no tokens transferred to escrow contract)
 
 	if (gaslessEnabled && (FULL_GASLESS_CHAINS.includes(chain.id) ? !nativeToken || instantEscrow : instantEscrow)) {
-		console.log('gasless enabled', gaslessEnabled);
 		return { isLoading, isSuccess, data, escrowFunds };
 	}
 

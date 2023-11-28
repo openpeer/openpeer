@@ -1,7 +1,7 @@
 import Avatar from 'components/Avatar';
 import QuadrataClient from 'components/QuadrataClient';
 import { providers } from 'ethers';
-import { useVerificationStatus, useAccount } from 'hooks';
+import { useVerificationStatus } from 'hooks';
 import { User } from 'models/types';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ import {
 	StarIcon
 } from '@heroicons/react/24/outline';
 import { polygon } from '@wagmi/chains';
+import useAccount from 'hooks/useAccount';
 
 const Metric = ({
 	label,
@@ -82,7 +83,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 	const [walletAge, setWalletAge] = useState<string>();
 	const [verificationModal, setVerificationModal] = useState(verificationOpen);
 	const { chain } = useNetwork();
-	const { address: connectedAddress } = useAccount();
+	const { address: connectedAddress, evm } = useAccount();
 	const { switchNetwork } = useSwitchNetwork();
 	const { verified, fetchVerificationStatus } = useVerificationStatus(address);
 
@@ -96,6 +97,8 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 
 	useEffect(() => {
 		const fetchWalletAge = async () => {
+			if (!evm) return;
+
 			const provider = new providers.EtherscanProvider();
 			const history = await provider.getHistory(address);
 			const [firstTransaction] = history;

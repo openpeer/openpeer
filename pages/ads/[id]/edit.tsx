@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps } from 'components';
 import { Amount, Details, PaymentMethod, Summary } from 'components/Listing';
@@ -8,7 +8,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React, { useEffect, useState } from 'react';
-import { useAccount } from 'hooks';
+import useAccount from 'hooks/useAccount';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;

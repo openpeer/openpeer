@@ -1,12 +1,13 @@
 import { Loading, Steps } from 'components';
 import { Amount, OrderPaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
-import { useListPrice, useAccount } from 'hooks';
+import { useListPrice } from 'hooks';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
+import useAccount from 'hooks/useAccount';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;

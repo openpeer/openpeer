@@ -1,6 +1,6 @@
 import { Notification } from 'models/notification';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import useAccount from 'hooks/useAccount';
 
 import Knock, { Feed, FeedEventPayload, FeedItem } from '@knocklabs/client';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';

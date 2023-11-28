@@ -2,7 +2,8 @@
 import { BankSelect, Button, Input, Loading, Textarea } from 'components';
 import { UIPaymentMethod } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
-import { useConfirmationSignMessage, useFormErrors, useAccount } from 'hooks';
+import { useConfirmationSignMessage, useFormErrors } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { Errors, Resolver } from 'models/errors';
 import { Bank, PaymentMethod as PaymentMethodType } from 'models/types';
 import Image from 'next/image';
@@ -12,7 +13,7 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import getAuthToken from 'utils/getAuthToken';
 import { BuyStepProps } from './Buy.types';
 
 const OrderPaymentMethod = ({ order, updateOrder }: BuyStepProps) => {

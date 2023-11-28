@@ -2,7 +2,8 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useOpenDispute, useTransactionFeedback, useAccount } from 'hooks';
+import { useOpenDispute, useTransactionFeedback } from 'hooks';
+import useAccount from 'hooks/useAccount';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';

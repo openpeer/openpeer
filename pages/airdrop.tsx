@@ -3,7 +3,7 @@
 import { VP2P } from 'abis';
 import { Button } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
+import { useTransactionFeedback } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,6 +23,7 @@ import {
 } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
+import useAccount from 'hooks/useAccount';
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
