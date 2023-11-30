@@ -12,16 +12,25 @@ const DepositFunds = ({ token, tokenAmount, contract, disabled }: DepositFundsPa
 
 	return (
 		<span className="w-full">
-			{nativeToken || approved ? (
-				<DepositFundsButton token={token} tokenAmount={tokenAmount} contract={contract} disabled={disabled} />
-			) : (
-				<ApproveTokenButton
-					token={token}
-					amount={parseUnits(String(tokenAmount || 0), token.decimals)}
-					spender={contract}
-					onTokenApproved={() => setApproved(true)}
-				/>
-			)}
+			<>
+				{nativeToken ||
+					(approved && (
+						<DepositFundsButton
+							token={token}
+							tokenAmount={tokenAmount}
+							contract={contract}
+							disabled={disabled}
+						/>
+					))}
+				<div className={nativeToken || approved ? 'hidden' : ''}>
+					<ApproveTokenButton
+						token={token}
+						amount={parseUnits(String(tokenAmount || 0), token.decimals)}
+						spender={contract}
+						onApprovalChange={setApproved}
+					/>
+				</div>
+			</>
 		</span>
 	);
 };
