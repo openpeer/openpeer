@@ -59,16 +59,17 @@ const EscrowButton = ({
 					instantEscrow={instantEscrow}
 					sellerWaitingTime={sellerWaitingTime}
 				/>
-			) : needsToDeploy ? (
-				<DeploySellerContract />
 			) : (
+				needsToDeploy && <DeploySellerContract />
+			)}
+			<div className={nativeToken || approved || needsToDeploy ? 'hidden' : ''}>
 				<ApproveTokenButton
 					token={token}
 					amount={totalAmount!}
 					spender={sellerContract as `0x${string}`}
-					onTokenApproved={() => setApproved(true)}
+					onApprovalChange={setApproved}
 				/>
-			)}
+			</div>
 		</span>
 	);
 };

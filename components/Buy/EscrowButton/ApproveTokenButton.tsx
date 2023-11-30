@@ -10,12 +10,12 @@ const ApproveTokenButton = ({
 	token,
 	spender,
 	amount,
-	onTokenApproved
+	onApprovalChange
 }: {
 	token: Token;
 	spender: `0x${string}`;
 	amount: bigint;
-	onTokenApproved: () => void;
+	onApprovalChange: (approved: boolean) => void;
 }) => {
 	const { address, isConnected } = useAccount();
 	const { isFetching, isLoading, isSuccess, data, approve } = useApproval({
@@ -47,7 +47,7 @@ const ApproveTokenButton = ({
 	const approved = !!allowance && !!amount && allowance >= amount;
 
 	useEffect(() => {
-		if (isSuccess || approved) onTokenApproved();
+		onApprovalChange(isSuccess || approved);
 	}, [isSuccess, approved]);
 
 	return (
