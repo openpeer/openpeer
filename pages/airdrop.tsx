@@ -1,9 +1,4 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable @typescript-eslint/indent */
-import { VP2P } from 'abis';
 import { Button } from 'components';
-import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback, useAccount } from 'hooks';
 import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,207 +8,13 @@ import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
-import {
-	useContractRead,
-	useContractWrite,
-	useNetwork,
-	usePrepareContractWrite,
-	useSwitchNetwork,
-	useWaitForTransaction
-} from 'wagmi';
-import { polygon } from 'wagmi/chains';
-
-import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
-import { formatUnits, parseUnits } from 'viem';
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import { constants } from 'ethers';
-import roundTree from '../airdrop/roundFiveTree.json';
+import { useAccount } from 'hooks';
 
-interface RoundData {
-	[key: `0x${string}`]: {
-		buy_volume: string;
-		sell_volume: string;
-	};
-}
-
-interface ClosedRound {
-	[key: number]: {
-		volume: number;
-		data: RoundData;
-	};
-}
-
-const CLOSED_ROUND = 5;
 const ROUND = 6;
 const POOL = 1000000;
 const AIRDROP_START = 1701432000000;
-const CHAIN = polygon;
-const CONTRACT_ADDRESS = '0x40D8250eFFcC13297B24B264Ea839296c34128C8';
-const CLOSED_ROUNDS: ClosedRound = {
-	2: {
-		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-		volume: 1567.09850225354078480242151,
-		data: {
-			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': {
-				buy_volume: '0',
-				sell_volume: '549.7756'
-			},
-			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
-				buy_volume: '579.76336',
-				sell_volume: '115.382818595088'
-			},
-			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': {
-				buy_volume: '115.382818595088',
-				sell_volume: '29.98776'
-			},
-			'0x088Ba7c136f64B692D1822F12409b2e4a4f239E9': {
-				buy_volume: '0',
-				sell_volume: '6.709746480468568151712'
-			},
-			'0xcd2523e1ea097Aec34Dfff62312BF27568A17643': {
-				buy_volume: '6.86875416692067466166',
-				sell_volume: '0'
-			},
-			'0x501DeFc41e7c9a9C17702c7c432124794Ee99c72': {
-				buy_volume: '241.769172',
-				sell_volume: '244.164228187447219176668'
-			},
-			'0xA1Be19349c296C4c7125894672EbC1756493617a': {
-				buy_volume: '24.315865',
-				sell_volume: '52.105425'
-			},
-			'0x1fDa15a7D17efbc3e8a11Fbaea63fb405cfB3C32': {
-				buy_volume: '52.105425',
-				sell_volume: '24.315865'
-			},
-			'0x198a0a2fa5B012e4646E7240dDFb16529967d72b': {
-				buy_volume: '0.06135289139936206207451',
-				sell_volume: '0'
-			},
-			'0xeC8dD93C481cBE0c8658f7673f16343a72Af9c3D': {
-				buy_volume: '6.709746480468568151712',
-				sell_volume: '6.86875416692067466166'
-			},
-			'0x8A57DCEda6F8CDa5B99BC83aC64F659f63b926f7': {
-				buy_volume: '244.164228187447219176668',
-				sell_volume: '243.853389'
-			},
-			'0xF07CF0C322e146aC6a47C13F9533E42D81567eF7': {
-				buy_volume: '243.853389',
-				sell_volume: '241.769172'
-			},
-			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': {
-				buy_volume: '6.946770305949513795261',
-				sell_volume: '6.946975626267446955046'
-			},
-			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': {
-				buy_volume: '6.946975626267446955046',
-				sell_volume: '6.946770305949513795261'
-			},
-			'0x4f3931aadbE087de9E572765B64744714428BD0A': {
-				buy_volume: '12.505302',
-				sell_volume: '25.705343'
-			},
-			'0x21837bc754EB9289ced8BeA462ED64541EF078cB': {
-				buy_volume: '25.705343',
-				sell_volume: '12.505302'
-			},
-			'0x39550F20857A8a3B848009cF907A8d82Cf3a6e7f': {
-				buy_volume: '0',
-				sell_volume: '0.06135289139936206207451'
-			}
-		}
-	},
-	3: {
-		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-		volume: 1936.99951567847137282304,
-		data: {
-			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': {
-				buy_volume: '21.8420931635',
-				sell_volume: '1121.3745931635'
-			},
-			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
-				buy_volume: '1131.3703431635',
-				sell_volume: '661.9221647546536900425'
-			},
-			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': { buy_volume: '224.904375', sell_volume: '9.99575' },
-			'0x4F20CBb1149BE8839A3554189098b67c21BCb587': { buy_volume: '0', sell_volume: '76.7030877603176883642' },
-			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': {
-				buy_volume: '33.50196',
-				sell_volume: '33.50195999999999441634'
-			},
-			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': {
-				buy_volume: '33.50195999999999441634',
-				sell_volume: '33.50196'
-			},
-			'0x920EFA6f544FE9050a0Aa4181911C75CdD5F8a23': { buy_volume: '76.7030877603176883642', sell_volume: '0' },
-			'0xaea5a33Bdf3f33769026beea245c6394EEAdE67F': { buy_volume: '390.1863215911536900425', sell_volume: '0' },
-			'0x60D188c083D0027B8884b61a0Ec6F50A71BBE994': { buy_volume: '24.989375', sell_volume: '0' }
-		}
-	},
-	4: {
-		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-		volume: 2444.1940945122468544272495,
-		data: {
-			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': { buy_volume: '0.110679', sell_volume: '1000.0' },
-			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': { buy_volume: '1002.0', sell_volume: '0' },
-			'0x630220d00Cf136270f553c8577aF18300F7b812c': { buy_volume: '0', sell_volume: '0.110679' },
-			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': { buy_volume: '4.289806', sell_volume: '4.287631' },
-			'0xfF99AF5c7bBe33b8Eb34a124f97A2CDe180640A0': { buy_volume: '0', sell_volume: '2.0' },
-			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': {
-				buy_volume: '471.34468637404579818945',
-				sell_volume: '503.036055'
-			},
-			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': {
-				buy_volume: '503.036055',
-				sell_volume: '471.34468637404579818945'
-			},
-			'0x9518d5744E6e39842c6a8fbCfc616ca7B67f2cFa': { buy_volume: '0', sell_volume: '454.352557127312296' },
-			'0x8240b3991aA6A225585309663a74213d25617016': { buy_volume: '4.352557127312296', sell_volume: '0' },
-			'0xFB48EFfcDC15160d6f3f94D1d12B6E4f4e29d671': { buy_volume: '4.287631', sell_volume: '4.289806' },
-			'0x3992BD6a739b9B2932FcD7dab572a009F88b9b3d': { buy_volume: '200.0', sell_volume: '0' },
-			'0x135133f344d0dD67e99C6106B1C0066A1B3EF263': { buy_volume: '250.0', sell_volume: '0' },
-			'0x1731D34B07CA2235E668c7B0941d4BfAB370a2d0': { buy_volume: '0', sell_volume: '4.313738596110696590835' },
-			'0x871b62f813b5F6E12Dd7689606C0bE9855C06D7B': { buy_volume: '0', sell_volume: '0.4589414147780636469645' },
-			'0xBE42A09D29Bfa9Ee0f2f7d41eb25aC35a14627aa': { buy_volume: '0.4589414147780636469645', sell_volume: '0' },
-			'0x683287150dE08509909E7efA8e4609DA8E34360F': { buy_volume: '4.313738596110696590835', sell_volume: '0' }
-		}
-	},
-	5: {
-		// eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-		volume: 5375.38372451445252876644,
-		data: {
-			'0xB98206A86e61bc59E9632D06679a5515eBf02e81': { buy_volume: '0', sell_volume: '0.227037872092404582' },
-			'0xFE6b7A4494B308f8c0025DCc635ac22630ec7330': {
-				buy_volume: '1576.296191252592404582',
-				sell_volume: '1874.89372737458289576684'
-			},
-			'0x9eab86EA2395c361eDA500F5094ABCF0BE825713': {
-				buy_volume: '52.89545937881889576684',
-				sell_volume: '9.99867'
-			},
-			'0x4F20CBb1149BE8839A3554189098b67c21BCb587': {
-				buy_volume: '1369.068323153045',
-				sell_volume: '1950.6507751645522284176'
-			},
-			'0xF3b20A83e4E621AAaa53f609a84CdFA29ebc13Ca': { buy_volume: '485.25477', sell_volume: '485.25477' },
-			'0x23dbF13709AD6B94111059F7B41a7460af28b6E0': { buy_volume: '485.25477', sell_volume: '485.25477' },
-			'0x920EFA6f544FE9050a0Aa4181911C75CdD5F8a23': { buy_volume: '30.015286937501322098', sell_volume: '0' },
-			'0x9518d5744E6e39842c6a8fbCfc616ca7B67f2cFa': { buy_volume: '0', sell_volume: '259.96542' },
-			'0x135133f344d0dD67e99C6106B1C0066A1B3EF263': { buy_volume: '199.9734', sell_volume: '0' },
-			'0xe172Bd02F842e98183cDBb8294Bf23f625588D9e': { buy_volume: '353.212205000119', sell_volume: '0' },
-			'0x85D3Af356773EC8614d596ca3540968Bd40FFd14': { buy_volume: '99.166484103225', sell_volume: '0' },
-			'0xE661b1030876F28FD2EAfdAe28d6280B3f198093': { buy_volume: '0', sell_volume: '99.166484103225' },
-			'0xeb2c2037017f93D22e2981061fEd4AE13F77E0d3': { buy_volume: '59.99202', sell_volume: '0' },
-			'0x6408F0b3313d9C63b5E234B4A6371Cba1A83a082': { buy_volume: '0', sell_volume: '9.99867' },
-			'0x87D5aF6B03178187489D8211feD16FCd3D56c7E0': { buy_volume: '9.99867', sell_volume: '0' },
-			'0x20FB270652138a12EC8607e93199A233A8c517f0': { buy_volume: '99.7177398426', sell_volume: '0' },
-			'0xcADD30BF714deE4a8496D09F9DF5aB9708e66600': { buy_volume: '359.422871120134695736', sell_volume: '0' },
-			'0xD22aE82D698740c151141F9e3e11768d42416d06': { buy_volume: '195.1155337264162105836', sell_volume: '0' },
-			'0xDc0981eaB09B6c27a02ce77a55d66e5C29f5cdB9': { buy_volume: '0', sell_volume: '199.9734' }
-		}
-	}
-};
 
 const CallToActionButton = ({ address }: { address: `0x${string}` | undefined }) => {
 	const router = useRouter();
@@ -223,86 +24,6 @@ const CallToActionButton = ({ address }: { address: `0x${string}` | undefined })
 	}
 
 	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
-};
-
-const ClaimRewardsButton = ({ tokens }: { tokens: number }) => {
-	const { chain } = useNetwork();
-	const { address, isConnected } = useAccount();
-	const wrongChain = CHAIN.id !== chain?.id;
-	const amount = parseUnits(tokens.toString(), 18);
-	// @ts-expect-error
-	const merkleTree = StandardMerkleTree.load(roundTree);
-	const index = address ? Object.keys(CLOSED_ROUNDS[CLOSED_ROUND].data).indexOf(address) : -1;
-	const proof = address && index >= 0 ? merkleTree.getProof(index) : [];
-	const { switchNetwork } = useSwitchNetwork();
-
-	const {
-		isLoading: claimCheckLoading,
-		isSuccess: claimChecked,
-		data: claimed
-	} = useContractRead({
-		abi: VP2P,
-		address: CONTRACT_ADDRESS,
-		args: [CLOSED_ROUND, address],
-		functionName: 'redeemedBy',
-		enabled: !wrongChain && !!address
-	});
-
-	const { config } = usePrepareContractWrite({
-		address: CONTRACT_ADDRESS,
-		abi: VP2P,
-		functionName: 'claim',
-		args: [CLOSED_ROUND, amount, proof],
-		gas: BigInt('150000'),
-		enabled: !wrongChain && !!address && !!proof.length
-	});
-
-	const { data, write: claim } = useContractWrite(config);
-
-	const { isSuccess, isLoading } = useWaitForTransaction({
-		hash: data?.hash
-	});
-
-	const onClaimRewards = async () => {
-		if (wrongChain) {
-			switchNetwork?.(CHAIN.id);
-		} else {
-			claim?.();
-		}
-	};
-
-	useTransactionFeedback({
-		hash: data?.hash,
-		isSuccess,
-		Link: <TransactionLink hash={data?.hash} />,
-		description: 'Claimed OpenPeer Rewards'
-	});
-
-	if (!isConnected) {
-		return <DynamicWidget />;
-	}
-
-	return (
-		<Button
-			title={
-				wrongChain
-					? `Switch to ${CHAIN.name}`
-					: !proof.length
-					? 'No tokens to claim'
-					: claimChecked && (claimed as boolean)
-					? 'Claimed'
-					: 'Claim Rewards'
-			}
-			onClick={onClaimRewards}
-			disabled={
-				isLoading ||
-				claimCheckLoading ||
-				!proof.length ||
-				!!(!wrongChain && proof.length && !claim) ||
-				(claimChecked && (claimed as boolean))
-			}
-		/>
-	);
 };
 
 const AirdropCountdown = ({ address }: { address: `0x${string}` | undefined }) => {
@@ -319,7 +40,7 @@ const AirdropCountdown = ({ address }: { address: `0x${string}` | undefined }) =
 		completed: boolean;
 	}) => (
 		<div className="p-6">
-			<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Time until the next airdrop</div>
+			<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Time until the next distribution</div>
 
 			<div className="flex flex-row space-x-2 w-[300px]">
 				{days > 0 && (
@@ -359,17 +80,10 @@ const AirdropCountdown = ({ address }: { address: `0x${string}` | undefined }) =
 const AirdropPage = () => {
 	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
 	const { address } = useAccount();
-
-	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0 } = volume;
+	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0, points = 0 } = volume;
 
 	const usdTotal = (Number(volume.total || 0) || 0) * 2; // times two because buyer and seller get the same amount
-	const tokens = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
-
-	const closedRoundTokensInfo = address ? roundTree.values.find((line) => line.value[0] === address) : undefined;
-
-	const closedRoundTokens = closedRoundTokensInfo
-		? Number(formatUnits(BigInt(closedRoundTokensInfo.value[1]), 18))
-		: 0;
+	const pendingPoints = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
 
 	useEffect(() => {
 		fetch(`/api/airdrop?address=${address || constants.AddressZero}&round=${ROUND}`, {
@@ -455,8 +169,8 @@ const AirdropPage = () => {
 								<div className="flex flex-col mb-4">
 									<span className="text-[#25385A] font-bold">What will be airdropped?</span>
 									<span className="text-[#67738E] font-light">
-										You will be rewarded with vP2P tokens based on your trade volume. This token
-										will be convertible to our protocol&apos;s upcoming P2P token.
+										You will be rewarded with points based on your share of trade volume every
+										month. Points will convert to OpenPeer&apos;s upcoming P2P token.
 									</span>
 								</div>
 							</div>
@@ -466,24 +180,24 @@ const AirdropPage = () => {
 										{Number(sellVolume).toFixed(2)} / {Number(usdTotal).toFixed(2)} USD
 									</span>
 									<span className="text-[#25385A] font-bold">Eligible sell volume</span>
-									<span className="text-[#67738E] font-light">Crypto sales between new users.</span>
+									<span className="text-[#67738E] font-light">Crypto sales between users.</span>
 								</div>
 								<div className="flex flex-col mb-4">
 									<span className="text-[#25385A] font-bold">How to collect your reward?</span>
 									<span className="text-[#67738E] font-light">
 										After the countdown hits zero and this month&apos;s epoch ends, the calculated
-										reward will be available to redeem
+										points will be distributed
 									</span>
 								</div>
 							</div>
 							<div className="flex justify-center items-center text-center">
 								<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
 									<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
-										<span className="text-white text-base mb-2">Eligible for</span>
+										<span className="text-white text-base mb-2">Pending points</span>
 										<span className="text-white text-4xl font-bold mb-2">
-											{Number(tokens).toFixed(2)}
+											{Number(pendingPoints).toFixed(2)}
 										</span>
-										<span className="text-white text-2xl">vP2P</span>
+										<span className="text-white text-2xl">Points</span>
 									</div>
 								</div>
 							</div>
@@ -500,14 +214,12 @@ const AirdropPage = () => {
 				</div>
 				<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
 					<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
-						<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Past rewards</div>
-						<div className="flex flex-row items-center space-x-2">
-							<span className="text-xl md:text-3xl font-bold">{closedRoundTokens}</span>
-							<span className="font-light">vP2P</span>
-						</div>
-						<div className="my-4">
-							<ClaimRewardsButton tokens={closedRoundTokens} />
-						</div>
+						<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Total points earned</div>
+						{address ? (
+							<span className="text-xl md:text-3xl font-bold">{points || 0}</span>
+						) : (
+							<DynamicWidget />
+						)}
 					</div>
 				</div>
 			</div>

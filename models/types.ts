@@ -153,6 +153,7 @@ export interface Order {
 export interface Airdrop {
 	buy_volume?: number;
 	sell_volume?: number;
+	points: number;
 	total: number;
 }
 
