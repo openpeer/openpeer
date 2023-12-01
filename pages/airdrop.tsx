@@ -12,9 +12,9 @@ import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
 import { constants } from 'ethers';
 import { useAccount } from 'hooks';
 
-const ROUND = 6;
+const ROUND = 7;
 const POOL = 1000000;
-const AIRDROP_START = 1701432000000;
+const AIRDROP_START = 1704110400000;
 
 const CallToActionButton = ({ address }: { address: `0x${string}` | undefined }) => {
 	const router = useRouter();
