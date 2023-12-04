@@ -1300,9 +1300,9 @@
     "@dynamic-labs/types" "0.18.100-viem.14"
 
 "@dynamic-labs/wagmi-connector@^0.18.100-viem.14":
-  version "0.18.100-viem.14"
-  resolved "https://registry.yarnpkg.com/@dynamic-labs/wagmi-connector/-/wagmi-connector-0.18.100-viem.14.tgz#394950b0c378b8536f33f291e7742898e348a8d4"
-  integrity sha512-4c6TVwfMU6HUiKPG60W0rEavFgZ6/D502lnL3P88sqNLzsryi8b+CSVisYAJLDB8TJRcKh1IiL1BxXw/bHqPVw==
+  version "0.18.100-viem.30"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wagmi-connector/-/wagmi-connector-0.18.100-viem.30.tgz#4581c2b9cfbb6c099b2b1b5f8608e3a7e3ed91b6"
+  integrity sha512-ztvrfVqtUjWAg/Z44wc2Wm61xsUABM24ZObG6I0oaxQWue+vdkgLOabckNqQyj6ax9mGPbIJnMUXVdw0W4tW/Q==
 
 "@dynamic-labs/wallet-book@0.18.100-viem.14":
   version "0.18.100-viem.14"

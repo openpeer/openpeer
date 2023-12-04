@@ -153,7 +153,8 @@ export interface Order {
 export interface Airdrop {
 	buy_volume?: number;
 	sell_volume?: number;
-	points: number;
+	points: number; // trade points
+	liquidity_points: number; // trade points
 	total: number;
 }
 
@@ -162,4 +163,5 @@ export interface Contract {
 	address: `0x${string}`;
 	chain_id: number;
 	version: string;
+	locked_value: number | undefined;
 }
