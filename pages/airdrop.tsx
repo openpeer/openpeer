@@ -271,21 +271,25 @@ const AirdropPage = () => {
 									<div className="flex flex-row justify-between mb-4">
 										<div>Value currently in instant escrow</div>
 										<div>
-											<span className="text-2xl">${lockedValue}</span>
+											<span className="text-2xl">${Number(lockedValue).toFixed(2)}</span>
 											<span className="text-sm pl-2">USD</span>
 										</div>
 									</div>
 									<div className="flex flex-row justify-between border-b mb-4 pb-4">
-										<div>Total daily rewards estimative</div>
+										<div>Estimated Daily Points</div>
 										<div>
-											<span className="text-2xl">{lockedValue * 0.000832 * 24}</span>
+											<span className="text-2xl">
+												{Number(lockedValue * 0.000832 * 24).toFixed(2)}
+											</span>
 											<span className="text-sm pl-2">points</span>
 										</div>
 									</div>
 									<div className="flex flex-row justify-between">
 										<div>Total points earned</div>
 										<div>
-											<span className="text-2xl font-bold">{volume.liquidity_points}</span>
+											<span className="text-2xl font-bold">
+												{Number(volume.liquidity_points).toFixed(2)}
+											</span>
 											<span className="text-sm pl-2 font-bold">points</span>
 										</div>
 									</div>
@@ -309,7 +313,7 @@ const AirdropPage = () => {
 								Total points earned
 							</div>
 							{address ? (
-								<span className="text-xl md:text-3xl font-bold">{points || 0}</span>
+								<span className="text-xl md:text-3xl font-bold">{Number(points || 0).toFixed(2)}</span>
 							) : (
 								<DynamicWidget />
 							)}
