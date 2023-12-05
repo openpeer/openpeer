@@ -146,7 +146,7 @@ const AirdropPage = () => {
 					<span className="text-base text-zinc-800">
 						We&apos;re running a retroactive airdrop campaign with a monthly rewards pool. If you trade on
 						OpenPeer, you will be rewarded based on your volume and providing liquidity to the protocol.
-						<Link href="https://blog.openpeer.xyz/openpeer-rewards-campaign" target="_blank">
+						<Link href="https://blog.openpeer.xyz/introducing-openpeer-points/" target="_blank">
 							<div className="ml-2 underline inline-block hover:no-underline cursor-pointer">
 								Read about details here.
 							</div>
