@@ -2,7 +2,7 @@ import getAuthToken from 'utils/getAuthToken';
 import Loading from 'components/Loading/Loading';
 import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useNetwork } from 'hooks';
 import { polygon } from 'wagmi/chains';
 
 import Select from './Select';
@@ -21,8 +21,8 @@ const TokenSelect = ({
 }: TokenSelectProps) => {
 	const [tokens, setTokens] = useState<Token[]>();
 	const [isLoading, setLoading] = useState(false);
-	const { chain, chains } = useNetwork();
-	const chainId = allTokens ? undefined : networkId || chain?.id || chains[0]?.id || polygon.id;
+	const { chain } = useNetwork();
+	const chainId = allTokens ? undefined : networkId || chain?.id || polygon.id;
 
 	useEffect(() => {
 		if (!chainId && !allTokens) return;

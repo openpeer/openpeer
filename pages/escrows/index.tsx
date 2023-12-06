@@ -4,11 +4,11 @@ import DeploySellerContract from 'components/Buy/EscrowButton/DeploySellerContra
 import HeaderH3 from 'components/SectionHeading/h2';
 import NetworkSelect from 'components/Select/NetworkSelect';
 import useAccount from 'hooks/useAccount';
-import { useUserProfile } from 'hooks';
+import { useUserProfile, useNetwork } from 'hooks';
 import { DEPLOYER_CONTRACTS, allChains } from 'models/networks';
 import React, { useEffect, useState } from 'react';
 import { formatUnits } from 'viem';
-import { Chain, useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Chain, useContractRead, useSwitchNetwork } from 'wagmi';
 import { Contract, Token } from 'models/types';
 import { smallWalletAddress } from 'utils';
 

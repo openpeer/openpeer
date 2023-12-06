@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNetwork } from 'wagmi';
+import { useNetwork } from 'hooks';
 
 const TransactionLink = ({ hash }: { hash: `0x${string}` | undefined }) => {
 	const { chain } = useNetwork();

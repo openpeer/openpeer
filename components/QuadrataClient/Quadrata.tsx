@@ -3,7 +3,7 @@ import '@quadrata/core-react/lib/cjs/quadrata-ui.min.css';
 import Loading from 'components/Loading/Loading';
 import { quadrataPassportContracts } from 'models/networks';
 import React, { useEffect, useState } from 'react';
-import { useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 import {
 	Page,
@@ -15,7 +15,7 @@ import {
 	QuadMintParamsBigNumbers
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
-import { useConfirmationSignMessage } from 'hooks';
+import { useConfirmationSignMessage, useNetwork } from 'hooks';
 import getAuthToken from 'utils/getAuthToken';
 import useAccount from 'hooks/useAccount';
 

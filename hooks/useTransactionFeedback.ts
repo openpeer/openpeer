@@ -1,7 +1,7 @@
 import { useTransactionFeedbackModal } from 'contexts/TransactionFeedContext';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 
 interface Params {
 	isSuccess: boolean;

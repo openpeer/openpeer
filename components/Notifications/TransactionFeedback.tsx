@@ -4,12 +4,13 @@ import { User } from 'models/types';
 import React, { Fragment, useEffect } from 'react';
 import { smallWalletAddress } from 'utils';
 import useAccount from 'hooks/useAccount';
-import { useNetwork, useWaitForTransaction } from 'wagmi';
+import { useWaitForTransaction } from 'wagmi';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { ArrowPathIcon, ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { Manrope } from '@next/font/google';
+import useNetwork from 'hooks/useNetwork';
 
 const manrope = Manrope({
 	subsets: ['latin'],

@@ -3,11 +3,11 @@ import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { Button, Loading, Token as TokenImage } from 'components';
 import SendFundsModal from 'components/Modal/SendFundsModal';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useTransactionFeedback, useNetwork } from 'hooks';
 import { Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits, zeroAddress } from 'viem';
-import { erc20ABI, useNetwork, usePublicClient, useWalletClient } from 'wagmi';
+import { erc20ABI, usePublicClient, useWalletClient } from 'wagmi';
 
 interface Balance {
 	[key: string]: bigint;

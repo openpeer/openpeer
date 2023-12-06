@@ -68,7 +68,7 @@
 		"tailwind": "^4.0.0",
 		"tailwindcss": "^3.2.4",
 		"tls": "^0.0.1",
-		"tronweb": "~5.1.0",
+		"tronweb": "5.3.1",
 		"typescript": "5.0.4",
 		"utf8": "^3.0.0",
 		"viem": "^1.9.0",

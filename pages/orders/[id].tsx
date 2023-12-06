@@ -6,7 +6,7 @@ import Dispute from 'components/Dispute/Dispute';
 import { GetServerSideProps } from 'next';
 import useAccount from 'hooks/useAccount';
 import React, { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 
 const ERROR_STEP = 0;
 const PAYMENT_METHOD_STEP = 2;

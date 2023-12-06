@@ -1,6 +1,6 @@
 import { Token } from 'models/types';
 import useAccount from 'hooks/useAccount';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 
 import useGaslessApproval from './useGaslessApproval';
 import useTokenApproval from './useTokenApproval';
@@ -14,7 +14,7 @@ interface UseTokenApprovalProps {
 const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
 	const { gasless } = token;
 	const { address } = useAccount();
-	const { chain, chains } = useNetwork();
+	const { chain } = useNetwork();
 
 	const withGasCall = useTokenApproval({
 		address: token.address,
@@ -24,7 +24,7 @@ const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, approve } = useGaslessApproval({
 		amount,
-		chain: chain || chains[0],
+		chain,
 		spender,
 		tokenAddress: token.address,
 		userAddress: address!

@@ -1,12 +1,12 @@
 import Avatar from 'components/Avatar';
 import QuadrataClient from 'components/QuadrataClient';
 import { providers } from 'ethers';
-import { useVerificationStatus } from 'hooks';
+import { useVerificationStatus, useNetwork } from 'hooks';
 import { User } from 'models/types';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { smallWalletAddress } from 'utils';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useSwitchNetwork } from 'wagmi';
 
 import {
 	CalendarDaysIcon,

@@ -11,8 +11,9 @@ import ExplainerNotification from 'components/Notifications/ExplainerNotificatio
 import { formatUnits, parseUnits } from 'viem';
 import DepositFunds from 'components/DepositButton';
 import { constants } from 'ethers';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useSwitchNetwork } from 'wagmi';
 import Button from 'components/Button/Button';
+import { useNetwork } from 'hooks';
 import { getChainToken } from 'utils';
 import TokenImage from '../Token/Token';
 import StepLayout from './StepLayout';

@@ -40,7 +40,26 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
 
-export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis];
+export const tron = {
+	id: 999999999,
+	name: 'Tron',
+	network: 'tron',
+	nativeCurrency: {
+		symbol: 'TRX',
+		name: 'TRX',
+		decimals: 18
+	},
+	rpcUrls: {
+		default: { http: ['https://api.trongrid.io'] },
+		public: { http: ['https://api.trongrid.io'] }
+	},
+	blockExplorers: {
+		default: { name: 'TronScan', url: 'https://tronscan.org/#/' },
+		etherscan: { name: 'TronScan', url: 'https://tronscan.org/#/' }
+	}
+};
+
+export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, tron];
 
 const devChains = [polygonMumbai];
 

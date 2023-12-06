@@ -1,7 +1,7 @@
 import getAuthToken from 'utils/getAuthToken';
 import { Verification } from 'models/verification';
 import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 
 const useVerificationStatus = (address: `0x${string}` | undefined) => {
 	const [verification, setVerification] = useState<Verification>();

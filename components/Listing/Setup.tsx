@@ -1,10 +1,10 @@
 import { CurrencySelect, TokenSelect } from 'components';
 import { Option } from 'components/Select/Select.types';
-import { useFormErrors } from 'hooks';
+import { useFormErrors, useNetwork } from 'hooks';
 import { Errors } from 'models/errors';
 import { FiatCurrency, Token } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { Chain, useNetwork } from 'wagmi';
+import { Chain } from 'wagmi';
 
 import NetworkSelect from 'components/Select/NetworkSelect';
 import { allChains } from 'models/networks';

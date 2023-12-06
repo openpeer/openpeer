@@ -6,7 +6,8 @@ import { Order } from 'models/types';
 import React from 'react';
 import { formatUnits } from 'viem';
 import useAccount from 'hooks/useAccount';
-import { useContractRead, useNetwork } from 'wagmi';
+import { useContractRead } from 'wagmi';
+import { useNetwork } from 'hooks';
 
 interface DisputeParams {
 	order: Order;

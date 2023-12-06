@@ -1,8 +1,9 @@
 import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Biconomy } from '@biconomy/mexa';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
+import useNetwork from './useNetwork';
 
 interface UseBiconomyProps {
 	contract: `0x${string}`;
@@ -11,8 +12,8 @@ interface UseBiconomyProps {
 const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const [biconomy, setBiconomy] = useState<Biconomy | null>();
 	const account = useAccount();
-	const { chain, chains } = useNetwork();
-	const chainId = (chain || chains[0])?.id;
+	const { chain } = useNetwork();
+	const chainId = chain?.id || 0;
 	const apiKey = networkApiKeys[chainId || 0];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
 	const { primaryWallet } = useDynamicContext();

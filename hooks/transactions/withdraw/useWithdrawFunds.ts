@@ -1,7 +1,7 @@
 import { constants } from 'ethers';
 
 import { FULL_GASLESS_CHAINS } from 'models/networks';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 import { UseWithdrawFundsProps } from '../types';
 import useWithdrawWithGas from './useWithdrawWithGas';
 import useGaslessWithdrawFunds from './useGaslessWithdrawFunds';

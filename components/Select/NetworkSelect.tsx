@@ -1,8 +1,9 @@
-import { allChains } from 'models/networks';
+import { allChains, tron } from 'models/networks';
 import React from 'react';
 import { Chain } from 'wagmi';
 
 import { arbitrum, gnosis, optimism } from 'wagmi/chains';
+import useAccount from 'hooks/useAccount';
 import Select from './Select';
 import { SelectProps } from './Select.types';
 
@@ -21,7 +22,8 @@ const NetworkSelect = ({
 	label?: string;
 	extraStyle?: string;
 }) => {
-	const chains = allChains;
+	const { evm } = useAccount();
+	const chains = allChains.filter((chain) => (evm ? chain.id !== tron.id : chain.id === tron.id));
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {

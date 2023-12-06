@@ -2,14 +2,14 @@
 import { OpenPeerEscrow } from 'abis';
 import { Button, ModalWindow } from 'components';
 import TransactionLink from 'components/TransactionLink';
-import { useOpenDispute, useTransactionFeedback } from 'hooks';
+import { useOpenDispute, useTransactionFeedback, useNetwork } from 'hooks';
 import useAccount from 'hooks/useAccount';
 import { Order } from 'models/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Abi, formatUnits, parseUnits } from 'viem';
-import { useBalance, useContractReads, useNetwork } from 'wagmi';
+import { useBalance, useContractReads } from 'wagmi';
 
 interface OpenDisputeButtonParams {
 	order: Order;

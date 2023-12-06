@@ -3,9 +3,10 @@ import Label from 'components/Label/Label';
 import { Dispute } from 'models/types';
 import React from 'react';
 import { formatUnits } from 'viem';
-import { useContractRead, useNetwork } from 'wagmi';
+import { useContractRead } from 'wagmi';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { useNetwork } from 'hooks';
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ');

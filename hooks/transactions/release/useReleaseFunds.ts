@@ -1,4 +1,4 @@
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 import { FULL_GASLESS_CHAINS } from 'models/networks';
 import { UseEscrowTransactionProps } from '../types';
 import useGaslessReleaseFunds from './useGaslessReleaseFunds';

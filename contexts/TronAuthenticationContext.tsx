@@ -54,6 +54,10 @@ export const TronAuthenticationProvider = ({ children }: { children: React.React
 	}, [disconnecting]);
 
 	const authenticate = async (message: string, signature: string) => {
+		if (!address) {
+			return;
+		}
+
 		const response = await fetch('/api/siwt', {
 			method: 'POST',
 			headers: {
@@ -61,12 +65,13 @@ export const TronAuthenticationProvider = ({ children }: { children: React.React
 			},
 			body: JSON.stringify({
 				message,
-				signature,
-				address
+				signature
 			})
 		});
 
-		const newToken = await response.json();
+		const tokens = await response.json();
+		const newToken = tokens[address];
+		console.log(tokens, newToken);
 		if (newToken) {
 			localStorage.setItem('openpeer_authentication_token', newToken);
 			setToken(newToken);

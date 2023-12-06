@@ -1,5 +1,5 @@
 import { FULL_GASLESS_CHAINS } from 'models/networks';
-import { useNetwork } from 'wagmi';
+import useNetwork from 'hooks/useNetwork';
 import { UseEscrowCancelProps } from '../types';
 import useGasEscrowCancel from './useGasEscrowCancel';
 import useGaslessEscrowCancel from './useGaslessEscrowCancel';

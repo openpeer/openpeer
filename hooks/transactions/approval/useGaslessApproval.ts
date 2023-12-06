@@ -7,7 +7,7 @@ import { parseAbi } from 'viem';
 import { Chain, useContractReads } from 'wagmi';
 
 interface ApproveTokenProps {
-	chain: Chain;
+	chain: Chain | undefined;
 	tokenAddress: `0x${string}`;
 	userAddress: `0x${string}`;
 	spender: `0x${string}`;
@@ -46,7 +46,7 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 		]
 	});
 
-	if (isFetching || biconomy === undefined || gaslessEnabled === undefined) {
+	if (isFetching || biconomy === undefined || gaslessEnabled === undefined || chain === undefined) {
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };
 	}
 
