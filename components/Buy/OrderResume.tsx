@@ -22,7 +22,8 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 		escrow,
 		id,
 		created_at: createdAt,
-		seller
+		seller,
+		payment_method: { bank }
 	} = order;
 	const { token, fiat_currency: currency } = list!;
 	const { address } = useAccount();
@@ -34,10 +35,14 @@ const OrderResume = ({ order, showRating = false }: OrderResumeParams) => {
 	const date = new Date(createdAt);
 
 	return (
-		<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6">
+		<div className="w-full bg-white rounded-lg border border-color-gray-100 p-6 mb-2">
 			<div className="flex flex-row justify-between mb-4">
 				<span className="text-neutral-500">Amount Paid</span>
 				<span className="flex flex-row justify-between">{selling ? tokenValue : fiatValue}</span>
+			</div>
+			<div className="flex flex-row justify-between mb-4">
+				<span className="text-neutral-500">Payment Method</span>
+				<span className="flex flex-row justify-between">{bank.name}</span>
 			</div>
 			{selling && !!fee && (
 				<div className="flex flex-row justify-between mb-4">
