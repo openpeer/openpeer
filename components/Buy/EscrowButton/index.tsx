@@ -46,7 +46,6 @@ const EscrowButton = ({
 				const tronWeb = tronWebClient(chain);
 				const deployerContract = await tronWeb.contract(OpenPeerDeployer, deployer);
 				const contract = await deployerContract.sellerContracts(instantEscrow ? seller : address).call();
-				console.log('contract', contract);
 				setSellerContract(contract as string | undefined);
 			}
 		};
@@ -63,17 +62,12 @@ const EscrowButton = ({
 
 	if (isFetching || !fee) return <></>;
 
-	console.log('sellerContract', sellerContract);
-
 	const needsToDeploy =
 		!instantEscrow &&
 		(!sellerContract ||
 			sellerContract === constants.AddressZero ||
 			sellerContract === '410000000000000000000000000000000000000000');
 
-	console.log('nativeToken', nativeToken);
-	console.log('approved', approved);
-	console.log('needsToDeploy', needsToDeploy);
 	return (
 		<span className="w-full">
 			{(nativeToken || approved) && !needsToDeploy ? (

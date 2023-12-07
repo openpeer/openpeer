@@ -71,7 +71,6 @@ export const TronAuthenticationProvider = ({ children }: { children: React.React
 
 		const tokens = await response.json();
 		const newToken = tokens[address];
-		console.log(tokens, newToken);
 		if (newToken) {
 			localStorage.setItem('openpeer_authentication_token', newToken);
 			setToken(newToken);

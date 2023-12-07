@@ -5,7 +5,7 @@ export const tron = {
 	chainId: '0x2b6653dc',
 	fullHost: 'https://api.trongrid.io',
 	name: 'Tron',
-	network: 'tron',
+	network: 'mainnet',
 	nativeCurrency: {
 		symbol: 'TRX',
 		name: 'TRX',
@@ -26,7 +26,8 @@ export const shasta = {
 	id: 999999991,
 	fullHost: 'https://api.shasta.trongrid.io',
 	name: 'Tron Shasta',
-	chainId: '0x94a9059e'
+	chainId: '0x94a9059e',
+	network: 'shasta'
 };
 
 export const nile = {
@@ -34,7 +35,8 @@ export const nile = {
 	id: 999999992,
 	fullHost: 'https://api.nileex.io/',
 	name: 'Tron Nile',
-	chainId: '0xcd8690dc'
+	chainId: '0xcd8690dc',
+	network: 'nile'
 };
 
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {

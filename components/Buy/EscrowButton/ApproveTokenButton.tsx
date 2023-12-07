@@ -60,7 +60,6 @@ const ApproveTokenButton = ({
 				const tronWeb = tronWebClient(chain);
 				const contract = await tronWeb.contract(erc20ABI, token.address);
 				const tokenAllowance = await contract.allowance(address, spender).call();
-				console.log(tokenAllowance.toString());
 				setAllowance(BigInt(tokenAllowance.toString()));
 			}
 		};

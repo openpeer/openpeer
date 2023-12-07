@@ -1,9 +1,9 @@
 import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 import { Biconomy } from '@biconomy/mexa';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
 import useNetwork from './useNetwork';
+import useAccount from './useAccount';
 
 interface UseBiconomyProps {
 	contract: `0x${string}`;
@@ -11,16 +11,15 @@ interface UseBiconomyProps {
 
 const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	const [biconomy, setBiconomy] = useState<Biconomy | null>();
-	const account = useAccount();
+	const { address, evm } = useAccount();
 	const { chain } = useNetwork();
 	const chainId = chain?.id || 0;
 	const apiKey = networkApiKeys[chainId || 0];
 	const [gaslessEnabled, setGaslessEnabled] = useState<boolean>();
 	const { primaryWallet } = useDynamicContext();
-	const address = account.address || (primaryWallet?.address as `0x${string}`);
 
 	const canSubmitGaslessTransaction = async () => {
-		if (apiKey && address) {
+		if (apiKey && address && evm) {
 			try {
 				const { allowed } = await (
 					await fetch(`https://api.biconomy.io/api/v1/dapp/checkLimits?userAddress=${address}`, {
@@ -57,14 +56,9 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 
 	useEffect(() => {
 		const initBiconomy = async () => {
-			if (address && chain && primaryWallet && contract) {
+			if (address && chain && evm && primaryWallet && contract && apiKey) {
 				const provider = await primaryWallet.connector.getWeb3Provider();
 				if (!provider) return;
-
-				if (!apiKey) {
-					setBiconomy(null);
-					return;
-				}
 
 				const client = new Biconomy(provider, {
 					apiKey,
@@ -73,10 +67,12 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 				});
 				await client.init();
 				setBiconomy(client);
+			} else {
+				setBiconomy(null);
 			}
 		};
 		initBiconomy();
-	}, [address, chain, contract, apiKey, primaryWallet]);
+	}, [address, chain, contract, apiKey, primaryWallet, evm]);
 
 	useEffect(() => {
 		canSubmitGaslessTransaction();
