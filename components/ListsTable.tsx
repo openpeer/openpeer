@@ -1,6 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { countries } from 'models/countries';
 import { Token as TokenType, List } from 'models/types';
 import Link from 'next/link';
@@ -64,8 +63,7 @@ const BuyButton = ({ fiatAmount, tokenAmount, list }: BuyButtonProps) => {
 };
 
 const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTableProps) => {
-	const { address } = useAccount();
-	const { primaryWallet } = useDynamicContext();
+	const { address, isConnected } = useAccount();
 	const chains = allChains;
 	const { user } = useUserProfile({});
 
@@ -161,7 +159,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					} = list;
 					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
-					const isSeller = primaryWallet && sellerAddress === address;
+					const isSeller = isConnected && sellerAddress === address;
 					const { symbol, minimum_amount: minimumAmount = 0 } = token;
 					const chain = chains.find((c) => c.id === chainId);
 					const chainToken = getChainToken(chain);

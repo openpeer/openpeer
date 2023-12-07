@@ -6,6 +6,7 @@ import { allChains } from 'models/networks';
 import { List, Token } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
 import { Chain } from 'wagmi';
+import tronWeb from './tronWeb';
 
 export const smallWalletAddress = (address: `0x${string}`, length = 4): string =>
 	`${address.substring(0, length)}..${address.substring(address.length - length)}`;
@@ -62,3 +63,9 @@ export const getChainToken = (chain: Chain | undefined) => {
 	}
 	return undefined;
 };
+
+export const tron = {
+	AddressZero: 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb'
+};
+
+export const tronWebClient = tronWeb;

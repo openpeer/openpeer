@@ -1,4 +1,5 @@
 import { Interface } from 'ethers/lib/utils';
+import useAccount from 'hooks/useAccount';
 import useBiconomy from 'hooks/useBiconomy';
 import { sendSignedTransaction } from 'models/transactions';
 import { useState } from 'react';
@@ -26,6 +27,7 @@ interface Data {
 }
 
 const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount }: ApproveTokenProps) => {
+	const { evm } = useAccount();
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,8 +45,13 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 			{ ...tokenContract, functionName: 'getNonce', args: [userAddress] },
 			{ ...tokenContract, functionName: '_nonces', args: [userAddress] },
 			{ ...tokenContract, functionName: 'nonces', args: [userAddress] }
-		]
+		],
+		enabled: evm
 	});
+
+	if (!evm) {
+		return { isFetching: false, gaslessEnabled: false, isSuccess: true, isLoading: false };
+	}
 
 	if (isFetching || biconomy === undefined || gaslessEnabled === undefined || chain === undefined) {
 		return { isFetching: true, gaslessEnabled, isSuccess, isLoading, data };

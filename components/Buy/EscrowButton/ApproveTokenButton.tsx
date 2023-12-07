@@ -1,11 +1,13 @@
+import { readContract } from '@wagmi/core';
 import Button from 'components/Button/Button';
 import TransactionLink from 'components/TransactionLink';
-import { useTransactionFeedback } from 'hooks';
+import { useNetwork, useTransactionFeedback } from 'hooks';
 import { useApproval } from 'hooks/transactions';
 import useAccount from 'hooks/useAccount';
 import { Token } from 'models/types';
-import React, { useEffect } from 'react';
-import { erc20ABI, useContractRead } from 'wagmi';
+import React, { useEffect, useState } from 'react';
+import { tronWebClient } from 'utils';
+import { erc20ABI } from 'wagmi';
 
 const ApproveTokenButton = ({
 	token,
@@ -18,12 +20,15 @@ const ApproveTokenButton = ({
 	amount: bigint;
 	onApprovalChange: (approved: boolean) => void;
 }) => {
-	const { address, isConnected } = useAccount();
+	const { address, isConnected, evm } = useAccount();
+	const { chain } = useNetwork();
 	const { isFetching, isLoading, isSuccess, data, approve } = useApproval({
 		token,
 		spender,
 		amount
 	});
+
+	const [allowance, setAllowance] = useState<bigint>();
 
 	useTransactionFeedback({
 		hash: data?.hash,
@@ -38,12 +43,30 @@ const ApproveTokenButton = ({
 		approve?.();
 	};
 
-	const { data: allowance } = useContractRead({
-		address: token.address,
-		abi: erc20ABI,
-		functionName: 'allowance',
-		args: [address!, spender]
-	});
+	useEffect(() => {
+		const fetchAllowance = async () => {
+			if (!chain || !address) return;
+
+			if (evm) {
+				const lala = await readContract({
+					address: token.address,
+					abi: erc20ABI,
+					functionName: 'allowance',
+					args: [address!, spender]
+				});
+				// @ts-expect-error @TODO: Marcos fix this
+				setAllowance(lala);
+			} else {
+				const tronWeb = tronWebClient(chain);
+				const contract = await tronWeb.contract(erc20ABI, token.address);
+				const tokenAllowance = await contract.allowance(address, spender).call();
+				console.log(tokenAllowance.toString());
+				setAllowance(BigInt(tokenAllowance.toString()));
+			}
+		};
+
+		fetchAllowance();
+	}, [evm]);
 
 	const approved = !!allowance && !!amount && allowance >= amount;
 

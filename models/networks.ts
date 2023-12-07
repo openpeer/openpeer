@@ -1,5 +1,42 @@
 import { arbitrum, avalanche, bsc, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
+export const tron = {
+	id: 999999999,
+	chainId: '0x2b6653dc',
+	fullHost: 'https://api.trongrid.io',
+	name: 'Tron',
+	network: 'tron',
+	nativeCurrency: {
+		symbol: 'TRX',
+		name: 'TRX',
+		decimals: 18
+	},
+	rpcUrls: {
+		default: { http: ['https://api.trongrid.io'] },
+		public: { http: ['https://api.trongrid.io'] }
+	},
+	blockExplorers: {
+		default: { name: 'TronScan', url: 'https://tronscan.org/#/' },
+		etherscan: { name: 'TronScan', url: 'https://tronscan.org/#/' }
+	}
+};
+
+export const shasta = {
+	...tron,
+	id: 999999991,
+	fullHost: 'https://api.shasta.trongrid.io',
+	name: 'Tron Shasta',
+	chainId: '0x94a9059e'
+};
+
+export const nile = {
+	...tron,
+	id: 999999992,
+	fullHost: 'https://api.nileex.io/',
+	name: 'Tron Nile',
+	chainId: '0xcd8690dc'
+};
+
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[avalanche.id]: process.env.NEXT_PUBLIC_AVAX_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -19,7 +56,8 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[arbitrum.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[optimism.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[bsc.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
-	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1'
+	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1',
+	[nile.id]: 'TFA761EdwDnr86PeEMVLopd8UbJfEz7tgn'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
@@ -40,28 +78,9 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
 
-export const tron = {
-	id: 999999999,
-	name: 'Tron',
-	network: 'tron',
-	nativeCurrency: {
-		symbol: 'TRX',
-		name: 'TRX',
-		decimals: 18
-	},
-	rpcUrls: {
-		default: { http: ['https://api.trongrid.io'] },
-		public: { http: ['https://api.trongrid.io'] }
-	},
-	blockExplorers: {
-		default: { name: 'TronScan', url: 'https://tronscan.org/#/' },
-		etherscan: { name: 'TronScan', url: 'https://tronscan.org/#/' }
-	}
-};
-
 export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, tron];
 
-const devChains = [polygonMumbai];
+const devChains = [polygonMumbai, shasta, nile];
 
 export const allChains = process.env.NODE_ENV === 'production' ? productionChains : [...productionChains, ...devChains];
 

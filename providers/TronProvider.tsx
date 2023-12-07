@@ -3,8 +3,7 @@ import React, { useMemo } from 'react';
 import '@tronweb3/tronwallet-adapter-react-ui/style.css';
 import { WalletProvider } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { WalletModalProvider } from '@tronweb3/tronwallet-adapter-react-ui';
-import { WalletDisconnectedError, WalletError, WalletNotFoundError } from '@tronweb3/tronwallet-abstract-adapter';
-import { toast } from 'react-toastify';
+import { WalletError } from '@tronweb3/tronwallet-abstract-adapter';
 import {
 	BitKeepAdapter,
 	LedgerAdapter,
@@ -17,11 +16,7 @@ import { TronAuthenticationProvider } from 'contexts/TronAuthenticationContext';
 
 const TronProvider = ({ children }: { children: React.ReactNode }) => {
 	function onError(e: WalletError) {
-		if (e instanceof WalletNotFoundError) {
-			toast.error(e.message);
-		} else if (e instanceof WalletDisconnectedError) {
-			toast.error(e.message);
-		} else toast.error(e.message);
+		console.error(e.message);
 	}
 	const adapters = useMemo(() => {
 		const tronLinkAdapter = new TronLinkAdapter();
