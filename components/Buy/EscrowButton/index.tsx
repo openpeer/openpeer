@@ -63,7 +63,7 @@ const EscrowButton = ({
 				needsToDeploy && <DeploySellerContract />
 			)}
 			{!instantEscrow && !nativeToken && (
-				<div className={nativeToken || approved ? 'hidden' : ''}>
+				<div className={nativeToken || approved || needsToDeploy ? 'hidden' : ''}>
 					<ApproveTokenButton
 						token={token}
 						amount={totalAmount!}
