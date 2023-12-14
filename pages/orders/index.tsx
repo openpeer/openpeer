@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';

@@ -2,7 +2,7 @@ import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { Biconomy } from '@biconomy/mexa';
-import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 interface UseBiconomyProps {
 	contract: `0x${string}`;

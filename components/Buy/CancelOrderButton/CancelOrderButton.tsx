@@ -1,4 +1,4 @@
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { Button, Modal } from 'components';
 import { useCancelReasons, useConfirmationSignMessage, useAccount } from 'hooks';
 import { Order } from 'models/types';

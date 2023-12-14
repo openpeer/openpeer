@@ -1,4 +1,4 @@
-import { useDynamicContext, useSendBalance } from '@dynamic-labs/sdk-react';
+import { useDynamicContext, useSendBalance } from '@dynamic-labs/sdk-react-core';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { Button, Loading, Token as TokenImage } from 'components';
 import SendFundsModal from 'components/Modal/SendFundsModal';

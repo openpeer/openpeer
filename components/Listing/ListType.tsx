@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { User } from 'models/types';
 import { useAccount } from 'hooks';
 import { DEFAULT_DEPOSIT_TIME_LIMIT } from 'utils';

@@ -14,7 +14,7 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { DocumentIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import FilesUploader from './FilesUploader';
 
 interface Upload {

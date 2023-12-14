@@ -4,7 +4,7 @@ import React from 'react';
 
 import { PencilSquareIcon, TrashIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { useConfirmationSignMessage, useAccount } from 'hooks';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { List } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
 

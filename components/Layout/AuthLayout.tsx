@@ -30,7 +30,7 @@ import {
 	DynamicWidget,
 	useAuthenticateConnectedUser,
 	useDynamicContext
-} from '@dynamic-labs/sdk-react';
+} from '@dynamic-labs/sdk-react-core';
 import { ChatWithOwner } from 'react-wallet-chat-sso';
 import Avatar from '../Avatar';
 import Button from '../Button/Button';

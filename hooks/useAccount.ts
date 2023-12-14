@@ -1,4 +1,4 @@
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useAccount as useWagmiAccount } from 'wagmi';
 
 const useAccount = () => {

@@ -16,7 +16,7 @@ import {
 } from '@quadrata/client-react';
 import QUAD_PASSPORT_ABI from '@quadrata/contracts/abis/QuadPassport.json';
 import { useConfirmationSignMessage, useAccount } from 'hooks';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const quadConfig: QuadClientConfig = {
 	environment:

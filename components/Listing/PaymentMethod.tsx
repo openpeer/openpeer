@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { ListStepProps, UIPaymentMethod } from './Listing.types';
 import StepLayout from './StepLayout';
 import PaymentMethodForm from './PaymentMethodForm';

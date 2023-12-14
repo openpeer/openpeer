@@ -1,4 +1,4 @@
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { SignMessageArgs } from '@wagmi/core';
 import { useState } from 'react';
 import { toast } from 'react-toastify';

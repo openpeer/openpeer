@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import Knock, { Feed, FeedEventPayload, FeedItem } from '@knocklabs/client';
-import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 const useNotifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);

@@ -12,7 +12,7 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { BuyStepProps } from './Buy.types';
 
 const OrderPaymentMethod = ({ order, updateOrder }: BuyStepProps) => {

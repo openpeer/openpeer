@@ -6,7 +6,7 @@ import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;

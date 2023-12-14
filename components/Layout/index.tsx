@@ -1,6 +1,6 @@
 import 'tailwindcss/tailwind.css';
 import type { AppProps } from 'next/app';
-import { DynamicContextProvider } from '@dynamic-labs/sdk-react';
+import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
 
 import Head from 'app/head';
 import { TransactionFeedbackProvider } from 'contexts/TransactionFeedContext';

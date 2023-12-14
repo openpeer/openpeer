@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-curly-newline */
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import Flag from 'components/Flag/Flag';
 import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';

@@ -8,7 +8,7 @@ import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
-import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react';
+import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { constants } from 'ethers';
 import { useAccount } from 'hooks';
 

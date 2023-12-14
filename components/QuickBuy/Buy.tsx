@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { truncate } from 'utils';
 
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 interface BuyProps {
 	lists: List[];
