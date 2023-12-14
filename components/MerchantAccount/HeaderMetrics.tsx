@@ -185,7 +185,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 										target="_blank"
 									>
 										View on{' '}
-										{chain.blockExplorers!.etherscan.name || chain.blockExplorers!.default.name}
+										{chain.blockExplorers!.etherscan?.name || chain.blockExplorers!.default.name}
 									</Link>
 								)}
 							</div>

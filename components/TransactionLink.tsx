@@ -8,12 +8,12 @@ const TransactionLink = ({ hash }: { hash: `0x${string}` | undefined }) => {
 
 	const {
 		default: { url, name },
-		etherscan: { url: etherscanUrl, name: etherscanName }
+		etherscan
 	} = chain.blockExplorers!;
 
 	return (
-		<a target="_blank" rel="noreferrer" href={`${etherscanUrl || url}/tx/${hash}`}>
-			<>Done. View on {etherscanName || name}</>
+		<a target="_blank" rel="noreferrer" href={`${etherscan?.url || url}/tx/${hash}`}>
+			<>Done. View on {etherscan?.name || name}</>
 		</a>
 	);
 };
