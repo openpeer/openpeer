@@ -57,7 +57,7 @@ const useBiconomy = ({ contract }: UseBiconomyProps) => {
 	useEffect(() => {
 		const initBiconomy = async () => {
 			if (address && chain && primaryWallet && contract) {
-				const provider = await primaryWallet.connector.getWeb3Provider();
+				const provider = await primaryWallet.connector.getWalletClient();
 				if (!provider) return;
 
 				if (!apiKey) {
