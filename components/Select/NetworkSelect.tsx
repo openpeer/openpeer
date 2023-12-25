@@ -22,8 +22,10 @@ const NetworkSelect = ({
 	label?: string;
 	extraStyle?: string;
 }) => {
-	const { evm } = useAccount();
-	const chains = allChains.filter((chain) => (evm ? chain.id !== tron.id : chain.id === tron.id));
+	const { evm, isConnected } = useAccount();
+	const chains = isConnected
+		? allChains.filter((chain) => (evm ? chain.id !== tron.id : chain.id === tron.id))
+		: allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {

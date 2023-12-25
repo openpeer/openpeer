@@ -1,4 +1,4 @@
-import { getAuthToken as evmGetAuthToken } from '@dynamic-labs/sdk-react';
+import { getAuthToken as evmGetAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const getAuthToken = () => {
 	const token = evmGetAuthToken();

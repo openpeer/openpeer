@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { DynamicWidget } from '@dynamic-labs/sdk-react';
+import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
 import { WalletActionButton } from '@tronweb3/tronwallet-adapter-react-ui';
 import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { useAccount } from 'wagmi';

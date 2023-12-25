@@ -1,4 +1,4 @@
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { useAccount as useWagmiAccount } from 'wagmi';
 

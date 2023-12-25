@@ -1,7 +1,7 @@
 import { networkApiKeys } from 'models/networks';
 import { useEffect, useState } from 'react';
 import { Biconomy } from '@biconomy/mexa';
-import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import useNetwork from './useNetwork';
 import useAccount from './useAccount';
 

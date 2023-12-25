@@ -24,7 +24,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Manrope } from '@next/font/google';
 
-import { DynamicConnectButton, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react';
+import { DynamicConnectButton, useAuthenticateConnectedUser, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { ChatWithOwner } from 'react-wallet-chat-sso';
 import ConnectionWidget from 'components/ConnectionWidget';
 import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
