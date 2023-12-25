@@ -9,7 +9,7 @@ import useAccount from 'hooks/useAccount';
 
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import Token from './Token/Token';
 
 interface OrdersTableProps {

@@ -12,8 +12,10 @@
 	"dependencies": {
 		"@biconomy/mexa": "^3.0.6",
 		"@coingecko/cryptoformat": "^0.5.4",
-		"@dynamic-labs/sdk-react": "^0.18.100-viem.14",
-		"@dynamic-labs/wagmi-connector": "^0.18.100-viem.14",
+		"@dynamic-labs/ethereum": "^1.0.2",
+		"@dynamic-labs/magic": "^1.0.2",
+		"@dynamic-labs/sdk-react-core": "^1.0.2",
+		"@dynamic-labs/wagmi-connector": "^1.0.2",
 		"@ethersproject/providers": "^5.7.2",
 		"@headlessui/react": "^1.7.5",
 		"@heroicons/react": "^2.0.13",
@@ -72,8 +74,8 @@
 		"tronweb": "5.3.1",
 		"typescript": "5.0.4",
 		"utf8": "^3.0.0",
-		"viem": "^1.9.0",
-		"wagmi": "^1.3.10"
+		"viem": "^1.19.15",
+		"wagmi": "^1.4.12"
 	},
 	"devDependencies": {
 		"@types/jsonwebtoken": "^9.0.1",

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { MessageContext } from 'contexts/MessageContext';
 import React, { useContext } from 'react';
 import { WalletChatProvider, WalletChatWidget } from 'react-wallet-chat-sso';

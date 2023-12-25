@@ -132,7 +132,7 @@ const TransactionFeedback = ({ open, onClose, hash, description, onTransactionRe
 													<div className="mt-6 mb-2 flex flex-row justify-between">
 														<span className="text-xs">
 															View more on{' '}
-															{chain.blockExplorers?.etherscan.name ||
+															{chain.blockExplorers?.etherscan?.name ||
 																chain.blockExplorers.default.name}
 														</span>
 														<span className="text-xs">
