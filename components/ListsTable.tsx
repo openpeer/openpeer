@@ -289,8 +289,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 												</div>
 											)}
 											<div className="mb-2">
-												{banks.map((bank) => (
-													<div className="flex flex-row items-center" key={bank.id}>
+												{banks.map((bank, index) => (
+													<div
+														className="flex flex-row items-center"
+														// eslint-disable-next-line react/no-array-index-key
+														key={`${bank.id}-${index}`}
+													>
 														<span
 															className="bg-gray-500 w-1 h-3 rounded-full"
 															style={{ backgroundColor: bank.color || 'gray' }}
@@ -368,8 +372,12 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 								)}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
-								{banks.map((bank) => (
-									<div className="flex flex-row items-center mb-1" key={id}>
+								{banks.map((bank, index) => (
+									<div
+										className="flex flex-row items-center mb-1"
+										// eslint-disable-next-line react/no-array-index-key
+										key={`${bank.id}-${index}`}
+									>
 										<span
 											className="w-1 h-3 rounded-full"
 											style={{ backgroundColor: bank.color || 'gray' }}

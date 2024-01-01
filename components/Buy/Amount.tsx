@@ -5,7 +5,7 @@ import Input from 'components/Input/Input';
 import { AccountInfo } from 'components/Listing';
 import StepLayout from 'components/Listing/StepLayout';
 import Token from 'components/Token/Token';
-import { useFormErrors, useEscrowFee } from 'hooks';
+import { useFormErrors, useEscrowFee, useSellerContract, useEscrowBalance } from 'hooks';
 import useAccount from 'hooks/useAccount';
 import { countries } from 'models/countries';
 import { Errors, Resolver } from 'models/errors';
@@ -15,10 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { truncate } from 'utils';
 
 import snakecaseKeys from 'snakecase-keys';
-import { useContractRead } from 'wagmi';
-import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
-import { Abi, formatUnits, parseUnits } from 'viem';
-import { DEPLOYER_CONTRACTS } from 'models/networks';
+import { formatUnits, parseUnits } from 'viem';
 import ModalWindow from 'components/Modal/ModalWindow';
 import BankSelect from 'components/Select/BankSelect';
 import { BuyStepProps, UIOrder } from './Buy.types';
@@ -58,25 +55,13 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	const banks = list.payment_methods.map((pm) => ({ ...pm.bank, id: pm.id }));
 	const instantEscrow = list?.escrow_type === 'instant';
 
-	const { data: sellerContract } = useContractRead({
-		address: DEPLOYER_CONTRACTS[list.chain_id],
-		abi: OpenPeerDeployer,
-		functionName: 'sellerContracts',
-		args: [list.seller.address],
-		enabled: instantEscrow,
-		watch: true,
-		chainId: list.chain_id
+	const { sellerContract } = useSellerContract({
+		seller: list.seller?.address,
+		chainId: list.chain_id,
+		instantEscrow: list.escrow_type === 'instant'
 	});
 
-	const { data: balance } = useContractRead({
-		address: (sellerContract as `0x${string}`) || list?.contract,
-		abi: OpenPeerEscrow as Abi,
-		functionName: 'balances',
-		args: [list?.token?.address],
-		enabled: instantEscrow,
-		watch: true,
-		chainId: list.chain_id
-	});
+	const { balance } = useEscrowBalance(sellerContract, token);
 
 	const { fee } = useEscrowFee({
 		token,

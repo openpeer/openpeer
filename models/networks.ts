@@ -82,7 +82,7 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 
 export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, tron];
 
-const devChains = [polygonMumbai, shasta, nile];
+const devChains = [polygonMumbai, nile];
 
 export const allChains = process.env.NODE_ENV === 'production' ? productionChains : [...productionChains, ...devChains];
 

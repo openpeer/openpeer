@@ -35,18 +35,14 @@ const useDeploy = () => {
 	const tronDeploy = async () => {
 		const tronWeb = tronWebClient(chain);
 		const tronSave = new TronSave(tronWeb, {
-			apiKey: '',
-			// network: chain.network as 'mainnet' | 'nile',
-			network: 'nile',
+			apiKey: process.env[`NEXT_PUBLIC_TRON_SAVE_API_KEY_${chain.network.toUpperCase()}`],
+			network: chain.network as 'mainnet' | 'nile',
 			paymentMethodType: 11
 		});
 		const instance = await tronSave.contract().at(contract);
 		const response = await instance.deploy().send({
-			useRelay: true,
+			useForceRelay: true,
 			useSignType: 'personal_trx'
-			// feeLimit: 100_000_000,
-			// callValue: 0,
-			// shouldPollResponse: true
 		});
 		console.log(response);
 		return response;

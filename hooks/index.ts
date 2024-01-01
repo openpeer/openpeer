@@ -12,6 +12,8 @@ import useVerificationStatus from './useVerificationStatus';
 import useConfirmationSignMessage from './useConfirmationSignMessage';
 import useSignInWithTron from './tron/useSignInWithTron';
 import useNetwork from './useNetwork';
+import useSellerContract from './useSellerContract';
+import useEscrowBalance from './useEscrowBalance';
 
 export {
 	useListPrice,
@@ -27,5 +29,7 @@ export {
 	useCancelReasons,
 	useConfirmationSignMessage,
 	useSignInWithTron,
-	useNetwork
+	useNetwork,
+	useSellerContract,
+	useEscrowBalance
 };

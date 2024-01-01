@@ -18,8 +18,8 @@ const ExplainerNotification = ({ title, content, info = false, disclaimer = fals
 				: 'bg-[#F7FBFC] text-cyan-600 p-4 rounded'
 		}
 	>
-		{title && <p className="text-sm font-bold mb-2">{title}</p>}
-		<p className="text-sm">{content}</p>
+		{title && <div className="text-sm font-bold mb-2">{title}</div>}
+		<div className="text-sm">{content}</div>
 	</div>
 );
 

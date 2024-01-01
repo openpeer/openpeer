@@ -48,14 +48,13 @@ const ApproveTokenButton = ({
 			if (!chain || !address) return;
 
 			if (evm) {
-				const lala = await readContract({
+				const tokenAllowance = await readContract({
 					address: token.address,
 					abi: erc20ABI,
 					functionName: 'allowance',
 					args: [address!, spender]
 				});
-				// @ts-expect-error @TODO: Marcos fix this
-				setAllowance(lala);
+				setAllowance(BigInt(tokenAllowance.toString()));
 			} else {
 				const tronWeb = tronWebClient(chain);
 				const contract = await tronWeb.contract(erc20ABI, token.address);
@@ -64,8 +63,10 @@ const ApproveTokenButton = ({
 			}
 		};
 
-		fetchAllowance();
-	}, [evm]);
+		const intervalId = setInterval(fetchAllowance, 5000); // 5000 milliseconds = 5 seconds
+		// Clear interval on component unmount
+		return () => clearInterval(intervalId);
+	}, [evm, chain]);
 
 	const approved = !!allowance && !!amount && allowance >= amount;
 

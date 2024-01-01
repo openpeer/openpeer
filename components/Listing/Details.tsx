@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
-import getAuthToken from 'utils/getAuthToken';
-import { useConfirmationSignMessage } from 'hooks';
-import { useRouter } from 'next/router';
 import React from 'react';
+import getAuthToken from 'utils/getAuthToken';
+import { useConfirmationSignMessage, useEscrowBalance, useSellerContract } from 'hooks';
+import { useRouter } from 'next/router';
 import snakecaseKeys from 'snakecase-keys';
 
 import { Token } from 'models/types';
 import Checkbox from 'components/Checkbox/Checkbox';
-import { useContractRead } from 'wagmi';
-import { DEPLOYER_CONTRACTS } from 'models/networks';
-import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { parseUnits } from 'viem';
 import { constants } from 'ethers';
 import { listToMessage } from 'utils';
@@ -28,6 +25,14 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
 	const { address } = useAccount();
 	const router = useRouter();
+
+	const { sellerContract } = useSellerContract({
+		seller: address,
+		instantEscrow: escrowType === 'instant',
+		chainId
+	});
+
+	const { balance } = useEscrowBalance(sellerContract, token as Token);
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data) => {
@@ -61,26 +66,6 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const onTermsChange = (value: string) => {
 		updateList({ ...list, ...{ terms: value } });
 	};
-
-	const { data: sellerContract } = useContractRead({
-		address: DEPLOYER_CONTRACTS[chainId],
-		abi: OpenPeerDeployer,
-		functionName: 'sellerContracts',
-		args: [address],
-		enabled: !!address && escrowType === 'instant',
-		chainId,
-		watch: true
-	});
-
-	const { data: balance } = useContractRead({
-		address: sellerContract as `0x${string}`,
-		abi: OpenPeerEscrow,
-		functionName: 'balances',
-		args: [(token as Token).address],
-		enabled: !!sellerContract && sellerContract !== constants.AddressZero,
-		chainId,
-		watch: true
-	});
 
 	const needToDeploy = !sellerContract || sellerContract === constants.AddressZero;
 	const needToFund =

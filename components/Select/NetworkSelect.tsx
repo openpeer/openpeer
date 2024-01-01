@@ -13,7 +13,8 @@ const NetworkSelect = ({
 	error,
 	labelStyle = '',
 	label = 'Chain',
-	extraStyle = ''
+	extraStyle = '',
+	showAllChains = false
 }: {
 	onSelect: (option: Chain | undefined) => void;
 	selected: Chain | undefined;
@@ -21,11 +22,13 @@ const NetworkSelect = ({
 	labelStyle?: SelectProps['labelStyle'];
 	label?: string;
 	extraStyle?: string;
+	showAllChains?: boolean;
 }) => {
 	const { evm, isConnected } = useAccount();
-	const chains = isConnected
-		? allChains.filter((chain) => (evm ? chain.id !== tron.id : chain.id === tron.id))
-		: allChains;
+	const chains =
+		isConnected && !showAllChains
+			? allChains.filter((chain) => (evm ? chain.id !== tron.id : chain.id === tron.id))
+			: allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {

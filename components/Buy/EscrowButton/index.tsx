@@ -1,12 +1,7 @@
-import { OpenPeerDeployer } from 'abis';
 import { constants } from 'ethers';
-import { useEscrowFee, useNetwork } from 'hooks';
-import { DEPLOYER_CONTRACTS } from 'models/networks';
-import React, { useEffect, useState } from 'react';
-import useAccount from 'hooks/useAccount';
+import { useEscrowFee, useSellerContract } from 'hooks';
+import React, { useState } from 'react';
 
-import { readContract } from '@wagmi/core';
-import { tronWebClient } from 'utils';
 import ApproveTokenButton from './ApproveTokenButton';
 import DeploySellerContract from './DeploySellerContract';
 import { EscrowFundsParams } from './EscrowButton.types';
@@ -23,35 +18,11 @@ const EscrowButton = ({
 }: EscrowFundsParams) => {
 	const nativeToken = token.address === constants.AddressZero;
 	const [approved, setApproved] = useState(nativeToken || instantEscrow);
-	const { chain } = useNetwork();
-	const deployer = chain ? DEPLOYER_CONTRACTS[chain?.id || 0] : undefined;
-	const { address, evm } = useAccount();
-	const [sellerContract, setSellerContract] = useState<string | `0x${string}` | undefined>();
-
-	useEffect(() => {
-		const fetchSellerContract = async () => {
-			if (!deployer || !chain) return;
-
-			if (evm) {
-				const contract = await readContract({
-					address: deployer,
-					abi: OpenPeerDeployer,
-					functionName: 'sellerContracts',
-					args: [instantEscrow ? seller : address],
-					chainId: token.chain_id
-				});
-
-				setSellerContract(contract as `0x${string}` | undefined);
-			} else {
-				const tronWeb = tronWebClient(chain);
-				const deployerContract = await tronWeb.contract(OpenPeerDeployer, deployer);
-				const contract = await deployerContract.sellerContracts(instantEscrow ? seller : address).call();
-				setSellerContract(contract as string | undefined);
-			}
-		};
-
-		fetchSellerContract();
-	}, [evm]);
+	const { sellerContract } = useSellerContract({
+		seller,
+		instantEscrow,
+		chainId: token.chain_id
+	});
 
 	const { isFetching, fee, totalAmount } = useEscrowFee({
 		address: sellerContract as `0x${string}` | undefined,

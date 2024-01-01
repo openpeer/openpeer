@@ -57,6 +57,7 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 						onSelect={setChain}
 						extraStyle="my-0 mt-4"
 						labelStyle="text-sm truncate"
+						showAllChains
 					/>
 				</div>
 			</div>
