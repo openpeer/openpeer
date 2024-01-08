@@ -41,7 +41,8 @@ const ApproveTokenButton = ({
 		address: token.address,
 		abi: erc20ABI,
 		functionName: 'allowance',
-		args: [address!, spender]
+		args: [address!, spender],
+		watch: true
 	});
 
 	const approved = !!allowance && !!amount && allowance >= amount;
