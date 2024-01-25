@@ -20,7 +20,14 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 		<StepLayout onProceed={updateProfile}>
 			<div className="my-8">
 				<Label title="Set your account info to receive notifications" />
-				<Input placeholder="@satoshi" label="Username" id="username" value={username} onChange={setUsername} />
+				<Input
+					placeholder="@satoshi"
+					label="Username"
+					id="username"
+					value={username}
+					onChange={setUsername}
+					error={errors.name}
+				/>
 				<Input
 					placeholder="satoshi@bitcoin.org"
 					label="Email Address"
