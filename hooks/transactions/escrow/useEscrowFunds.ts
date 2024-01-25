@@ -2,12 +2,12 @@ import { constants } from 'ethers';
 
 import useNetwork from 'hooks/useNetwork';
 import { FULL_GASLESS_CHAINS } from 'models/networks';
-import { UseEscrowFundsProps } from '../types';
-import useEscrowWithGas from './useEscrowWithGas';
-import useGaslessEscrow from './useGaslessEscrow';
 import useAccount from 'hooks/useAccount';
 import { tronWebClient } from 'utils';
 import { OpenPeerEscrow } from 'abis';
+import { UseEscrowFundsProps } from '../types';
+import useEscrowWithGas from './useEscrowWithGas';
+import useGaslessEscrow from './useGaslessEscrow';
 
 const useEscrowFunds = ({
 	orderID,
@@ -66,29 +66,30 @@ const useEscrowFunds = ({
 	const tronEscrowFunds = async () => {
 		const tronWeb = tronWebClient(chain);
 		const instance = await tronWeb.contract(OpenPeerEscrow, contract);
-		// @TODO: Enviar TRX para o contracto
-		// token.address === constants.AddressZero
-		// ? await contractInstance.populateTransaction.createNativeEscrow(
-		// 		orderID,
-		// 		buyer,
-		// 		amount,
-		// 		partner,
-		// 		sellerWaitingTime,
-		// 		instantEscrow
-		// 	)
-		// : await contractInstance.populateTransaction.createERC20Escrow(
-		// 		orderID,
-		// 		buyer,
-		// 		token.address,
-		// 		amount,
-		// 		partner,
-		// 		sellerWaitingTime,
-		// 		instantEscrow
-		// 	);
-		const response = await instance.deploy().send({
-			useForceRelay: true,
-			useSignType: 'personal_trx'
-		});
+		let response;
+		if (nativeToken) {
+			response = await instance
+				.createNativeEscrow(orderID, buyer, amount, constants.AddressZero, sellerWaitingTime, instantEscrow)
+				.send({
+					useForceRelay: true,
+					useSignType: 'personal_trx'
+				});
+		} else {
+			response = await instance
+				.createERC20Escrow(
+					orderID,
+					buyer,
+					token.address,
+					amount,
+					constants.AddressZero,
+					sellerWaitingTime,
+					instantEscrow
+				)
+				.send({
+					useForceRelay: true,
+					useSignType: 'personal_trx'
+				});
+		}
 		console.log(response);
 		return response;
 	};
