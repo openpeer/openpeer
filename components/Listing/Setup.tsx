@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Chain, useNetwork } from 'wagmi';
 
 import NetworkSelect from 'components/Select/NetworkSelect';
-import { allChains } from 'models/networks';
+import { allChains, blast } from 'models/networks';
 import { ListStepProps } from './Listing.types';
 import StepLayout from './StepLayout';
 
@@ -31,10 +31,13 @@ const Setup = ({ list, updateList }: ListStepProps) => {
 
 	useEffect(() => {
 		if (!chain && !chainId && connectedChain) {
+			const newChain = connectedChain.id === blast.id ? blast : connectedChain;
 			setChain({
-				...connectedChain,
+				...newChain,
 				// @ts-expect-error
-				symbol: connectedChain.nativeCurrency.symbol
+				symbol: connectedChain.nativeCurrency.symbol,
+				// @ts-expect-error
+				icon: newChain?.iconUrls ? newChain.iconUrls[0] : ''
 			});
 		}
 	}, [connectedChain]);

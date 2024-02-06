@@ -1,4 +1,4 @@
-import { allChains } from 'models/networks';
+import { allChains, blast } from 'models/networks';
 import React from 'react';
 import { Chain } from 'wagmi';
 
@@ -21,16 +21,16 @@ const NetworkSelect = ({
 	label?: string;
 	extraStyle?: string;
 }) => {
-	const chains = allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {
 			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
 		},
-		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' }
+		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' },
+		[blast.id]: { symbol: '', icon: blast.iconUrls[0] }
 	};
-	const networks = chains.map((chain) => ({
+	const networks = allChains.map((chain) => ({
 		id: chain.id,
 		name: chain.name,
 		symbol: replace[chain.id]?.symbol || chain.nativeCurrency.symbol,

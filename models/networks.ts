@@ -40,7 +40,22 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
 
-export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis];
+export const blast = {
+	blockExplorerUrls: ['https://testnet.blastscan.io/'],
+	id: 168587773,
+	chainId: 168587773,
+	name: 'Blast Testnet',
+	iconUrls: [
+		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
+	],
+	nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
+	networkId: 168587773,
+	privateCustomerRpcUrls: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
+	rpcUrls: ['https://sepolia.blast.io'],
+	vanityName: 'Blast Testnet'
+};
+
+export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, blast];
 
 const devChains = [polygonMumbai];
 

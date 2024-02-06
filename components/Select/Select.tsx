@@ -49,7 +49,7 @@ export default function Select({
 						>
 							<span className="flex items-center">
 								{!!selected &&
-									(token ? (
+									(token && !selected.icon ? (
 										<Token token={selected as TokenModel} size={24} />
 									) : flag ? (
 										<Flag name={countries[selected.icon!]} size={24} />
@@ -109,7 +109,7 @@ export default function Select({
 										{({ selected: selectedOption, active }) => (
 											<>
 												<div className="flex items-center">
-													{token ? (
+													{token && !option.icon ? (
 														<Token token={option as TokenModel} size={24} />
 													) : flag ? (
 														<Flag name={countries[option.icon!]} size={24} />

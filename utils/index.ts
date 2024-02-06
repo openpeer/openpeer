@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { arbitrum, gnosis, optimism } from '@wagmi/chains';
 import { UIList } from 'components/Listing/Listing.types';
-import { allChains } from 'models/networks';
+import { allChains, blast } from 'models/networks';
 import { List, Token } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
 import { Chain } from 'wagmi';
@@ -58,6 +58,8 @@ export const getChainToken = (chain: Chain | undefined) => {
 					symbol: 'xDAI',
 					icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026'
 			  }
+			: chain.id === blast.id
+			? { symbol: 'ETH', icon: blast.iconUrls[0] }
 			: chain.nativeCurrency;
 	}
 	return undefined;
