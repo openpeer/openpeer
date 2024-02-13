@@ -1,4 +1,63 @@
+import { EvmNetwork } from '@dynamic-labs/sdk-react-core';
+import { defineChain } from 'viem';
 import { arbitrum, avalanche, bsc, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
+
+export const blastEvmNetwork: EvmNetwork = {
+	chainId: 168587773,
+	networkId: 168587773,
+	name: 'Blast Sepolia Testnet',
+	iconUrls: [
+		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
+	],
+	nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
+	privateCustomerRpcUrls: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
+	rpcUrls: ['https://sepolia.blast.io', process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
+	vanityName: 'Blast Sepolia Testnet',
+	blockExplorerUrls: ['https://testnet.blastscan.io/'],
+	chainName: 'Blast Sepolia'
+};
+
+export const blast = defineChain({
+	id: 168_587_773,
+	name: 'Blast Sepolia',
+	network: 'blastsepolia',
+	networkId: 168_587_773,
+	chainId: 168_587_773,
+	blockExplorerUrls: ['https://testnet.blastscan.io'] as readonly string[],
+	iconUrls: [
+		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
+	] as readonly string[],
+	nativeCurrency: {
+		name: 'Ether',
+		symbol: 'ETH',
+		decimals: 18
+	},
+	rpcUrls: {
+		default: {
+			http: ['https://sepolia.blast.io']
+		},
+		public: {
+			http: ['https://sepolia.blast.io']
+		}
+	},
+	blockExplorers: {
+		default: {
+			name: 'BlastScan',
+			url: 'https://testnet.blastscan.io'
+		},
+		etherscan: {
+			name: 'BlastScan',
+			url: 'https://testnet.blastscan.io'
+		}
+	},
+	contracts: {
+		multicall3: {
+			address: '0xca11bde05977b3631167028862be2a173976ca11',
+			blockCreated: 756690
+		}
+	},
+	testnet: true
+});
 
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -19,7 +78,8 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[arbitrum.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[optimism.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[bsc.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
-	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1'
+	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1',
+	[blast.id]: '0x80ED40DF18dAb19eEE73ffe493DE0d3F228d94DE'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
@@ -40,7 +100,7 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
 };
 
-export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis];
+export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, blast];
 
 const devChains = [polygonMumbai];
 

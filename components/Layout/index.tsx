@@ -11,6 +11,7 @@ import { MessageContextProvider } from 'contexts/MessageContext';
 import ChatProvider from 'providers/ChatProvider';
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 import { MagicWalletConnectors } from '@dynamic-labs/magic';
+import { blastEvmNetwork } from 'models/networks';
 
 const AuthLayout = dynamic(() => import('./AuthLayout'), { ssr: false });
 const NoAuthLayout = dynamic(() => import('./NoAuthLayout'), { ssr: false });
@@ -37,7 +38,8 @@ const App = ({ Component, pageProps }: AppProps) => {
 						setMessageToSign('');
 						setSignedMessage('');
 					}
-				}
+				},
+				evmNetworks: [blastEvmNetwork]
 			}}
 		>
 			<DynamicWagmiConnector>

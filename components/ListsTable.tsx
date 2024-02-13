@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { countries } from 'models/countries';
-import { Token as TokenType, List } from 'models/types';
+import { List } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
-import { getChainToken, smallWalletAddress } from 'utils';
+import { smallWalletAddress } from 'utils';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import { allChains } from 'models/networks';
@@ -19,6 +19,7 @@ import EditListButtons from './Button/EditListButtons';
 import Flag from './Flag/Flag';
 import Token from './Token/Token';
 import IdVerificationNeeded from './IdVerificationNeeded';
+import Network from './Network/Network';
 
 interface ListsTableProps {
 	lists: List[];
@@ -163,7 +164,6 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					const isSeller = primaryWallet && sellerAddress === address;
 					const { symbol, minimum_amount: minimumAmount = 0 } = token;
 					const chain = chains.find((c) => c.id === chainId);
-					const chainToken = getChainToken(chain);
 
 					// const priceDifferencePercentage =
 					// tokenSpotPrice && price ? (price / tokenSpotPrice) * 100 - 100 : 0;
@@ -193,7 +193,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					}
 
 					return (
-						<tr key={id} className="hover:bg-gray-50">
+						<tr key={`list-${id}`} className="hover:bg-gray-50">
 							<td className="lg:pl-4 py-4">
 								<div className="w-full flex flex-col">
 									<div className="w-full flex flex-row justify-around md:justify-start items-center">
@@ -270,7 +270,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 											{/* left */}
 											<div className="flex flex-row items-center mb-2">
 												<span className="pr-2 text-[11px]">{chain?.name}</span>
-												<Token token={chainToken! as TokenType} size={16} />
+												<Network id={chainId} size={16} />
 											</div>
 											{!!instantEscrow && (
 												<div className="flex flex-row items-center mb-2">
@@ -291,7 +291,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 											)}
 											<div className="mb-2">
 												{banks.map((bank) => (
-													<div className="flex flex-row items-center" key={bank.id}>
+													<div
+														className="flex flex-row items-center"
+														key={`bank-${list.id}-${bank.id}`}
+													>
 														<span
 															className="bg-gray-500 w-1 h-3 rounded-full"
 															style={{ backgroundColor: bank.color || 'gray' }}
@@ -325,7 +328,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 									</div>
 									<div className="flex flex-row items-center">
 										<div className=" flex flex-row items-center space-x-1 bg-gray-100 px-2 rounded-full">
-											<Token token={chainToken! as TokenType} size={14} />
+											<Network id={chainId} size={14} />
 											<span className="text-[10px]">{chain?.name}</span>
 										</div>
 									</div>
@@ -370,7 +373,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{banks.map((bank) => (
-									<div className="flex flex-row items-center mb-1" key={id}>
+									<div
+										className="flex flex-row items-center mb-1"
+										key={`bank-mobile-${list.id}-${bank.id}`}
+									>
 										<span
 											className="w-1 h-3 rounded-full"
 											style={{ backgroundColor: bank.color || 'gray' }}

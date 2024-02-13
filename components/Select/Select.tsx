@@ -7,6 +7,7 @@ import React, { Fragment } from 'react';
 
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import Network from 'components/Network/Network';
 
 import SearchBar from './SearchBar';
 import { SelectProps } from './Select.types';
@@ -27,6 +28,7 @@ export default function Select({
 	rounded = false,
 	flag = false,
 	token = false,
+	network = false,
 	labelStyle = '',
 	extraStyle = ''
 }: SelectProps) {
@@ -49,7 +51,9 @@ export default function Select({
 						>
 							<span className="flex items-center">
 								{!!selected &&
-									(token ? (
+									(network ? (
+										<Network id={selected.id} size={24} />
+									) : token ? (
 										<Token token={selected as TokenModel} size={24} />
 									) : flag ? (
 										<Flag name={countries[selected.icon!]} size={24} />
@@ -109,7 +113,9 @@ export default function Select({
 										{({ selected: selectedOption, active }) => (
 											<>
 												<div className="flex items-center">
-													{token ? (
+													{network ? (
+														<Network id={option.id} size={24} />
+													) : token ? (
 														<Token token={option as TokenModel} size={24} />
 													) : flag ? (
 														<Flag name={countries[option.icon!]} size={24} />

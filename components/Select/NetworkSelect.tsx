@@ -21,7 +21,6 @@ const NetworkSelect = ({
 	label?: string;
 	extraStyle?: string;
 }) => {
-	const chains = allChains;
 	const replace: { [key: number]: { symbol: string; icon: string } } = {
 		[arbitrum.id]: { symbol: 'ARB', icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=026' },
 		[optimism.id]: {
@@ -30,7 +29,7 @@ const NetworkSelect = ({
 		},
 		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' }
 	};
-	const networks = chains.map((chain) => ({
+	const networks = allChains.map((chain) => ({
 		id: chain.id,
 		name: chain.name,
 		symbol: replace[chain.id]?.symbol || chain.nativeCurrency.symbol,
@@ -45,9 +44,8 @@ const NetworkSelect = ({
 			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
 			labelStyle={labelStyle}
-			// extraStyle="my-0 mt-4"
 			extraStyle={extraStyle}
-			token
+			network
 		/>
 	);
 };
