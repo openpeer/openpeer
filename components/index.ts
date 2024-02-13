@@ -23,6 +23,7 @@ import Steps from './Steps';
 import Textarea from './Textarea/Textarea';
 import WrongNetwork from './WrongNetwork';
 import Token from './Token/Token';
+import Network from './Network/Network';
 import IdVerificationNeeded from './IdVerificationNeeded';
 import TimezoneSelect from './Select/TimezoneSelect';
 import EscrowDepositWithdraw from './EscrowDepositWithdraw';
@@ -55,5 +56,6 @@ export {
 	Token,
 	IdVerificationNeeded,
 	TimezoneSelect,
-	EscrowDepositWithdraw
+	EscrowDepositWithdraw,
+	Network
 };

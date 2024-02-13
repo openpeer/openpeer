@@ -1,28 +1,63 @@
+import { EvmNetwork } from '@dynamic-labs/sdk-react-core';
+import { defineChain } from 'viem';
 import { arbitrum, avalanche, bsc, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
-export const blast = {
-	id: 168587773,
-	blockExplorers: {
-		default: { name: 'BlastScan', url: 'https://testnet.blastscan.io/' },
-		etherscan: { name: 'BlastScan', url: 'https://testnet.blastscan.io/' }
-	},
+export const blastEvmNetwork: EvmNetwork = {
 	chainId: 168587773,
 	networkId: 168587773,
-	network: 'blastsepolia',
 	name: 'Blast Sepolia Testnet',
 	iconUrls: [
 		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
 	],
 	nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
 	privateCustomerRpcUrls: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
-	// rpcUrls: {
-	// default: { http: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!] },
-	// public: { http: ['https://sepolia.blast.io'] }
-	// },
 	rpcUrls: ['https://sepolia.blast.io', process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
 	vanityName: 'Blast Sepolia Testnet',
-	testnet: true
+	blockExplorerUrls: ['https://testnet.blastscan.io/'],
+	chainName: 'Blast Sepolia'
 };
+
+export const blast = defineChain({
+	id: 168_587_773,
+	name: 'Blast Sepolia',
+	network: 'blastsepolia',
+	networkId: 168_587_773,
+	chainId: 168_587_773,
+	blockExplorerUrls: ['https://testnet.blastscan.io'] as readonly string[],
+	iconUrls: [
+		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
+	] as readonly string[],
+	nativeCurrency: {
+		name: 'Ether',
+		symbol: 'ETH',
+		decimals: 18
+	},
+	rpcUrls: {
+		default: {
+			http: ['https://sepolia.blast.io']
+		},
+		public: {
+			http: ['https://sepolia.blast.io']
+		}
+	},
+	blockExplorers: {
+		default: {
+			name: 'BlastScan',
+			url: 'https://testnet.blastscan.io'
+		},
+		etherscan: {
+			name: 'BlastScan',
+			url: 'https://testnet.blastscan.io'
+		}
+	},
+	contracts: {
+		multicall3: {
+			address: '0xca11bde05977b3631167028862be2a173976ca11',
+			blockCreated: 756690
+		}
+	},
+	testnet: true
+});
 
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,

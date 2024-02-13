@@ -8,7 +8,6 @@ import { useQRCode } from 'next-qrcode';
 import { OpenPeerEscrow } from 'abis';
 import { useContractRead, useNetwork, useSwitchNetwork } from 'wagmi';
 import { formatUnits } from 'viem';
-import { getChainToken } from 'utils';
 import ClipboardText from './Buy/ClipboardText';
 import HeaderH3 from './SectionHeading/h3';
 import Switcher from './Button/Switcher';
@@ -19,6 +18,7 @@ import ExplainerNotification from './Notifications/ExplainerNotification';
 import Button from './Button/Button';
 import WithdrawFundsButton from './WithdrawButton/WithdrawFundsButton';
 import Loading from './Loading/Loading';
+import Network from './Network/Network';
 
 interface EscrowDepositWithdrawProps {
 	token: Token;
@@ -56,7 +56,6 @@ const EscrowDepositWithdraw = ({
 	const [depositAmount, setDepositAmount] = useState<number>();
 
 	const chain = allChains.find((c) => c.id === token.chain_id);
-	const chainToken = getChainToken(chain);
 
 	const deposit = type === 'Deposit';
 	const balance = data ? Number(formatUnits(data as bigint, token.decimals)) : 0;
@@ -118,7 +117,7 @@ const EscrowDepositWithdraw = ({
 					<div className="flex flex-row justify-between text-sm py-4 border-b border-gray-200">
 						<span>Network</span>
 						<div className="flex flex-row items-center space-x-1">
-							<TokenImage token={chainToken! as Token} size={20} />
+							<Network id={token.chain_id} size={20} />
 							<span>{chain!.name}</span>
 						</div>
 					</div>
@@ -195,7 +194,7 @@ const EscrowDepositWithdraw = ({
 										<ExplainerNotification
 											title={
 												<div className="flex flex-row space-x-2">
-													<TokenImage token={chainToken! as Token} size={20} />
+													<Network id={token.chain_id} size={20} />
 													<span className="text-sm">{chain?.name}</span>
 												</div>
 											}

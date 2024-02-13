@@ -17,6 +17,7 @@ export interface SelectProps {
 	rounded?: boolean;
 	flag?: boolean;
 	token?: boolean;
+	network?: boolean;
 	onSearch?: (value: string) => void;
 	labelStyle?: string;
 	extraStyle?: string;

@@ -1,4 +1,4 @@
-import { allChains, blast } from 'models/networks';
+import { allChains } from 'models/networks';
 import React from 'react';
 import { Chain } from 'wagmi';
 
@@ -27,8 +27,7 @@ const NetworkSelect = ({
 			symbol: 'OPTIMISM',
 			icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=026'
 		},
-		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' },
-		[blast.id]: { symbol: '', icon: blast.iconUrls[0] }
+		[gnosis.id]: { symbol: 'xDAI', icon: 'https://cryptologos.cc/logos/gnosis-gno-gno-logo.png?v=026' }
 	};
 	const networks = allChains.map((chain) => ({
 		id: chain.id,
@@ -45,9 +44,8 @@ const NetworkSelect = ({
 			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
 			labelStyle={labelStyle}
-			// extraStyle="my-0 mt-4"
 			extraStyle={extraStyle}
-			token
+			network
 		/>
 	);
 };
