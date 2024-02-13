@@ -1,3 +1,4 @@
+import { blast } from 'models/networks';
 import React from 'react';
 import { useNetwork } from 'wagmi';
 
@@ -6,10 +7,12 @@ const TransactionLink = ({ hash }: { hash: `0x${string}` | undefined }) => {
 
 	if (!chain || !hash) return <>Done</>;
 
+	const blockExplorers = chain.id === blast.id ? blast.blockExplorers : chain.blockExplorers;
+
 	const {
 		default: { url, name },
 		etherscan
-	} = chain.blockExplorers!;
+	} = blockExplorers!;
 
 	return (
 		<a target="_blank" rel="noreferrer" href={`${etherscan?.url || url}/tx/${hash}`}>

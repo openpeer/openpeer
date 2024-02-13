@@ -193,7 +193,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					}
 
 					return (
-						<tr key={id} className="hover:bg-gray-50">
+						<tr key={`list-${id}`} className="hover:bg-gray-50">
 							<td className="lg:pl-4 py-4">
 								<div className="w-full flex flex-col">
 									<div className="w-full flex flex-row justify-around md:justify-start items-center">
@@ -291,7 +291,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 											)}
 											<div className="mb-2">
 												{banks.map((bank) => (
-													<div className="flex flex-row items-center" key={bank.id}>
+													<div
+														className="flex flex-row items-center"
+														key={`bank-${list.id}-${bank.id}`}
+													>
 														<span
 															className="bg-gray-500 w-1 h-3 rounded-full"
 															style={{ backgroundColor: bank.color || 'gray' }}
@@ -370,7 +373,10 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								{banks.map((bank) => (
-									<div className="flex flex-row items-center mb-1" key={id}>
+									<div
+										className="flex flex-row items-center mb-1"
+										key={`bank-mobile-${list.id}-${bank.id}`}
+									>
 										<span
 											className="w-1 h-3 rounded-full"
 											style={{ backgroundColor: bank.color || 'gray' }}

@@ -13,15 +13,14 @@ const DepositFunds = ({ token, tokenAmount, contract, disabled }: DepositFundsPa
 	return (
 		<span className="w-full">
 			<>
-				{nativeToken ||
-					(approved && (
-						<DepositFundsButton
-							token={token}
-							tokenAmount={tokenAmount}
-							contract={contract}
-							disabled={disabled}
-						/>
-					))}
+				{(nativeToken || approved) && (
+					<DepositFundsButton
+						token={token}
+						tokenAmount={tokenAmount}
+						contract={contract}
+						disabled={disabled}
+					/>
+				)}
 				{!nativeToken && (
 					<div className={nativeToken || approved ? 'hidden' : ''}>
 						<ApproveTokenButton

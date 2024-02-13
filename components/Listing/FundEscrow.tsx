@@ -92,7 +92,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 										contract={sellerContract}
 										token={token}
 										tokenAmount={depositAmount!}
-										disabled={(depositAmount || 0) < toDeposit || chainId !== connectedChain?.id}
+										disabled={(depositAmount || 0) < toDeposit || wrongChain}
 									/>
 								)}
 							</div>

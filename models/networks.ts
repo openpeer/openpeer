@@ -1,5 +1,29 @@
 import { arbitrum, avalanche, bsc, gnosis, mainnet, optimism, polygon, polygonMumbai } from 'wagmi/chains';
 
+export const blast = {
+	id: 168587773,
+	blockExplorers: {
+		default: { name: 'BlastScan', url: 'https://testnet.blastscan.io/' },
+		etherscan: { name: 'BlastScan', url: 'https://testnet.blastscan.io/' }
+	},
+	chainId: 168587773,
+	networkId: 168587773,
+	network: 'blastsepolia',
+	name: 'Blast Sepolia Testnet',
+	iconUrls: [
+		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
+	],
+	nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
+	privateCustomerRpcUrls: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
+	// rpcUrls: {
+	// default: { http: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!] },
+	// public: { http: ['https://sepolia.blast.io'] }
+	// },
+	rpcUrls: ['https://sepolia.blast.io', process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
+	vanityName: 'Blast Sepolia Testnet',
+	testnet: true
+};
+
 export const DEPLOYER_V1_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[polygon.id]: process.env.NEXT_PUBLIC_POLYGON_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
 	[avalanche.id]: process.env.NEXT_PUBLIC_AVAX_DEPLOYER_CONTRACT_ADDRESS! as `0x${string}`,
@@ -19,7 +43,8 @@ export const DEPLOYER_CONTRACTS: { [key: number]: `0x${string}` } = {
 	[arbitrum.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[optimism.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
 	[bsc.id]: '0xEa13b6fA1b1Ac3b0951E943fCA37cC29Ed5703Aa',
-	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1'
+	[gnosis.id]: '0x491A140c185Feb0C0BbF90Fa4bBF6b0A3CF019D1',
+	[blast.id]: '0x80ED40DF18dAb19eEE73ffe493DE0d3F228d94DE'
 };
 
 export const networkApiKeys: { [key: number]: string } = {
@@ -38,21 +63,6 @@ export const quadrataPassportContracts: { [key: number]: `0x${string}` } = {
 	[avalanche.id]: '0x97058A9B7D0ce525009083F9b2C219336ce97736',
 	[polygonMumbai.id]: '0x185cc335175B1E7E29e04A321E1873932379a4a0',
 	[mainnet.id]: '0x2e779749c40CC4Ba1cAB4c57eF84d90755CC017d'
-};
-
-export const blast = {
-	blockExplorerUrls: ['https://testnet.blastscan.io/'],
-	id: 168587773,
-	chainId: 168587773,
-	name: 'Blast Testnet',
-	iconUrls: [
-		'https://assets-global.website-files.com/65a6baa1a3f8ed336f415cb4/65a6cc95aae1066cf96d497d_Logo%20Black%20on%20Yellow%20Background%402x-p-500.png'
-	],
-	nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
-	networkId: 168587773,
-	privateCustomerRpcUrls: [process.env.NEXT_PUBLIC_BLAST_RPC_URL!],
-	rpcUrls: ['https://sepolia.blast.io'],
-	vanityName: 'Blast Testnet'
 };
 
 export const productionChains = [polygon, mainnet, arbitrum, optimism, bsc, avalanche, gnosis, blast];

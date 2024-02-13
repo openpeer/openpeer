@@ -41,7 +41,7 @@ const EscrowButton = ({
 		chainId: token.chain_id
 	});
 
-	if (isFetching || !fee) return <></>;
+	if (isFetching || fee === undefined) return <></>;
 
 	const needsToDeploy = !instantEscrow && (!sellerContract || sellerContract === constants.AddressZero);
 
