@@ -88,28 +88,6 @@ const EditListButtons = ({ list }: { list: List }) => {
 	return (
 		<div className="flex flex-row items-center space-x-2 lg:justify-center">
 			<Select label="" options={options} selected={option} onSelect={updateOption} />
-
-			<Link href={{ pathname: `/ads/${encodeURIComponent(id)}/edit` }}>
-				<div className="bg-cyan-600 rounded p-1.5">
-					<PencilSquareIcon width={20} height={20} color="white" />
-				</div>
-			</Link>
-			<div
-				className={`${status === 'created' ? 'bg-cyan-400' : 'bg-gray-400'} rounded p-1.5 cursor-pointer`}
-				onClick={() => signListStatusChange({ message: toggleMessage })}
-			>
-				{status === 'created' ? (
-					<EyeIcon width={20} height={20} color="white" />
-				) : (
-					<EyeSlashIcon width={20} height={20} color="white" />
-				)}
-			</div>
-			<div
-				className="bg-red-400 rounded p-1.5 cursor-pointer"
-				onClick={() => signMessage({ message: `I want to delete the list ${id}` })}
-			>
-				<TrashIcon width={20} height={20} color="white" />
-			</div>
 		</div>
 	);
 };
