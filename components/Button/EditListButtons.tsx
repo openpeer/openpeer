@@ -84,7 +84,7 @@ const EditListButtons = ({ list }: { list: List }) => {
 	};
 
 	return (
-		<div className="w-full flex flex-row px-6 md:px-0 items-center space-x-2 lg:justify-center">
+		<div className="w-full flex flex-row px-4 md:px-0 items-center space-x-2 lg:justify-center">
 			<Select extraStyle="w-full" label="" options={options} selected={option} onSelect={updateOption} />
 		</div>
 	);
