@@ -1,8 +1,6 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import { PencilSquareIcon, TrashIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { useConfirmationSignMessage, useAccount } from 'hooks';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { List } from 'models/types';
