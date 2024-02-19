@@ -96,10 +96,13 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 	const showVerification = user && !user.verified;
 
 	return (
-		<table className="w-full md:rounded-lg overflow-hidden">
+		<table className="w-full md:rounded-lg">
 			<thead className="bg-gray-100">
 				<tr className="w-full relative">
-					<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+					<th
+						scope="col"
+						className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 rounded-tl-lg"
+					>
 						Seller
 					</th>
 					<th
@@ -134,7 +137,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 					</th>
 					<th
 						scope="col"
-						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+						className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell rounded-tr-lg"
 					>
 						Trade
 					</th>
