@@ -4,24 +4,37 @@ import OrdersTable from 'components/OrdersTable';
 import { Order } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import useAccount from 'hooks/useAccount';
+import qs from 'qs';
 
 const OrdersPage = () => {
-	const [orders, setOrders] = useState<Order[]>([]);
-	const [isLoading, setLoading] = useState(false);
+	const [activeOrders, setActiveOrders] = useState<Order[]>([]);
+	const [closedOrders, setClosedOrders] = useState<Order[]>([]);
+	const [isLoadingActive, setLoadingActive] = useState(false);
+	const [loadedClosed, setLoadedClosed] = useState(false);
+	const [isLoadingClosed, setLoadingClosed] = useState(false);
+	const [cancelledOrders, setCancelledOrders] = useState<Order[]>([]);
+	const [loadedCancelled, setLoadedCancelled] = useState(false);
+	const [isLoadingCancelled, setLoadingCancelled] = useState(false);
 	const { address } = useAccount();
 
-	useEffect(() => {
+	const fetchOrders = async (status: Order['status'][], type: 'active' | 'closed' | 'cancelled') => {
 		if (!address) return;
 
-		setLoading(true);
-		fetch('/api/orders', {
+		const loadingFunction =
+			type === 'active' ? setLoadingActive : type === 'closed' ? setLoadingClosed : setLoadingCancelled;
+
+		const setFunction =
+			type === 'active' ? setActiveOrders : type === 'closed' ? setClosedOrders : setCancelledOrders;
+
+		loadingFunction(true);
+		fetch(`/api/orders?${qs.stringify({ status })}`, {
 			headers: {
 				Authorization: `Bearer ${getAuthToken()}`
 			}
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setOrders(
+				setFunction(
 					data.filter(
 						(order: Order) =>
 							!(
@@ -31,39 +44,46 @@ const OrdersPage = () => {
 							)
 					)
 				);
-				setLoading(false);
+				loadingFunction(false);
 			});
+	};
+
+	useEffect(() => {
+		fetchOrders(['escrowed', 'release', 'dispute', 'created'], 'active');
 	}, [address]);
 
-	if (isLoading) return <Loading />;
+	const onOpenClosedOrders = () => {
+		if (loadedClosed) return;
 
-	const { activeOrders, closedOrders, cancelledOrders } = orders.reduce(
-		(acc: { [key: string]: Order[] }, order) => {
-			switch (order.status) {
-				case 'closed':
-					acc.closedOrders.push(order);
-					break;
-				case 'cancelled':
-					acc.cancelledOrders.push(order);
-					break;
-				default:
-					acc.activeOrders.push(order);
-			}
-			return acc;
-		},
-		{ activeOrders: [], closedOrders: [], cancelledOrders: [] }
-	);
+		fetchOrders(['closed'], 'closed');
+		setLoadedClosed(true);
+	};
+
+	const onOpenCancelledOrders = () => {
+		if (loadedCancelled) return;
+
+		fetchOrders(['cancelled'], 'cancelled');
+		setLoadedCancelled(true);
+	};
 
 	return (
 		<>
-			<div className="mx-auto sm:px-0 md:px-4">
-				<Accordion content={<OrdersTable orders={activeOrders} />} title="Active orders" open />
-				{closedOrders.length > 0 && (
-					<Accordion content={<OrdersTable orders={closedOrders} />} title="Closed orders" />
-				)}
-				{cancelledOrders.length > 0 && (
-					<Accordion content={<OrdersTable orders={cancelledOrders} />} title="Cancelled orders" />
-				)}
+			<div className="mx-auto sm:px-0 md:px-4 mb-8">
+				<Accordion
+					content={isLoadingActive ? <Loading /> : <OrdersTable orders={activeOrders} />}
+					title="Active orders"
+					open
+				/>
+				<Accordion
+					content={isLoadingClosed ? <Loading /> : <OrdersTable orders={closedOrders} />}
+					title="Closed orders"
+					onOpen={onOpenClosedOrders}
+				/>
+				<Accordion
+					content={isLoadingCancelled ? <Loading /> : <OrdersTable orders={cancelledOrders} />}
+					title="Cancelled orders"
+					onOpen={onOpenCancelledOrders}
+				/>
 			</div>
 		</>
 	);

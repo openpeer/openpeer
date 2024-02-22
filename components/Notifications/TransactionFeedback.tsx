@@ -11,6 +11,7 @@ import { ArrowPathIcon, ArrowTopRightOnSquareIcon, CheckCircleIcon, XCircleIcon 
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { Manrope } from '@next/font/google';
 import useNetwork from 'hooks/useNetwork';
+import { blast } from 'models/networks';
 
 const manrope = Manrope({
 	subsets: ['latin'],
@@ -32,6 +33,8 @@ const TransactionFeedback = ({ open, onClose, hash, description, onTransactionRe
 		hash,
 		onReplaced: ({ transaction: { hash: newHash } }) => onTransactionReplaced(newHash)
 	});
+
+	const blockExplorers = chain?.id === blast.id ? blast.blockExplorers : chain?.blockExplorers;
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -121,26 +124,23 @@ const TransactionFeedback = ({ open, onClose, hash, description, onTransactionRe
 												{isSuccess && <span className="text-xs text-blue-600">Confirmed</span>}
 											</div>
 										</div>
-										{hash &&
-											chain &&
-											(chain.blockExplorers?.etherscan || chain.blockExplorers?.default) && (
-												<a
-													target="_blank"
-													href={`${chain.blockExplorers.default.url}/tx/${hash}`}
-													rel="noopener noreferrer"
-												>
-													<div className="mt-6 mb-2 flex flex-row justify-between">
-														<span className="text-xs">
-															View more on{' '}
-															{chain.blockExplorers?.etherscan?.name ||
-																chain.blockExplorers.default.name}
-														</span>
-														<span className="text-xs">
-															<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
-														</span>
-													</div>
-												</a>
-											)}
+										{hash && chain && (blockExplorers?.etherscan || blockExplorers?.default) && (
+											<a
+												target="_blank"
+												href={`${blockExplorers.default.url}/tx/${hash}`}
+												rel="noopener noreferrer"
+											>
+												<div className="mt-6 mb-2 flex flex-row justify-between">
+													<span className="text-xs">
+														View more on{' '}
+														{blockExplorers?.etherscan?.name || blockExplorers.default.name}
+													</span>
+													<span className="text-xs">
+														<ArrowTopRightOnSquareIcon className="w-4 h-4 text-gray-500" />
+													</span>
+												</div>
+											</a>
+										)}
 									</div>
 								</div>
 							</Dialog.Panel>

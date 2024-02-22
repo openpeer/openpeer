@@ -52,9 +52,8 @@ const NetworkSelect = ({
 			onSelect={onSelect as SelectProps['onSelect']}
 			error={error}
 			labelStyle={labelStyle}
-			// extraStyle="my-0 mt-4"
 			extraStyle={extraStyle}
-			token
+			network
 		/>
 	);
 };

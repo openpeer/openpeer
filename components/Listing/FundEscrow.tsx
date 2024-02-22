@@ -14,8 +14,7 @@ import { constants } from 'ethers';
 import { useSwitchNetwork } from 'wagmi';
 import Button from 'components/Button/Button';
 import { useNetwork } from 'hooks';
-import { getChainToken } from 'utils';
-import TokenImage from '../Token/Token';
+import Network from 'components/Network/Network';
 import StepLayout from './StepLayout';
 
 interface FundsEscrowProps {
@@ -33,7 +32,6 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 	const [depositAmount, setDepositAmount] = useState<number | undefined>(listTotalNumber);
 	const { SVG } = useQRCode();
 	const chain = allChains.find((c) => c.id === chainId);
-	const chainToken = getChainToken(chain);
 	const sellerContractDeployed = !!sellerContract && sellerContract !== constants.AddressZero;
 	const { switchNetwork } = useSwitchNetwork();
 
@@ -93,7 +91,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 										contract={sellerContract}
 										token={token}
 										tokenAmount={depositAmount!}
-										disabled={(depositAmount || 0) < toDeposit || chainId !== connectedChain?.id}
+										disabled={(depositAmount || 0) < toDeposit || wrongChain}
 									/>
 								)}
 							</div>
@@ -128,7 +126,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 										<ExplainerNotification
 											title={
 												<div className="flex flex-row space-x-2">
-													<TokenImage token={chainToken! as Token} size={20} />
+													<Network id={chainId} size={20} />
 													<span className="text-sm">{chain?.name}</span>
 												</div>
 											}

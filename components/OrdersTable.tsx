@@ -1,7 +1,7 @@
-import { Avatar, Button, Flag } from 'components';
+import { Avatar, Button, Flag, Network } from 'components';
 import { countries } from 'models/countries';
 import { allChains } from 'models/networks';
-import { Order, Token as TokenModel } from 'models/types';
+import { Order } from 'models/types';
 import Link from 'next/link';
 import React from 'react';
 import { smallWalletAddress } from 'utils';
@@ -205,10 +205,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 														<div className="flex flex-row items-center">
 															<span className="pr-2 text-sm">Chain</span>
 															<div className="flex flex-row items-center space-x-1">
-																<Token
-																	token={network?.nativeCurrency as TokenModel}
-																	size={18}
-																/>
+																<Network id={network!.id} size={18} />
 															</div>
 															<span className="pl-1 text-sm">{network?.name}</span>
 														</div>
@@ -239,7 +236,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
 									</td>
 									<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 										<div className="flex flex-row items-center space-x-1">
-											<Token token={network?.nativeCurrency as TokenModel} size={24} />
+											<Network id={network!.id} size={24} />
 											<span>{network?.name}</span>
 										</div>
 									</td>
