@@ -63,7 +63,7 @@ const EditListButtons = ({ list }: { list: List }) => {
 	const options = [
 		{ id: 1, name: 'Edit Ad' },
 		{ id: 2, name: 'Deposit/Withdraw Funds' },
-		{ id: 3, name: status === 'created' ? 'Hide Ad' : 'Show Ad' },
+		{ id: 3, name: status === 'created' ? 'Show Ad' : 'Hide Ad' },
 		{ id: 4, name: 'Delete Ad' }
 	];
 
