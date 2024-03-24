@@ -3,6 +3,7 @@ import TransactionLink from 'components/TransactionLink';
 import { useTransactionFeedback, useAccount } from 'hooks';
 import { useEscrowFunds } from 'hooks/transactions';
 import React, { useEffect, useState } from 'react';
+import { truncate } from 'utils';
 import { parseUnits } from 'viem';
 
 import { EscrowFundsButtonProps } from './EscrowButton.types';
@@ -18,7 +19,7 @@ const EscrowFundsButton = ({
 	sellerWaitingTime
 }: EscrowFundsButtonProps) => {
 	const { isConnected } = useAccount();
-	const amount = parseUnits(String(tokenAmount), token.decimals);
+	const amount = parseUnits(String(truncate(tokenAmount, token.decimals)), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [escrowConfirmed, setEscrowConfirmed] = useState(false);
 
