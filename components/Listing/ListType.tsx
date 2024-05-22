@@ -46,9 +46,10 @@ const Option = ({ type, title, description, selected, onClick }: OptionProps) =>
 
 const ListType = ({ updateList, list }: ListStepProps) => {
 	const [type, setType] = useState<string>(list.type || 'SellList');
+	const [escrowType, setEscrowType] = useState<string>(list.escrowType || 'instant');
 	const { address } = useAccount();
 	const [user, setUser] = useState<User | null>();
-	const escrowSetting = type === 'BuyList' ? 'manual' : 'instant';
+	const escrowSetting = type === 'BuyList' ? 'manual' : (escrowType as UIList['escrowType']);
 
 	const onProceed = () => {
 		updateList({
@@ -71,7 +72,7 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 				escrowType: escrowSetting
 			}
 		});
-	}, [type, escrowSetting]);
+	}, [type, escrowType]);
 
 	useEffect(() => {
 		if (!address) return;
@@ -114,6 +115,27 @@ const ListType = ({ updateList, list }: ListStepProps) => {
 					selected={type === 'BuyList'}
 				/>
 			</fieldset>
+			{type === 'SellList' && (
+				<div>
+					<h2 className="text-lg mt-6 mb-2">Choose Sell order type</h2>
+					<fieldset className="mb-4">
+						<Option
+							type="instant"
+							title="Instant Escrow (recommended)"
+							description="I want to hold funds in OpenPeer and have them escrowed instantly when an order is placed"
+							onClick={setEscrowType}
+							selected={escrowType === 'instant'}
+						/>
+						<Option
+							type="manual"
+							title="Manual Escrow"
+							description="I want to move funds to OpenPeer and manually escrow when an order is placed. Ideal if you want to hold funds on Binance and only move to OpenPeer when an order is placed"
+							onClick={setEscrowType}
+							selected={escrowType === 'manual'}
+						/>
+					</fieldset>
+				</div>
+			)}
 		</StepLayout>
 	);
 };
