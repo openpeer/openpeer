@@ -14,9 +14,11 @@ import { Chain } from 'wagmi';
 
 interface FilterProps {
 	onFilterUpdate: (filters: SearchFilters) => void;
+	needToReset?: boolean;
+	setNeedToReset?: (value: boolean) => void;
 }
 
-const Filters = ({ onFilterUpdate }: FilterProps) => {
+const Filters = ({ onFilterUpdate, needToReset, setNeedToReset }: FilterProps) => {
 	const [chain, setChain] = useState<Chain>();
 	const [amount, setAmount] = useState<number>();
 	const [token, setToken] = useState<Token>();
@@ -27,6 +29,13 @@ const Filters = ({ onFilterUpdate }: FilterProps) => {
 	useEffect(() => {
 		onFilterUpdate({ amount, currency, paymentMethod, token, fiatAmount, chain });
 	}, [amount, fiatAmount, paymentMethod, token, chain]);
+
+	useEffect(() => {
+		if (needToReset) {
+			reset();
+			setNeedToReset?.(false);
+		}
+	}, [needToReset]);
 
 	useEffect(() => {
 		const availableInTheNewCurrency =
