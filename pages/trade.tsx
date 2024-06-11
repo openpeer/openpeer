@@ -1,4 +1,4 @@
-import { ListsTable, Loading, Pagination, Switcher } from 'components';
+import { Button, ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination } from 'hooks';
 import { SearchFilters } from 'models/search';
@@ -6,7 +6,7 @@ import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 
-import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
+import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 interface PaginationMeta {
@@ -24,6 +24,7 @@ const HomePage = () => {
 	const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>();
 	const [filters, setFilters] = useState<SearchFilters>({} as SearchFilters);
 	const [showFilters, setShowFilters] = useState(false);
+	const [needToReset, setNeedToReset] = useState(false);
 
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
 
@@ -108,17 +109,25 @@ const HomePage = () => {
 						<span className="text-gray-600 hover:cursor-pointer ml-2">Filters</span>
 					</div>
 					<div className="flex lg:justify-end hidden lg:block">
-						<Filters onFilterUpdate={setFilters} />
+						<Filters
+							onFilterUpdate={setFilters}
+							needToReset={needToReset}
+							setNeedToReset={setNeedToReset}
+						/>
 					</div>
 				</div>
 				{showFilters && (
 					<div className="lg:my-8 lg:hidden">
-						<Filters onFilterUpdate={setFilters} />
+						<Filters
+							onFilterUpdate={setFilters}
+							needToReset={needToReset}
+							setNeedToReset={setNeedToReset}
+						/>
 					</div>
 				)}
 				{isLoading ? (
 					<Loading />
-				) : (
+				) : lists.length > 0 ? (
 					<div className="py-4">
 						<ListsTable lists={lists} hideLowAmounts />
 						{!!lists.length && !!paginationMeta && paginationMeta.total_pages > 1 && (
@@ -131,6 +140,20 @@ const HomePage = () => {
 								onNextPage={onNextPage}
 							/>
 						)}
+					</div>
+				) : (
+					<div className="flex flex-col items-center space-y-8">
+						<div className="flex justify-center items-center w-16 h-16 bg-gray-100 p-4 rounded-full">
+							<MagnifyingGlassIcon
+								width={24}
+								height={24}
+								className="text-gray-600 hover:cursor-pointer"
+							/>
+						</div>
+						<div>No results within your search</div>
+						<div>
+							<Button title="Remove all filters" onClick={() => setNeedToReset(true)} />
+						</div>
 					</div>
 				)}
 			</div>
