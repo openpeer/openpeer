@@ -1,4 +1,4 @@
-import { Button, Loading, Steps } from 'components';
+import { Steps } from 'components';
 import { Amount, Details, ListType, PaymentMethod, Setup, Summary } from 'components/Listing';
 import { UIList } from 'components/Listing/Listing.types';
 import React, { useEffect, useState } from 'react';
@@ -28,7 +28,6 @@ const defaultList = {
 };
 
 const SellPage = () => {
-	const [merchants, setMerchants] = useState<`0x${string}`[] | undefined>();
 	const [showFilters, setShowFilters] = useState(false);
 
 	const { address } = useAccount();
@@ -40,15 +39,6 @@ const SellPage = () => {
 		...defaultList
 	} as UIList);
 	const { step } = list;
-
-	useEffect(() => {
-		const fetchMerchants = async () => {
-			const res = await fetch('/api/merchants');
-			setMerchants(await res.json());
-		};
-
-		fetchMerchants();
-	}, []);
 
 	useEffect(() => {
 		if (list.step > 4) {
@@ -73,29 +63,6 @@ const SellPage = () => {
 	const handleToggleFilters = () => {
 		setShowFilters(!showFilters);
 	};
-
-	if (merchants === undefined) return <Loading message="Loading..." />;
-
-	if (address && !merchants.map((m) => m.toLowerCase()).includes(address.toLowerCase())) {
-		return (
-			<Loading
-				spinner={false}
-				message={
-					<a
-						className="flex flex-col items-center space-y-2"
-						href="https://forms.gle/qiAzsPeCphUhZgBM9"
-						target="_blank"
-						rel="noreferrer"
-					>
-						<div>You need to be a verified merchant to post an ad on OpenPeer.</div>
-						<div>
-							<Button title="Apply here!" />
-						</div>
-					</a>
-				}
-			/>
-		);
-	}
 
 	return (
 		<div className="pt-4 md:pt-6">
