@@ -13,12 +13,13 @@ import snakecaseKeys from 'snakecase-keys';
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { truncate } from 'utils';
 import { BuyStepProps } from './Buy.types';
 
 const OrderPaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 	const { address } = useAccount();
 	const { list, paymentMethod = {} as PaymentMethodType } = order;
-	const { fiat_currency: currency, type, banks } = list;
+	const { fiat_currency: currency, type, banks, token } = list;
 	const { id, bank, values = {} } = paymentMethod;
 	const { account_info_schema: schema = [] } = (bank || {}) as Bank;
 	const { errors, clearErrors, validate } = useFormErrors();
@@ -49,7 +50,7 @@ const OrderPaymentMethod = ({ order, updateOrder }: BuyStepProps) => {
 						order: {
 							listId: order.list.id,
 							fiatAmount: order.fiat_amount,
-							tokenAmount: order.token_amount,
+							tokenAmount: truncate(order.token_amount, token.decimals),
 							price: order.price,
 							paymentMethod
 						}

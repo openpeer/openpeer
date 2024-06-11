@@ -130,7 +130,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 						order: {
 							listId: newOrder.list.id,
 							fiatAmount: newOrder.fiat_amount,
-							tokenAmount: newOrder.token_amount,
+							tokenAmount: truncate(newOrder.token_amount, token.decimals),
 							price: newOrder.price,
 							paymentMethod: { id: bank?.id }
 						}
@@ -179,7 +179,11 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 	function onChangeToken(val: number | undefined) {
 		clearErrors(['tokenAmount']);
 
-		setTokenAmount(val);
+		if (val) {
+			setTokenAmount(truncate(val, token.decimals));
+		} else {
+			setTokenAmount(val);
+		}
 		if (price && val) setFiatAmount(val * price);
 	}
 
