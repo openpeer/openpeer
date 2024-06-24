@@ -107,15 +107,18 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				)}
 				<div className="flex flex-col justify-around bg-gray-100 rounded-lg p-4 my-4">
-					<div className="flex flex-row items-center mb-1">
-						<span className="text-sm mr-2">Amount to pay</span>
-						<span className="text-base font-medium">
-							{selling
-								? `${tokenAmount} ${token.symbol}`
-								: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
-						</span>
-					</div>
-					{selling && <FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />}
+					{selling ? (
+						<FeeDisplay escrow={escrow?.address} token={token} tokenAmount={tokenAmount} />
+					) : (
+						<div className="flex flex-row items-center mb-1">
+							<span className="text-sm mr-2">Amount to pay</span>
+							<span className="text-base font-medium">
+								{selling
+									? `${tokenAmount} ${token.symbol}`
+									: `${currency.symbol} ${Number(fiatAmount).toFixed(2)}`}
+							</span>
+						</div>
+					)}
 					<div className="flex flex-row items-center mb-1">
 						<span className="text-sm mr-2">Price</span>
 						<span className="text-base font-medium">

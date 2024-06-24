@@ -5,7 +5,7 @@ import { constants, Contract } from 'ethers';
 import useBiconomy from 'hooks/useBiconomy';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-
+import { toast } from 'react-toastify';
 import { UseGaslessEscrowFundsProps } from '../types';
 
 interface Data {
@@ -68,7 +68,12 @@ const useGaslessEscrow = ({
 				signatureType: 'EIP712_SIGN'
 			};
 			// @ts-ignore
-			await provider.send('eth_sendTransaction', [txParams]);
+			const logs: { error: string; reason: string } = await provider.send('eth_sendTransaction', [txParams]);
+
+			if (logs.error) {
+				throw new Error(logs.reason);
+			}
+
 			setIsLoading(true);
 			biconomy.on('txHashGenerated', (txData) => {
 				setIsSuccess(false);
@@ -85,8 +90,17 @@ const useGaslessEscrow = ({
 				setIsLoading(false);
 				setIsSuccess(false);
 			});
-		} catch (error) {
-			console.error('error', error);
+		} catch (error: any) {
+			toast.error(error.message, {
+				theme: 'dark',
+				position: 'top-right',
+				autoClose: 5000,
+				hideProgressBar: true,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: false,
+				progress: undefined
+			});
 			setIsLoading(false);
 			setIsSuccess(false);
 		}
