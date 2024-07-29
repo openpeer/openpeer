@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React from 'react';
 import { toast } from 'react-toastify';
+import TelegramConnect from '../../components/TelegramConnect';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -72,6 +73,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				<div className="mb-2">
 					<HeaderH3 title="Social" />
 					<Input label="Twitter" id="twitter" value={twitter} onChange={setTwitter} />
+					<TelegramConnect />
 				</div>
 				<div>
 					<Button title="Update profile" onClick={updateProfile} />
