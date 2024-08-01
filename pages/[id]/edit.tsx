@@ -1,11 +1,13 @@
 // pages/[id]/edit.tsx
 import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
+import Select from 'components/Select/Select';
 import ImageUploader from 'components/ImageUploader';
 import { useUserProfile, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
 import React from 'react';
 import { toast } from 'react-toastify';
+import countryCodes from 'utils/countryCodes';
 import TelegramConnect from '../../components/TelegramConnect';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
@@ -113,31 +115,61 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				</div>
 				<div className="mb-2">
 					<HeaderH3 title="Messaging" />
-					<Input
-						label="Telegram User ID"
-						id="telegramUserId"
-						value={telegramUserId}
-						onChange={setTelegramUserId}
-						type="number"
-					/>
-					<Input
-						label="Telegram Username"
-						id="telegramUsername"
-						value={telegramUsername}
-						onChange={setTelegramUsername}
-					/>
-					<Input
+					{isTelegramConnected ? (
+						<div className="flex items-center bg-gray-100 p-2 rounded my-4">
+							<span className="font-bold mr-2">Telegram:</span>
+							<span>
+								@{telegramUsername} ({telegramUserId})
+							</span>
+						</div>
+					) : (
+						<>
+							<Input
+								type="hidden"
+								label="Telegram User ID"
+								id="telegramUserId"
+								value={telegramUserId || ''}
+								onChange={setTelegramUserId}
+							/>
+							<Input
+								type="hidden"
+								label="Telegram Username"
+								id="telegramUsername"
+								value={telegramUsername || ''}
+								onChange={setTelegramUsername}
+							/>
+						</>
+					)}
+
+					<Select
 						label="WhatsApp Country Code"
-						id="whatsappCountryCode"
-						value={whatsappCountryCode}
-						onChange={setWhatsappCountryCode}
+						options={[
+							{ id: '', name: 'Select a country code' },
+							...countryCodes.map((country) => ({
+								id: country.code,
+								name: `${country.name} (+${country.code})`
+							}))
+						]}
+						selected={
+							countryCodes.find((c) => c.code === whatsappCountryCode)
+								? {
+										id: whatsappCountryCode,
+										name: `${
+											countryCodes.find((c) => c.code === whatsappCountryCode)?.name
+										} (+${whatsappCountryCode})`
+								  }
+								: { id: '', name: 'Select a country code' }
+						}
+						onSelect={(option) => setWhatsappCountryCode(option.id)}
 					/>
+
 					<Input
 						label="WhatsApp Number"
 						id="whatsappNumber"
 						value={whatsappNumber}
 						onChange={setWhatsappNumber}
 					/>
+
 					<TelegramConnect onTelegramAuth={handleTelegramAuth} isConnected={isTelegramConnected} />
 				</div>
 				<div>
