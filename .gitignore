@@ -35,7 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-pages/test.tsx
-
 DEVLOG.md
+TODO.md
+.vscode/
 

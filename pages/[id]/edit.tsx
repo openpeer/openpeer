@@ -1,3 +1,4 @@
+// pages/[id]/edit.tsx
 import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
 import ImageUploader from 'components/ImageUploader';
 import { useUserProfile, useAccount } from 'hooks';
@@ -31,7 +32,15 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		email,
 		setEmail,
 		twitter,
-		setTwitter
+		setTwitter,
+		telegramUserId,
+		setTelegramUserId,
+		telegramUsername,
+		setTelegramUsername,
+		whatsappCountryCode,
+		setWhatsappCountryCode,
+		whatsappNumber,
+		setWhatsappNumber
 	} = useUserProfile({ onUpdateProfile });
 
 	if (user === undefined) {
@@ -40,6 +49,34 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	if (user === null || id !== address) {
 		return <ErrorPage statusCode={404} />;
 	}
+
+	const handleTelegramAuth = async (user: TelegramUser) => {
+		try {
+			const response = await fetch('/api/tg/verify-telegram-auth', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(user)
+			});
+
+			if (response.ok) {
+				const { chatId, username } = await response.json();
+				setTelegramUserId(chatId.toString());
+				setTelegramUsername(username);
+				toast.success('Telegram account connected successfully!');
+			} else {
+				const errorText = await response.text();
+				console.error('Error response:', errorText);
+				toast.error(`Failed to connect Telegram account: ${response.status} ${response.statusText}`);
+			}
+		} catch (error) {
+			console.error('Error during Telegram authentication:', error);
+			toast.error('An error occurred during Telegram authentication');
+		}
+	};
+
+	const isTelegramConnected = !!telegramUserId;
 
 	return (
 		<div className="w-full m-auto flex flex-col sm:flex-row px-8 py-4 gap-x-16 justify-center mt-8">
@@ -73,7 +110,35 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				<div className="mb-2">
 					<HeaderH3 title="Social" />
 					<Input label="Twitter" id="twitter" value={twitter} onChange={setTwitter} />
-					<TelegramConnect />
+				</div>
+				<div className="mb-2">
+					<HeaderH3 title="Messaging" />
+					<Input
+						label="Telegram User ID"
+						id="telegramUserId"
+						value={telegramUserId}
+						onChange={setTelegramUserId}
+						type="number"
+					/>
+					<Input
+						label="Telegram Username"
+						id="telegramUsername"
+						value={telegramUsername}
+						onChange={setTelegramUsername}
+					/>
+					<Input
+						label="WhatsApp Country Code"
+						id="whatsappCountryCode"
+						value={whatsappCountryCode}
+						onChange={setWhatsappCountryCode}
+					/>
+					<Input
+						label="WhatsApp Number"
+						id="whatsappNumber"
+						value={whatsappNumber}
+						onChange={setWhatsappNumber}
+					/>
+					<TelegramConnect onTelegramAuth={handleTelegramAuth} isConnected={isTelegramConnected} />
 				</div>
 				<div>
 					<Button title="Update profile" onClick={updateProfile} />
@@ -84,7 +149,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
-	props: { title: 'Edit Profile', id: String(context.params?.id) } // will be passed to the page component as props
+	props: { title: 'Edit Profile', id: String(context.params?.id) }
 });
 
 export default EditProfile;

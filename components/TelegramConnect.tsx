@@ -1,56 +1,62 @@
-'use client';
+// components/TelegramConnect.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export default function TelegramConnect() {
-	const [telegramConnected, setTelegramConnected] = useState(false);
-	const [telegramChatId, setTelegramChatId] = useState('');
-
-	const handleTelegramConnect = async () => {
-		// Placeholder
-		const chatId = '468259635';
-
-		try {
-			const response = await fetch('/api/telegram/connect', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ telegramChatId: chatId })
-			});
-
-			if (response.ok) {
-				setTelegramConnected(true);
-				setTelegramChatId(chatId);
-			} else {
-				throw new Error('Failed to connect Telegram');
-			}
-		} catch (error) {
-			console.error('Error connecting Telegram:', error);
-		}
-	};
-
-	return (
-		<div>
-			<h3 className="text-lg font-medium leading-6 text-gray-900">Telegram Integration</h3>
-			<div className="mt-2 max-w-xl text-sm text-gray-500">
-				<p>Connect your account to receive notifications via Telegram.</p>
-			</div>
-			<div className="mt-5">
-				{telegramConnected ? (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-						Connected (Chat ID: {telegramChatId})
-					</span>
-				) : (
-					<button
-						type="button"
-						onClick={handleTelegramConnect}
-						className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-					>
-						Connect Telegram
-					</button>
-				)}
-			</div>
-		</div>
-	);
+interface TelegramConnectProps {
+	onTelegramAuth: (user: TelegramUser) => void;
+	isConnected: boolean;
 }
+
+interface TelegramUser {
+	id: number;
+	first_name: string;
+	username?: string;
+	photo_url?: string;
+	auth_date: number;
+	hash: string;
+}
+
+declare global {
+	interface Window {
+		TelegramLoginWidget: any;
+	}
+}
+
+const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isConnected }) => {
+	const buttonRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (!isConnected) {
+			const script = document.createElement('script');
+			script.src = 'https://telegram.org/js/telegram-widget.js?22';
+			script.async = true;
+			script.onload = () => {
+				window.TelegramLoginWidget = {
+					dataOnauth: (user: TelegramUser) => onTelegramAuth(user)
+				};
+
+				const widget = document.createElement('script');
+				widget.setAttribute('data-telegram-login', 'openpeer_bot');
+				widget.setAttribute('data-size', 'large');
+				widget.setAttribute('data-onauth', 'TelegramLoginWidget.dataOnauth(user)');
+				widget.setAttribute('data-request-access', 'write');
+				widget.async = true;
+
+				buttonRef.current?.appendChild(widget);
+			};
+			document.body.appendChild(script);
+
+			return () => {
+				document.body.removeChild(script);
+			};
+		}
+	}, [isConnected, onTelegramAuth]);
+
+	if (isConnected) {
+		return <div>Telegram Connected</div>;
+	}
+
+	return <div ref={buttonRef} />;
+};
+
+export default TelegramConnect;
