@@ -3,7 +3,7 @@ import { NumericFormat, OnValueChange } from 'react-number-format';
 import Tooltip from 'components/Tooltip';
 
 export interface InputProps {
-	label: string;
+	label?: string;
 	addOn?: JSX.Element | string;
 	id: string;
 	value?: number | string | undefined;
@@ -50,16 +50,18 @@ const Input = ({
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
 	return (
 		<div className={`my-8 ${containerExtraStyle}`}>
-			<div className="flex justify-between items-center">
-				<div className="flex flex-row items-center space-x-1">
-					<label htmlFor={id} className={`block text-base font-medium text-gray-700 mb-1 ${labelStyle}`}>
-						{label}
-					</label>
-					<span className="mb-1">{!!tooltipContent && <Tooltip content={tooltipContent} />}</span>
-				</div>
+			{label && (
+				<div className="flex justify-between items-center">
+					<div className="flex flex-row items-center space-x-1">
+						<label htmlFor={id} className={`block text-base font-medium text-gray-700 mb-1 ${labelStyle}`}>
+							{label}
+						</label>
+						<span className="mb-1">{!!tooltipContent && <Tooltip content={tooltipContent} />}</span>
+					</div>
 
-				<span className="text-sm text-gray-500">{labelSideInfo}</span>
-			</div>
+					<span className="text-sm text-gray-500">{labelSideInfo}</span>
+				</div>
+			)}
 			<div className="relative rounded-md shadow-sm">
 				{prefix}
 				{type === 'decimal' ? (

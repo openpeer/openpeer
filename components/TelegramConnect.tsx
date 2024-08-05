@@ -53,10 +53,10 @@ const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isCon
 	}, [isConnected, onTelegramAuth]);
 
 	if (isConnected) {
-		return <div>Telegram Connected</div>;
+		return;
 	}
 
-	return <div ref={buttonRef} />;
+	return <div className="mt-2" ref={buttonRef} />;
 };
 
 export default TelegramConnect;

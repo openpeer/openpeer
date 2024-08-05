@@ -10,6 +10,7 @@ interface ButtonProps {
 	link?: boolean;
 	disabled?: boolean;
 	processing?: boolean;
+	xyz?: boolean;
 }
 
 const Button = ({
@@ -20,13 +21,16 @@ const Button = ({
 	rounded = false,
 	link = false,
 	disabled = false,
-	processing = false
+	processing = false,
+	xyz = false
 }: ButtonProps) => (
 	<button
 		type="button"
 		className={
 			minimal
 				? 'text-xl font-bold w-8'
+				: xyz
+				? 'text-xl text-red-600'
 				: outlined
 				? 'w-full px-2 py-3 rounded border border-cyan-600 text-base text-cyan-600 my-4'
 				: processing

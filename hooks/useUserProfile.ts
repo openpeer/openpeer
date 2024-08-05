@@ -100,6 +100,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const updateProfile = () => {
 		setErrors({});
+
 		const newUser = {
 			...user,
 			name: username || null,
