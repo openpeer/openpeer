@@ -7,7 +7,8 @@ const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== 'POST') {
-		return res.status(405).json({ error: 'Method not allowed' });
+		res.status(405).json({ error: 'Method not allowed' });
+		return;
 	}
 	try {
 		const { hash, ...userData } = req.body;
@@ -32,7 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		// console.log('Received hash:', hash);
 
 		if (calculatedHash !== hash) {
-			return res.status(401).json({ error: 'Invalid authentication' });
+			res.status(401).json({ error: 'Invalid authentication' });
+			return;
 		}
 
 		// Authentication successful
@@ -41,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			username: userData.username || `${userData.first_name}${userData.last_name ? ` ${userData.last_name}` : ''}`
 		});
 	} catch (error) {
-		console.error('Error in verify-telegram-auth:', error);
+		// console.error('Error in verify-telegram-auth:', error);
 		res.status(500).json({ error: 'Internal server error during Telegram authentication' });
 	}
 }

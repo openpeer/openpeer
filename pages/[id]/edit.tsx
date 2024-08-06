@@ -9,6 +9,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import countryCodes from 'utils/countryCodes';
 import TelegramConnect from '../../components/TelegramConnect';
+import { TelegramUser } from '../../models/telegram';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -52,30 +53,30 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		return <ErrorPage statusCode={404} />;
 	}
 
-	const handleTelegramAuth = async (user: TelegramUser) => {
+	const handleTelegramAuth = async (telegramUser: TelegramUser) => {
 		try {
 			const response = await fetch('/api/tg/verify-telegram-auth', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(user)
+				body: JSON.stringify(telegramUser)
 			});
 
 			if (response.ok) {
-				const { chatId, username } = await response.json();
+				const { chatId, username: tgUsername } = await response.json();
 				setTelegramUserId(chatId.toString());
-				setTelegramUsername(username);
+				setTelegramUsername(tgUsername);
 
 				toast.success('Telegram account connected successfully! Please update your profile.');
 				// await updateProfile();
 			} else {
-				const errorText = await response.text();
-				console.error('Error response:', errorText);
+				// const errorText = await response.text();
+				// console.error('Error response:', errorText);
 				toast.error(`Failed to connect Telegram account: ${response.status} ${response.statusText}`);
 			}
 		} catch (error) {
-			console.error('Error during Telegram authentication:', error);
+			// console.error('Error during Telegram authentication:', error);
 			toast.error('An error occurred during Telegram authentication');
 		}
 	};
@@ -173,23 +174,30 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					<Select
 						label="WhatsApp Country Code"
 						options={[
-							{ id: '', name: 'Select a country code' },
-							...countryCodes.map((country) => ({
-								id: country.code,
+							{ id: 0, name: 'Select a country code' },
+							...countryCodes.map((country, index) => ({
+								id: index + 1,
 								name: `${country.name} (+${country.code})`
 							}))
 						]}
 						selected={
-							countryCodes.find((c) => c.code === whatsappCountryCode)
+							countryCodes.findIndex((c) => c.code === whatsappCountryCode) !== -1
 								? {
-										id: whatsappCountryCode,
+										id: countryCodes.findIndex((c) => c.code === whatsappCountryCode) + 1,
 										name: `${
 											countryCodes.find((c) => c.code === whatsappCountryCode)?.name
 										} (+${whatsappCountryCode})`
 								  }
-								: { id: '', name: 'Select a country code' }
+								: { id: 0, name: 'Select a country code' }
 						}
-						onSelect={(option) => setWhatsappCountryCode(option.id)}
+						onSelect={(option) => {
+							if (option && option.id !== 0) {
+								const selectedCountry = countryCodes[option.id - 1];
+								setWhatsappCountryCode(selectedCountry.code);
+							} else {
+								setWhatsappCountryCode('');
+							}
+						}}
 					/>
 
 					<Input

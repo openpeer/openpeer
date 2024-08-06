@@ -24,7 +24,7 @@ const Metric = ({
 }: {
 	label: string;
 	value: string | number | undefined | null;
-	Icon: (props: any) => JSX.Element;
+	Icon: React.ElementType;
 }) => (
 	<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
 		<div className="flex flex-col">
@@ -82,7 +82,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 		created_at: createdAt,
 		name,
 		twitter,
-		telegram_username,
+		telegram_username: telegramUsername,
 		address,
 		completion_rate: completionRate
 	} = user;
@@ -181,10 +181,10 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 								</Link>
 							</span>
 						)}
-						{!!telegram_username && (
+						{!!telegramUsername && (
 							<span className="text-sm mb-4 flex items-center">
 								<Link
-									href={`https://t.me/${telegram_username}`}
+									href={`https://t.me/${telegramUsername}`}
 									className="flex items-center"
 									target="_blank"
 								>
@@ -215,7 +215,7 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 											</linearGradient>
 										</defs>
 									</svg>
-									{telegram_username.toLowerCase()}
+									{telegramUsername.toLowerCase()}
 								</Link>
 							</span>
 						)}

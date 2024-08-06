@@ -1,19 +1,11 @@
 // components/TelegramConnect.tsx
 
 import React, { useEffect, useRef } from 'react';
+import { TelegramUser } from '../models/telegram';
 
 interface TelegramConnectProps {
 	onTelegramAuth: (user: TelegramUser) => void;
 	isConnected: boolean;
-}
-
-interface TelegramUser {
-	id: number;
-	first_name: string;
-	username?: string;
-	photo_url?: string;
-	auth_date: number;
-	hash: string;
 }
 
 declare global {
@@ -50,10 +42,11 @@ const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isCon
 				document.body.removeChild(script);
 			};
 		}
+		return () => {};
 	}, [isConnected, onTelegramAuth]);
 
 	if (isConnected) {
-		return;
+		return null;
 	}
 
 	return <div className="mt-2" ref={buttonRef} />;
