@@ -67,30 +67,42 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	}, [user]);
 
 	const updateUserProfile = async (profile: User, showNotification = true) => {
-		const result = await fetch(`/api/user_profiles/${address}`, {
-			method: 'PUT',
-			body: JSON.stringify({ user_profile: profile }),
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		});
+		try {
+			const userProfileData = {
+				...profile,
+				telegram_user_id: profile.telegram_user_id || null,
+				telegram_username: profile.telegram_username || null
+			};
 
-		const newUser = await result.json();
-
-		if (newUser.id) {
-			setUser(newUser);
-			if (!showNotification) return;
-			onUpdateProfile?.(newUser);
-		} else {
-			const foundErrors: ErrorObject = newUser.errors;
-			Object.entries(foundErrors).map(([fieldName, messages]) => {
-				const formattedMessages = messages.map(
-					(message) => `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} ${message}`
-				);
-
-				setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
-				return formattedMessages;
+			const result = await fetch(`/api/user_profiles/${address}`, {
+				method: 'PUT',
+				body: JSON.stringify({ user_profile: userProfileData }),
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`,
+					'Content-Type': 'application/json'
+				}
 			});
+
+			const newUser = await result.json();
+			console.log('API Response:', newUser);
+
+			if (newUser.id) {
+				setUser(newUser);
+				if (!showNotification) return;
+				onUpdateProfile?.(newUser);
+			} else {
+				const foundErrors: ErrorObject = newUser.errors;
+				Object.entries(foundErrors).map(([fieldName, messages]) => {
+					const formattedMessages = messages.map(
+						(message) => `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} ${message}`
+					);
+
+					setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
+					return formattedMessages;
+				});
+			}
+		} catch (error) {
+			console.error('Error updating profile:', error);
 		}
 	};
 
@@ -106,11 +118,12 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			name: username || null,
 			email: email || null,
 			twitter: twitter || null,
-			telegram_user_id: telegramUserId || null,
+			telegram_user_id: telegramUserId ? parseInt(telegramUserId, 10) : null,
 			telegram_username: telegramUsername || null,
 			whatsapp_country_code: whatsappCountryCode || null,
 			whatsapp_number: whatsappNumber || null
 		};
+		console.log('Updating user with:', newUser);
 		updateUserProfile(newUser as User);
 	};
 

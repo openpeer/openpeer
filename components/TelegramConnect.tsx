@@ -6,6 +6,8 @@ import { TelegramUser } from '../models/telegram';
 interface TelegramConnectProps {
 	onTelegramAuth: (user: TelegramUser) => void;
 	isConnected: boolean;
+	buttonSize?: 'small' | 'medium' | 'large';
+	showUserPic?: boolean;
 }
 
 declare global {
@@ -14,7 +16,12 @@ declare global {
 	}
 }
 
-const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isConnected }) => {
+const TelegramConnect: React.FC<TelegramConnectProps> = ({
+	onTelegramAuth,
+	isConnected,
+	buttonSize = 'large',
+	showUserPic = true
+}) => {
 	const buttonRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -29,9 +36,12 @@ const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isCon
 
 				const widget = document.createElement('script');
 				widget.setAttribute('data-telegram-login', 'openpeer_bot');
-				widget.setAttribute('data-size', 'large');
+				widget.setAttribute('data-size', buttonSize);
 				widget.setAttribute('data-onauth', 'TelegramLoginWidget.dataOnauth(user)');
 				widget.setAttribute('data-request-access', 'write');
+				if (showUserPic) {
+					widget.setAttribute('data-userpic', 'true');
+				}
 				widget.async = true;
 
 				buttonRef.current?.appendChild(widget);
@@ -43,7 +53,7 @@ const TelegramConnect: React.FC<TelegramConnectProps> = ({ onTelegramAuth, isCon
 			};
 		}
 		return () => {};
-	}, [isConnected, onTelegramAuth]);
+	}, [isConnected, onTelegramAuth, buttonSize, showUserPic]);
 
 	if (isConnected) {
 		return null;
