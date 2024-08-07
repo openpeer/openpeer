@@ -1,91 +1,23 @@
-import { Button } from 'components';
-import { Airdrop, User } from 'models/types';
+import { Airdrop } from 'models/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import bgBottomLeft from 'public/airdrop/bgAirdropBottomLeft.png';
 import bgTopRight from 'public/airdrop/bgAirdropTopRight.png';
 import React, { useEffect, useState } from 'react';
-import Countdown from 'react-countdown';
 
 import { DynamicWidget, getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { constants } from 'ethers';
 import { useAccount } from 'hooks';
 
 const ROUND = 14;
-const POOL = 1000000;
-const AIRDROP_START = 1722513600000;
-
-const CallToActionButton = ({ address }: { address: `0x${string}` | undefined }) => {
-	const router = useRouter();
-
-	if (!address) {
-		return <DynamicWidget />;
-	}
-
-	return <Button title="Start trading" onClick={() => router.push('/trade')} />;
-};
-
-const AirdropCountdown = ({ address }: { address: `0x${string}` | undefined }) => {
-	const renderer = ({
-		days,
-		hours,
-		minutes,
-		seconds
-	}: {
-		days: number;
-		hours: number;
-		minutes: number;
-		seconds: number;
-		completed: boolean;
-	}) => (
-		<div className="p-6">
-			<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">Time until the next distribution</div>
-
-			<div className="flex flex-row space-x-2 w-[300px]">
-				{days > 0 && (
-					<div className="flex items-center justify-around space-x-2">
-						<span className="text-2xl md:text-3xl font-bold">{days}</span>
-						<span className="font-light">{days >= 2 ? 'days' : 'day'}</span>
-					</div>
-				)}
-				<div className="flex items-center justify-around space-x-2">
-					<span className="text-2xl md:text-3xl font-bold">{hours}</span>
-					<span className="font-light">{hours === 1 ? 'hour' : 'hours'}</span>
-				</div>
-				<div className="flex items-center justify-around space-x-2">
-					<span className="text-xl md:text-3xl font-bold">{minutes}</span>
-					<span className="font-light">{minutes === 1 ? 'min' : 'mins'}</span>
-				</div>
-				<div className="flex items-center justify-around space-x-2">
-					<span className="text-xl md:text-3xl font-bold">{seconds}</span>
-					<span className="font-light">{seconds === 1 ? 'sec' : 'secs'}</span>
-				</div>
-			</div>
-			<div className="my-4 flex justify-center">
-				<div className="inline-block">
-					<CallToActionButton address={address} />
-				</div>
-			</div>
-		</div>
-	);
-
-	return (
-		<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
-			<Countdown date={AIRDROP_START} renderer={renderer} />
-		</div>
-	);
-};
 
 const AirdropPage = () => {
 	const [volume, setVolume] = useState<Airdrop>({} as Airdrop);
-	const [user, setUser] = useState<User>();
 	const [activeTab, setActiveTab] = useState<'Trade' | 'Liquidity'>('Trade');
 	const { address } = useAccount();
 	const { buy_volume: buyVolume = 0, sell_volume: sellVolume = 0, points = 0 } = volume;
 
 	const usdTotal = (Number(volume.total || 0) || 0) * 2; // times two because buyer and seller get the same amount
-	const pendingPoints = address && usdTotal ? ((Number(buyVolume) + Number(sellVolume)) / usdTotal) * POOL : 0;
 
 	useEffect(() => {
 		fetch(`/api/airdrop?address=${address || constants.AddressZero}&round=${ROUND}`, {
@@ -99,38 +31,7 @@ const AirdropPage = () => {
 					setVolume(data);
 				}
 			});
-
-		if (address) {
-			fetch(`/api/users/${address}`, {
-				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
-				}
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					setUser(data);
-				});
-		} else {
-			setUser(undefined);
-		}
-
-		if (address) {
-			fetch(`/api/users/${address}`, {
-				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
-				}
-			})
-				.then((res) => res.json())
-				.then((data) => {
-					setUser(data);
-				});
-		} else {
-			setUser(undefined);
-		}
 	}, [address]);
-
-	const contracts = user?.contracts || [];
-	const lockedValue = contracts.reduce((acc, contract) => acc + Number(contract.locked_value || 0), 0);
 
 	return (
 		<div className="w-full 2xl:w-2/3 m-auto">
@@ -144,13 +45,9 @@ const AirdropPage = () => {
 						receive rewards
 					</span>
 					<span className="text-base text-zinc-800">
-						We&apos;re running a retroactive airdrop campaign with a monthly rewards pool. If you trade on
-						OpenPeer, you will be rewarded based on your volume and providing liquidity to the protocol.
-						<Link href="https://blog.openpeer.xyz/introducing-openpeer-points/" target="_blank">
-							<div className="ml-2 underline inline-block hover:no-underline cursor-pointer">
-								Read about details here.
-							</div>
-						</Link>
+						Season 1 of the OpenPeer points campaign has now concluded. More details around our airdrop and
+						token generation event will be shared in our Discord. Please stay updated in order to claim your
+						tokens.
 					</span>
 				</div>
 			</div>
@@ -225,8 +122,8 @@ const AirdropPage = () => {
 									<div className="flex flex-col mb-4">
 										<span className="text-[#25385A] font-bold">What will be airdropped?</span>
 										<span className="text-[#67738E] font-light">
-											You will be rewarded with points based on your share of trade volume every
-											month. Points will convert to OpenPeer&apos;s upcoming P2P token.
+											You will be rewarded with points based on your trade volume. This token will
+											be convertible to our protocol&apos;s upcoming PP token.
 										</span>
 									</div>
 								</div>
@@ -241,19 +138,18 @@ const AirdropPage = () => {
 									<div className="flex flex-col mb-4">
 										<span className="text-[#25385A] font-bold">How to collect your reward?</span>
 										<span className="text-[#67738E] font-light">
-											After the countdown hits zero and this month&apos;s epoch ends, the
-											calculated points will be distributed
+											A claim period will be available soon for eligible addresses
 										</span>
 									</div>
 								</div>
 								<div className="flex justify-center items-center text-center">
 									<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
 										<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
-											<span className="text-white text-base mb-2">Pending points</span>
+											<span className="text-white text-base mb-2">Eligible for</span>
 											<span className="text-white text-4xl font-bold mb-2">
-												{Number(pendingPoints).toFixed(2)}
+												{Number(points).toFixed(2)}
 											</span>
-											<span className="text-white text-2xl">Points</span>
+											<span className="text-white text-2xl">$PP</span>
 										</div>
 									</div>
 								</div>
@@ -263,34 +159,18 @@ const AirdropPage = () => {
 								<div className="mb-4 font-bold md:text-2xl text-center">Liquidity Rewards</div>
 								<div className="w-full md:w-4/5 text-center text-base text-zinc-600">
 									You can earn points by posting an ad with crypto for sale and locking that crypto in
-									your escrow contract. Rewards are calculated based on the total amount you deposit
-									and how long you have them available. Points are calculated and distributed every
-									hour.
+									your escrow contract. Rewards were calculated based on the total amount you escrow
+									and how long you have them available. Points were calculated and distributed every
+									hour
 								</div>
 								<div className="w-full md:w-1/2 flex flex-col text-left my-8">
-									<div className="flex flex-row justify-between mb-4">
-										<div>Value currently in instant escrow</div>
-										<div>
-											<span className="text-2xl">${Number(lockedValue).toFixed(2)}</span>
-											<span className="text-sm pl-2">USD</span>
-										</div>
-									</div>
-									<div className="flex flex-row justify-between border-b mb-4 pb-4">
-										<div>Estimated Daily Points</div>
-										<div>
-											<span className="text-2xl">
-												{Number(lockedValue * 0.000832 * 24).toFixed(2)}
-											</span>
-											<span className="text-sm pl-2">points</span>
-										</div>
-									</div>
 									<div className="flex flex-row justify-between">
-										<div>Total points earned</div>
+										<div>Total $PP earned</div>
 										<div>
 											<span className="text-2xl font-bold">
 												{Number(volume.liquidity_points).toFixed(2)}
 											</span>
-											<span className="text-sm pl-2 font-bold">points</span>
+											<span className="text-sm pl-2 font-bold">$PP</span>
 										</div>
 									</div>
 								</div>
@@ -302,25 +182,6 @@ const AirdropPage = () => {
 					<Image src={bgBottomLeft} alt="background image" />
 				</div>
 			</div>
-			{activeTab === 'Trade' && (
-				<div className="p-6 md:px-16 flex flex-col md:flex-row md:space-x-10 text-zinc-800 relative text-center md:text-left">
-					<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
-						<AirdropCountdown address={address} />
-					</div>
-					<div className="w-full mt-8 md:mt-0 md:w-1/2 rounded-xl mx-auto p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
-						<div className="flex flex-col justify-center items-center p-4 md:p-0 h-full bg-white text-white rounded-lg text-gray-800">
-							<div className="mb-4 font-light text-zinc-500 md:text-xl text-center">
-								Total points earned
-							</div>
-							{address ? (
-								<span className="text-xl md:text-3xl font-bold">{Number(points || 0).toFixed(2)}</span>
-							) : (
-								<DynamicWidget />
-							)}
-						</div>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };
