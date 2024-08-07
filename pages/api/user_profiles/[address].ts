@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+// pages/api/user_profiles/[address].ts
 import { User } from 'models/types';
 
 import { minkeApi } from '../utils/utils';

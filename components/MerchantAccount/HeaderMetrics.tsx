@@ -24,7 +24,7 @@ const Metric = ({
 }: {
 	label: string;
 	value: string | number | undefined | null;
-	Icon: (props: any) => JSX.Element;
+	Icon: React.ElementType;
 }) => (
 	<div className="w-full flex justify-between items-center rounded-lg bg-white border border-1 p-8">
 		<div className="flex flex-col">
@@ -77,7 +77,15 @@ const VerifiedIcon = () => (
 );
 
 const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
-	const { trades, created_at: createdAt, name, twitter, address, completion_rate: completionRate } = user;
+	const {
+		trades,
+		created_at: createdAt,
+		name,
+		twitter,
+		telegram_username: telegramUsername,
+		address,
+		completion_rate: completionRate
+	} = user;
 	const date = new Date(createdAt);
 	const [walletAge, setWalletAge] = useState<string>();
 	const [verificationModal, setVerificationModal] = useState(verificationOpen);
@@ -150,10 +158,64 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 							)}
 						</div>
 						{!!twitter && (
-							<span className="text-sm mb-4">
-								<Link href={`https://twitter.com/${twitter}/`}>
+							<span className="text-sm mb-4 flex items-center">
+								<Link href={`https://x.com/${twitter}/`} className="flex items-center" target="_blank">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										strokeWidth="2"
+										stroke="currentColor"
+										fill="none"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										className="mr-1"
+									>
+										<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+										<path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+										<path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+									</svg>
 									{twitter.startsWith('@') ? '' : '@'}
 									{twitter}
+								</Link>
+							</span>
+						)}
+						{!!telegramUsername && (
+							<span className="text-sm mb-4 flex items-center">
+								<Link
+									href={`https://t.me/${telegramUsername}`}
+									className="flex items-center"
+									target="_blank"
+								>
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 32 32"
+										className="mr-1"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<circle cx="16" cy="16" r="14" fill="url(#paint0_linear_87_7225)" />
+										<path
+											d="M22.9866 10.2088C23.1112 9.40332 22.3454 8.76755 21.6292 9.082L7.36482 15.3448C6.85123 15.5703 6.8888 16.3483 7.42147 16.5179L10.3631 17.4547C10.9246 17.6335 11.5325 17.541 12.0228 17.2023L18.655 12.6203C18.855 12.4821 19.073 12.7665 18.9021 12.9426L14.1281 17.8646C13.665 18.3421 13.7569 19.1512 14.314 19.5005L19.659 22.8523C20.2585 23.2282 21.0297 22.8506 21.1418 22.1261L22.9866 10.2088Z"
+											fill="white"
+										/>
+										<defs>
+											<linearGradient
+												id="paint0_linear_87_7225"
+												x1="16"
+												y1="2"
+												x2="16"
+												y2="30"
+												gradientUnits="userSpaceOnUse"
+											>
+												<stop stopColor="#37BBFE" />
+												<stop offset="1" stopColor="#007DBB" />
+											</linearGradient>
+										</defs>
+									</svg>
+									{telegramUsername.toLowerCase()}
 								</Link>
 							</span>
 						)}

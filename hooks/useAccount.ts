@@ -1,3 +1,4 @@
+// hooks/useAccount.ts
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useAccount as useWagmiAccount } from 'wagmi';
 

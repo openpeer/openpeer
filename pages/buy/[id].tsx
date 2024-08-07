@@ -1,3 +1,4 @@
+// pages/buy/[id].tsx
 import { Loading, Steps } from 'components';
 import { Amount, OrderPaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
