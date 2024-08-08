@@ -1,3 +1,4 @@
+// models/types.ts
 import { CountriesType } from './countries';
 
 export interface FiatCurrency {
@@ -28,6 +29,10 @@ export interface User {
 	available_to: number | null;
 	weekend_offline: boolean;
 	online: boolean | null;
+	telegram_user_id: string | null;
+	telegram_username: string | null;
+	whatsapp_country_code: string | null;
+	whatsapp_number: string | null;
 }
 
 export interface Token {

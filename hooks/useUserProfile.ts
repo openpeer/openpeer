@@ -1,3 +1,4 @@
+// hooks/userUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors } from 'models/errors';
@@ -18,6 +19,12 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [availableFrom, setAvailableFrom] = useState<number>();
 	const [availableTo, setAvailableTo] = useState<number>();
 	const [weekendOffline, setWeekendOffline] = useState<boolean>();
+
+	const [telegramUserId, setTelegramUserId] = useState<string>('');
+	const [telegramUsername, setTelegramUsername] = useState<string>('');
+	const [whatsappCountryCode, setWhatsappCountryCode] = useState<string>('');
+	const [whatsappNumber, setWhatsappNumber] = useState<string>('');
+
 	const [errors, setErrors] = useState<Errors>({});
 
 	const { address } = useAccount();
@@ -52,34 +59,50 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			setAvailableFrom(user.available_from || undefined);
 			setAvailableTo(user.available_to || undefined);
 			setWeekendOffline(user.weekend_offline);
+			setTelegramUserId(user.telegram_user_id || '');
+			setTelegramUsername(user.telegram_username || '');
+			setWhatsappCountryCode(user.whatsapp_country_code || '');
+			setWhatsappNumber(user.whatsapp_number || '');
 		}
 	}, [user]);
 
 	const updateUserProfile = async (profile: User, showNotification = true) => {
-		const result = await fetch(`/api/user_profiles/${address}`, {
-			method: 'PUT',
-			body: JSON.stringify({ user_profile: profile }),
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		});
+		try {
+			const userProfileData = {
+				...profile,
+				telegram_user_id: profile.telegram_user_id || null,
+				telegram_username: profile.telegram_username || null
+			};
 
-		const newUser = await result.json();
-
-		if (newUser.id) {
-			setUser(newUser);
-			if (!showNotification) return;
-			onUpdateProfile?.(newUser);
-		} else {
-			const foundErrors: ErrorObject = newUser.errors;
-			Object.entries(foundErrors).map(([fieldName, messages]) => {
-				const formattedMessages = messages.map(
-					(message) => `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} ${message}`
-				);
-
-				setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
-				return formattedMessages;
+			const result = await fetch(`/api/user_profiles/${address}`, {
+				method: 'PUT',
+				body: JSON.stringify({ user_profile: userProfileData }),
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`,
+					'Content-Type': 'application/json'
+				}
 			});
+
+			const newUser = await result.json();
+			console.log('API Response:', newUser);
+
+			if (newUser.id) {
+				setUser(newUser);
+				if (!showNotification) return;
+				onUpdateProfile?.(newUser);
+			} else {
+				const foundErrors: ErrorObject = newUser.errors;
+				Object.entries(foundErrors).map(([fieldName, messages]) => {
+					const formattedMessages = messages.map(
+						(message) => `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} ${message}`
+					);
+
+					setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
+					return formattedMessages;
+				});
+			}
+		} catch (error) {
+			console.error('Error updating profile:', error);
 		}
 	};
 
@@ -89,7 +112,18 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const updateProfile = () => {
 		setErrors({});
-		const newUser = { ...user, ...{ name: username || null, email: email || null, twitter: twitter || null } };
+
+		const newUser = {
+			...user,
+			name: username || null,
+			email: email || null,
+			twitter: twitter || null,
+			telegram_user_id: telegramUserId ? parseInt(telegramUserId, 10) : null,
+			telegram_username: telegramUsername || null,
+			whatsapp_country_code: whatsappCountryCode || null,
+			whatsapp_number: whatsappNumber || null
+		};
+		console.log('Updating user with:', newUser);
 		updateUserProfile(newUser as User);
 	};
 
@@ -113,7 +147,15 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		weekendOffline,
 		setWeekendOffline,
 		updateUserProfile,
-		fetchUserProfile
+		fetchUserProfile,
+		telegramUserId,
+		setTelegramUserId,
+		telegramUsername,
+		setTelegramUsername,
+		whatsappCountryCode,
+		setWhatsappCountryCode,
+		whatsappNumber,
+		setWhatsappNumber
 	};
 };
 

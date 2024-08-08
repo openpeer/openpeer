@@ -1,14 +1,29 @@
+// components/Listing/AccountInfo.tsx
 import Input from 'components/Input/Input';
 import Label from 'components/Label/Label';
 import Loading from 'components/Loading/Loading';
 import { useUserProfile } from 'hooks';
 import { User } from 'models/types';
 import React from 'react';
+import TelegramSection from '../../components/TelegramSection';
+import { useTelegramConnection } from '../../hooks/useTelegramConnection';
 
 import StepLayout from './StepLayout';
 
 const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
-	const { user, updateProfile, errors, username, setUsername, email, setEmail } = useUserProfile({
+	const {
+		user,
+		updateProfile,
+		errors,
+		username,
+		setUsername,
+		email,
+		setEmail,
+		telegramUserId,
+		setTelegramUserId,
+		telegramUsername,
+		setTelegramUsername
+	} = useUserProfile({
 		onUpdateProfile: setUser
 	});
 
@@ -36,6 +51,13 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 					value={email}
 					onChange={setEmail}
 					error={errors.email}
+				/>
+				<label className="block text-base font-medium text-gray-700 mb-1 ">Telegram Notifications</label>
+				<TelegramSection
+					telegramUserId={telegramUserId}
+					telegramUsername={telegramUsername}
+					setTelegramUserId={setTelegramUserId}
+					setTelegramUsername={setTelegramUsername}
 				/>
 			</div>
 		</StepLayout>

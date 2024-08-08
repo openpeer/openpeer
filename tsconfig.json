@@ -21,6 +21,13 @@
 		],
 		"baseUrl": "."
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"utils/telegramNotifications.ts",
+		"utils/testTelegramNotification.mts"
+	],
 	"exclude": ["node_modules"]
 }
