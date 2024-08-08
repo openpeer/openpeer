@@ -52,6 +52,7 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 					onChange={setEmail}
 					error={errors.email}
 				/>
+				<label className="block text-base font-medium text-gray-700 mb-1 ">Telegram Notifications</label>
 				<TelegramSection
 					telegramUserId={telegramUserId}
 					telegramUsername={telegramUsername}
