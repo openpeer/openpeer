@@ -22,7 +22,9 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 		telegramUserId,
 		setTelegramUserId,
 		telegramUsername,
-		setTelegramUsername
+		setTelegramUsername,
+		deleteTelegramInfo,
+		telegramBotLink
 	} = useUserProfile({
 		onUpdateProfile: setUser
 	});
@@ -56,8 +58,11 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 				<TelegramSection
 					telegramUserId={telegramUserId}
 					telegramUsername={telegramUsername}
+					telegramBotLink={telegramBotLink}
 					setTelegramUserId={setTelegramUserId}
 					setTelegramUsername={setTelegramUsername}
+					updateProfile={updateProfile}
+					deleteTelegramInfo={deleteTelegramInfo}
 				/>
 			</div>
 		</StepLayout>
