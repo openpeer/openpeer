@@ -9,7 +9,8 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import countryCodes from 'utils/countryCodes';
 import TelegramSection from '../../components/TelegramSection';
-import { useTelegramConnection } from '../../hooks/useTelegramConnection';
+
+// TODO: clear out old TG stuff from old oauth login method Also see pages/[id]/edit.tsx and hooks/useUserProfile.ts among others. Also lots of logging to disable here.
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -43,18 +44,10 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		telegramUserId,
 		setTelegramUserId,
 		telegramUsername,
-		setTelegramUsername
+		setTelegramUsername,
+		telegramBotLink,
+		deleteTelegramInfo
 	} = useUserProfile({ onUpdateProfile });
-
-	// const {
-	// 	telegramUserId,
-	// 	telegramUsername,
-	// 	setTelegramUserId,
-	// 	setTelegramUsername,
-	// 	handleTelegramAuth,
-	// 	handleDeleteTelegram,
-	// 	isTelegramConnected
-	// } = useTelegramConnection();
 
 	if (user === undefined) {
 		return <Loading />;
@@ -102,9 +95,30 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					<TelegramSection
 						telegramUserId={telegramUserId}
 						telegramUsername={telegramUsername}
+						telegramBotLink={telegramBotLink}
 						setTelegramUserId={setTelegramUserId}
 						setTelegramUsername={setTelegramUsername}
+						updateProfile={updateProfile}
+						deleteTelegramInfo={deleteTelegramInfo}
 					/>
+
+					{/* {telegramBotLink && (
+						<div className="mt-4">
+							<Button
+								title={
+									<a
+										href={telegramBotLink}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-white"
+									>
+										Activate Telegram Notifications
+									</a>
+								}
+								onClick={() => window.open(telegramBotLink, '_blank')}
+							/>
+						</div>
+					)} */}
 					<Select
 						label="WhatsApp Country Code"
 						options={[

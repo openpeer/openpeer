@@ -1,24 +1,30 @@
 // components/TelegramSection.tsx
-
 import React from 'react';
 import { toast } from 'react-toastify';
-import TelegramConnect from './TelegramConnect';
+// import TelegramConnect from './TelegramConnect';
 import { TelegramUser } from '../models/telegram';
 import { Button, Input } from 'components';
 
 interface TelegramSectionProps {
 	telegramUserId: string;
 	telegramUsername: string;
+	telegramBotLink: string;
 	setTelegramUserId: (id: string) => void;
 	setTelegramUsername: (username: string) => void;
+	updateProfile: () => void;
+	deleteTelegramInfo: () => Promise<void>;
 }
 
 const TelegramSection: React.FC<TelegramSectionProps> = ({
 	telegramUserId,
 	telegramUsername,
+	telegramBotLink,
 	setTelegramUserId,
-	setTelegramUsername
+	setTelegramUsername,
+	updateProfile,
+	deleteTelegramInfo
 }) => {
+	console.log('TelegramSection props:', { telegramUserId, telegramUsername });
 	const isTelegramConnected = !!telegramUserId;
 
 	const handleTelegramAuth = async (telegramUser: TelegramUser) => {
@@ -37,7 +43,8 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 				setTelegramUsername(tgUsername);
 				// console.log('Telegram auth successful:', { chatId, tgUsername });
 
-				toast.success('Telegram account connected successfully! Please update your profile.');
+				toast.success('Telegram account connected successfully!');
+				updateProfile();
 			} else {
 				toast.error(`Failed to connect Telegram account: ${response.status} ${response.statusText}`);
 			}
@@ -46,15 +53,21 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 		}
 	};
 
-	const handleDeleteTelegram = () => {
-		setTelegramUserId('');
-		setTelegramUsername('');
-		toast.success('Telegram account disconnected successfully! Please update your profile.');
+	const handleDeleteTelegram = async () => {
+		try {
+			await deleteTelegramInfo();
+			setTelegramUserId('');
+			setTelegramUsername('');
+			toast.success('Telegram account disconnected successfully!');
+		} catch (error) {
+			console.error('Error deleting Telegram info:', error);
+			toast.error('Failed to disconnect Telegram account');
+		}
 	};
 
 	return (
 		<div>
-			{isTelegramConnected && (
+			{isTelegramConnected ? (
 				<>
 					<div className="flex items-center bg-gray-100 p-2 justify-between rounded my-4">
 						<div className="flex items-center">
@@ -64,7 +77,6 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 							</span>
 						</div>
 						<Button
-							xyz
 							onClick={handleDeleteTelegram}
 							aria-label="Delete Telegram info"
 							title={
@@ -83,7 +95,26 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 							}
 						/>
 					</div>
-					<p className="text-xs text-gray-500">Adding Telegram enables notifications for your trades.</p>
+					{/* <p className="text-xs text-gray-500">Adding Telegram enables notifications for your trades.</p> */}
+				</>
+			) : (
+				<>
+					{/* <TelegramConnect onTelegramAuth={handleTelegramAuth} isConnected={isTelegramConnected} /> */}
+					<div className="mt-4">
+						<Button
+							title={
+								<a
+									href={telegramBotLink}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-white"
+								>
+									Activate Telegram Notifications
+								</a>
+							}
+							onClick={() => window.open(telegramBotLink, '_blank')}
+						/>
+					</div>
 				</>
 			)}
 
@@ -102,8 +133,6 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 					onChange={setTelegramUsername}
 				/>
 			</div>
-
-			<TelegramConnect onTelegramAuth={handleTelegramAuth} isConnected={isTelegramConnected} />
 		</div>
 	);
 };
