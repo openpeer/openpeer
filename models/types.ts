@@ -31,6 +31,7 @@ export interface User {
 	online: boolean | null;
 	telegram_user_id: string | null;
 	telegram_username: string | null;
+	unique_identifier: string | null;
 	whatsapp_country_code: string | null;
 	whatsapp_number: string | null;
 }
