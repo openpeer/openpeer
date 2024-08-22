@@ -6,7 +6,7 @@ import { useUserProfile } from 'hooks';
 import { User } from 'models/types';
 import React from 'react';
 import TelegramSection from '../../components/TelegramSection';
-import { useTelegramConnection } from '../../hooks/useTelegramConnection';
+// import { useTelegramConnection } from '../../hooks/useTelegramConnection';
 
 import StepLayout from './StepLayout';
 
@@ -24,7 +24,8 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 		telegramUsername,
 		setTelegramUsername,
 		deleteTelegramInfo,
-		telegramBotLink
+		telegramBotLink,
+		refreshUserProfile
 	} = useUserProfile({
 		onUpdateProfile: setUser
 	});
@@ -63,6 +64,7 @@ const AccountInfo = ({ setUser }: { setUser: (user: User) => void }) => {
 					setTelegramUsername={setTelegramUsername}
 					updateProfile={updateProfile}
 					deleteTelegramInfo={deleteTelegramInfo}
+					refreshUserProfile={refreshUserProfile}
 				/>
 			</div>
 		</StepLayout>
