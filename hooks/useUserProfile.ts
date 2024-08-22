@@ -35,6 +35,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		if (!address) return;
 
 		try {
+			console.log('Fetching user profile...');
 			const res = await fetch(`/api/user_profiles/${address}`, {
 				headers: {
 					Authorization: `Bearer ${getAuthToken()}`
@@ -45,6 +46,20 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setUser(null);
 			} else {
 				setUser(data);
+				// new
+				setUsername(data.name || '');
+				setEmail(data.email || '');
+				setTwitter(data.twitter || '');
+				setTelegramUserId(data.telegram_user_id || '');
+				setTelegramUsername(data.telegram_username || '');
+				setWhatsappCountryCode(data.whatsapp_country_code || '');
+				setWhatsappNumber(data.whatsapp_number || '');
+
+				const uniqueIdentifier = data?.unique_identifier;
+				const botLink = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
+				setTelegramBotLink(botLink);
+
+				console.log('User profile fetched:', data);
 			}
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
@@ -53,7 +68,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	useEffect(() => {
 		fetchUserProfile();
-	}, [address]);
+	}, [address, fetchUserProfile]);
 
 	useEffect(() => {
 		if (user) {
@@ -74,7 +89,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			setWhatsappCountryCode(user.whatsapp_country_code || '');
 			setWhatsappNumber(user.whatsapp_number || '');
 
-			const uniqueIdentifier = user?.unique_identifier; // ?
+			const uniqueIdentifier = user?.unique_identifier;
 			const botLink = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
 			setTelegramBotLink(botLink);
 		}
@@ -108,6 +123,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				if (showNotification) {
 					onUpdateProfile?.(newUser);
 				}
+				console.log('User profile updated:', newUser);
 			} else {
 				const foundErrors: ErrorObject = newUser.errors;
 				Object.entries(foundErrors).map(([fieldName, messages]) => {
@@ -186,7 +202,8 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		whatsappCountryCode,
 		setWhatsappCountryCode,
 		whatsappNumber,
-		setWhatsappNumber
+		setWhatsappNumber,
+		refreshUserProfile: fetchUserProfile
 	};
 };
 
