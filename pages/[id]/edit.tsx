@@ -46,7 +46,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		telegramUsername,
 		setTelegramUsername,
 		telegramBotLink,
-		deleteTelegramInfo
+		deleteTelegramInfo,
+		refreshUserProfile
 	} = useUserProfile({ onUpdateProfile });
 
 	if (user === undefined) {
@@ -93,14 +94,15 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					<HeaderH3 title="Messaging" />
 
 					<TelegramSection
-						telegramUserId={telegramUserId}
-						telegramUsername={telegramUsername}
-						telegramBotLink={telegramBotLink}
-						setTelegramUserId={setTelegramUserId}
-						setTelegramUsername={setTelegramUsername}
-						updateProfile={updateProfile}
-						deleteTelegramInfo={deleteTelegramInfo}
-					/>
+    telegramUserId={telegramUserId}
+    telegramUsername={telegramUsername}
+    telegramBotLink={telegramBotLink}
+    setTelegramUserId={setTelegramUserId}
+    setTelegramUsername={setTelegramUsername}
+    updateProfile={updateProfile}
+    deleteTelegramInfo={deleteTelegramInfo}
+    refreshUserProfile={refreshUserProfile}
+/>
 
 					{/* {telegramBotLink && (
 						<div className="mt-4">
