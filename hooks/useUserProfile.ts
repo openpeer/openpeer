@@ -161,6 +161,33 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		updateUserProfile(newUser as User);
 	};
 
+	const refreshUserProfile = useCallback(async () => {
+		if (!address) return { success: false, error: 'No address provided' };
+
+		try {
+			console.log('Fetching user profile...');
+			const res = await fetch(`/api/user_profiles/${address}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			});
+			const data = await res.json();
+			if (data.errors) {
+				if (data.errors.telegram_user_id && data.errors.telegram_user_id.includes('has already been taken')) {
+					return { success: false, error: 'This Telegram account is already associated with another user.' };
+				}
+				return { success: false, error: 'Failed to fetch user profile' };
+			} else {
+				updateUserState(data);
+				console.log('User profile fetched:', data);
+				return { success: true };
+			}
+		} catch (error) {
+			console.error('Error fetching user profile:', error);
+			return { success: false, error: 'An error occurred while fetching the user profile' };
+		}
+	}, [address, updateUserState]);
+
 	return {
 		user,
 		isUpdating,
@@ -193,7 +220,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		setWhatsappCountryCode,
 		whatsappNumber,
 		setWhatsappNumber,
-		refreshUserProfile: fetchUserProfile
+		refreshUserProfile
 	};
 };
 
