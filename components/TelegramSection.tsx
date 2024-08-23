@@ -10,7 +10,7 @@ interface TelegramSectionProps {
 	setTelegramUsername: (username: string) => void;
 	updateProfile: () => void;
 	deleteTelegramInfo: () => Promise<void>;
-	refreshUserProfile: () => Promise<void>;
+	refreshUserProfile: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const TelegramSection: React.FC<TelegramSectionProps> = ({
@@ -30,17 +30,38 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 	const [hasClickedLink, setHasClickedLink] = useState(false);
 	const [showAlternativeMethod, setShowAlternativeMethod] = useState(false);
 	const [isCheckingAltMethod, setIsCheckingAltMethod] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const isTelegramConnected = !!telegramUserId;
 	const uniqueIdentifier = telegramBotLink.split('=')[1];
 
 	const checkTelegramStatus = useCallback(async () => {
 		if (!isTelegramConnected) {
 			setIsChecking(true);
-			await refreshUserProfile();
-			setIsActivationDisabled(false);
-			setIsChecking(false);
+			try {
+				const result = await refreshUserProfile();
+				if (!result.success) {
+					throw new Error(result.error || 'Failed to check Telegram status');
+				}
+				setIsActivationDisabled(false);
+			} catch (error) {
+				console.error('Error refreshing user profile:', error);
+				setError(error instanceof Error ? error.message : 'An unknown error occurred');
+				endProcess();
+			} finally {
+				setIsChecking(false);
+			}
+		} else {
+			endProcess();
 		}
 	}, [isTelegramConnected, refreshUserProfile]);
+
+	const endProcess = () => {
+		setHasClickedLink(false);
+		setIsCheckingAltMethod(false);
+		setShowAlternativeMethod(false);
+		setCountdown(0);
+		setIsActivationDisabled(false);
+	};
 
 	useEffect(() => {
 		let checkCount = 0;
@@ -48,38 +69,43 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 		let countdownId: NodeJS.Timeout;
 
 		const runCheck = async () => {
-			if (isTelegramConnected) {
-				setHasClickedLink(false);
-				setIsCheckingAltMethod(false);
+			if (isTelegramConnected || error) {
+				endProcess();
 				return;
 			}
 
-			await checkTelegramStatus();
-			checkCount++;
+			try {
+				await checkTelegramStatus();
+				checkCount++;
 
-			if (checkCount < 5) {
-				timeoutId = setTimeout(runCheck, 2000);
-			} else if (checkCount < 17) {
-				setCountdown(10);
-				const startCountdown = () => {
-					countdownId = setInterval(() => {
-						setCountdown((prev) => {
-							if (prev <= 1) {
-								clearInterval(countdownId);
-								return 0;
-							}
-							return prev - 1;
-						});
-					}, 1000);
-				};
-				startCountdown();
-				timeoutId = setTimeout(() => {
-					clearInterval(countdownId);
-					runCheck();
-				}, 10000);
-			} else {
-				setHasClickedLink(false);
-				setIsCheckingAltMethod(false);
+				if (checkCount < 5) {
+					timeoutId = setTimeout(runCheck, 2000);
+				} else if (checkCount < 13) {
+					setCountdown(10);
+					const startCountdown = () => {
+						countdownId = setInterval(() => {
+							setCountdown((prev) => {
+								if (prev <= 1) {
+									clearInterval(countdownId);
+									return 0;
+								}
+								return prev - 1;
+							});
+						}, 1000);
+					};
+					startCountdown();
+					timeoutId = setTimeout(() => {
+						clearInterval(countdownId);
+						runCheck();
+					}, 10000);
+				} else {
+					endProcess();
+					setError('Telegram connection timed out. Please try again.');
+				}
+			} catch (error) {
+				console.error('Error during Telegram check:', error);
+				setError(error instanceof Error ? error.message : 'An unknown error occurred');
+				endProcess();
 			}
 		};
 
@@ -91,11 +117,12 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			clearTimeout(timeoutId);
 			clearInterval(countdownId);
 		};
-	}, [checkTelegramStatus, hasClickedLink, isTelegramConnected, isCheckingAltMethod]);
+	}, [checkTelegramStatus, hasClickedLink, isTelegramConnected, isCheckingAltMethod, error]);
 
 	const handleActivateTelegram = () => {
 		setIsActivationDisabled(true);
 		setHasClickedLink(true);
+		setError(null);
 		window.open(telegramBotLink, '_blank');
 	};
 
@@ -112,18 +139,18 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			toast.error('Failed to disconnect Telegram account');
 		} finally {
 			setIsLoading(false);
-			setHasClickedLink(false);
-			setIsActivationDisabled(false);
-			setIsChecking(false);
-			setCountdown(0);
+			endProcess();
 		}
 	};
 
 	const handleToggleAlternativeMethod = () => {
 		const newShowAlternativeMethod = !showAlternativeMethod;
 		setShowAlternativeMethod(newShowAlternativeMethod);
+		setError(null);
 		if (newShowAlternativeMethod && !isTelegramConnected) {
 			setIsCheckingAltMethod(true);
+		} else {
+			setIsCheckingAltMethod(false);
 		}
 	};
 
@@ -201,6 +228,8 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 						customBgColor={getButtonColor()}
 					/>
 
+					{error && <div className="mt-2 text-red-500 text-sm">{error}</div>}
+
 					<div className="mt-2 text-center">
 						<button
 							onClick={handleToggleAlternativeMethod}
@@ -224,7 +253,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 						<div className="mt-2 p-4 bg-gray-100 rounded">
 							<ol className="list-decimal list-outside space-y-2 ml-5">
 								<li className="pl-1">
-									<span className="inline-flex items-center">
+									<span className="">
 										Open Telegram and search for:
 										<span className="font-bold mx-1">@openpeer_bot</span>
 										<button
@@ -249,7 +278,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 										</button>
 									</span>
 								</li>
-								<li className="pl-1">Start a chat with the bot and send this message:</li>
+								<li className="pl-1">Send this message to the bot:</li>
 							</ol>
 							<div className="flex items-center bg-white p-2 rounded mt-2">
 								<code className="flex-grow">/start {uniqueIdentifier}</code>
@@ -273,9 +302,6 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 									</svg>
 								</button>
 							</div>
-							{isCheckingAltMethod && (
-								<div className="mt-2 text-center text-sm text-gray-600">Checking for updates...</div>
-							)}
 						</div>
 					)}
 				</div>
