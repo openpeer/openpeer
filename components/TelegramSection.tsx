@@ -39,6 +39,11 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			await refreshUserProfile();
 			setIsActivationDisabled(false);
 			setIsChecking(false);
+		} else {
+			// If Telegram is connected, close the alternative method
+			setShowAlternativeMethod(false);
+			setIsCheckingAltMethod(false);
+			setHasClickedLink(false);
 		}
 	}, [isTelegramConnected, refreshUserProfile]);
 
@@ -51,6 +56,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			if (isTelegramConnected) {
 				setHasClickedLink(false);
 				setIsCheckingAltMethod(false);
+				setShowAlternativeMethod(false);
 				return;
 			}
 
@@ -59,7 +65,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 
 			if (checkCount < 5) {
 				timeoutId = setTimeout(runCheck, 2000);
-			} else if (checkCount < 17) {
+			} else if (checkCount < 13) {
 				setCountdown(10);
 				const startCountdown = () => {
 					countdownId = setInterval(() => {
@@ -80,6 +86,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			} else {
 				setHasClickedLink(false);
 				setIsCheckingAltMethod(false);
+				setShowAlternativeMethod(false);
 			}
 		};
 
@@ -116,6 +123,8 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			setIsActivationDisabled(false);
 			setIsChecking(false);
 			setCountdown(0);
+			setShowAlternativeMethod(false);
+			setIsCheckingAltMethod(false);
 		}
 	};
 
@@ -124,6 +133,8 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 		setShowAlternativeMethod(newShowAlternativeMethod);
 		if (newShowAlternativeMethod && !isTelegramConnected) {
 			setIsCheckingAltMethod(true);
+		} else {
+			setIsCheckingAltMethod(false);
 		}
 	};
 
@@ -224,7 +235,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 						<div className="mt-2 p-4 bg-gray-100 rounded">
 							<ol className="list-decimal list-outside space-y-2 ml-5">
 								<li className="pl-1">
-									<span className="inline-flex items-center">
+									<span className="">
 										Open Telegram and search for:
 										<span className="font-bold mx-1">@openpeer_bot</span>
 										<button
@@ -249,7 +260,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 										</button>
 									</span>
 								</li>
-								<li className="pl-1">Start a chat with the bot and send this message:</li>
+								<li className="pl-1">Send this message to the bot:</li>
 							</ol>
 							<div className="flex items-center bg-white p-2 rounded mt-2">
 								<code className="flex-grow">/start {uniqueIdentifier}</code>
@@ -273,9 +284,9 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 									</svg>
 								</button>
 							</div>
-							{isCheckingAltMethod && (
+							{/* {isCheckingAltMethod && (
 								<div className="mt-2 text-center text-sm text-gray-600">Checking for updates...</div>
-							)}
+							)} */}
 						</div>
 					)}
 				</div>
