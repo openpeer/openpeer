@@ -1,4 +1,3 @@
-// components/TelegramSection.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'components';
@@ -26,22 +25,77 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isActivationDisabled, setIsActivationDisabled] = useState(false);
+	const [isChecking, setIsChecking] = useState(false);
+	const [countdown, setCountdown] = useState(0);
+	const [hasClickedLink, setHasClickedLink] = useState(false);
+	const [showAlternativeMethod, setShowAlternativeMethod] = useState(false);
+	const [isCheckingAltMethod, setIsCheckingAltMethod] = useState(false);
 	const isTelegramConnected = !!telegramUserId;
+	const uniqueIdentifier = telegramBotLink.split('=')[1];
 
 	const checkTelegramStatus = useCallback(async () => {
 		if (!isTelegramConnected) {
+			setIsChecking(true);
 			await refreshUserProfile();
 			setIsActivationDisabled(false);
+			setIsChecking(false);
 		}
 	}, [isTelegramConnected, refreshUserProfile]);
 
 	useEffect(() => {
-		const intervalId = setInterval(checkTelegramStatus, 5000); // Check every 5 seconds
-		return () => clearInterval(intervalId);
-	}, [checkTelegramStatus]);
+		let checkCount = 0;
+		let timeoutId: NodeJS.Timeout;
+		let countdownId: NodeJS.Timeout;
+
+		const runCheck = async () => {
+			if (isTelegramConnected) {
+				setHasClickedLink(false);
+				setIsCheckingAltMethod(false);
+				return;
+			}
+
+			await checkTelegramStatus();
+			checkCount++;
+
+			if (checkCount < 5) {
+				timeoutId = setTimeout(runCheck, 2000);
+			} else if (checkCount < 17) {
+				setCountdown(10);
+				const startCountdown = () => {
+					countdownId = setInterval(() => {
+						setCountdown((prev) => {
+							if (prev <= 1) {
+								clearInterval(countdownId);
+								return 0;
+							}
+							return prev - 1;
+						});
+					}, 1000);
+				};
+				startCountdown();
+				timeoutId = setTimeout(() => {
+					clearInterval(countdownId);
+					runCheck();
+				}, 10000);
+			} else {
+				setHasClickedLink(false);
+				setIsCheckingAltMethod(false);
+			}
+		};
+
+		if (hasClickedLink || isCheckingAltMethod) {
+			runCheck();
+		}
+
+		return () => {
+			clearTimeout(timeoutId);
+			clearInterval(countdownId);
+		};
+	}, [checkTelegramStatus, hasClickedLink, isTelegramConnected, isCheckingAltMethod]);
 
 	const handleActivateTelegram = () => {
 		setIsActivationDisabled(true);
+		setHasClickedLink(true);
 		window.open(telegramBotLink, '_blank');
 	};
 
@@ -58,7 +112,54 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			toast.error('Failed to disconnect Telegram account');
 		} finally {
 			setIsLoading(false);
+			setHasClickedLink(false);
+			setIsActivationDisabled(false);
+			setIsChecking(false);
+			setCountdown(0);
 		}
+	};
+
+	const handleToggleAlternativeMethod = () => {
+		const newShowAlternativeMethod = !showAlternativeMethod;
+		setShowAlternativeMethod(newShowAlternativeMethod);
+		if (newShowAlternativeMethod && !isTelegramConnected) {
+			setIsCheckingAltMethod(true);
+		}
+	};
+
+	const renderButtonContent = () => (
+		<>
+			{(hasClickedLink || isCheckingAltMethod) && (isChecking || countdown > 0) && (
+				<svg className="animate-spin h-5 w-5 mr-3 inline" viewBox="0 0 24 24">
+					<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+					<path
+						className="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					/>
+				</svg>
+			)}
+			<span>
+				{!hasClickedLink && !isCheckingAltMethod && 'Activate Telegram Notifications'}
+				{(hasClickedLink || isCheckingAltMethod) && isChecking && 'Checking...'}
+				{(hasClickedLink || isCheckingAltMethod) &&
+					!isChecking &&
+					countdown > 0 &&
+					`Next check in ${countdown}s`}
+				{(hasClickedLink || isCheckingAltMethod) && !isChecking && countdown === 0 && 'Checking...'}
+			</span>
+		</>
+	);
+
+	const getButtonColor = () => {
+		if (!hasClickedLink && !isCheckingAltMethod) return undefined; // Use default color
+		if (isChecking || countdown > 0) return '#6B7280';
+		return '#6B7280'; // gray-500
+	};
+
+	const handleCopyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+		toast.success('Copied to clipboard!');
 	};
 
 	return (
@@ -93,10 +194,90 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			) : (
 				<div className="mt-4">
 					<Button
-						title="Activate Telegram Notifications"
 						onClick={handleActivateTelegram}
 						disabled={isActivationDisabled || isLoading}
+						title={renderButtonContent()}
+						className="py-2 px-4 rounded inline-flex items-center justify-center w-full"
+						customBgColor={getButtonColor()}
 					/>
+
+					<div className="mt-2 text-center">
+						<button
+							onClick={handleToggleAlternativeMethod}
+							className="text-blue-500 hover:text-blue-700 flex items-center justify-center w-full"
+						>
+							<svg
+								className={`w-4 h-4 mr-1 transition-transform ${
+									showAlternativeMethod ? 'rotate-90' : ''
+								}`}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+							</svg>
+							Alternative Method
+						</button>
+					</div>
+					{showAlternativeMethod && (
+						<div className="mt-2 p-4 bg-gray-100 rounded">
+							<ol className="list-decimal list-outside space-y-2 ml-5">
+								<li className="pl-1">
+									<span className="inline-flex items-center">
+										Open Telegram and search for:
+										<span className="font-bold mx-1">@openpeer_bot</span>
+										<button
+											onClick={() => handleCopyToClipboard('@openpeer_bot')}
+											className="ml-1 text-blue-500 hover:text-blue-700"
+											aria-label="Copy bot name"
+										>
+											<svg
+												className="w-4 h-4"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+												/>
+											</svg>
+										</button>
+									</span>
+								</li>
+								<li className="pl-1">Start a chat with the bot and send this message:</li>
+							</ol>
+							<div className="flex items-center bg-white p-2 rounded mt-2">
+								<code className="flex-grow">/start {uniqueIdentifier}</code>
+								<button
+									onClick={() => handleCopyToClipboard(`/start ${uniqueIdentifier}`)}
+									className="ml-2 text-blue-500 hover:text-blue-700"
+								>
+									<svg
+										className="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+										/>
+									</svg>
+								</button>
+							</div>
+							{isCheckingAltMethod && (
+								<div className="mt-2 text-center text-sm text-gray-600">Checking for updates...</div>
+							)}
+						</div>
+					)}
 				</div>
 			)}
 		</div>

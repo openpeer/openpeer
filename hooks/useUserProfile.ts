@@ -1,4 +1,3 @@
-// hooks/userUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors } from 'models/errors';
@@ -11,15 +10,15 @@ interface ErrorObject {
 }
 
 const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) => void }) => {
-	const [user, setUser] = useState<User | null>();
+	const [user, setUser] = useState<User | null>(null);
 	const [isUpdating, setIsUpdating] = useState(false);
-	const [username, setUsername] = useState<string>();
-	const [email, setEmail] = useState<string>();
-	const [twitter, setTwitter] = useState<string>();
-	const [timezone, setTimezone] = useState<string>();
-	const [availableFrom, setAvailableFrom] = useState<number>();
-	const [availableTo, setAvailableTo] = useState<number>();
-	const [weekendOffline, setWeekendOffline] = useState<boolean>();
+	const [username, setUsername] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
+	const [twitter, setTwitter] = useState<string>('');
+	const [timezone, setTimezone] = useState<string | undefined>();
+	const [availableFrom, setAvailableFrom] = useState<number | undefined>();
+	const [availableTo, setAvailableTo] = useState<number | undefined>();
+	const [weekendOffline, setWeekendOffline] = useState<boolean | undefined>();
 
 	const [telegramUserId, setTelegramUserId] = useState<string>('');
 	const [telegramUsername, setTelegramUsername] = useState<string>('');
@@ -30,6 +29,37 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [errors, setErrors] = useState<Errors>({});
 
 	const { address } = useAccount();
+
+	const updateUserState = useCallback(
+		(data: User) => {
+			const hasChanged = JSON.stringify(user) !== JSON.stringify(data);
+			if (hasChanged) {
+				setUser(data);
+				setUsername(data.name || '');
+				setEmail(data.email || '');
+				setTwitter(data.twitter || '');
+				setTimezone(data.timezone || undefined);
+				setAvailableFrom(data.available_from || undefined);
+				setAvailableTo(data.available_to || undefined);
+				setWeekendOffline(data.weekend_offline);
+				setTelegramUserId(data.telegram_user_id?.toString() || '');
+				setTelegramUsername(data.telegram_username || '');
+				setWhatsappCountryCode(data.whatsapp_country_code || '');
+				setWhatsappNumber(data.whatsapp_number || '');
+
+				const uniqueIdentifier = data.unique_identifier;
+				const botLink = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
+				setTelegramBotLink(botLink);
+
+				console.log('User updated:', data);
+				console.log('Telegram info:', {
+					telegramUserId: data.telegram_user_id,
+					telegramUsername: data.telegram_username
+				});
+			}
+		},
+		[user]
+	);
 
 	const fetchUserProfile = useCallback(async () => {
 		if (!address) return;
@@ -45,55 +75,17 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			if (data.errors) {
 				setUser(null);
 			} else {
-				setUser(data);
-				// new
-				setUsername(data.name || '');
-				setEmail(data.email || '');
-				setTwitter(data.twitter || '');
-				setTelegramUserId(data.telegram_user_id || '');
-				setTelegramUsername(data.telegram_username || '');
-				setWhatsappCountryCode(data.whatsapp_country_code || '');
-				setWhatsappNumber(data.whatsapp_number || '');
-
-				const uniqueIdentifier = data?.unique_identifier;
-				const botLink = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
-				setTelegramBotLink(botLink);
-
+				updateUserState(data);
 				console.log('User profile fetched:', data);
 			}
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
 		}
-	}, [address]);
+	}, [address, updateUserState]);
 
 	useEffect(() => {
 		fetchUserProfile();
 	}, [address, fetchUserProfile]);
-
-	useEffect(() => {
-		if (user) {
-			console.log('User updated:', user);
-			console.log('Telegram info:', {
-				telegramUserId: user.telegram_user_id,
-				telegramUsername: user.telegram_username
-			});
-			setUsername(user.name || '');
-			setEmail(user.email || '');
-			setTwitter(user.twitter || '');
-			setTimezone(user.timezone || undefined);
-			setAvailableFrom(user.available_from || undefined);
-			setAvailableTo(user.available_to || undefined);
-			setWeekendOffline(user.weekend_offline);
-			setTelegramUserId(user.telegram_user_id || '');
-			setTelegramUsername(user.telegram_username || '');
-			setWhatsappCountryCode(user.whatsapp_country_code || '');
-			setWhatsappNumber(user.whatsapp_number || '');
-
-			const uniqueIdentifier = user?.unique_identifier;
-			const botLink = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
-			setTelegramBotLink(botLink);
-		}
-	}, [user]);
 
 	const updateUserProfile = async (profile: Partial<User>, showNotification = true) => {
 		try {
@@ -119,20 +111,18 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			console.log('API Response:', newUser);
 
 			if (newUser.id) {
-				setUser(newUser);
+				updateUserState(newUser);
 				if (showNotification) {
 					onUpdateProfile?.(newUser);
 				}
 				console.log('User profile updated:', newUser);
 			} else {
 				const foundErrors: ErrorObject = newUser.errors;
-				Object.entries(foundErrors).map(([fieldName, messages]) => {
+				Object.entries(foundErrors).forEach(([fieldName, messages]) => {
 					const formattedMessages = messages.map(
 						(message) => `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} ${message}`
 					);
-
-					setErrors({ ...errors, ...{ [fieldName]: formattedMessages.join(', ') } });
-					return formattedMessages;
+					setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: formattedMessages.join(', ') }));
 				});
 			}
 		} catch (error) {
@@ -151,7 +141,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	};
 
 	const onUploadFinished = async ({ Key: image }: S3.ManagedUpload.SendData) => {
-		updateUserProfile({ ...user, ...{ image } } as User, false);
+		updateUserProfile({ ...user, image } as User, false);
 	};
 
 	const updateProfile = () => {
