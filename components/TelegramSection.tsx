@@ -28,7 +28,10 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 	const [isChecking, setIsChecking] = useState(false);
 	const [countdown, setCountdown] = useState(0);
 	const [hasClickedLink, setHasClickedLink] = useState(false);
+	const [showAlternativeMethod, setShowAlternativeMethod] = useState(false);
+	const [isCheckingAltMethod, setIsCheckingAltMethod] = useState(false);
 	const isTelegramConnected = !!telegramUserId;
+	const uniqueIdentifier = telegramBotLink.split('=')[1];
 
 	const checkTelegramStatus = useCallback(async () => {
 		if (!isTelegramConnected) {
@@ -47,6 +50,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 		const runCheck = async () => {
 			if (isTelegramConnected) {
 				setHasClickedLink(false);
+				setIsCheckingAltMethod(false);
 				return;
 			}
 
@@ -75,10 +79,11 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 				}, 10000);
 			} else {
 				setHasClickedLink(false);
+				setIsCheckingAltMethod(false);
 			}
 		};
 
-		if (hasClickedLink) {
+		if (hasClickedLink || isCheckingAltMethod) {
 			runCheck();
 		}
 
@@ -86,7 +91,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 			clearTimeout(timeoutId);
 			clearInterval(countdownId);
 		};
-	}, [checkTelegramStatus, hasClickedLink, isTelegramConnected]);
+	}, [checkTelegramStatus, hasClickedLink, isTelegramConnected, isCheckingAltMethod]);
 
 	const handleActivateTelegram = () => {
 		setIsActivationDisabled(true);
@@ -114,9 +119,17 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 		}
 	};
 
+	const handleToggleAlternativeMethod = () => {
+		const newShowAlternativeMethod = !showAlternativeMethod;
+		setShowAlternativeMethod(newShowAlternativeMethod);
+		if (newShowAlternativeMethod && !isTelegramConnected) {
+			setIsCheckingAltMethod(true);
+		}
+	};
+
 	const renderButtonContent = () => (
 		<>
-			{hasClickedLink && (isChecking || countdown > 0) && (
+			{(hasClickedLink || isCheckingAltMethod) && (isChecking || countdown > 0) && (
 				<svg className="animate-spin h-5 w-5 mr-3 inline" viewBox="0 0 24 24">
 					<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
 					<path
@@ -127,18 +140,26 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 				</svg>
 			)}
 			<span>
-				{!hasClickedLink && 'Activate Telegram Notifications'}
-				{hasClickedLink && isChecking && 'Checking...'}
-				{hasClickedLink && !isChecking && countdown > 0 && `Next check in ${countdown}s`}
-				{hasClickedLink && !isChecking && countdown === 0 && 'Checking...'}
+				{!hasClickedLink && !isCheckingAltMethod && 'Activate Telegram Notifications'}
+				{(hasClickedLink || isCheckingAltMethod) && isChecking && 'Checking...'}
+				{(hasClickedLink || isCheckingAltMethod) &&
+					!isChecking &&
+					countdown > 0 &&
+					`Next check in ${countdown}s`}
+				{(hasClickedLink || isCheckingAltMethod) && !isChecking && countdown === 0 && 'Checking...'}
 			</span>
 		</>
 	);
 
 	const getButtonColor = () => {
-		if (!hasClickedLink) return undefined; // Use default color
+		if (!hasClickedLink && !isCheckingAltMethod) return undefined; // Use default color
 		if (isChecking || countdown > 0) return '#6B7280';
 		return '#6B7280'; // gray-500
+	};
+
+	const handleCopyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+		toast.success('Copied to clipboard!');
 	};
 
 	return (
@@ -176,9 +197,87 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 						onClick={handleActivateTelegram}
 						disabled={isActivationDisabled || isLoading}
 						title={renderButtonContent()}
-						className="py-2 px-4 rounded inline-flex items-center justify-center"
+						className="py-2 px-4 rounded inline-flex items-center justify-center w-full"
 						customBgColor={getButtonColor()}
 					/>
+
+					<div className="mt-2 text-center">
+						<button
+							onClick={handleToggleAlternativeMethod}
+							className="text-blue-500 hover:text-blue-700 flex items-center justify-center w-full"
+						>
+							<svg
+								className={`w-4 h-4 mr-1 transition-transform ${
+									showAlternativeMethod ? 'rotate-90' : ''
+								}`}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+							</svg>
+							Alternative Method
+						</button>
+					</div>
+					{showAlternativeMethod && (
+						<div className="mt-2 p-4 bg-gray-100 rounded">
+							<ol className="list-decimal list-outside space-y-2 ml-5">
+								<li className="pl-1">
+									<span className="inline-flex items-center">
+										Open Telegram and search for:
+										<span className="font-bold mx-1">@openpeer_bot</span>
+										<button
+											onClick={() => handleCopyToClipboard('@openpeer_bot')}
+											className="ml-1 text-blue-500 hover:text-blue-700"
+											aria-label="Copy bot name"
+										>
+											<svg
+												className="w-4 h-4"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+												/>
+											</svg>
+										</button>
+									</span>
+								</li>
+								<li className="pl-1">Start a chat with the bot and send this message:</li>
+							</ol>
+							<div className="flex items-center bg-white p-2 rounded mt-2">
+								<code className="flex-grow">/start {uniqueIdentifier}</code>
+								<button
+									onClick={() => handleCopyToClipboard(`/start ${uniqueIdentifier}`)}
+									className="ml-2 text-blue-500 hover:text-blue-700"
+								>
+									<svg
+										className="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+										/>
+									</svg>
+								</button>
+							</div>
+							{isCheckingAltMethod && (
+								<div className="mt-2 text-center text-sm text-gray-600">Checking for updates...</div>
+							)}
+						</div>
+					)}
 				</div>
 			)}
 		</div>
