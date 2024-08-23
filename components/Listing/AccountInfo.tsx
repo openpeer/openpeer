@@ -6,7 +6,6 @@ import { useUserProfile } from 'hooks';
 import { User } from 'models/types';
 import React from 'react';
 import TelegramSection from '../../components/TelegramSection';
-// import { useTelegramConnection } from '../../hooks/useTelegramConnection';
 
 import StepLayout from './StepLayout';
 
