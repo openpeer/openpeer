@@ -5,16 +5,16 @@ import ImageUploader from 'components/ImageUploader';
 import { useUserProfile, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import countryCodes from 'utils/countryCodes';
 import TelegramSection from '../../components/TelegramSection';
-
-// TODO: clear out old TG stuff from old oauth login method Also see pages/[id]/edit.tsx and hooks/useUserProfile.ts among others. Also lots of logging to disable here.
+// import { User } from 'models/types';
+import { isEqual } from 'lodash';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
-	const onUpdateProfile = () => {
+	const onUpdateProfile = useCallback(() => {
 		toast.success('Done', {
 			theme: 'dark',
 			position: 'top-right',
@@ -25,30 +25,82 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 			draggable: false,
 			progress: undefined
 		});
-	};
-	const {
-		user,
-		onUploadFinished,
-		updateProfile,
-		errors,
+	}, []);
+
+	const { user, onUploadFinished, updateProfile, errors, deleteTelegramInfo, refreshUserProfile, telegramBotLink } =
+		useUserProfile({ onUpdateProfile });
+
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+	const [twitter, setTwitter] = useState('');
+	const [whatsappCountryCode, setWhatsappCountryCode] = useState('');
+	const [whatsappNumber, setWhatsappNumber] = useState('');
+	const [telegramUserId, setTelegramUserId] = useState('');
+	const [telegramUsername, setTelegramUsername] = useState('');
+
+	useEffect(() => {
+		if (user) {
+			const newState = {
+				username: user.name || '',
+				email: user.email || '',
+				twitter: user.twitter || '',
+				whatsappCountryCode: user.whatsapp_country_code || '',
+				whatsappNumber: user.whatsapp_number || '',
+				telegramUserId: user.telegram_user_id || '',
+				telegramUsername: user.telegram_username || ''
+			};
+
+			if (
+				!isEqual(newState, {
+					username,
+					email,
+					twitter,
+					whatsappCountryCode,
+					whatsappNumber,
+					telegramUserId,
+					telegramUsername
+				})
+			) {
+				setUsername(newState.username);
+				setEmail(newState.email);
+				setTwitter(newState.twitter);
+				setWhatsappCountryCode(newState.whatsappCountryCode);
+				setWhatsappNumber(newState.whatsappNumber);
+				setTelegramUserId(newState.telegramUserId);
+				setTelegramUsername(newState.telegramUsername);
+			}
+		}
+	}, [user]);
+
+	const handleUpdateProfile = useCallback(() => {
+		console.log('Updating profile with:', {
+			username,
+			email,
+			twitter,
+			whatsappCountryCode,
+			whatsappNumber,
+			telegramUserId,
+			telegramUsername
+		});
+		updateProfile({
+			name: username,
+			email,
+			twitter,
+			whatsapp_country_code: whatsappCountryCode,
+			whatsapp_number: whatsappNumber,
+			telegram_user_id: telegramUserId,
+			telegram_username: telegramUsername
+		});
+	}, [
 		username,
-		setUsername,
 		email,
-		setEmail,
 		twitter,
-		setTwitter,
 		whatsappCountryCode,
-		setWhatsappCountryCode,
 		whatsappNumber,
-		setWhatsappNumber,
 		telegramUserId,
-		setTelegramUserId,
 		telegramUsername,
-		setTelegramUsername,
-		telegramBotLink,
-		deleteTelegramInfo,
-		refreshUserProfile
-	} = useUserProfile({ onUpdateProfile });
+		updateProfile
+	]);
 
 	if (user === undefined) {
 		return <Loading />;
@@ -59,6 +111,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 
 	return (
 		<div className="w-full m-auto flex flex-col sm:flex-row px-8 py-4 gap-x-16 justify-center mt-8">
+			{/* Avatar section */}
 			<div className="w-full md:w-80 mb-8">
 				<div className="flex items-start">
 					<div className="w-48">
@@ -73,6 +126,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					</div>
 				</div>
 			</div>
+
+			{/* Profile info section */}
 			<div className="w-full md:w-80">
 				<div className="mb-2">
 					<HeaderH3 title="Account info" />
@@ -94,33 +149,16 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					<HeaderH3 title="Messaging" />
 
 					<TelegramSection
-    telegramUserId={telegramUserId}
-    telegramUsername={telegramUsername}
-    telegramBotLink={telegramBotLink}
-    setTelegramUserId={setTelegramUserId}
-    setTelegramUsername={setTelegramUsername}
-    updateProfile={updateProfile}
-    deleteTelegramInfo={deleteTelegramInfo}
-    refreshUserProfile={refreshUserProfile}
-/>
+						telegramUserId={telegramUserId}
+						telegramUsername={telegramUsername}
+						telegramBotLink={telegramBotLink}
+						setTelegramUserId={setTelegramUserId}
+						setTelegramUsername={setTelegramUsername}
+						updateProfile={updateProfile}
+						deleteTelegramInfo={deleteTelegramInfo}
+						refreshUserProfile={refreshUserProfile}
+					/>
 
-					{/* {telegramBotLink && (
-						<div className="mt-4">
-							<Button
-								title={
-									<a
-										href={telegramBotLink}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-white"
-									>
-										Activate Telegram Notifications
-									</a>
-								}
-								onClick={() => window.open(telegramBotLink, '_blank')}
-							/>
-						</div>
-					)} */}
 					<Select
 						label="WhatsApp Country Code"
 						options={[
@@ -158,21 +196,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 					/>
 				</div>
 				<div>
-					<Button
-						title="Update profile"
-						onClick={() => {
-							console.log('Updating profile with:', {
-								username,
-								email,
-								twitter,
-								telegramUserId,
-								telegramUsername,
-								whatsappCountryCode,
-								whatsappNumber
-							});
-							updateProfile();
-						}}
-					/>
+					<Button title="Update profile" onClick={handleUpdateProfile} />
 				</div>
 			</div>
 		</div>

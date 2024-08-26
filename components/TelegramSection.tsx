@@ -1,6 +1,8 @@
+// components/TelegramSection.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'components';
+import { User } from 'models/types';
 
 interface TelegramSectionProps {
 	telegramUserId: string;
@@ -8,7 +10,7 @@ interface TelegramSectionProps {
 	telegramBotLink: string;
 	setTelegramUserId: (id: string) => void;
 	setTelegramUsername: (username: string) => void;
-	updateProfile: () => void;
+	updateProfile: (profile: Partial<User>) => Promise<void>;
 	deleteTelegramInfo: () => Promise<void>;
 	refreshUserProfile: () => Promise<{ success: boolean; error?: string }>;
 }
@@ -231,7 +233,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 					{error && <div className="mt-2 text-red-500 text-sm">{error}</div>}
 
 					<div className="mt-2 text-center">
-						<button
+						<div
 							onClick={handleToggleAlternativeMethod}
 							className="text-blue-500 hover:text-blue-700 flex items-center justify-center w-full"
 						>
@@ -247,7 +249,7 @@ const TelegramSection: React.FC<TelegramSectionProps> = ({
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
 							</svg>
 							Alternative Method
-						</button>
+						</div>
 					</div>
 					{showAlternativeMethod && (
 						<div className="mt-2 p-4 bg-gray-100 rounded">
