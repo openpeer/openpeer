@@ -5,7 +5,7 @@ import { Errors } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useAccount } from 'wagmi';
-import { isEqual } from 'lodash';
+import { isEqual, debounce } from 'lodash';
 
 interface ErrorObject {
 	[fieldName: string]: string[];
@@ -25,10 +25,6 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				const uniqueIdentifier = data.unique_identifier;
 				telegramBotLinkRef.current = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
 				console.log('User updated:', data);
-				console.log('Telegram info:', {
-					telegramUserId: data.telegram_user_id,
-					telegramUsername: data.telegram_username
-				});
 				return data;
 			}
 			return prevUser;
@@ -65,11 +61,18 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		async (profile: Partial<User>, showNotification = true) => {
 			try {
 				setIsUpdating(true);
-				const userProfileData = {
-					...profile,
-					telegram_user_id: profile.telegram_user_id || null,
-					telegram_username: profile.telegram_username || null
-				};
+				let userProfileData = { ...profile };
+
+				// Only include WhatsApp data if both country code and number are present
+				if (profile.whatsapp_country_code || profile.whatsapp_number) {
+					if (!profile.whatsapp_country_code || !profile.whatsapp_number) {
+						throw new Error('Both WhatsApp country code and number must be provided.');
+					}
+				}
+
+				// Don't overwrite Telegram data with null values
+				if (userProfileData.telegram_user_id === null) delete userProfileData.telegram_user_id;
+				if (userProfileData.telegram_username === null) delete userProfileData.telegram_username;
 
 				console.log('Sending user profile data to API:', userProfileData);
 
@@ -103,12 +106,18 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				}
 			} catch (error) {
 				console.error('Error updating profile:', error);
+				setErrors((prevErrors) => ({
+					...prevErrors,
+					general: error instanceof Error ? error.message : 'An unknown error occurred'
+				}));
 			} finally {
 				setIsUpdating(false);
 			}
 		},
 		[address, onUpdateProfile, updateUserState]
 	);
+
+	const debouncedUpdateUserProfile = useMemo(() => debounce(updateUserProfile, 500), [updateUserProfile]);
 
 	const deleteTelegramInfo = useCallback(async () => {
 		await updateUserProfile({
@@ -157,9 +166,9 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			user,
 			isUpdating,
 			onUploadFinished,
-			updateProfile: updateUserProfile,
-			errors,
+			updateProfile: debouncedUpdateUserProfile,
 			updateUserProfile,
+			errors,
 			fetchUserProfile,
 			deleteTelegramInfo,
 			refreshUserProfile,
@@ -169,6 +178,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			user,
 			isUpdating,
 			onUploadFinished,
+			debouncedUpdateUserProfile,
 			updateUserProfile,
 			errors,
 			fetchUserProfile,

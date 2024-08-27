@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from 'components';
 import { User } from 'models/types';
+import { DebouncedFunc } from 'lodash';
 
 interface TelegramSectionProps {
 	telegramUserId: string;
@@ -10,7 +11,7 @@ interface TelegramSectionProps {
 	telegramBotLink: string;
 	setTelegramUserId: (id: string) => void;
 	setTelegramUsername: (username: string) => void;
-	updateProfile: (profile: Partial<User>) => Promise<void>;
+	updateProfile: DebouncedFunc<(profile: Partial<User>, showNotification?: boolean) => Promise<void>>;
 	deleteTelegramInfo: () => Promise<void>;
 	refreshUserProfile: () => Promise<{ success: boolean; error?: string }>;
 }

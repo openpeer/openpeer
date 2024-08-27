@@ -1,5 +1,5 @@
 // pages/[id]/edit.tsx
-import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
+import { Avatar, HeaderH3, Input, Loading } from 'components';
 import Select from 'components/Select/Select';
 import ImageUploader from 'components/ImageUploader';
 import { useUserProfile, useAccount } from 'hooks';
@@ -9,16 +9,16 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import countryCodes from 'utils/countryCodes';
 import TelegramSection from '../../components/TelegramSection';
-// import { User } from 'models/types';
 import { isEqual } from 'lodash';
+import { User } from 'models/types';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
 	const onUpdateProfile = useCallback(() => {
-		toast.success('Done', {
+		toast.success('Profile updated', {
 			theme: 'dark',
 			position: 'top-right',
-			autoClose: 5000,
+			autoClose: 3000,
 			hideProgressBar: false,
 			closeOnClick: true,
 			pauseOnHover: true,
@@ -72,35 +72,29 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		}
 	}, [user]);
 
-	const handleUpdateProfile = useCallback(() => {
-		console.log('Updating profile with:', {
-			username,
-			email,
-			twitter,
-			whatsappCountryCode,
-			whatsappNumber,
-			telegramUserId,
-			telegramUsername
-		});
-		updateProfile({
-			name: username,
-			email,
-			twitter,
-			whatsapp_country_code: whatsappCountryCode,
-			whatsapp_number: whatsappNumber,
-			telegram_user_id: telegramUserId,
-			telegram_username: telegramUsername
-		});
-	}, [
-		username,
-		email,
-		twitter,
-		whatsappCountryCode,
-		whatsappNumber,
-		telegramUserId,
-		telegramUsername,
-		updateProfile
-	]);
+	const handleFieldChange = useCallback(
+		(field: string, value: string) => {
+			let updatedProfile: Partial<User> = { [field]: value };
+
+			// If updating WhatsApp info, include both country code and number
+			if (field === 'whatsapp_country_code') {
+				updatedProfile.whatsapp_number = whatsappNumber;
+			} else if (field === 'whatsapp_number') {
+				updatedProfile.whatsapp_country_code = whatsappCountryCode;
+			}
+
+			// Only update if both WhatsApp fields are filled
+			if (
+				(field === 'whatsapp_country_code' || field === 'whatsapp_number') &&
+				(!updatedProfile.whatsapp_country_code || !updatedProfile.whatsapp_number)
+			) {
+				return; // Don't update if either field is empty
+			}
+
+			updateProfile(updatedProfile, false);
+		},
+		[updateProfile, whatsappCountryCode, whatsappNumber]
+	);
 
 	if (user === undefined) {
 		return <Loading />;
@@ -131,19 +125,39 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 			<div className="w-full md:w-80">
 				<div className="mb-2">
 					<HeaderH3 title="Account info" />
-					<Input label="Username" id="username" value={username} onChange={setUsername} error={errors.name} />
+					<Input
+						label="Username"
+						id="username"
+						value={username}
+						onChange={(value) => {
+							setUsername(value);
+							handleFieldChange('name', value);
+						}}
+						error={errors.name}
+					/>
 					<Input
 						label="Email Address"
 						id="email"
 						value={email}
-						onChange={setEmail}
+						onChange={(value) => {
+							setEmail(value);
+							handleFieldChange('email', value);
+						}}
 						type="email"
 						error={errors.email}
 					/>
 				</div>
 				<div className="mb-2">
 					<HeaderH3 title="Social" />
-					<Input label="Twitter" id="twitter" value={twitter} onChange={setTwitter} />
+					<Input
+						label="Twitter"
+						id="twitter"
+						value={twitter}
+						onChange={(value) => {
+							setTwitter(value);
+							handleFieldChange('twitter', value);
+						}}
+					/>
 				</div>
 				<div className="mb-2">
 					<HeaderH3 title="Messaging" />
@@ -182,8 +196,10 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							if (option && option.id !== 0) {
 								const selectedCountry = countryCodes[option.id - 1];
 								setWhatsappCountryCode(selectedCountry.code);
+								handleFieldChange('whatsapp_country_code', selectedCountry.code);
 							} else {
 								setWhatsappCountryCode('');
+								// handleFieldChange('whatsapp_country_code', '');
 							}
 						}}
 					/>
@@ -192,11 +208,11 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						label="WhatsApp Number"
 						id="whatsappNumber"
 						value={whatsappNumber}
-						onChange={setWhatsappNumber}
+						onChange={(value) => {
+							setWhatsappNumber(value);
+							handleFieldChange('whatsapp_number', value);
+						}}
 					/>
-				</div>
-				<div>
-					<Button title="Update profile" onClick={handleUpdateProfile} />
 				</div>
 			</div>
 		</div>
