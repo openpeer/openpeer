@@ -14,6 +14,7 @@ interface ErrorObject {
 const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) => void }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [isUpdatingDebounced, setIsUpdatingDebounced] = useState(false);
 	const [errors, setErrors] = useState<Errors>({});
 	const { address } = useAccount();
 
@@ -60,17 +61,17 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const validateProfile = (profile: Partial<User>): Errors => {
 		const errors: Errors = {};
 
-		const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+		const alphanumericUnderscoreRegex = /^[a-zA-Z0-9_]+$/;
 
-		if (profile.name && !alphanumericRegex.test(profile.name)) {
-			errors['name'] = 'Username must contain only alphanumeric characters';
+		if (profile.name && !alphanumericUnderscoreRegex.test(profile.name)) {
+			errors['name'] = 'Username must contain only alphanumeric characters and underscores';
 		}
 
 		if (profile.twitter) {
 			if (profile.twitter.includes('@')) {
 				errors.twitter = 'Twitter handle should not include the @ symbol';
-			} else if (!alphanumericRegex.test(profile.twitter)) {
-				errors.twitter = 'Twitter handle must contain only alphanumeric characters';
+			} else if (!alphanumericUnderscoreRegex.test(profile.twitter)) {
+				errors.twitter = 'Twitter handle must contain only alphanumeric characters and underscores';
 			}
 		}
 
@@ -158,7 +159,16 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		[address, onUpdateProfile, updateUserState]
 	);
 
-	const debouncedUpdateUserProfile = useMemo(() => debounce(updateUserProfile, 1000), [updateUserProfile]);
+	const debouncedUpdateUserProfile = useMemo(
+		() =>
+			debounce((profile: Partial<User>) => {
+				setIsUpdatingDebounced(true);
+				updateUserProfile(profile, false).finally(() => {
+					setIsUpdatingDebounced(false);
+				});
+			}, 1000),
+		[updateUserProfile]
+	);
 
 	const deleteTelegramInfo = useCallback(async () => {
 		await updateUserProfile({
@@ -206,6 +216,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		() => ({
 			user,
 			isUpdating,
+			isUpdatingDebounced,
 			onUploadFinished,
 			updateProfile: debouncedUpdateUserProfile,
 			updateUserProfile,
@@ -219,6 +230,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		[
 			user,
 			isUpdating,
+			isUpdatingDebounced,
 			onUploadFinished,
 			debouncedUpdateUserProfile,
 			updateUserProfile,

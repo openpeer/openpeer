@@ -1,3 +1,4 @@
+// components/Input/Input.tsx
 import React from 'react';
 import { NumericFormat, OnValueChange } from 'react-number-format';
 import Tooltip from 'components/Tooltip';
@@ -21,6 +22,7 @@ export interface InputProps {
 	containerExtraStyle?: string;
 	labelStyle?: string;
 	tooltipContent?: string;
+	helperText?: string;
 }
 
 const Input = ({
@@ -41,7 +43,8 @@ const Input = ({
 	extraStyle = '',
 	containerExtraStyle = '',
 	labelStyle = '',
-	tooltipContent
+	tooltipContent,
+	helperText
 }: InputProps) => {
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
@@ -97,6 +100,7 @@ const Input = ({
 				{!!addOn && <div className="absolute inset-y-0 right-2 flex items-center">{addOn}</div>}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+			{!!helperText && !error && <p className="mt-2 text-sm text-gray-600">{helperText}</p>}
 		</div>
 	);
 };

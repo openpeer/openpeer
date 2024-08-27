@@ -36,7 +36,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		deleteTelegramInfo,
 		refreshUserProfile,
 		telegramBotLink,
-		validateProfile
+		validateProfile,
+		isUpdatingDebounced
 	} = useUserProfile({ onUpdateProfile });
 
 	const [username, setUsername] = useState('');
@@ -98,7 +99,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 			setLocalErrors(validationErrors);
 
 			if (Object.keys(validationErrors).length === 0) {
-				updateProfile(updatedProfile, false);
+				updateProfile(updatedProfile);
 			}
 		},
 		[updateProfile, validateProfile, whatsappCountryCode, whatsappNumber]
@@ -150,6 +151,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							handleFieldChange('name', value);
 						}}
 						error={localErrors.name || errors.name}
+						helperText="Use only alphanumeric characters and underscores"
 					/>
 					<Input
 						label="Email Address"
@@ -174,6 +176,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							handleFieldChange('twitter', value);
 						}}
 						error={localErrors.twitter || errors.twitter}
+						helperText="Use only alphanumeric characters and underscores, without @"
 					/>
 				</div>
 				<div className="mb-2">
@@ -227,8 +230,9 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							setWhatsappNumber(value);
 							handleFieldChange('whatsapp_number', value);
 						}}
+						helperText="Enter only digits, without spaces or dashes. Do not include the country code with the number."
 					/>
-					{getWhatsAppError() && <p className="text-sm text-red-500">{getWhatsAppError()}</p>}
+					{isUpdatingDebounced && <p className="text-sm text-blue-500 mt-4">Saving changes...</p>}
 				</div>
 			</div>
 		</div>
