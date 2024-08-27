@@ -57,8 +57,34 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		fetchUserProfile();
 	}, [fetchUserProfile]);
 
+	const validateProfile = (profile: Partial<User>): Errors => {
+		const errors: Errors = {};
+
+		if (profile.email && !/\S+@\S+\.\S+/.test(profile.email)) {
+			errors.email = 'Invalid email format';
+		}
+
+		if (profile.whatsapp_country_code && !profile.whatsapp_number) {
+			errors.whatsapp_number = 'WhatsApp number is required when country code is provided';
+		}
+
+		if (profile.whatsapp_number && !profile.whatsapp_country_code) {
+			errors.whatsapp_country_code = 'WhatsApp country code is required when number is provided';
+		}
+
+		// Add more validations?
+
+		return errors;
+	};
+
 	const updateUserProfile = useCallback(
 		async (profile: Partial<User>, showNotification = true) => {
+			const validationErrors = validateProfile(profile);
+			if (Object.keys(validationErrors).length > 0) {
+				setErrors(validationErrors);
+				return;
+			}
+
 			try {
 				setIsUpdating(true);
 				let userProfileData = { ...profile };
@@ -172,7 +198,8 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			fetchUserProfile,
 			deleteTelegramInfo,
 			refreshUserProfile,
-			telegramBotLink: telegramBotLinkRef.current
+			telegramBotLink: telegramBotLinkRef.current,
+			validateProfile
 		}),
 		[
 			user,
@@ -183,7 +210,8 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			errors,
 			fetchUserProfile,
 			deleteTelegramInfo,
-			refreshUserProfile
+			refreshUserProfile,
+			validateProfile
 		]
 	);
 };

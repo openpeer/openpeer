@@ -11,6 +11,7 @@ import countryCodes from 'utils/countryCodes';
 import TelegramSection from '../../components/TelegramSection';
 import { isEqual } from 'lodash';
 import { User } from 'models/types';
+import { Errors } from 'models/errors';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -27,8 +28,16 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		});
 	}, []);
 
-	const { user, onUploadFinished, updateProfile, errors, deleteTelegramInfo, refreshUserProfile, telegramBotLink } =
-		useUserProfile({ onUpdateProfile });
+	const {
+		user,
+		onUploadFinished,
+		updateProfile,
+		errors,
+		deleteTelegramInfo,
+		refreshUserProfile,
+		telegramBotLink,
+		validateProfile
+	} = useUserProfile({ onUpdateProfile });
 
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
@@ -72,6 +81,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		}
 	}, [user]);
 
+	const [localErrors, setLocalErrors] = useState<Errors>({});
+
 	const handleFieldChange = useCallback(
 		(field: string, value: string) => {
 			let updatedProfile: Partial<User> = { [field]: value };
@@ -83,17 +94,14 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				updatedProfile.whatsapp_country_code = whatsappCountryCode;
 			}
 
-			// Only update if both WhatsApp fields are filled
-			if (
-				(field === 'whatsapp_country_code' || field === 'whatsapp_number') &&
-				(!updatedProfile.whatsapp_country_code || !updatedProfile.whatsapp_number)
-			) {
-				return; // Don't update if either field is empty
-			}
+			const validationErrors = validateProfile(updatedProfile);
+			setLocalErrors(validationErrors);
 
-			updateProfile(updatedProfile, false);
+			if (Object.keys(validationErrors).length === 0) {
+				updateProfile(updatedProfile, false);
+			}
 		},
-		[updateProfile, whatsappCountryCode, whatsappNumber]
+		[updateProfile, validateProfile, whatsappCountryCode, whatsappNumber]
 	);
 
 	if (user === undefined) {
@@ -199,9 +207,9 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 								handleFieldChange('whatsapp_country_code', selectedCountry.code);
 							} else {
 								setWhatsappCountryCode('');
-								// handleFieldChange('whatsapp_country_code', '');
 							}
 						}}
+						error={localErrors.whatsapp_country_code || errors.whatsapp_country_code}
 					/>
 
 					<Input
@@ -212,7 +220,13 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							setWhatsappNumber(value);
 							handleFieldChange('whatsapp_number', value);
 						}}
+						error={localErrors.whatsapp_number || errors.whatsapp_number}
 					/>
+					{(localErrors.whatsapp_country_code || localErrors.whatsapp_number) && (
+						<p className="text-sm text-red-500">
+							Both WhatsApp country code and number must be filled to update.
+						</p>
+					)}
 				</div>
 			</div>
 		</div>
