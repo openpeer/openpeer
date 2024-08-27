@@ -23,6 +23,7 @@ export interface InputProps {
 	labelStyle?: string;
 	tooltipContent?: string;
 	helperText?: string;
+	isUpdating?: boolean;
 }
 
 const Input = ({
@@ -44,13 +45,28 @@ const Input = ({
 	containerExtraStyle = '',
 	labelStyle = '',
 	tooltipContent,
-	helperText
+	helperText,
+	isUpdating = false
 }: InputProps) => {
+	// console.log(`Input ${id} isUpdating:`, isUpdating);
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		onChange?.(event.target.value);
 	};
 
 	const onValueChange: OnValueChange = ({ floatValue }) => onChangeNumber?.(floatValue);
+
+	const baseClassName = `block w-full rounded-md pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${
+		!!prefix && 'text-right'
+	}`;
+
+	const borderClassName = isUpdating ? '' : 'border-gray-300';
+
+	const updatingClassName = isUpdating
+		? 'bg-blue-50 border-blue-300 outline outline-2 outline-blue-500 transition-all duration-300'
+		: 'border-gray-300';
+
+	const inputClassName = `${baseClassName} ${updatingClassName} ${extraStyle}`;
+
 	return (
 		<div className={`my-8 ${containerExtraStyle}`}>
 			{label && (
@@ -72,9 +88,7 @@ const Input = ({
 						id={id}
 						value={value}
 						onValueChange={onValueChange}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
-							!!prefix && 'text-right'
-						}`}
+						className={inputClassName}
 						allowedDecimalSeparators={[',', '.']}
 						decimalScale={decimalScale}
 						inputMode="decimal"
@@ -87,9 +101,7 @@ const Input = ({
 					<input
 						type={type}
 						id={id}
-						className={`block w-full rounded-md border-gray-300 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-slate-400 ${extraStyle} ${
-							!!prefix && 'text-right'
-						}`}
+						className={inputClassName}
 						value={value}
 						onChange={onInputChange}
 						placeholder={placeholder}
@@ -98,9 +110,34 @@ const Input = ({
 					/>
 				)}
 				{!!addOn && <div className="absolute inset-y-0 right-2 flex items-center">{addOn}</div>}
+				{isUpdating && (
+					<div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+						<svg
+							className="animate-spin h-5 w-5 text-blue-500"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								className="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								strokeWidth="4"
+							></circle>
+							<path
+								className="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+					</div>
+				)}
 			</div>
 			{!!error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 			{!!helperText && !error && <p className="mt-2 text-sm text-gray-600">{helperText}</p>}
+			{isUpdating && <p className="mt-2 text-sm text-blue-600 animate-pulse">Updating...</p>}
 		</div>
 	);
 };

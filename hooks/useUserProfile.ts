@@ -5,7 +5,7 @@ import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useAccount } from 'wagmi';
-import { isEqual, debounce } from 'lodash';
+import { isEqual, debounce, DebouncedFunc } from 'lodash';
 
 interface ErrorObject {
 	[fieldName: string]: string[];
@@ -161,14 +161,28 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const debouncedUpdateUserProfile = useMemo(
 		() =>
-			debounce((profile: Partial<User>) => {
+			debounce((profile: Partial<User>, showNotification = false) => {
 				setIsUpdatingDebounced(true);
-				updateUserProfile(profile, false).finally(() => {
+				return updateUserProfile(profile, showNotification).finally(() => {
 					setIsUpdatingDebounced(false);
 				});
-			}, 1000),
+			}, 2000),
 		[updateUserProfile]
 	);
+
+	const safeUpdateProfile = useCallback(
+		(profile: Partial<User>, showNotification = false) => {
+			const result = debouncedUpdateUserProfile(profile, showNotification);
+			return result || Promise.resolve();
+		},
+		[debouncedUpdateUserProfile]
+	) as unknown as DebouncedFunc<typeof updateUserProfile>;
+
+	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
+	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
+
+	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
+	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
 
 	const deleteTelegramInfo = useCallback(async () => {
 		await updateUserProfile({
@@ -218,7 +232,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			isUpdating,
 			isUpdatingDebounced,
 			onUploadFinished,
-			updateProfile: debouncedUpdateUserProfile,
+			updateProfile: safeUpdateProfile,
 			updateUserProfile,
 			errors,
 			fetchUserProfile,
