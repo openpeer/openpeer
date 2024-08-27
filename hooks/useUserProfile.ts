@@ -1,7 +1,7 @@
 // hooks/useUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
-import { Errors } from 'models/errors';
+import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useAccount } from 'wagmi';
@@ -60,6 +60,20 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const validateProfile = (profile: Partial<User>): Errors => {
 		const errors: Errors = {};
 
+		const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+
+		if (profile.name && !alphanumericRegex.test(profile.name)) {
+			errors['name'] = 'Username must contain only alphanumeric characters';
+		}
+
+		if (profile.twitter) {
+			if (profile.twitter.includes('@')) {
+				errors.twitter = 'Twitter handle should not include the @ symbol';
+			} else if (!alphanumericRegex.test(profile.twitter)) {
+				errors.twitter = 'Twitter handle must contain only alphanumeric characters';
+			}
+		}
+
 		if (profile.email && !/\S+@\S+\.\S+/.test(profile.email)) {
 			errors.email = 'Invalid email format';
 		}
@@ -71,8 +85,6 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		if (profile.whatsapp_number && !profile.whatsapp_country_code) {
 			errors.whatsapp_country_code = 'WhatsApp country code is required when number is provided';
 		}
-
-		// Add more validations?
 
 		return errors;
 	};
@@ -125,7 +137,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					setErrors((prevErrors) => {
 						const newErrors: Errors = {};
 						Object.entries(foundErrors).forEach(([fieldName, messages]) => {
-							newErrors[fieldName] = messages.join(', ');
+							if (Object.prototype.hasOwnProperty.call(ERROR_FIELDS, fieldName)) {
+								const errorField = fieldName as ErrorFields;
+								newErrors[errorField] = messages.join(', ');
+							}
 						});
 						return { ...prevErrors, ...newErrors };
 					});
@@ -143,7 +158,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		[address, onUpdateProfile, updateUserState]
 	);
 
-	const debouncedUpdateUserProfile = useMemo(() => debounce(updateUserProfile, 500), [updateUserProfile]);
+	const debouncedUpdateUserProfile = useMemo(() => debounce(updateUserProfile, 1000), [updateUserProfile]);
 
 	const deleteTelegramInfo = useCallback(async () => {
 		await updateUserProfile({

@@ -104,6 +104,14 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		[updateProfile, validateProfile, whatsappCountryCode, whatsappNumber]
 	);
 
+	const getWhatsAppError = () => {
+		if (localErrors.whatsapp_country_code) return localErrors.whatsapp_country_code;
+		if (localErrors.whatsapp_number) return localErrors.whatsapp_number;
+		if (errors.whatsapp_country_code) return errors.whatsapp_country_code;
+		if (errors.whatsapp_number) return errors.whatsapp_number;
+		return null;
+	};
+
 	if (user === undefined) {
 		return <Loading />;
 	}
@@ -141,7 +149,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							setUsername(value);
 							handleFieldChange('name', value);
 						}}
-						error={errors.name}
+						error={localErrors.name || errors.name}
 					/>
 					<Input
 						label="Email Address"
@@ -165,6 +173,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							setTwitter(value);
 							handleFieldChange('twitter', value);
 						}}
+						error={localErrors.twitter || errors.twitter}
 					/>
 				</div>
 				<div className="mb-2">
@@ -209,9 +218,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 								setWhatsappCountryCode('');
 							}
 						}}
-						error={localErrors.whatsapp_country_code || errors.whatsapp_country_code}
 					/>
-
 					<Input
 						label="WhatsApp Number"
 						id="whatsappNumber"
@@ -220,13 +227,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							setWhatsappNumber(value);
 							handleFieldChange('whatsapp_number', value);
 						}}
-						error={localErrors.whatsapp_number || errors.whatsapp_number}
 					/>
-					{(localErrors.whatsapp_country_code || localErrors.whatsapp_number) && (
-						<p className="text-sm text-red-500">
-							Both WhatsApp country code and number must be filled to update.
-						</p>
-					)}
+					{getWhatsAppError() && <p className="text-sm text-red-500">{getWhatsAppError()}</p>}
 				</div>
 			</div>
 		</div>
