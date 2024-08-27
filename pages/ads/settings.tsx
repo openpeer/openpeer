@@ -1,3 +1,4 @@
+// pages/ads/settings.tsx
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';

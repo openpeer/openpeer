@@ -1,24 +1,25 @@
 // pages/[id]/edit.tsx
-import { Avatar, Button, HeaderH3, Input, Loading } from 'components';
+import { Avatar, HeaderH3, Input, Loading } from 'components';
 import Select from 'components/Select/Select';
 import ImageUploader from 'components/ImageUploader';
 import { useUserProfile, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import ErrorPage from 'next/error';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import countryCodes from 'utils/countryCodes';
 import TelegramSection from '../../components/TelegramSection';
-// import { User } from 'models/types';
 import { isEqual } from 'lodash';
+import { User } from 'models/types';
+import { Errors } from 'models/errors';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
 	const onUpdateProfile = useCallback(() => {
-		toast.success('Done', {
+		toast.success('Profile updated', {
 			theme: 'dark',
 			position: 'top-right',
-			autoClose: 5000,
+			autoClose: 3000,
 			hideProgressBar: false,
 			closeOnClick: true,
 			pauseOnHover: true,
@@ -27,8 +28,17 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		});
 	}, []);
 
-	const { user, onUploadFinished, updateProfile, errors, deleteTelegramInfo, refreshUserProfile, telegramBotLink } =
-		useUserProfile({ onUpdateProfile });
+	const {
+		user,
+		onUploadFinished,
+		updateProfile,
+		errors,
+		deleteTelegramInfo,
+		refreshUserProfile,
+		telegramBotLink,
+		validateProfile,
+		isUpdatingDebounced
+	} = useUserProfile({ onUpdateProfile });
 
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
@@ -37,6 +47,7 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const [whatsappNumber, setWhatsappNumber] = useState('');
 	const [telegramUserId, setTelegramUserId] = useState('');
 	const [telegramUsername, setTelegramUsername] = useState('');
+	const [updatingFields, setUpdatingFields] = useState<Set<string>>(new Set());
 
 	useEffect(() => {
 		if (user) {
@@ -72,35 +83,62 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		}
 	}, [user]);
 
-	const handleUpdateProfile = useCallback(() => {
-		console.log('Updating profile with:', {
-			username,
-			email,
-			twitter,
-			whatsappCountryCode,
-			whatsappNumber,
-			telegramUserId,
-			telegramUsername
-		});
-		updateProfile({
-			name: username,
-			email,
-			twitter,
-			whatsapp_country_code: whatsappCountryCode,
-			whatsapp_number: whatsappNumber,
-			telegram_user_id: telegramUserId,
-			telegram_username: telegramUsername
-		});
-	}, [
-		username,
-		email,
-		twitter,
-		whatsappCountryCode,
-		whatsappNumber,
-		telegramUserId,
-		telegramUsername,
-		updateProfile
-	]);
+	const [localErrors, setLocalErrors] = useState<Errors>({});
+
+	const handleFieldChange = useCallback(
+		(field: string, value: string) => {
+			let updatedProfile: Partial<User> = { [field]: value };
+
+			// If updating WhatsApp info, include both country code and number
+			if (field === 'whatsapp_country_code') {
+				updatedProfile.whatsapp_number = whatsappNumber;
+			} else if (field === 'whatsapp_number') {
+				updatedProfile.whatsapp_country_code = whatsappCountryCode;
+			}
+
+			const validationErrors = validateProfile(updatedProfile);
+			setLocalErrors(validationErrors);
+
+			if (Object.keys(validationErrors).length === 0 && updateProfile) {
+				setUpdatingFields((prev) => {
+					const newSet = new Set(prev).add(field);
+					// console.log('updatingFields:', newSet);
+					return newSet;
+				});
+
+				(updateProfile?.(updatedProfile, false) ?? Promise.resolve())
+					.then(() => {
+						// Delay clearing the updating state to allow animation to be visible
+						setTimeout(() => {
+							setUpdatingFields((prev) => {
+								const newSet = new Set(prev);
+								newSet.delete(field);
+								// console.log('updatingFields after update:', newSet);
+								return newSet;
+							});
+						}, 1000); // 1 second delay
+					})
+					.catch((error) => {
+						console.error('Error updating profile:', error);
+						// Clear the updating state even if there's an error
+						setUpdatingFields((prev) => {
+							const newSet = new Set(prev);
+							newSet.delete(field);
+							return newSet;
+						});
+					});
+			}
+		},
+		[updateProfile, validateProfile, whatsappCountryCode, whatsappNumber]
+	);
+
+	// const getWhatsAppError = () => {
+	// 	if (localErrors.whatsapp_country_code) return localErrors.whatsapp_country_code;
+	// 	if (localErrors.whatsapp_number) return localErrors.whatsapp_number;
+	// 	if (errors.whatsapp_country_code) return errors.whatsapp_country_code;
+	// 	if (errors.whatsapp_number) return errors.whatsapp_number;
+	// 	return null;
+	// };
 
 	if (user === undefined) {
 		return <Loading />;
@@ -131,19 +169,45 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 			<div className="w-full md:w-80">
 				<div className="mb-2">
 					<HeaderH3 title="Account info" />
-					<Input label="Username" id="username" value={username} onChange={setUsername} error={errors.name} />
+					<Input
+						label="Username"
+						id="username"
+						value={username}
+						onChange={(value) => {
+							setUsername(value);
+							handleFieldChange('name', value);
+						}}
+						error={localErrors.name || errors.name}
+						helperText="Use only alphanumeric characters and underscores"
+						isUpdating={updatingFields.has('name')}
+					/>
 					<Input
 						label="Email Address"
 						id="email"
 						value={email}
-						onChange={setEmail}
+						onChange={(value) => {
+							setEmail(value);
+							handleFieldChange('email', value);
+						}}
 						type="email"
 						error={errors.email}
+						isUpdating={updatingFields.has('email')}
 					/>
 				</div>
 				<div className="mb-2">
 					<HeaderH3 title="Social" />
-					<Input label="Twitter" id="twitter" value={twitter} onChange={setTwitter} />
+					<Input
+						label="X (Twitter)"
+						id="twitter"
+						value={twitter}
+						onChange={(value) => {
+							setTwitter(value);
+							handleFieldChange('twitter', value);
+						}}
+						error={localErrors.twitter || errors.twitter}
+						helperText="Use only alphanumeric characters and underscores, without @"
+						isUpdating={updatingFields.has('twitter')}
+					/>
 				</div>
 				<div className="mb-2">
 					<HeaderH3 title="Messaging" />
@@ -182,21 +246,24 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 							if (option && option.id !== 0) {
 								const selectedCountry = countryCodes[option.id - 1];
 								setWhatsappCountryCode(selectedCountry.code);
+								handleFieldChange('whatsapp_country_code', selectedCountry.code);
 							} else {
 								setWhatsappCountryCode('');
 							}
 						}}
 					/>
-
 					<Input
 						label="WhatsApp Number"
 						id="whatsappNumber"
 						value={whatsappNumber}
-						onChange={setWhatsappNumber}
+						onChange={(value) => {
+							setWhatsappNumber(value);
+							handleFieldChange('whatsapp_number', value);
+						}}
+						helperText="Enter only digits, without spaces or dashes. Do not include the country code with the number."
+						isUpdating={updatingFields.has('whatsapp_number')}
 					/>
-				</div>
-				<div>
-					<Button title="Update profile" onClick={handleUpdateProfile} />
+					{isUpdatingDebounced && <p className="text-sm text-blue-500 mt-4">Saving changes...</p>}
 				</div>
 			</div>
 		</div>

@@ -1,11 +1,11 @@
 // hooks/useUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
-import { Errors } from 'models/errors';
+import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useAccount } from 'wagmi';
-import { isEqual } from 'lodash';
+import { isEqual, debounce, DebouncedFunc } from 'lodash';
 
 interface ErrorObject {
 	[fieldName: string]: string[];
@@ -14,6 +14,7 @@ interface ErrorObject {
 const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) => void }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [isUpdatingDebounced, setIsUpdatingDebounced] = useState(false);
 	const [errors, setErrors] = useState<Errors>({});
 	const { address } = useAccount();
 
@@ -25,10 +26,6 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				const uniqueIdentifier = data.unique_identifier;
 				telegramBotLinkRef.current = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
 				console.log('User updated:', data);
-				console.log('Telegram info:', {
-					telegramUserId: data.telegram_user_id,
-					telegramUsername: data.telegram_username
-				});
 				return data;
 			}
 			return prevUser;
@@ -61,15 +58,60 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		fetchUserProfile();
 	}, [fetchUserProfile]);
 
+	const validateProfile = (profile: Partial<User>): Errors => {
+		const errors: Errors = {};
+
+		const alphanumericUnderscoreRegex = /^[a-zA-Z0-9_]+$/;
+
+		if (profile.name && !alphanumericUnderscoreRegex.test(profile.name)) {
+			errors['name'] = 'Username must contain only alphanumeric characters and underscores';
+		}
+
+		if (profile.twitter) {
+			if (profile.twitter.includes('@')) {
+				errors.twitter = 'Twitter handle should not include the @ symbol';
+			} else if (!alphanumericUnderscoreRegex.test(profile.twitter)) {
+				errors.twitter = 'Twitter handle must contain only alphanumeric characters and underscores';
+			}
+		}
+
+		if (profile.email && !/\S+@\S+\.\S+/.test(profile.email)) {
+			errors.email = 'Invalid email format';
+		}
+
+		if (profile.whatsapp_country_code && !profile.whatsapp_number) {
+			errors.whatsapp_number = 'WhatsApp number is required when country code is provided';
+		}
+
+		if (profile.whatsapp_number && !profile.whatsapp_country_code) {
+			errors.whatsapp_country_code = 'WhatsApp country code is required when number is provided';
+		}
+
+		return errors;
+	};
+
 	const updateUserProfile = useCallback(
 		async (profile: Partial<User>, showNotification = true) => {
+			const validationErrors = validateProfile(profile);
+			if (Object.keys(validationErrors).length > 0) {
+				setErrors(validationErrors);
+				return;
+			}
+
 			try {
 				setIsUpdating(true);
-				const userProfileData = {
-					...profile,
-					telegram_user_id: profile.telegram_user_id || null,
-					telegram_username: profile.telegram_username || null
-				};
+				let userProfileData = { ...profile };
+
+				// Only include WhatsApp data if both country code and number are present
+				if (profile.whatsapp_country_code || profile.whatsapp_number) {
+					if (!profile.whatsapp_country_code || !profile.whatsapp_number) {
+						throw new Error('Both WhatsApp country code and number must be provided.');
+					}
+				}
+
+				// Don't overwrite Telegram data with null values
+				if (userProfileData.telegram_user_id === null) delete userProfileData.telegram_user_id;
+				if (userProfileData.telegram_username === null) delete userProfileData.telegram_username;
 
 				console.log('Sending user profile data to API:', userProfileData);
 
@@ -96,19 +138,51 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					setErrors((prevErrors) => {
 						const newErrors: Errors = {};
 						Object.entries(foundErrors).forEach(([fieldName, messages]) => {
-							newErrors[fieldName] = messages.join(', ');
+							if (Object.prototype.hasOwnProperty.call(ERROR_FIELDS, fieldName)) {
+								const errorField = fieldName as ErrorFields;
+								newErrors[errorField] = messages.join(', ');
+							}
 						});
 						return { ...prevErrors, ...newErrors };
 					});
 				}
 			} catch (error) {
 				console.error('Error updating profile:', error);
+				setErrors((prevErrors) => ({
+					...prevErrors,
+					general: error instanceof Error ? error.message : 'An unknown error occurred'
+				}));
 			} finally {
 				setIsUpdating(false);
 			}
 		},
 		[address, onUpdateProfile, updateUserState]
 	);
+
+	const debouncedUpdateUserProfile = useMemo(
+		() =>
+			debounce((profile: Partial<User>, showNotification = false) => {
+				setIsUpdatingDebounced(true);
+				return updateUserProfile(profile, showNotification).finally(() => {
+					setIsUpdatingDebounced(false);
+				});
+			}, 2000),
+		[updateUserProfile]
+	);
+
+	const safeUpdateProfile = useCallback(
+		(profile: Partial<User>, showNotification = false) => {
+			const result = debouncedUpdateUserProfile(profile, showNotification);
+			return result || Promise.resolve();
+		},
+		[debouncedUpdateUserProfile]
+	) as unknown as DebouncedFunc<typeof updateUserProfile>;
+
+	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
+	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
+
+	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
+	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
 
 	const deleteTelegramInfo = useCallback(async () => {
 		await updateUserProfile({
@@ -156,24 +230,29 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		() => ({
 			user,
 			isUpdating,
+			isUpdatingDebounced,
 			onUploadFinished,
-			updateProfile: updateUserProfile,
-			errors,
+			updateProfile: safeUpdateProfile,
 			updateUserProfile,
+			errors,
 			fetchUserProfile,
 			deleteTelegramInfo,
 			refreshUserProfile,
-			telegramBotLink: telegramBotLinkRef.current
+			telegramBotLink: telegramBotLinkRef.current,
+			validateProfile
 		}),
 		[
 			user,
 			isUpdating,
+			isUpdatingDebounced,
 			onUploadFinished,
+			debouncedUpdateUserProfile,
 			updateUserProfile,
 			errors,
 			fetchUserProfile,
 			deleteTelegramInfo,
-			refreshUserProfile
+			refreshUserProfile,
+			validateProfile
 		]
 	);
 };
