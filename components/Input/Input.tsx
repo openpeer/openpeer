@@ -10,6 +10,7 @@ export interface InputProps {
 	value?: number | string | undefined;
 	onChange?: (value: string) => void | undefined;
 	onChangeNumber?: (value: number | undefined) => void | undefined;
+	onBlur?: () => void | undefined;
 	type?: 'number' | 'email' | 'text' | 'decimal';
 	required?: boolean;
 	placeholder?: string;
@@ -24,6 +25,7 @@ export interface InputProps {
 	tooltipContent?: string;
 	helperText?: string;
 	isUpdating?: boolean;
+	maxLength?: number;
 }
 
 const Input = ({
@@ -32,6 +34,7 @@ const Input = ({
 	addOn,
 	value,
 	onChange,
+	onBlur,
 	type = 'text',
 	required = false,
 	placeholder,
@@ -46,7 +49,8 @@ const Input = ({
 	labelStyle = '',
 	tooltipContent,
 	helperText,
-	isUpdating = false
+	isUpdating = false,
+	maxLength
 }: InputProps) => {
 	// console.log(`Input ${id} isUpdating:`, isUpdating);
 	const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +100,8 @@ const Input = ({
 						required={required}
 						allowNegative={false}
 						disabled={disabled}
+						maxLength={maxLength}
+						onBlur={onBlur}
 					/>
 				) : (
 					<input
@@ -107,6 +113,8 @@ const Input = ({
 						placeholder={placeholder}
 						required={required}
 						disabled={disabled}
+						maxLength={maxLength}
+						onBlur={onBlur}
 					/>
 				)}
 				{!!addOn && <div className="absolute inset-y-0 right-2 flex items-center">{addOn}</div>}

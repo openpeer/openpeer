@@ -1,4 +1,3 @@
-// hooks/useUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
@@ -16,6 +15,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [isUpdatingDebounced, setIsUpdatingDebounced] = useState(false);
 	const [errors, setErrors] = useState<Errors>({});
+	const [previousProfile, setPreviousProfile] = useState<Partial<User> | null>(null);
 	const { address } = useAccount();
 
 	const telegramBotLinkRef = useRef<string>('');
@@ -47,6 +47,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setUser(null);
 			} else {
 				updateUserState(data);
+				setPreviousProfile(data);
 				console.log('User profile fetched:', data);
 			}
 		} catch (error) {
@@ -63,12 +64,22 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 		const alphanumericUnderscoreRegex = /^[a-zA-Z0-9_]+$/;
 
-		if (profile.name && !alphanumericUnderscoreRegex.test(profile.name)) {
-			errors['name'] = 'Username must contain only alphanumeric characters and underscores';
+		if (profile.name) {
+			if (profile.name.length < 3) {
+				errors['name'] = 'Username must be at least 3 characters';
+			} else if (profile.name.length > 15) {
+				errors['name'] = 'Username must be 15 characters or less';
+			} else if (!alphanumericUnderscoreRegex.test(profile.name)) {
+				errors['name'] = 'Username must contain only alphanumeric characters and underscores';
+			}
 		}
 
 		if (profile.twitter) {
-			if (profile.twitter.includes('@')) {
+			if (profile.twitter.length < 3) {
+				errors.twitter = 'Twitter handle must be at least 3 characters';
+			} else if (profile.twitter.length > 15) {
+				errors.twitter = 'Twitter handle must be 15 characters or less';
+			} else if (profile.twitter.includes('@')) {
 				errors.twitter = 'Twitter handle should not include the @ symbol';
 			} else if (!alphanumericUnderscoreRegex.test(profile.twitter)) {
 				errors.twitter = 'Twitter handle must contain only alphanumeric characters and underscores';
@@ -77,6 +88,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 		if (profile.email && !/\S+@\S+\.\S+/.test(profile.email)) {
 			errors.email = 'Invalid email format';
+		}
+
+		if (profile.whatsapp_number && profile.whatsapp_number.length > 17) {
+			errors.whatsapp_number = 'WhatsApp number must be 17 digits or less';
 		}
 
 		if (profile.whatsapp_country_code && !profile.whatsapp_number) {
@@ -98,6 +113,11 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				return;
 			}
 
+			if (previousProfile && isEqual(previousProfile, profile)) {
+				// console.log('Profile has not changed, skipping update.');
+				return;
+			}
+
 			try {
 				setIsUpdating(true);
 				let userProfileData = { ...profile };
@@ -109,9 +129,17 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				}
 
-				// Don't overwrite Telegram data with null values
-				if (userProfileData.telegram_user_id === null) delete userProfileData.telegram_user_id;
-				if (userProfileData.telegram_username === null) delete userProfileData.telegram_username;
+				// Ensure we're not sending empty objects for nested properties
+				Object.keys(userProfileData).forEach((key) => {
+					const k = key as keyof Partial<User>;
+					if (
+						typeof userProfileData[k] === 'object' &&
+						userProfileData[k] !== null &&
+						Object.keys(userProfileData[k] as object).length === 0
+					) {
+						delete userProfileData[k];
+					}
+				});
 
 				console.log('Sending user profile data to API:', userProfileData);
 
@@ -124,27 +152,26 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				});
 
-				const newUser = await result.json();
-				console.log('API Response:', newUser);
+				const responseData = await result.json();
 
-				if (newUser.id) {
-					updateUserState(newUser);
-					if (showNotification) {
-						onUpdateProfile?.(newUser);
+				if (!result.ok) {
+					if (responseData.errors) {
+						setErrors(responseData.errors);
+					} else {
+						throw new Error(responseData.message || 'Failed to update user profile');
 					}
-					console.log('User profile updated:', newUser);
+					return;
+				}
+
+				if (responseData.id) {
+					updateUserState(responseData);
+					setPreviousProfile(responseData);
+					if (showNotification) {
+						onUpdateProfile?.(responseData);
+					}
+					console.log('User profile updated:', responseData);
 				} else {
-					const foundErrors: ErrorObject = newUser.errors;
-					setErrors((prevErrors) => {
-						const newErrors: Errors = {};
-						Object.entries(foundErrors).forEach(([fieldName, messages]) => {
-							if (Object.prototype.hasOwnProperty.call(ERROR_FIELDS, fieldName)) {
-								const errorField = fieldName as ErrorFields;
-								newErrors[errorField] = messages.join(', ');
-							}
-						});
-						return { ...prevErrors, ...newErrors };
-					});
+					throw new Error('Invalid response from server');
 				}
 			} catch (error) {
 				console.error('Error updating profile:', error);
@@ -152,34 +179,43 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					...prevErrors,
 					general: error instanceof Error ? error.message : 'An unknown error occurred'
 				}));
+				throw error;
 			} finally {
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState]
+		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile]
 	);
 
-	const debouncedUpdateUserProfile = useMemo(
-		() =>
-			debounce((profile: Partial<User>, showNotification = false) => {
-				setIsUpdatingDebounced(true);
-				return updateUserProfile(profile, showNotification).finally(() => {
+	const debouncedUpdateUserProfile = useCallback(
+		debounce((profile: Partial<User>, showNotification = false) => {
+			// console.log('debouncedUpdateUserProfile called');
+			setIsUpdatingDebounced(true);
+			return updateUserProfile(profile, showNotification)
+				.then((result) => {
 					setIsUpdatingDebounced(false);
+					return result;
+				})
+				.catch((error) => {
+					setIsUpdatingDebounced(false);
+					throw error;
 				});
-			}, 2000),
+		}, 2000),
 		[updateUserProfile]
 	);
 
 	const safeUpdateProfile = useCallback(
 		(profile: Partial<User>, showNotification = false) => {
-			const result = debouncedUpdateUserProfile(profile, showNotification);
-			return result || Promise.resolve();
-		},
-		[debouncedUpdateUserProfile]
-	) as unknown as DebouncedFunc<typeof updateUserProfile>;
+			const validationErrors = validateProfile(profile);
+			if (Object.keys(validationErrors).length > 0) {
+				setErrors(validationErrors);
+				return Promise.resolve();
+			}
 
-	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
-	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
+			return debouncedUpdateUserProfile(profile, showNotification);
+		},
+		[debouncedUpdateUserProfile, validateProfile]
+	) as unknown as DebouncedFunc<typeof updateUserProfile>;
 
 	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
 	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
@@ -209,20 +245,21 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					Authorization: `Bearer ${getAuthToken()}`
 				}
 			});
-			const data = await res.json();
-			if (data.errors) {
-				if (data.errors.telegram_user_id && data.errors.telegram_user_id.includes('has already been taken')) {
-					return { success: false, error: 'This Telegram account is already associated with another user.' };
-				}
-				return { success: false, error: 'Failed to fetch user profile' };
-			} else {
-				updateUserState(data);
-				console.log('User profile refreshed:', data);
-				return { success: true };
+			if (!res.ok) {
+				const errorData = await res.json();
+				throw new Error(errorData.message || 'Failed to fetch user profile');
 			}
+			const data = await res.json();
+			updateUserState(data);
+			setPreviousProfile(data);
+			console.log('User profile refreshed:', data);
+			return { success: true, user: data };
 		} catch (error) {
 			console.error('Error refreshing user profile:', error);
-			return { success: false, error: 'An error occurred while fetching the user profile' };
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : 'An error occurred while fetching the user profile'
+			};
 		}
 	}, [address, updateUserState]);
 
@@ -246,7 +283,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			isUpdating,
 			isUpdatingDebounced,
 			onUploadFinished,
-			debouncedUpdateUserProfile,
+			safeUpdateProfile,
 			updateUserProfile,
 			errors,
 			fetchUserProfile,
