@@ -1,4 +1,3 @@
-// hooks/useUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
@@ -109,9 +108,17 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				}
 
-				// Don't overwrite Telegram data with null values
-				if (userProfileData.telegram_user_id === null) delete userProfileData.telegram_user_id;
-				if (userProfileData.telegram_username === null) delete userProfileData.telegram_username;
+				// Ensure we're not sending empty objects for nested properties
+				Object.keys(userProfileData).forEach((key) => {
+					const k = key as keyof Partial<User>;
+					if (
+						typeof userProfileData[k] === 'object' &&
+						userProfileData[k] !== null &&
+						Object.keys(userProfileData[k] as object).length === 0
+					) {
+						delete userProfileData[k];
+					}
+				});
 
 				console.log('Sending user profile data to API:', userProfileData);
 
@@ -124,6 +131,11 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				});
 
+				if (!result.ok) {
+					const errorData = await result.json();
+					throw new Error(errorData.message || 'Failed to update user profile');
+				}
+
 				const newUser = await result.json();
 				console.log('API Response:', newUser);
 
@@ -134,17 +146,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 					console.log('User profile updated:', newUser);
 				} else {
-					const foundErrors: ErrorObject = newUser.errors;
-					setErrors((prevErrors) => {
-						const newErrors: Errors = {};
-						Object.entries(foundErrors).forEach(([fieldName, messages]) => {
-							if (Object.prototype.hasOwnProperty.call(ERROR_FIELDS, fieldName)) {
-								const errorField = fieldName as ErrorFields;
-								newErrors[errorField] = messages.join(', ');
-							}
-						});
-						return { ...prevErrors, ...newErrors };
-					});
+					throw new Error('Invalid response from server');
 				}
 			} catch (error) {
 				console.error('Error updating profile:', error);
@@ -152,11 +154,12 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					...prevErrors,
 					general: error instanceof Error ? error.message : 'An unknown error occurred'
 				}));
+				throw error;
 			} finally {
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState]
+		[address, onUpdateProfile, updateUserState, validateProfile]
 	);
 
 	const debouncedUpdateUserProfile = useMemo(
@@ -177,9 +180,6 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		},
 		[debouncedUpdateUserProfile]
 	) as unknown as DebouncedFunc<typeof updateUserProfile>;
-
-	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
-	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
 
 	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
 	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
@@ -209,20 +209,20 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					Authorization: `Bearer ${getAuthToken()}`
 				}
 			});
-			const data = await res.json();
-			if (data.errors) {
-				if (data.errors.telegram_user_id && data.errors.telegram_user_id.includes('has already been taken')) {
-					return { success: false, error: 'This Telegram account is already associated with another user.' };
-				}
-				return { success: false, error: 'Failed to fetch user profile' };
-			} else {
-				updateUserState(data);
-				console.log('User profile refreshed:', data);
-				return { success: true };
+			if (!res.ok) {
+				const errorData = await res.json();
+				throw new Error(errorData.message || 'Failed to fetch user profile');
 			}
+			const data = await res.json();
+			updateUserState(data);
+			console.log('User profile refreshed:', data);
+			return { success: true, user: data };
 		} catch (error) {
 			console.error('Error refreshing user profile:', error);
-			return { success: false, error: 'An error occurred while fetching the user profile' };
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : 'An error occurred while fetching the user profile'
+			};
 		}
 	}, [address, updateUserState]);
 
