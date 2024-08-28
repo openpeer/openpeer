@@ -15,6 +15,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [isUpdatingDebounced, setIsUpdatingDebounced] = useState(false);
 	const [errors, setErrors] = useState<Errors>({});
+	const [previousProfile, setPreviousProfile] = useState<Partial<User> | null>(null);
 	const { address } = useAccount();
 
 	const telegramBotLinkRef = useRef<string>('');
@@ -46,6 +47,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setUser(null);
 			} else {
 				updateUserState(data);
+				setPreviousProfile(data);
 				console.log('User profile fetched:', data);
 			}
 		} catch (error) {
@@ -62,12 +64,22 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 		const alphanumericUnderscoreRegex = /^[a-zA-Z0-9_]+$/;
 
-		if (profile.name && !alphanumericUnderscoreRegex.test(profile.name)) {
-			errors['name'] = 'Username must contain only alphanumeric characters and underscores';
+		if (profile.name) {
+			if (profile.name.length < 3) {
+				errors['name'] = 'Username must be at least 3 characters';
+			} else if (profile.name.length > 15) {
+				errors['name'] = 'Username must be 15 characters or less';
+			} else if (!alphanumericUnderscoreRegex.test(profile.name)) {
+				errors['name'] = 'Username must contain only alphanumeric characters and underscores';
+			}
 		}
 
 		if (profile.twitter) {
-			if (profile.twitter.includes('@')) {
+			if (profile.twitter.length < 3) {
+				errors.twitter = 'Twitter handle must be at least 3 characters';
+			} else if (profile.twitter.length > 15) {
+				errors.twitter = 'Twitter handle must be 15 characters or less';
+			} else if (profile.twitter.includes('@')) {
 				errors.twitter = 'Twitter handle should not include the @ symbol';
 			} else if (!alphanumericUnderscoreRegex.test(profile.twitter)) {
 				errors.twitter = 'Twitter handle must contain only alphanumeric characters and underscores';
@@ -76,6 +88,10 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 		if (profile.email && !/\S+@\S+\.\S+/.test(profile.email)) {
 			errors.email = 'Invalid email format';
+		}
+
+		if (profile.whatsapp_number && profile.whatsapp_number.length > 17) {
+			errors.whatsapp_number = 'WhatsApp number must be 17 digits or less';
 		}
 
 		if (profile.whatsapp_country_code && !profile.whatsapp_number) {
@@ -94,6 +110,11 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			const validationErrors = validateProfile(profile);
 			if (Object.keys(validationErrors).length > 0) {
 				setErrors(validationErrors);
+				return;
+			}
+
+			if (previousProfile && isEqual(previousProfile, profile)) {
+				// console.log('Profile has not changed, skipping update.');
 				return;
 			}
 
@@ -131,20 +152,24 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				});
 
+				const responseData = await result.json();
+
 				if (!result.ok) {
-					const errorData = await result.json();
-					throw new Error(errorData.message || 'Failed to update user profile');
+					if (responseData.errors) {
+						setErrors(responseData.errors);
+					} else {
+						throw new Error(responseData.message || 'Failed to update user profile');
+					}
+					return;
 				}
 
-				const newUser = await result.json();
-				console.log('API Response:', newUser);
-
-				if (newUser.id) {
-					updateUserState(newUser);
+				if (responseData.id) {
+					updateUserState(responseData);
+					setPreviousProfile(responseData);
 					if (showNotification) {
-						onUpdateProfile?.(newUser);
+						onUpdateProfile?.(responseData);
 					}
-					console.log('User profile updated:', newUser);
+					console.log('User profile updated:', responseData);
 				} else {
 					throw new Error('Invalid response from server');
 				}
@@ -159,26 +184,37 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState, validateProfile]
+		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile]
 	);
 
-	const debouncedUpdateUserProfile = useMemo(
-		() =>
-			debounce((profile: Partial<User>, showNotification = false) => {
-				setIsUpdatingDebounced(true);
-				return updateUserProfile(profile, showNotification).finally(() => {
+	const debouncedUpdateUserProfile = useCallback(
+		debounce((profile: Partial<User>, showNotification = false) => {
+			// console.log('debouncedUpdateUserProfile called');
+			setIsUpdatingDebounced(true);
+			return updateUserProfile(profile, showNotification)
+				.then((result) => {
 					setIsUpdatingDebounced(false);
+					return result;
+				})
+				.catch((error) => {
+					setIsUpdatingDebounced(false);
+					throw error;
 				});
-			}, 2000),
+		}, 2000),
 		[updateUserProfile]
 	);
 
 	const safeUpdateProfile = useCallback(
 		(profile: Partial<User>, showNotification = false) => {
-			const result = debouncedUpdateUserProfile(profile, showNotification);
-			return result || Promise.resolve();
+			const validationErrors = validateProfile(profile);
+			if (Object.keys(validationErrors).length > 0) {
+				setErrors(validationErrors);
+				return Promise.resolve();
+			}
+
+			return debouncedUpdateUserProfile(profile, showNotification);
 		},
-		[debouncedUpdateUserProfile]
+		[debouncedUpdateUserProfile, validateProfile]
 	) as unknown as DebouncedFunc<typeof updateUserProfile>;
 
 	safeUpdateProfile.cancel = debouncedUpdateUserProfile.cancel;
@@ -215,6 +251,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			}
 			const data = await res.json();
 			updateUserState(data);
+			setPreviousProfile(data);
 			console.log('User profile refreshed:', data);
 			return { success: true, user: data };
 		} catch (error) {
@@ -246,7 +283,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			isUpdating,
 			isUpdatingDebounced,
 			onUploadFinished,
-			debouncedUpdateUserProfile,
+			safeUpdateProfile,
 			updateUserProfile,
 			errors,
 			fetchUserProfile,
