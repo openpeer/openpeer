@@ -96,6 +96,7 @@ export interface Bank {
 	icon: string;
 	account_info_schema: AccountField[];
 	color: string;
+	code?: string;
 }
 
 export interface PaymentMethod {
