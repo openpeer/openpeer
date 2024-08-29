@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { FiatCurrency, List, PriceSource, Token } from '../models/types';
 import Loading from './Loading/Loading';
 import Selector from './Selector';
@@ -74,10 +73,29 @@ const MarginSwitcher = ({
 	onUpdatePriceSource
 }: Props) => {
 	const [priceSource, setPriceSource] = useState<PriceSource>(listPriceSource || currency.default_price_source);
+	const [newMargin, setNewMargin] = useState<number | undefined>(margin);
+
 	const selectPriceSource = (ps: OptionPriceSource) => {
 		setPriceSource(ps.api_id);
 		onUpdatePriceSource(ps.api_id);
 	};
+
+	const handleUpdateMargin = (value: number) => {
+		setNewMargin(value);
+		updateMargin(value);
+	};
+
+	const updateToMarketPrice = () => {
+		if (price !== undefined) {
+			handleUpdateMargin(price);
+		}
+	};
+
+	useEffect(() => {
+		if (selected === 'fixed' && price !== undefined && newMargin === undefined) {
+			setNewMargin(margin);
+		}
+	}, [price, selected, margin, newMargin]);
 
 	return (
 		<>
@@ -97,13 +115,26 @@ const MarginSwitcher = ({
 					(margin === undefined ? (
 						<Loading big={false} />
 					) : (
-						<Selector
-							value={margin}
-							suffix={` ${currency.name} per ${token.name}`}
-							updateValue={updateMargin}
-							error={error}
-							decimals={3}
-						/>
+						<>
+							<Selector
+								value={newMargin ?? 0}
+								suffix={` ${currency.name} per ${token.name}`}
+								updateValue={handleUpdateMargin}
+								error={error}
+								decimals={3}
+							/>
+							<div className="text-xl font-bold text-center mb-4">
+								<h1>{price ? `Market Price: ${price} ${currency.name}` : ''}</h1>
+							</div>
+							<div className="flex justify-center my-2">
+								<button
+									onClick={updateToMarketPrice}
+									className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition my-2"
+								>
+									Update to Market Price?
+								</button>
+							</div>
+						</>
 					))}
 				{selected === 'percentage' && (
 					<Selector value={margin!} suffix="%" updateValue={updateMargin} error={error} allowNegative />
@@ -117,10 +148,6 @@ const MarginSwitcher = ({
 						onSelect={(o) => selectPriceSource(o as OptionPriceSource)}
 					/>
 				)}
-
-				<div className="text-xl font-bold text-center mb-4">
-					<h1>{price ? `Market Price: ${price} ${currency.name}` : ''}</h1>
-				</div>
 			</>
 		</>
 	);
