@@ -1,3 +1,4 @@
+// pages/orders/index.tsx
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { Accordion, Loading } from 'components';
 import OrdersTable from 'components/OrdersTable';
@@ -34,16 +35,21 @@ const OrdersPage = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				setFunction(
-					data.filter(
-						(order: Order) =>
-							!(
-								order.seller.address === address &&
-								order.list.escrow_type === 'instant' &&
-								order.status === 'created'
-							)
-					)
+				let orders = data.filter(
+					(order: Order) =>
+						!(
+							order.seller.address === address &&
+							order.list.escrow_type === 'instant' &&
+							order.status === 'created'
+						)
 				);
+
+				// Sort orders by created_at for all types
+				orders = orders.sort(
+					(a: Order, b: Order) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+				);
+
+				setFunction(orders);
 				loadingFunction(false);
 			});
 	};
