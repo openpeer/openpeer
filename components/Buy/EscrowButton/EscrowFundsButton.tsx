@@ -22,6 +22,7 @@ const EscrowFundsButton = ({
 	const amount = parseUnits(String(truncate(tokenAmount, token.decimals)), token.decimals);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [escrowConfirmed, setEscrowConfirmed] = useState(false);
+	const [escrowCreationTime, setEscrowCreationTime] = useState<number | null>(null);
 
 	const { isLoading, isSuccess, data, escrowFunds, isFetching } = useEscrowFunds({
 		orderID: uuid!,
@@ -41,6 +42,21 @@ const EscrowFundsButton = ({
 			setModalOpen(true);
 			return;
 		}
+
+		// Set the escrow creation time if not already set
+		if (!escrowCreationTime) {
+			setEscrowCreationTime(Date.now());
+			console.log('Escrow creation time set:', Date.now());
+		}
+
+		// Check if 30 seconds have passed since the escrow creation time
+		if (escrowCreationTime && Date.now() - escrowCreationTime < 30000) {
+			console.log('30-second delay not yet passed. Current time:', Date.now());
+			alert('Please wait 30 seconds before attempting to escrow funds.');
+			return;
+		}
+
+		console.log('30-second delay passed. Proceeding with escrow.');
 		escrowFunds?.();
 	};
 
@@ -57,6 +73,41 @@ const EscrowFundsButton = ({
 		description: instantEscrow ? 'Confirmed the order' : 'Escrowed funds'
 	});
 
+	const isButtonDisabled =
+		isLoading ||
+		isFetching ||
+		isSuccess ||
+		(escrowCreationTime !== null && Date.now() - escrowCreationTime < 30000);
+
+	useEffect(() => {
+		if (escrowCreationTime !== null) {
+			const timeSinceCreation = (Date.now() - escrowCreationTime) / 1000; // in seconds
+			if (isButtonDisabled) {
+				console.log(`Button greyed out. Time since escrow creation: ${timeSinceCreation} seconds`);
+			} else {
+				console.log(`Button no longer greyed out. Time since escrow creation: ${timeSinceCreation} seconds`);
+			}
+		}
+	}, [isButtonDisabled, escrowCreationTime]);
+
+	// Log the initial state on component load
+	useEffect(() => {
+		if (escrowCreationTime !== null) {
+			const timeSinceCreation = (Date.now() - escrowCreationTime) / 1000; // in seconds
+			console.log(
+				`Component loaded. Button state: ${
+					isButtonDisabled ? 'greyed out' : 'active'
+				}. Time since escrow creation: ${timeSinceCreation} seconds`
+			);
+		} else {
+			console.log(
+				`Component loaded. Button state: ${
+					isButtonDisabled ? 'greyed out' : 'active'
+				}. Escrow creation time not set.`
+			);
+		}
+	}, []);
+
 	return (
 		<>
 			<Button
@@ -65,7 +116,8 @@ const EscrowFundsButton = ({
 				}
 				onClick={escrow}
 				processing={isLoading || isFetching}
-				disabled={isSuccess || isFetching}
+				disabled={isButtonDisabled}
+				className={isButtonDisabled ? 'bg-gray-400' : ''}
 			/>
 			<Modal
 				actionButtonTitle="Yes, confirm"
