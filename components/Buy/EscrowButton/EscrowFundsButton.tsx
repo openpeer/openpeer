@@ -124,7 +124,7 @@ const EscrowFundsButton = ({
 				title={instantEscrow ? 'Confirm order?' : 'Escrow funds?'}
 				content={`The funds will be ${
 					instantEscrow ? 'locked in the' : 'sent to your'
-				} escrow contract (${contract}).`}
+				} escrow account (${contract}).`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}

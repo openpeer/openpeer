@@ -102,7 +102,7 @@ const EscrowDepositWithdraw = ({
 								target="_blank"
 								rel="noreferrer"
 							>
-								Escrow Contract.
+								Escrow Account.
 							</a>
 						</>
 						{deposit ? (

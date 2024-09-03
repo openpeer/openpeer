@@ -159,7 +159,7 @@ const AirdropPage = () => {
 								<div className="mb-4 font-bold md:text-2xl text-center">Liquidity Rewards</div>
 								<div className="w-full md:w-4/5 text-center text-base text-zinc-600">
 									You can earn points by posting an ad with crypto for sale and locking that crypto in
-									your escrow contract. Rewards were calculated based on the total amount you escrow
+									your escrow account. Rewards were calculated based on the total amount you escrow
 									and how long you have them available. Points were calculated and distributed every
 									hour
 								</div>

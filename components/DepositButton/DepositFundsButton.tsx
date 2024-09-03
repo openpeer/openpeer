@@ -54,7 +54,7 @@ const DepositFundsButton = ({ token, tokenAmount, contract, disabled }: DepositF
 			<ModalWindow
 				actionButtonTitle="Yes, confirm"
 				title="Deposit funds?"
-				content={`The funds will be sent to your escrow contract (${contract}).`}
+				content={`The funds will be sent to your escrow account (${contract}).`}
 				type="confirmation"
 				open={modalOpen}
 				onClose={() => setModalOpen(false)}

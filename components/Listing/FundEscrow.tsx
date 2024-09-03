@@ -47,7 +47,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 					</span>
 				</div>
 				<h2 className="block text-xl font-medium mb-1 font-bold">
-					{`${sellerContractDeployed ? 'Fund' : 'Deploy'} Escrow Contract`}
+					{`${sellerContractDeployed ? 'Fund' : 'Create'} Escrow Account`}
 				</h2>
 				<div className="mb-4">
 					<div className="text-sm text-gray-600 mb-4">
@@ -60,7 +60,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 									target="_blank"
 									rel="noreferrer"
 								>
-									Escrow Contract.
+									Escrow Account.
 								</a>
 							</>
 						)}
