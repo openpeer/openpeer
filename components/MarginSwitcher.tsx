@@ -129,7 +129,7 @@ const MarginSwitcher = ({
 							<div className="flex justify-center my-2">
 								<button
 									onClick={updateToMarketPrice}
-									className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition my-2"
+									className="bg-white text-blue-500 px-4 py-2 rounded-md hover:text-blue-600 transition my-2"
 								>
 									Update to Market Price?
 								</button>

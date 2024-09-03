@@ -107,7 +107,7 @@ const Amount = ({ order, updateOrder, price }: BuyAmountStepProps) => {
 			if (instantEscrow && escrowedBalance < parseUnits(String(tokenAmount), token.decimals)) {
 				error.tokenAmount = `Only ${formatUnits(escrowedBalance, token.decimals)} ${
 					token.symbol
-				} is available in the escrow contract. Should be less or equal ${formatUnits(
+				} is available in the escrow account. Should be less or equal ${formatUnits(
 					escrowedBalance,
 					token.decimals
 				)} ${token.symbol}.`;

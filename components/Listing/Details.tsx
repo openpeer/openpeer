@@ -114,8 +114,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				!needToDeployOrFund
 					? 'Sign and Finish'
 					: needToDeploy
-					? 'Deploy Escrow Contract'
-					: 'Deposit in the Escrow Contract'
+					? 'Create Escrow Account'
+					: 'Deposit in the Escrow Account'
 			}
 		>
 			<div className="my-8">

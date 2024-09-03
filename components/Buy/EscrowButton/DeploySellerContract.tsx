@@ -4,7 +4,7 @@ import { useTransactionFeedback, useAccount } from 'hooks';
 import useDeploy from 'hooks/transactions/deploy/useDeploy';
 import React from 'react';
 
-const DeploySellerContract = ({ label = 'Create Escrow Contract' }: { label?: string }) => {
+const DeploySellerContract = ({ label = 'Create Escrow Account' }: { label?: string }) => {
 	const { isConnected } = useAccount();
 
 	const { isFetching, isLoading, isSuccess, data, deploy } = useDeploy();

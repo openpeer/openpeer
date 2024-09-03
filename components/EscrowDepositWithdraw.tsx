@@ -102,7 +102,7 @@ const EscrowDepositWithdraw = ({
 								target="_blank"
 								rel="noreferrer"
 							>
-								Escrow Contract.
+								Escrow Account.
 							</a>
 						</>
 						{deposit ? (
@@ -172,7 +172,7 @@ const EscrowDepositWithdraw = ({
 					</div>
 					{deposit && (
 						<div className="mt-8">
-							<h2 className="block text-xl font-medium mb-1 font-bold my-8">
+							<h2 className="block text-xl mb-1 font-bold my-8">
 								{`or send ${token.symbol} from your exchange`}
 							</h2>
 							<div className="mt-2 mb-4 border border-gray-200 rounded-lg py-8 px-4 md:px-8  flex flex-col xl:flex-row items-center">

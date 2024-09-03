@@ -7,7 +7,7 @@ import { useAccount } from 'hooks';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 import Countdown from 'react-countdown';
-import { useContractRead } from 'wagmi';
+import { useContractRead, useBalance } from 'wagmi';
 import { OpenPeerEscrow } from 'abis';
 import { BuyStepProps } from './Buy.types';
 import CancelOrderButton from './CancelOrderButton/CancelOrderButton';
@@ -47,12 +47,13 @@ const Payment = ({ order }: BuyStepProps) => {
 		args: [tradeId]
 	});
 
+	const { data: balanceData } = useBalance({ address }); // Fetch wallet balance
+
 	const timeLimit =
 		status === 'created' && depositTimeLimit && Number(depositTimeLimit) > 0
 			? Number(depositTimeLimit) * 60 * 1000
 			: 0;
 
-	// time left will be the difference between now + the time limit and the order created_at
 	const timeLeft = timeLimit - (new Date().getTime() - new Date(order.created_at).getTime());
 	const instantEscrow = escrowType === 'instant';
 
@@ -220,7 +221,17 @@ const Payment = ({ order }: BuyStepProps) => {
 					</div>
 				)}
 
-				<div className="flex flex-col flex-col-reverse md:flex-row items-center justify-between mt-0">
+				{/* Add wallet balance and address display */}
+				<div className="mt-4">
+					<p className="text-base">
+						<strong>Your Wallet Address:</strong> {address}
+					</p>
+					<p className="text-base">
+						<strong>Your Wallet Balance:</strong> {balanceData?.formatted} {balanceData?.symbol}
+					</p>
+				</div>
+
+				<div className="flex flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
 					</span>
