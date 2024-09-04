@@ -223,6 +223,7 @@ const Payment = ({ order }: BuyStepProps) => {
 
 				{/* Add wallet balance and address display */}
 				<div className="mt-4">
+					<HeaderH3 title="Need to Top Up Your Wallet?" />
 					<p className="text-base">
 						<strong>Your Wallet Address:</strong> {address}
 					</p>
