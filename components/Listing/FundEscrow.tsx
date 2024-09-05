@@ -1,5 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable @typescript-eslint/indent */
 import React, { useState } from 'react';
 import { Token } from 'models/types';
 import { useQRCode } from 'next-qrcode';
@@ -15,6 +13,9 @@ import { useNetwork, useSwitchNetwork } from 'wagmi';
 import Button from 'components/Button/Button';
 import Network from 'components/Network/Network';
 import StepLayout from './StepLayout';
+import HeaderH3 from 'components/SectionHeading/h3';
+import { toast } from 'react-toastify';
+import { useAccount, useBalance } from 'wagmi';
 
 interface FundsEscrowProps {
 	token: Token;
@@ -36,6 +37,23 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 
 	const { chain: connectedChain } = useNetwork();
 	const wrongChain = chainId !== connectedChain?.id;
+
+	const { address } = useAccount();
+	const { data: balanceData } = useBalance({ address }); // Fetch wallet balance
+
+	const handleCopyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+		toast.success('Copied to clipboard', {
+			theme: 'dark',
+			position: 'top-right',
+			autoClose: 3000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: false,
+			progress: undefined
+		});
+	};
 
 	return (
 		<StepLayout buttonText={`Deposit ${token.name}`}>
@@ -67,6 +85,7 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 						The amount you deposit will be available for other traders to buy. You will have to acknowledge
 						receipt of funds before escrowed crypto is released on any trade.
 					</div>
+
 					<div className="flex flex-col space-y-2 justify-center items-center">
 						{sellerContractDeployed ? (
 							<div className="w-full">
@@ -103,6 +122,43 @@ const FundEscrow = ({ token, sellerContract, chainId, balance, totalAvailableAmo
 					</div>
 					{sellerContractDeployed && (
 						<div className="mt-8">
+							{/* Add wallet balance and address display */}
+							<div className="my-4">
+								<HeaderH3 title="Need to Top Up Your Wallet?" />
+								<div className="flex items-center">
+									<p className="text-base">
+										<strong>Your Wallet Address:</strong> {address}
+									</p>
+									<button
+										className="ml-2"
+										onClick={() => {
+											if (address) {
+												handleCopyToClipboard(address);
+											} else {
+												toast.error('Address is not available');
+											}
+										}}
+									>
+										<svg
+											className="w-4 h-4"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+											/>
+										</svg>
+									</button>
+								</div>
+								<p className="text-base">
+									<strong>Your Wallet Balance:</strong> {balanceData?.formatted} {balanceData?.symbol}
+								</p>
+							</div>
 							<h2 className="block text-xl mb-1 font-bold my-8">
 								{`or send ${token.symbol} from your exchange`}
 							</h2>

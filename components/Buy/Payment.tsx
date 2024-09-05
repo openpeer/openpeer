@@ -5,6 +5,8 @@ import React from 'react';
 import { useAccount } from 'hooks';
 
 import { ClockIcon } from '@heroicons/react/24/outline';
+// import { ClipboardIcon } from '@heroicons/react/24/solid';
+import { toast } from 'react-toastify';
 
 import Countdown from 'react-countdown';
 import { useContractRead, useBalance } from 'wagmi';
@@ -65,6 +67,20 @@ const Payment = ({ order }: BuyStepProps) => {
 			? sellerCanCancelAfterSeconds * 1000
 			: 0;
 	const paymentTimeLeft = timeLimitForPayment > 0 ? timeLimitForPayment - new Date().getTime() : 0;
+
+	const handleCopyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+		toast.success('Copied to clipboard', {
+			theme: 'dark',
+			position: 'top-right',
+			autoClose: 3000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: false,
+			progress: undefined
+		});
+	};
 
 	return (
 		<StepLayout>
@@ -223,14 +239,41 @@ const Payment = ({ order }: BuyStepProps) => {
 
 				{/* Add wallet balance and address display */}
 				<div className="mt-4">
-					<p className="text-base">
-						<strong>Your Wallet Address:</strong> {address}
-					</p>
+					<HeaderH3 title="Need to Top Up Your Wallet?" />
+					<div className="flex items-center">
+						<p className="text-base">
+							<strong>Your Wallet Address:</strong> {address}
+						</p>
+						<button
+							className="ml-2"
+							onClick={() => {
+								if (address) {
+									handleCopyToClipboard(address);
+								} else {
+									toast.error('Address is not available');
+								}
+							}}
+						>
+							<svg
+								className="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+								/>
+							</svg>
+						</button>
+					</div>
 					<p className="text-base">
 						<strong>Your Wallet Balance:</strong> {balanceData?.formatted} {balanceData?.symbol}
 					</p>
 				</div>
-
 				<div className="flex flex-col-reverse md:flex-row items-center justify-between mt-0">
 					<span className="w-full md:w-1/2 md:pr-8">
 						<CancelOrderButton order={order} />
