@@ -7,6 +7,7 @@ import { List } from 'models/types';
 import snakecaseKeys from 'snakecase-keys';
 import Select from 'components/Select/Select';
 import { Option } from 'components/Select/Select.types';
+import { toast } from 'react-toastify';
 
 const EditListButtons = ({ list }: { list: List }) => {
 	const { id, status } = list;
@@ -63,8 +64,9 @@ const EditListButtons = ({ list }: { list: List }) => {
 	const options = [
 		{ id: 1, name: 'Edit Ad' },
 		{ id: 2, name: 'Deposit/Withdraw Funds' },
-		{ id: 3, name: status === 'created' ? 'Show Ad' : 'Hide Ad' },
-		{ id: 4, name: 'Delete Ad' }
+		{ id: 3, name: 'Share Ad' },
+		{ id: 4, name: status === 'created' ? 'Show Ad' : 'Hide Ad' },
+		{ id: 5, name: 'Delete Ad' }
 	];
 
 	const updateOption = (o: Option | undefined) => {
@@ -77,8 +79,14 @@ const EditListButtons = ({ list }: { list: List }) => {
 		} else if (o.id === 2) {
 			router.push('/escrows');
 		} else if (o.id === 3) {
+			// Handle the share ad option
+			const shareUrl = `${window.location.origin}/buy/${encodeURIComponent(id)}`;
+			navigator.clipboard.writeText(shareUrl).then(() => {
+				toast.success('Ad URL copied to clipboard!');
+			});
+		} else if (o.id === 4) {
 			signListStatusChange({ message: toggleMessage });
-		} else {
+		} else if (o.id === 5) {
 			signMessage({ message: `I want to delete the list ${id}` });
 		}
 	};

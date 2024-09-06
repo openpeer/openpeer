@@ -106,7 +106,7 @@ const AirdropPage = () => {
 					</span>
 				</div>
 				<div className="mt-4 w-full rounded-xl p-[4px] bg-gradient-to-r from-[#3C9AAA] to-cyan-600">
-					<div className="flex flex-col p-8 justify-center items-center h-full bg-[#F4F6FB] text-white rounded-lg text-gray-800">
+					<div className="flex flex-col p-8 justify-center items-center h-full bg-[#F4F6FB] rounded-lg text-gray-800">
 						{activeTab === 'Trade' ? (
 							<div className="flex flex-col lg:flex-row lg:space-x-20 items-center">
 								<div>
@@ -144,7 +144,7 @@ const AirdropPage = () => {
 								</div>
 								<div className="flex justify-center items-center text-center">
 									<div className="rounded-full mt-6 md:mt-0 p-[4px] bg-gradient-to-r from-[#6FD9EC] to-[#6BA4F8]">
-										<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] p-10 justify-center items-center text-white bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
+										<div className="flex flex-col w-[200px] h-[200px] md:w-[220px] md:h-[220px] justify-center items-center bg-gradient-to-r from-[#2C76E5] to-[#6FD9EC] rounded-full p-8 text-gray-800">
 											<span className="text-white text-base mb-2">Eligible for</span>
 											<span className="text-white text-4xl font-bold mb-2">
 												{Number(points).toFixed(2)}
