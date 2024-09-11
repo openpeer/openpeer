@@ -1,8 +1,9 @@
+// components/Select/TimezoneSelect.tsx
 import React, { useState } from 'react';
-
 import { useTimezoneSelect, allTimezones } from 'react-timezone-select';
 import Select from './Select';
-import { TimezoneSelectProps } from './Select.types';
+import { TimezoneSelectProps, Option } from './Select.types';
+import timezoneMapping from '../../utils/timeZoneMapping';
 
 const TimezoneSelect = ({ onSelect, selected, error }: TimezoneSelectProps) => {
 	const [search, setSearch] = useState('');
@@ -13,8 +14,14 @@ const TimezoneSelect = ({ onSelect, selected, error }: TimezoneSelectProps) => {
 		results = options.filter((option) => option.label.toLowerCase().includes(search.toLowerCase()));
 	}
 
-	const handleSelect = (option: any) => {
-		onSelect(option);
+	const handleSelect = (option: Option | undefined) => {
+		if (option && option.value) {
+			const translatedValue = timezoneMapping[option.value] || option.value;
+			const updatedOption: Option = { ...option, value: translatedValue };
+			onSelect(updatedOption);
+		} else {
+			onSelect(undefined);
+		}
 		setSearch('');
 	};
 
@@ -33,4 +40,5 @@ const TimezoneSelect = ({ onSelect, selected, error }: TimezoneSelectProps) => {
 		/>
 	);
 };
+
 export default TimezoneSelect;
