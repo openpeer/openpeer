@@ -1,4 +1,3 @@
-// pages/ads/settings.tsx
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
@@ -14,6 +13,7 @@ import { Errors } from 'models/errors';
 import { allTimezones, useTimezoneSelect } from 'react-timezone-select';
 import { User } from 'models/types';
 import { toast } from 'react-toastify';
+import timezoneMapping from '../../utils/timeZoneMapping';
 
 const timeOptions = Array.from({ length: 24 }, (_, i) => ({
 	id: i,
@@ -40,7 +40,7 @@ const AdsSettings = () => {
 	const { options } = useTimezoneSelect({ labelStyle: 'original', timezones: allTimezones });
 
 	const [isVisible, setIsVisible] = useState(true);
-	const [timezone, setTimezone] = useState<Option>();
+	const [timezone, setTimezone] = useState<Option | undefined>();
 	const [from, setFrom] = useState<number | undefined>(9);
 	const [to, setTo] = useState<number | undefined>(21);
 	const [disableWeekends, setDisableWeekends] = useState(false);
@@ -85,16 +85,17 @@ const AdsSettings = () => {
 		setLoading(true);
 		if (validate(resolver)) {
 			clearErrors(['timezone', 'from', 'to']);
-			const updatedUser = {
-				// @ts-expect-error
-				timezone: timezone.value,
-				available_from: from,
-				available_to: to,
-				weekend_offline: disableWeekends
-			};
-			updateUserProfile(updatedUser as User);
+			if (timezone && timezone.value) {
+				const translatedTimezone = timezoneMapping[timezone.value] || timezone.value; // Translate the timezone
+				const updatedUser = {
+					timezone: translatedTimezone,
+					available_from: from,
+					available_to: to,
+					weekend_offline: disableWeekends
+				};
+				updateUserProfile(updatedUser as User);
+			}
 		}
-
 		setLoading(false);
 	};
 
@@ -105,8 +106,8 @@ const AdsSettings = () => {
 				const index = options.findIndex((o) => o.value === user.timezone);
 				option = {
 					id: index,
-					name: options[index].label
-					// value: options[index].value
+					name: options[index]?.label || '',
+					value: options[index]?.value || ''
 				};
 			}
 			setTimezone(option);

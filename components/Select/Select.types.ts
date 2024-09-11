@@ -4,8 +4,8 @@ export interface Option {
 	id: number;
 	name: string;
 	icon?: string;
+	value?: string;
 }
-
 export interface SelectProps {
 	label: string;
 	options: Option[];
@@ -48,4 +48,8 @@ export interface TokenSelectProps {
 	allTokens?: boolean;
 }
 
-export type TimezoneSelectProps = Pick<SelectProps, 'selected' | 'onSelect' | 'error'>;
+export interface TimezoneSelectProps {
+	onSelect: (option: Option | undefined) => void;
+	selected: Option | undefined;
+	error?: string;
+}
