@@ -10,7 +10,7 @@ import { useContractRead } from 'wagmi';
 import { DEPLOYER_CONTRACTS } from 'models/networks';
 import { OpenPeerDeployer, OpenPeerEscrow } from 'abis';
 import { parseUnits } from 'viem';
-import { constants } from 'ethers';
+import { ethers, constants } from 'ethers';
 import { listToMessage } from 'utils';
 import dynamic from 'next/dynamic';
 import Label from 'components/Label/Label';
@@ -113,6 +113,24 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const handleAddTrustedUser = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
+
+		if (selectedTrustedUsers.length >= 10) {
+			setError('You can only add up to 10 trusted addresses');
+			setTimeout(() => setError(''), 5000); // Remove error message after 5 seconds
+			return;
+		}
+
+		if (!ethers.utils.isAddress(ethAddress)) {
+			setError('Invalid Ethereum address');
+			setTimeout(() => setError(''), 5000); // Remove error message after 5 seconds
+			return;
+		}
+
+		if (selectedTrustedUsers.some((user) => user.address.toLowerCase() === ethAddress.toLowerCase())) {
+			setError('Address already in the trusted list');
+			setTimeout(() => setError(''), 5000); // Remove error message after 5 seconds
+			return;
+		}
 
 		try {
 			const response = await fetch(`/api/user_search/${ethAddress}`, {
