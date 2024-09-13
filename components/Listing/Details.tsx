@@ -124,6 +124,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 
 			if (response.status === 404 || user.errors) {
 				setError('User not found');
+				setTimeout(() => setError(''), 5000); // Remove error message after 5 seconds
 			} else {
 				setSelectedTrustedUsers([...selectedTrustedUsers, user]);
 				updateList({ ...list, ...{ trustedUsers: [...selectedTrustedUsers, user] } });
@@ -131,6 +132,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 			}
 		} catch (err) {
 			setError('Failed to fetch user');
+			setTimeout(() => setError(''), 5000); // Remove error message after 5 seconds
 		}
 	};
 
