@@ -115,14 +115,14 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		setError('');
 
 		try {
-			const response = await fetch(`/api/users/${ethAddress}`, {
+			const response = await fetch(`/api/user_search/${ethAddress}`, {
 				headers: {
 					Authorization: `Bearer ${getAuthToken()}`
 				}
 			});
 			const user = await response.json();
 
-			if (user.errors) {
+			if (response.status === 404 || user.errors) {
 				setError('User not found');
 			} else {
 				setSelectedTrustedUsers([...selectedTrustedUsers, user]);
