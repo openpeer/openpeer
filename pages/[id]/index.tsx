@@ -1,3 +1,5 @@
+// pages/[id]/index.tsx
+
 import { HeaderMetrics, Label, ListsTable, Loading } from 'components';
 import NotificationHeader from 'components/Notifications/NotificationHeader';
 import { List, User } from 'models/types';
