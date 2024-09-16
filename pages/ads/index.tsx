@@ -1,9 +1,8 @@
 // pages/ads/index.tsx
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Button, Label, ListsTable, Loading } from 'components';
 import IconButton from 'components/Button/IconButton';
-import { List } from 'models/types';
+import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -11,24 +10,35 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 
 const Ads = () => {
-	const [lists, setLists] = useState<List[]>();
+	const [user, setUser] = useState<User | null>();
+	const [lists, setLists] = useState<List[]>([]);
 	const { address } = useAccount();
 	const router = useRouter();
 
 	useEffect(() => {
 		if (!address) return;
-		fetch('/api/lists/ads', {
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		})
+		fetch(`/api/users/${address}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setLists(data);
+				if (data.errors) {
+					setUser(null);
+				} else {
+					setUser(data);
+				}
 			});
 	}, [address]);
 
-	if (lists === undefined) {
+	useEffect(() => {
+		if (!user) return;
+
+		fetch(`/api/lists?&seller=${user.address}`)
+			.then((res) => res.json())
+			.then((data) => {
+				setLists(data.data);
+			});
+	}, [user]);
+
+	if (user === undefined) {
 		return <Loading />;
 	}
 
@@ -64,13 +74,13 @@ const Ads = () => {
 						{sellLists.length > 0 && (
 							<div className="mb-4">
 								<Label title="Buy Ads" />
-								<ListsTable lists={lists.filter((l) => l.type === 'SellList')} />
+								<ListsTable lists={sellLists} />
 							</div>
 						)}
 						{buyLists.length > 0 && (
 							<div>
 								<Label title="Sell Ads" />
-								<ListsTable lists={lists.filter((l) => l.type === 'BuyList')} />
+								<ListsTable lists={buyLists} />
 							</div>
 						)}
 					</>
