@@ -15,7 +15,7 @@ import { User } from 'models/types';
 import { toast } from 'react-toastify';
 import timezoneMapping from '../../utils/timeZoneMapping';
 
-const timeOptions = Array.from({ length: 25 }, (_, i) => ({
+const timeOptions = Array.from({ length: 24 }, (_, i) => ({
 	id: i,
 	name: `${i < 10 ? '0' : ''}${i}:00`,
 	icon: ''

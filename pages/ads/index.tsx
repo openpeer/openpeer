@@ -1,3 +1,4 @@
+// pages/ads/index.tsx
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Button, Label, ListsTable, Loading } from 'components';
