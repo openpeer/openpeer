@@ -146,9 +146,9 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				});
 
 				// Include email in the update even if it hasn't changed
-				if (user && user.email) {
-					userProfileData.email = user.email;
-				}
+				// if (user && user.email) {
+				// 	userProfileData.email = user.email;
+				// }
 
 				console.log('Sending user profile data to API:', userProfileData);
 
