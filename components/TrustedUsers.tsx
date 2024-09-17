@@ -59,7 +59,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 	};
 
 	useEffect(() => {
-		if (acceptOnlyTrusted) {
+		if (acceptOnlyTrusted || context === 'profile') {
 			setIsLoading(true);
 			setLoadError('');
 			const loadUsers = async () => {
@@ -80,7 +80,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			// Clear the selected trusted users when the checkbox is unchecked
 			setSelectedTrustedUsers([]);
 		}
-	}, [acceptOnlyTrusted, address]); // Added 'address' to dependencies
+	}, [acceptOnlyTrusted, context, address]); // Added 'context' and 'address' to dependencies
 
 	const handleAddTrustedUser = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -250,7 +250,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 					<Label title="Trusted Users" />
 					<div
 						onClick={handleToggleTrustedUsers}
-						className="text-blue-500 hover:text-blue-700 flex items-center justify-center w-full"
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
 					>
 						<svg
 							className={`w-4 h-4 mr-1 transition-transform ${showTrustedUsers ? 'rotate-90' : ''}`}
@@ -313,7 +313,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 							onChange={(e) => setEthAddress(e.target.value)}
 							className="border p-2 rounded w-96"
 						/>
-						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded">
+						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded ml-2">
 							Add Trusted User
 						</button>
 					</form>
