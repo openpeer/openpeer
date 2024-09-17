@@ -208,6 +208,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					setAcceptOnlyTrusted={setAcceptOnlyTrusted}
 					selectedTrustedUsers={selectedTrustedUsers}
 					setSelectedTrustedUsers={setSelectedTrustedUsers}
+					context="trade"
 				/>
 
 				<Label title="Order Terms" />

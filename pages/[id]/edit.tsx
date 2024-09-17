@@ -12,6 +12,7 @@ import TelegramSection from '../../components/TelegramSection';
 import { isEqual } from 'lodash';
 import { User } from 'models/types';
 import { Errors } from 'models/errors';
+import TrustedUsers from 'components/TrustedUsers';
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -48,6 +49,9 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const [telegramUserId, setTelegramUserId] = useState('');
 	const [telegramUsername, setTelegramUsername] = useState('');
 	const [updatingFields, setUpdatingFields] = useState<Set<string>>(new Set());
+
+	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
+	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 
 	useEffect(() => {
 		if (user) {
@@ -249,6 +253,16 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						maxLength={17}
 					/>
 					{isUpdatingDebounced && <p className="text-sm text-blue-500 mt-4">Saving changes...</p>}
+				</div>
+				<div className="w-full md:w-80">
+					<HeaderH3 title="Relationships" />
+					<TrustedUsers
+						acceptOnlyTrusted={acceptOnlyTrusted}
+						setAcceptOnlyTrusted={setAcceptOnlyTrusted}
+						selectedTrustedUsers={selectedTrustedUsers}
+						setSelectedTrustedUsers={setSelectedTrustedUsers}
+						context="profile"
+					/>
 				</div>
 			</div>
 		</div>

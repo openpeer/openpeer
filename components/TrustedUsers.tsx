@@ -13,6 +13,7 @@ interface TrustedUsersProps {
 	setAcceptOnlyTrusted: (value: boolean) => void;
 	selectedTrustedUsers: User[];
 	setSelectedTrustedUsers: (users: User[]) => void;
+	context?: 'trade' | 'profile'; // Updated context prop
 }
 
 interface ApiResponse {
@@ -26,13 +27,15 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 	acceptOnlyTrusted,
 	setAcceptOnlyTrusted,
 	selectedTrustedUsers,
-	setSelectedTrustedUsers
+	setSelectedTrustedUsers,
+	context = 'trade' // Default to 'trade' context
 }) => {
 	const { address } = useAccount();
 	const [ethAddress, setEthAddress] = useState('');
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadError, setLoadError] = useState('');
+	const [showTrustedUsers, setShowTrustedUsers] = useState(false); // State to toggle trusted users list
 
 	const fetchUserRelationships = async () => {
 		try {
@@ -122,13 +125,6 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 					'Content-Type': 'application/json'
 				}
 			});
-
-			interface ApiResponse {
-				data?: {
-					message?: string;
-					errors?: string;
-				};
-			}
 
 			let data: ApiResponse = {};
 			try {
@@ -231,23 +227,48 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 		return `${address.slice(0, 6)}...${address.slice(-6)}`;
 	};
 
+	const handleToggleTrustedUsers = () => {
+		setShowTrustedUsers(!showTrustedUsers);
+	};
+
 	return (
 		<div className="mb-4">
-			<Checkbox
-				content="Accept transactions only from trusted traders that you nominate"
-				id="trusted"
-				name="trusted"
-				checked={acceptOnlyTrusted}
-				onChange={() => {
-					setAcceptOnlyTrusted(!acceptOnlyTrusted);
-					setError('');
-					setLoadError('');
-				}}
-			/>
+			{context === 'trade' ? (
+				<Checkbox
+					content="Accept transactions only from trusted traders that you nominate"
+					id="trusted"
+					name="trusted"
+					checked={acceptOnlyTrusted}
+					onChange={() => {
+						setAcceptOnlyTrusted(!acceptOnlyTrusted);
+						setError('');
+						setLoadError('');
+					}}
+				/>
+			) : (
+				<div className="my-2">
+					<Label title="Trusted Users" />
+					<div
+						onClick={handleToggleTrustedUsers}
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-center w-full"
+					>
+						<svg
+							className={`w-4 h-4 mr-1 transition-transform ${showTrustedUsers ? 'rotate-90' : ''}`}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+						</svg>
+						{showTrustedUsers ? 'Hide Trusted Users' : 'Show Trusted Users'}
+					</div>
+				</div>
+			)}
 
-			{acceptOnlyTrusted && (
+			{(acceptOnlyTrusted || showTrustedUsers) && (
 				<div className="mb-4">
-					<Label title="Select Your Trusted Traders" />
+					{context === 'trade' && <Label title="Select Your Trusted Traders" />}
 					{isLoading ? (
 						<p>Loading trusted users...</p>
 					) : loadError ? (
@@ -289,17 +310,14 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 							type="text"
 							placeholder="Enter Ethereum address"
 							value={ethAddress}
-							onChange={(e) => {
-								setEthAddress(e.target.value);
-								setError('');
-							}}
-							className="my-2 mr-2 p-2 border rounded min-w-72"
+							onChange={(e) => setEthAddress(e.target.value)}
+							className="border p-2 rounded w-96"
 						/>
-						<button type="submit" className="p-2 bg-blue-500 text-white rounded">
-							Add Trusted Trader
+						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded">
+							Add Trusted User
 						</button>
 					</form>
-					{error && <p className="text-red-500">{error}</p>}
+					{error && <p className="text-red-500 mt-2">{error}</p>}
 				</div>
 			)}
 		</div>
