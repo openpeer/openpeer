@@ -9,9 +9,14 @@ const TimezoneSelect = ({ onSelect, selected, error }: TimezoneSelectProps) => {
 	const [search, setSearch] = useState('');
 	const { options } = useTimezoneSelect({ labelStyle: 'original', timezones: allTimezones });
 
-	let results = options;
+	let results = options.map((option) => ({
+		...option,
+		value: timezoneMapping[option.value] || option.value,
+		label: timezoneMapping[option.value] ? `${option.label} (${timezoneMapping[option.value]})` : option.label
+	}));
+
 	if (search) {
-		results = options.filter((option) => option.label.toLowerCase().includes(search.toLowerCase()));
+		results = results.filter((option) => option.label.toLowerCase().includes(search.toLowerCase()));
 	}
 
 	const handleSelect = (option: Option | undefined) => {

@@ -1,3 +1,4 @@
+// hooks/useUserProfile.ts
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
 import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
@@ -107,11 +108,14 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const updateUserProfile = useCallback(
 		async (profile: Partial<User>, showNotification = true) => {
+			console.log('Profile data before validation:', profile);
 			const validationErrors = validateProfile(profile);
 			if (Object.keys(validationErrors).length > 0) {
 				setErrors(validationErrors);
 				return;
 			}
+
+			console.log('Profile data after validation:', profile);
 
 			if (previousProfile && isEqual(previousProfile, profile)) {
 				// console.log('Profile has not changed, skipping update.');
@@ -140,6 +144,11 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 						delete userProfileData[k];
 					}
 				});
+
+				// Include email in the update even if it hasn't changed
+				// if (user && user.email) {
+				// 	userProfileData.email = user.email;
+				// }
 
 				console.log('Sending user profile data to API:', userProfileData);
 
@@ -184,7 +193,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile]
+		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile, user]
 	);
 
 	const debouncedUpdateUserProfile = useCallback(

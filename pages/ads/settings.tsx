@@ -41,8 +41,8 @@ const AdsSettings = () => {
 
 	const [isVisible, setIsVisible] = useState(true);
 	const [timezone, setTimezone] = useState<Option | undefined>();
-	const [from, setFrom] = useState<number | undefined>(9);
-	const [to, setTo] = useState<number | undefined>(21);
+	const [from, setFrom] = useState<number>(9);
+	const [to, setTo] = useState<number>(21);
 	const [disableWeekends, setDisableWeekends] = useState(false);
 	const [loading, setLoading] = useState(false);
 
@@ -57,25 +57,9 @@ const AdsSettings = () => {
 			error.timezone = 'Please select your timezone';
 		}
 
-		if (from === undefined) {
-			error.from = 'Please select a time';
-		}
-
-		if (to === undefined) {
-			error.to = 'Please select a time';
-		}
-
-		if (from !== undefined && to !== undefined && from >= to) {
-			error.from = 'Please select a valid time';
-			error.to = 'Please select a valid time';
-		}
-
-		if (from !== undefined && (from < 0 || from > 23)) {
-			error.from = 'Please select a valid time';
-		}
-
-		if (to !== undefined && (to < 0 || to > 23)) {
-			error.to = 'Please select a valid time';
+		if (from === to) {
+			error.from = 'From and To times cannot be the same';
+			error.to = 'From and To times cannot be the same';
 		}
 
 		return error;
@@ -86,7 +70,7 @@ const AdsSettings = () => {
 		if (validate(resolver)) {
 			clearErrors(['timezone', 'from', 'to']);
 			if (timezone && timezone.value) {
-				const translatedTimezone = timezoneMapping[timezone.value] || timezone.value; // Translate the timezone
+				const translatedTimezone = timezoneMapping[timezone.value] || timezone.value;
 				const updatedUser = {
 					timezone: translatedTimezone,
 					available_from: from,
@@ -111,13 +95,13 @@ const AdsSettings = () => {
 				};
 			}
 			setTimezone(option);
-			setFrom(user.available_from || undefined);
-			setTo(user.available_to || undefined);
+			setFrom(user.available_from ?? 0);
+			setTo(user.available_to ?? 0);
 			setDisableWeekends(user.weekend_offline);
 
 			setIsVisible(!!(user.timezone && user.available_from !== null && user.available_to !== null));
 		}
-	}, [user]);
+	}, [user, options]);
 
 	if (user === undefined || user === null) {
 		return <Loading />;
@@ -165,16 +149,16 @@ const AdsSettings = () => {
 								<div className="text-base font-medium text-gray-700 ">Select your available time</div>
 								<div className="w-full flex flex-row justify-between space-x-4">
 									<Select
-										onSelect={(o) => setFrom(o?.id)}
-										selected={from !== undefined ? timeOptions[from] : undefined}
+										onSelect={(o) => setFrom(o?.id ?? 0)}
+										selected={timeOptions[from]}
 										label="From:"
 										options={timeOptions}
 										error={errors.from}
 										extraStyle="w-full my-2 md:my-1.5 text-gray-600"
 									/>
 									<Select
-										onSelect={(o) => setTo(o?.id)}
-										selected={to !== undefined ? timeOptions[to] : undefined}
+										onSelect={(o) => setTo(o?.id ?? 0)}
+										selected={timeOptions[to]}
 										label="To:"
 										options={timeOptions}
 										error={errors.to}

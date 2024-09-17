@@ -1,3 +1,4 @@
+// pages/api/lists/ads.ts
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { List } from 'models/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
