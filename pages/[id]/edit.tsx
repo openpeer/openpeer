@@ -13,6 +13,7 @@ import { isEqual } from 'lodash';
 import { User } from 'models/types';
 import { Errors } from 'models/errors';
 import TrustedUsers from 'components/TrustedUsers';
+import BlockedUsers from 'components/BlockedUsers'; // Import BlockedUsers component
 
 const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const { address } = useAccount();
@@ -52,6 +53,9 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 
 	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
+
+	const [acceptOnlyBlocked, setAcceptOnlyBlocked] = useState(false); // State for blocked users
+	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]); // State for blocked users
 
 	const [localErrors, setLocalErrors] = useState<Errors>({});
 
@@ -291,6 +295,13 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						setAcceptOnlyTrusted={setAcceptOnlyTrusted}
 						selectedTrustedUsers={selectedTrustedUsers}
 						setSelectedTrustedUsers={setSelectedTrustedUsers}
+						context="profile"
+					/>
+					<BlockedUsers
+						acceptOnlyBlocked={acceptOnlyBlocked}
+						setAcceptOnlyBlocked={setAcceptOnlyBlocked}
+						selectedBlockedUsers={selectedBlockedUsers}
+						setSelectedBlockedUsers={setSelectedBlockedUsers}
 						context="profile"
 					/>
 				</div>
