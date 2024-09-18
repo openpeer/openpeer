@@ -1,3 +1,4 @@
+// pages/[id]/edit.tsx
 import { Avatar, HeaderH3, Input, Loading } from 'components';
 import Select from 'components/Select/Select';
 import ImageUploader from 'components/ImageUploader';
