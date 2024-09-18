@@ -153,7 +153,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				console.log('Sending user profile data to API:', userProfileData);
 
 				const result = await fetch(`/api/user_profiles/${address}`, {
-					method: 'PUT',
+					method: 'PATCH',
 					body: JSON.stringify({ user_profile: userProfileData }),
 					headers: {
 						Authorization: `Bearer ${getAuthToken()}`,
@@ -164,23 +164,32 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				const responseData = await result.json();
 
 				if (!result.ok) {
-					if (responseData.errors) {
-						setErrors(responseData.errors);
+					if (result.status === 422) {
+						// This is a validation error (e.g., username already taken)
+						const errorMessage = responseData.data?.message || 'Validation error occurred';
+						setErrors((prevErrors) => ({
+							...prevErrors,
+							name: errorMessage
+						}));
+						// Throw an error so that the calling function can catch it
+						throw new Error(errorMessage);
 					} else {
-						throw new Error(responseData.message || 'Failed to update user profile');
+						// For other types of errors, throw an error to be caught below
+						throw new Error(responseData.data?.message || 'An error occurred while updating the profile');
 					}
-					return;
 				}
 
-				if (responseData.id) {
-					updateUserState(responseData);
-					setPreviousProfile(responseData);
+				// Check if responseData contains the updated user data
+				if (responseData.data) {
+					updateUserState(responseData.data);
+					setPreviousProfile(responseData.data);
 					if (showNotification) {
-						onUpdateProfile?.(responseData);
+						onUpdateProfile?.(responseData.data);
 					}
-					console.log('User profile updated:', responseData);
+					console.log('User profile updated:', responseData.data);
 				} else {
-					throw new Error('Invalid response from server');
+					console.log('Profile updated successfully, but no data returned. Fetching latest profile.');
+					await fetchUserProfile();
 				}
 			} catch (error) {
 				console.error('Error updating profile:', error);
@@ -188,12 +197,12 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					...prevErrors,
 					general: error instanceof Error ? error.message : 'An unknown error occurred'
 				}));
-				throw error;
+				// throw error;
 			} finally {
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile, user]
+		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile, user, fetchUserProfile]
 	);
 
 	const debouncedUpdateUserProfile = useCallback(

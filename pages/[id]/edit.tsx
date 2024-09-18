@@ -1,4 +1,3 @@
-// pages/[id]/edit.tsx
 import { Avatar, HeaderH3, Input, Loading } from 'components';
 import Select from 'components/Select/Select';
 import ImageUploader from 'components/ImageUploader';
@@ -53,6 +52,8 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 
+	const [localErrors, setLocalErrors] = useState<Errors>({});
+
 	useEffect(() => {
 		if (user) {
 			const newState = {
@@ -87,19 +88,19 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		}
 	}, [user]);
 
-	const [localErrors, setLocalErrors] = useState<Errors>({});
+	useEffect(() => {
+		// Update localErrors when errors from useUserProfile change
+		setLocalErrors(errors);
+	}, [errors]);
 
 	const handleFieldChange = useCallback(
 		(field: string, value: string) => {
-			// Check if the value has changed
 			if (user && user[field as keyof User] === value) {
-				// console.log(`Field ${field} has not changed, skipping update.`);
 				return;
 			}
 
 			let updatedProfile: Partial<User> = { [field]: value };
 
-			// If updating WhatsApp info, include both country code and number
 			if (field === 'whatsapp_country_code') {
 				updatedProfile.whatsapp_number = whatsappNumber;
 			} else if (field === 'whatsapp_number') {
@@ -115,10 +116,18 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 				(updateProfile?.(updatedProfile, false) ?? Promise.resolve())
 					.then(() => {
 						console.log(`Field ${field} updated successfully`);
+						setLocalErrors((prev) => {
+							const newErrors = { ...prev };
+							delete newErrors[field as keyof Errors];
+							return newErrors;
+						});
 					})
 					.catch((error) => {
 						console.error(`Error updating field ${field}:`, error);
-						// Handle the error (e.g., show an error message to the user)
+						setLocalErrors((prev) => ({
+							...prev,
+							[field]: error.message || 'An error occurred while updating'
+						}));
 					})
 					.finally(() => {
 						setTimeout(() => {
@@ -133,6 +142,14 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 		},
 		[updateProfile, validateProfile, whatsappCountryCode, whatsappNumber, user]
 	);
+
+	const clearFieldError = useCallback((field: string) => {
+		setLocalErrors((prev) => {
+			const newErrors = { ...prev };
+			delete newErrors[field as keyof Errors];
+			return newErrors;
+		});
+	}, []);
 
 	if (user === undefined) {
 		return <Loading />;
@@ -167,9 +184,12 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						label="Username"
 						id="username"
 						value={username}
-						onChange={setUsername}
+						onChange={(value) => {
+							setUsername(value);
+							clearFieldError('name');
+						}}
 						onBlur={() => handleFieldChange('name', username)}
-						error={localErrors.name || errors.name}
+						error={localErrors.name}
 						helperText="Use only alphanumeric characters and underscores (3-15 characters)"
 						isUpdating={updatingFields.has('name')}
 						maxLength={15}
@@ -178,10 +198,13 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						label="Email Address"
 						id="email"
 						value={email}
-						onChange={setEmail}
+						onChange={(value) => {
+							setEmail(value);
+							clearFieldError('email');
+						}}
 						onBlur={() => handleFieldChange('email', email)}
 						type="email"
-						error={errors.email}
+						error={localErrors.email}
 						isUpdating={updatingFields.has('email')}
 					/>
 				</div>
@@ -191,9 +214,12 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						label="X (Twitter)"
 						id="twitter"
 						value={twitter}
-						onChange={setTwitter}
+						onChange={(value) => {
+							setTwitter(value);
+							clearFieldError('twitter');
+						}}
 						onBlur={() => handleFieldChange('twitter', twitter)}
-						error={localErrors.twitter || errors.twitter}
+						error={localErrors.twitter}
 						helperText="Use only alphanumeric characters and underscores, without @ (3-15 characters)"
 						isUpdating={updatingFields.has('twitter')}
 						maxLength={15}
@@ -246,7 +272,10 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						label="WhatsApp Number"
 						id="whatsappNumber"
 						value={whatsappNumber}
-						onChange={setWhatsappNumber}
+						onChange={(value) => {
+							setWhatsappNumber(value);
+							clearFieldError('whatsapp_number');
+						}}
 						onBlur={() => handleFieldChange('whatsapp_number', whatsappNumber)}
 						helperText="Enter only digits, without spaces or dashes. Do not include the country code with the number. (max 17 digits)"
 						isUpdating={updatingFields.has('whatsapp_number')}
