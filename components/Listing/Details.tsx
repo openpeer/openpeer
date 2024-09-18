@@ -21,6 +21,7 @@ import FundEscrow from 'components/Listing/FundEscrow';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import TrustedUsers from 'components/TrustedUsers';
+import BlockedUsers from 'components/BlockedUsers';
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -42,6 +43,9 @@ const Details = ({ list, updateList }: ListStepProps) => {
 
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
+
+	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]);
+	const [acceptOnlyBlocked, setAcceptOnlyBlocked] = useState(false);
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data) => {
@@ -209,6 +213,14 @@ const Details = ({ list, updateList }: ListStepProps) => {
 					selectedTrustedUsers={selectedTrustedUsers}
 					setSelectedTrustedUsers={setSelectedTrustedUsers}
 					context="trade"
+				/>
+
+				<BlockedUsers
+					acceptOnlyBlocked={acceptOnlyBlocked}
+					setAcceptOnlyBlocked={setAcceptOnlyBlocked}
+					selectedBlockedUsers={selectedBlockedUsers}
+					setSelectedBlockedUsers={setSelectedBlockedUsers}
+					context="profile"
 				/>
 
 				<Label title="Order Terms" />

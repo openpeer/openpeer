@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useAccount } from 'hooks';
 import axios from 'axios';
 import { User } from 'models/types';
-import Checkbox from 'components/Checkbox/Checkbox';
 import Label from 'components/Label/Label';
 import AddressTooltip from 'components/AddressTooltip';
 import { ethers } from 'ethers';
@@ -28,7 +27,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	setAcceptOnlyBlocked,
 	selectedBlockedUsers,
 	setSelectedBlockedUsers,
-	context = 'trade'
+	context = 'profile'
 }) => {
 	const { address } = useAccount();
 	const [ethAddress, setEthAddress] = useState('');
@@ -155,16 +154,16 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			} else if (response.status === 404) {
 				setError(data.data?.message || 'User not found in the database. Cannot add non-existent user.');
 			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to add blocked user: Invalid data');
+				setError(data.data?.message || 'Failed to add blocked trader: Invalid data');
 			} else if (response.status === 500) {
 				console.error('Server error:', data);
 				setError('An internal server error occurred. Please try again later.');
 			} else {
-				setError(data.data?.message || 'Failed to add blocked user');
+				setError(data.data?.message || 'Failed to add blocked trader');
 			}
 		} catch (err) {
-			console.error('Failed to add blocked user:', err);
-			setError('Failed to add blocked user');
+			console.error('Failed to add blocked trader:', err);
+			setError('Failed to add blocked trader');
 		}
 	};
 
@@ -201,16 +200,16 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			} else if (response.status === 404) {
 				setError(data.data?.message || 'User not found in your blocked list.');
 			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to remove blocked user: Invalid data');
+				setError(data.data?.message || 'Failed to remove blocked trader: Invalid data');
 			} else if (response.status === 500) {
 				console.error('Server error:', data);
 				setError('An internal server error occurred. Please try again later.');
 			} else {
-				setError(data.data?.message || 'Failed to remove blocked user');
+				setError(data.data?.message || 'Failed to remove blocked trader');
 			}
 		} catch (err) {
-			console.error('Failed to remove blocked user:', err);
-			setError('Failed to remove blocked user');
+			console.error('Failed to remove blocked trader:', err);
+			setError('Failed to remove blocked trader');
 		}
 	};
 
@@ -225,44 +224,29 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 
 	return (
 		<div className="mb-4">
-			{context === 'trade' ? (
-				<Checkbox
-					content="Accept transactions only from blocked traders that you nominate"
-					id="blocked"
-					name="blocked"
-					checked={acceptOnlyBlocked}
-					onChange={() => {
-						setAcceptOnlyBlocked(!acceptOnlyBlocked);
-						setError('');
-						setLoadError('');
-					}}
-				/>
-			) : (
-				<div className="my-2">
-					<Label title="Blocked Users" />
-					<div
-						onClick={handleToggleBlockedUsers}
-						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
+			<div className="my-2">
+				<Label title="Blocked Traders" />
+				<div
+					onClick={handleToggleBlockedUsers}
+					className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
+				>
+					<svg
+						className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
 					>
-						<svg
-							className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-						</svg>
-						{showBlockedUsers ? 'Hide Blocked Users' : 'Show Blocked Users'}
-					</div>
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+					</svg>
+					{showBlockedUsers ? 'Hide Blocked Traders' : 'Show Blocked Traders'}
 				</div>
-			)}
+			</div>
 
 			{(acceptOnlyBlocked || showBlockedUsers) && (
 				<div className="mb-4">
-					{context === 'trade' && <Label title="Select Your Blocked Traders" />}
 					{isLoading ? (
-						<p>Loading blocked users...</p>
+						<p>Loading blocked traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedBlockedUsers && selectedBlockedUsers.length > 0 ? (
@@ -295,7 +279,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 							))}
 						</ul>
 					) : (
-						<p className="mb-2">No blocked users found.</p>
+						<p className="mb-2">No blocked traders found.</p>
 					)}
 					<form onSubmit={handleAddBlockedUser}>
 						<input
@@ -306,7 +290,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 							className="border p-2 rounded w-96"
 						/>
 						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded ml-2">
-							Add Blocked User
+							Add Blocked Trader
 						</button>
 					</form>
 					{error && <p className="text-red-500 mt-2">{error}</p>}

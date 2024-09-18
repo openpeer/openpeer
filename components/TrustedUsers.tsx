@@ -161,18 +161,18 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 					setError('Failed to fetch user details');
 				}
 			} else if (response.status === 404) {
-				setError(data.data?.message || 'User not found in the database. Cannot add non-existent user.');
+				setError(data.data?.message || 'Trader not found in the database. Cannot add non-existent trader.');
 			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to add trusted user: Invalid data');
+				setError(data.data?.message || 'Failed to add trusted trader: Invalid data');
 			} else if (response.status === 500) {
 				console.error('Server error:', data);
 				setError('An internal server error occurred. Please try again later.');
 			} else {
-				setError(data.data?.message || 'Failed to add trusted user');
+				setError(data.data?.message || 'Failed to add trusted trader');
 			}
 		} catch (err) {
 			console.error('Failed to add trusted user:', err);
-			setError('Failed to add trusted user');
+			setError('Failed to add trusted trader');
 		}
 	};
 
@@ -207,14 +207,14 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 				const updatedUsers = selectedTrustedUsers.filter((user) => user.id !== userId);
 				setSelectedTrustedUsers(updatedUsers);
 			} else if (response.status === 404) {
-				setError(data.data?.message || 'User not found in your trusted list.');
+				setError(data.data?.message || 'Trader not found in your trusted list.');
 			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to remove trusted user: Invalid data');
+				setError(data.data?.message || 'Failed to remove trusted trader: Invalid data');
 			} else if (response.status === 500) {
 				console.error('Server error:', data);
 				setError('An internal server error occurred. Please try again later.');
 			} else {
-				setError(data.data?.message || 'Failed to remove trusted user');
+				setError(data.data?.message || 'Failed to remove trusted trader');
 			}
 		} catch (err) {
 			console.error('Failed to remove trusted user:', err);
@@ -247,7 +247,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 				/>
 			) : (
 				<div className="my-2">
-					<Label title="Trusted Users" />
+					<Label title="Trusted Traders" />
 					<div
 						onClick={handleToggleTrustedUsers}
 						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
@@ -261,7 +261,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 						>
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
 						</svg>
-						{showTrustedUsers ? 'Hide Trusted Users' : 'Show Trusted Users'}
+						{showTrustedUsers ? 'Hide Trusted Traders' : 'Show Trusted Traders'}
 					</div>
 				</div>
 			)}
@@ -270,7 +270,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 				<div className="mb-4">
 					{context === 'trade' && <Label title="Select Your Trusted Traders" />}
 					{isLoading ? (
-						<p>Loading trusted users...</p>
+						<p>Loading trusted traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedTrustedUsers && selectedTrustedUsers.length > 0 ? (
@@ -303,7 +303,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 							))}
 						</ul>
 					) : (
-						<p>No trusted users found.</p>
+						<p>No trusted traders found.</p>
 					)}
 					<form onSubmit={handleAddTrustedUser}>
 						<input
@@ -314,7 +314,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 							className="border p-2 rounded w-96"
 						/>
 						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded ml-2">
-							Add Trusted User
+							Add Trusted Trader
 						</button>
 					</form>
 					{error && <p className="text-red-500 mt-2">{error}</p>}
