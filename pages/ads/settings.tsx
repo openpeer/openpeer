@@ -1,3 +1,4 @@
+// pages/ads/settings.tsx
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
@@ -73,8 +74,8 @@ const AdsSettings = () => {
 				const translatedTimezone = timezoneMapping[timezone.value] || timezone.value;
 				const updatedUser = {
 					timezone: translatedTimezone,
-					available_from: from,
-					available_to: to,
+					available_from: parseInt(from.toString(), 10), // Ensure it's an integer
+					available_to: parseInt(to.toString(), 10), // Ensure it's an integer
 					weekend_offline: disableWeekends
 				};
 				updateUserProfile(updatedUser as User);
