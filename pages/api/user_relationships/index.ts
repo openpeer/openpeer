@@ -4,11 +4,11 @@ import { User } from 'models/types';
 import { minkeApi } from '../utils/utils';
 
 const getUserRelationshipsFromApi = async (
-	address: string
+	token: string
 ): Promise<{ trusted_users: User[]; blocked_users: User[] }> => {
 	const { data } = await minkeApi.get('/user_relationships', {
 		headers: {
-			Authorization: `Bearer ${address}`
+			Authorization: `Bearer ${token}`
 		}
 	});
 	return data.data;
@@ -71,3 +71,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
+
+export { getUserRelationshipsFromApi };

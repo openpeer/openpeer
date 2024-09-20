@@ -17,7 +17,18 @@ const fetchUser = async (address: string, token: string): Promise<User> => {
 
 const updateUser = async (address: string, body: NextApiRequest['body'], token: string): Promise<User> => {
 	try {
-		const { data } = await minkeApi.patch(`/user_profiles/${address}`, body, {
+		const userProfile = body.user_profile;
+
+		// Parse available_from and available_to to integers
+		userProfile.available_from = parseInt(userProfile.available_from, 10);
+		userProfile.available_to = parseInt(userProfile.available_to, 10);
+
+		// Ensure available_from and available_to are valid integers
+		if (isNaN(userProfile.available_from) || isNaN(userProfile.available_to)) {
+			throw new Error('Available from and available to must be valid integers');
+		}
+
+		const { data } = await minkeApi.patch(`/user_profiles/${address}`, userProfile, {
 			headers: {
 				Authorization: token,
 				'Content-Type': 'application/json'

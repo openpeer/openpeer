@@ -178,9 +178,9 @@ const Summary = ({ list }: SummaryProps) => {
 						</span>
 						<span>
 							{isTermsContentExpanded ? (
-								<ChevronUpIcon className="w-4 h-4 font-bold" />
+								<ChevronUpIcon className="w-4 h-4 font-bold" key="up-icon" />
 							) : (
-								<ChevronDownIcon className="w-4 h-4 font-bold" />
+								<ChevronDownIcon className="w-4 h-4 font-bold" key="down-icon" />
 							)}
 						</span>
 					</div>

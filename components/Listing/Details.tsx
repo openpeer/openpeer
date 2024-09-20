@@ -22,6 +22,7 @@ import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import TrustedUsers from 'components/TrustedUsers';
 import BlockedUsers from 'components/BlockedUsers';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -49,24 +50,27 @@ const Details = ({ list, updateList }: ListStepProps) => {
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data) => {
+			const body = snakecaseKeys(
+				{
+					list: {
+						...list,
+						bankIds: (list.banks || []).map((b) => b.id)
+					},
+					data,
+					address // Include address in the body
+				},
+				{ deep: true }
+			);
+
 			const result = await fetch(list.id ? `/api/lists/${list.id}` : '/api/lists', {
 				method: list.id ? 'PUT' : 'POST',
-				body: JSON.stringify(
-					snakecaseKeys(
-						{
-							list: {
-								...list,
-								bankIds: (list.banks || []).map((b) => b.id)
-							},
-							data
-						},
-						{ deep: true }
-					)
-				),
 				headers: {
-					Authorization: `Bearer ${address}`
-				}
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${getAuthToken()}`
+				},
+				body: JSON.stringify(body)
 			});
+
 			const { id } = await result.json();
 
 			if (id) {
