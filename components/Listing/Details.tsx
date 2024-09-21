@@ -1,5 +1,5 @@
 // components/Listing/Details.tsx
-import { useConfirmationSignMessage, useAccount } from 'hooks';
+import { useConfirmationSignMessage, useAccount, useUserProfile } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import snakecaseKeys from 'snakecase-keys';
@@ -41,6 +41,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
 	const { address } = useAccount();
 	const router = useRouter();
+	const { user, fetchUserProfile } = useUserProfile({});
+	const [lastVersion, setLastVersion] = useState(0);
 
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
@@ -102,8 +104,12 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		chainId,
 		watch: true
 	});
+	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chainId && Number(c.version) >= 2);
 
-	const needToDeploy = !sellerContract || sellerContract === constants.AddressZero;
+	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
+	const outdatedContract = contracts.length === 0 || lastDeployedVersion < lastVersion;
+	const lastDeployedContract = sellerContract as `0x${string}` | undefined;
+	const needToDeploy = !sellerContract || sellerContract === constants.AddressZero || outdatedContract;
 	const needToFund =
 		!balance ||
 		(balance as bigint) < parseUnits(String((list.totalAvailableAmount || 0) / 4), (token as Token)!.decimals);
@@ -121,11 +127,31 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		}
 	};
 
+	useEffect(() => {
+		if (lastDeployedContract && contracts.length > 0) {
+			const deployed = contracts.find(
+				(cont) => cont.address.toLowerCase() === lastDeployedContract.toLowerCase()
+			);
+			if (!deployed) {
+				fetchUserProfile();
+			}
+		}
+	}, [lastDeployedContract, contracts]);
+
+	useEffect(() => {
+		const fetchSettings = async () => {
+			const response = await fetch('/api/settings');
+			const settings: { [key: string]: string } = await response.json();
+			setLastVersion(Number(settings.contract_version || 0));
+		};
+		fetchSettings();
+	}, []);
+
 	if (needToDeployOrFund) {
 		return (
 			<FundEscrow
 				token={token as Token}
-				sellerContract={sellerContract as `0x${string}` | undefined}
+				sellerContract={needToDeploy ? undefined : (sellerContract as `0x${string}` | undefined)}
 				chainId={chainId}
 				balance={(balance || BigInt(0)) as bigint}
 				totalAvailableAmount={list.totalAvailableAmount!}
