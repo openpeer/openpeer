@@ -109,6 +109,7 @@ export const allChains = process.env.NODE_ENV === 'production' ? productionChain
 export const FULL_GASLESS_CHAINS: number[] = [
 	polygon.id,
 	polygonMumbai.id,
+	mainnet.id,
 	arbitrum.id,
 	optimism.id,
 	bsc.id,
