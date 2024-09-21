@@ -1,3 +1,5 @@
+// components/Button/EditListButtons.tsx
+
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -19,16 +21,12 @@ const EditListButtons = ({ list }: { list: List }) => {
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async () => {
-			await fetch(
-				`/api/lists/${id}`,
-
-				{
-					method: 'DELETE',
-					headers: {
-						Authorization: `Bearer ${getAuthToken()}`
-					}
+			await fetch(`/api/lists/${id}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
 				}
-			);
+			});
 			router.reload();
 		}
 	});
@@ -53,6 +51,7 @@ const EditListButtons = ({ list }: { list: List }) => {
 						)
 					),
 					headers: {
+						'Content-Type': 'application/json',
 						Authorization: `Bearer ${getAuthToken()}`
 					}
 				}
