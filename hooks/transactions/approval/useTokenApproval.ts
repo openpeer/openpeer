@@ -1,3 +1,4 @@
+import { parseAbi } from 'viem';
 import { erc20ABI, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi';
 
 interface UseTokenApprovalParams {
@@ -16,7 +17,7 @@ const useTokenApproval = ({ address, spender, amount, noBooleanReturn }: UseToke
 	];
 	const { config } = usePrepareContractWrite({
 		address,
-		abi,
+		abi: parseAbi(abi),
 		functionName: 'approve',
 		args: [spender, maxAllowance]
 	});
