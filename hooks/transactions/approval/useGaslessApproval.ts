@@ -12,6 +12,7 @@ interface ApproveTokenProps {
 	userAddress: `0x${string}`;
 	spender: `0x${string}`;
 	amount: bigint;
+	noBooleanReturn: boolean;
 }
 
 const noncesAbi = parseAbi([
@@ -25,7 +26,14 @@ interface Data {
 	hash?: `0x${string}`;
 }
 
-const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount }: ApproveTokenProps) => {
+const useGaslessApproval = ({
+	chain,
+	tokenAddress,
+	userAddress,
+	spender,
+	amount,
+	noBooleanReturn
+}: ApproveTokenProps) => {
 	const [data, updateData] = useState<Data>({});
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +69,11 @@ const useGaslessApproval = ({ chain, tokenAddress, userAddress, spender, amount 
 	}
 
 	const approve = async () => {
-		const abi = ['function approve(address spender, uint256 amount) external returns (bool)'];
+		const abi = [
+			noBooleanReturn
+				? 'function approve(address spender, uint256 value) public'
+				: 'function approve(address spender, uint256 amount) external returns (bool)'
+		];
 		const contractInterface = new Interface(abi);
 		const functionSignature = contractInterface.encodeFunctionData('approve', [spender, amount]);
 		const { r, s, v } = await signGaslessTransaction({
