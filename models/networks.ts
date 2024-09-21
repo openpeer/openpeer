@@ -116,4 +116,4 @@ export const FULL_GASLESS_CHAINS: number[] = [
 	avalanche.id,
 	gnosis.id
 ];
-export const HARDCODED_GAS_CHAINS: number[] = [polygon.id, polygonMumbai.id, mainnet.id];
+export const HARDCODED_GAS_CHAINS: number[] = [polygon.id, polygonMumbai.id];
