@@ -3,6 +3,7 @@ import { useAccount, useNetwork } from 'wagmi';
 
 import useGaslessApproval from './useGaslessApproval';
 import useTokenApproval from './useTokenApproval';
+import { mainnet } from 'wagmi/chains';
 
 interface UseTokenApprovalProps {
 	token: Token;
@@ -15,18 +16,23 @@ const useApproval = ({ token, spender, amount }: UseTokenApprovalProps) => {
 	const { address } = useAccount();
 	const { chain, chains } = useNetwork();
 
+	const chainInUse = chain || chains[0];
+	const noBooleanReturn = chainInUse.id === mainnet.id && token.symbol === 'USDT';
+
 	const withGasCall = useTokenApproval({
 		address: token.address,
 		spender,
-		amount
+		amount,
+		noBooleanReturn
 	});
 
 	const { gaslessEnabled, isFetching, isLoading, isSuccess, data, approve } = useGaslessApproval({
 		amount,
-		chain: chain || chains[0],
+		chain: chainInUse,
 		spender,
 		tokenAddress: token.address,
-		userAddress: address!
+		userAddress: address!,
+		noBooleanReturn
 	});
 
 	if (isFetching) {
