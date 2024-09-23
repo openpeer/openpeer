@@ -1,8 +1,8 @@
-// pages/ads/index.tsx
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Button, Label, ListsTable, Loading } from 'components';
 import IconButton from 'components/Button/IconButton';
-import { List, User } from 'models/types';
+import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -10,35 +10,45 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 
 const Ads = () => {
-	const [user, setUser] = useState<User | null>();
-	const [lists, setLists] = useState<List[]>([]);
+	const [lists, setLists] = useState<List[]>();
 	const { address } = useAccount();
 	const router = useRouter();
 
 	useEffect(() => {
 		if (!address) return;
-		fetch(`/api/users/${address}`)
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.errors) {
-					setUser(null);
-				} else {
-					setUser(data);
+		const authToken = getAuthToken();
+		if (!authToken) {
+			console.error('Authorization token missing');
+			return;
+		}
+
+		fetch('/api/lists/ads', {
+			headers: {
+				Authorization: `Bearer ${authToken}`, // Ensure the token is set correctly
+				'X-User-Address': address // Ensure the address is set correctly
+			}
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(`HTTP error! Status: ${res.status}`);
 				}
+				return res.json();
+			})
+			.then((data) => {
+				if (Array.isArray(data)) {
+					setLists(data);
+				} else {
+					console.error('Unexpected data structure:', data);
+					setLists([]);
+				}
+			})
+			.catch((error) => {
+				console.error('Error fetching lists:', error);
+				setLists([]);
 			});
 	}, [address]);
 
-	useEffect(() => {
-		if (!user) return;
-
-		fetch(`/api/lists?&seller=${user.address}`)
-			.then((res) => res.json())
-			.then((data) => {
-				setLists(data.data);
-			});
-	}, [user]);
-
-	if (user === undefined) {
+	if (lists === undefined) {
 		return <Loading />;
 	}
 
@@ -50,8 +60,9 @@ const Ads = () => {
 		router.push('/sell');
 	};
 
-	const sellLists = lists.filter((l) => l.type === 'SellList');
-	const buyLists = lists.filter((l) => l.type === 'BuyList');
+	// Include hidden ads (status === 0) in the sell and buy lists
+	const sellLists = lists.filter((l) => l.type === 'SellList' || (l.status === 0 && l.type === 'SellList'));
+	const buyLists = lists.filter((l) => l.type === 'BuyList' || (l.status === 0 && l.type === 'BuyList'));
 
 	return (
 		<div className="py-6">
@@ -74,13 +85,13 @@ const Ads = () => {
 						{sellLists.length > 0 && (
 							<div className="mb-4">
 								<Label title="Buy Ads" />
-								<ListsTable lists={sellLists} />
+								<ListsTable lists={sellLists} /> {/* Display sell lists including hidden ones */}
 							</div>
 						)}
 						{buyLists.length > 0 && (
 							<div>
 								<Label title="Sell Ads" />
-								<ListsTable lists={buyLists} />
+								<ListsTable lists={buyLists} /> {/* Display buy lists including hidden ones */}
 							</div>
 						)}
 					</>
