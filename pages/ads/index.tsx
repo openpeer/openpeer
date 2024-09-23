@@ -1,8 +1,8 @@
-// pages/ads/index.tsx
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Button, Label, ListsTable, Loading } from 'components';
 import IconButton from 'components/Button/IconButton';
-import { List, User } from 'models/types';
+import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -10,35 +10,45 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 
 const Ads = () => {
-	const [user, setUser] = useState<User | null>();
-	const [lists, setLists] = useState<List[]>([]);
+	const [lists, setLists] = useState<List[]>();
 	const { address } = useAccount();
 	const router = useRouter();
 
 	useEffect(() => {
 		if (!address) return;
-		fetch(`/api/users/${address}`)
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.errors) {
-					setUser(null);
-				} else {
-					setUser(data);
+		const authToken = getAuthToken();
+		if (!authToken) {
+			console.error('Authorization token missing');
+			return;
+		}
+
+		fetch('/api/lists/ads', {
+			headers: {
+				Authorization: `Bearer ${authToken}`,
+				'X-User-Address': address
+			}
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(`HTTP error! Status: ${res.status}`);
 				}
+				return res.json();
+			})
+			.then((data) => {
+				if (Array.isArray(data)) {
+					setLists(data);
+				} else {
+					console.error('Unexpected data structure:', data);
+					setLists([]);
+				}
+			})
+			.catch((error) => {
+				console.error('Error fetching lists:', error);
+				setLists([]);
 			});
 	}, [address]);
 
-	useEffect(() => {
-		if (!user) return;
-
-		fetch(`/api/lists?&seller=${user.address}`)
-			.then((res) => res.json())
-			.then((data) => {
-				setLists(data.data);
-			});
-	}, [user]);
-
-	if (user === undefined) {
+	if (lists === undefined) {
 		return <Loading />;
 	}
 
@@ -50,6 +60,7 @@ const Ads = () => {
 		router.push('/sell');
 	};
 
+	// Include all ads in the sell and buy lists, regardless of status
 	const sellLists = lists.filter((l) => l.type === 'SellList');
 	const buyLists = lists.filter((l) => l.type === 'BuyList');
 

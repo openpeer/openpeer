@@ -1,35 +1,63 @@
-// pages/api/user_relationships/[relationship_type]/[target_user_id].ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../../utils/utils';
 import axios from 'axios';
-
-// Utility function to extract the JWT token from the Authorization header
-const getTokenFromHeader = (headers: NextApiRequest['headers']): string | null => {
-	const authHeader = headers.authorization;
-	if (authHeader && authHeader.startsWith('Bearer ')) {
-		return authHeader.substring(7);
-	}
-	return null;
-};
+import { getUserRelationshipsFromApi } from '../index';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { method, query, headers } = req;
-	const token = getTokenFromHeader(headers);
 	const { relationship_type, target_user_id } = query;
+	const userAddress = headers['x-user-address'] as string;
 
-	if (!token) {
-		return res.status(401).json({ error: 'Unauthorized: Missing token' });
+	if (!userAddress) {
+		return res.status(401).json({ error: 'Unauthorized: Missing user address' });
+	}
+
+	if (!target_user_id || Array.isArray(target_user_id)) {
+		return res.status(400).json({ error: 'Invalid target_user_id' });
+	}
+
+	if (
+		!relationship_type ||
+		Array.isArray(relationship_type) ||
+		(relationship_type !== 'trusted' && relationship_type !== 'blocked')
+	) {
+		return res.status(400).json({ error: 'Invalid relationship_type' });
 	}
 
 	try {
 		switch (method) {
 			case 'POST': {
+				// Fetch current user relationships
+				const { trusted_users, blocked_users } = await getUserRelationshipsFromApi(userAddress);
+
+				// Check for conflicts
+				if (
+					relationship_type === 'trusted' &&
+					blocked_users.some((user) => user.address.toLowerCase() === target_user_id.toLowerCase())
+				) {
+					return res
+						.status(400)
+						.json({
+							error: 'User is in the blocked list. Remove them from the blocked list before adding as trusted.'
+						});
+				}
+				if (
+					relationship_type === 'blocked' &&
+					trusted_users.some((user) => user.address.toLowerCase() === target_user_id.toLowerCase())
+				) {
+					return res
+						.status(400)
+						.json({
+							error: 'User is in the trusted list. Remove them from the trusted list before adding as blocked.'
+						});
+				}
+
 				const addResponse = await minkeApi.post(
 					`/user_relationships/${relationship_type}/${target_user_id}`,
 					null,
 					{
 						headers: {
-							Authorization: `Bearer ${token}`
+							'X-User-Address': userAddress
 						}
 					}
 				);
@@ -41,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					`/user_relationships/${relationship_type}/${target_user_id}`,
 					{
 						headers: {
-							Authorization: `Bearer ${token}`
+							'X-User-Address': userAddress
 						}
 					}
 				);
@@ -54,7 +82,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		}
 	} catch (error) {
 		if (axios.isAxiosError(error) && error.response) {
-			// Pass through the status code and error message from the backend
 			res.status(error.response.status).json(error.response.data);
 		} else {
 			console.error('Error in user_relationships API:', error);
