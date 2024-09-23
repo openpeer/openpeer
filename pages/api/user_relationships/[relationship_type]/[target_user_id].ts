@@ -1,23 +1,14 @@
-// pages/api/user_relationships/[relationship_type]/[target_user_id].ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../../utils/utils';
 import axios from 'axios';
 
-const getTokenFromHeader = (headers: NextApiRequest['headers']): string | null => {
-	const authHeader = headers.authorization;
-	if (authHeader && authHeader.startsWith('Bearer ')) {
-		return authHeader.substring(7);
-	}
-	return null;
-};
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { method, query, headers } = req;
-	const token = getTokenFromHeader(headers);
 	const { relationship_type, target_user_id } = query;
+	const userAddress = headers['x-user-address'] as string;
 
-	if (!token) {
-		return res.status(401).json({ error: 'Unauthorized: Missing token' });
+	if (!userAddress) {
+		return res.status(401).json({ error: 'Unauthorized: Missing user address' });
 	}
 
 	try {
@@ -28,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					null,
 					{
 						headers: {
-							Authorization: `Bearer ${token}`
+							'X-User-Address': userAddress
 						}
 					}
 				);
@@ -40,8 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					`/user_relationships/${relationship_type}/${target_user_id}`,
 					{
 						headers: {
-							Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
-							'X-User-Address': headers['x-user-address']
+							'X-User-Address': userAddress
 						}
 					}
 				);
