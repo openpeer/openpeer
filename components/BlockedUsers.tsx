@@ -12,6 +12,7 @@ interface BlockedUsersProps {
 	setAcceptOnlyBlocked: (value: boolean) => void;
 	selectedBlockedUsers: User[];
 	setSelectedBlockedUsers: (users: User[]) => void;
+	selectedTrustedUsers?: User[]; // New prop
 	context?: 'trade' | 'profile';
 }
 
@@ -20,6 +21,7 @@ interface ApiResponse {
 		message?: string;
 		errors?: string;
 	};
+	error?: string;
 }
 
 const BlockedUsers: React.FC<BlockedUsersProps> = ({
@@ -27,6 +29,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	setAcceptOnlyBlocked,
 	selectedBlockedUsers,
 	setSelectedBlockedUsers,
+	selectedTrustedUsers = [],
 	context = 'profile'
 }) => {
 	const { address } = useAccount();
@@ -99,8 +102,8 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			return;
 		}
 
-		if (selectedBlockedUsers.some((user) => user.address.toLowerCase() === ethAddress.toLowerCase())) {
-			setError('This user is already in your blocked list.');
+		if (selectedTrustedUsers.some((user) => user.address.toLowerCase() === ethAddress.toLowerCase())) {
+			setError('This user is in your trusted list. Please remove them from the trusted list before blocking.');
 			return;
 		}
 
@@ -111,7 +114,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 
 		try {
 			const response = await fetch(`/api/user_relationships/blocked/${ethAddress}`, {
-				method: 'POST', // Changed from DELETE to POST
+				method: 'POST',
 				headers: {
 					'X-User-Address': address,
 					'Content-Type': 'application/json'
@@ -151,6 +154,12 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 				} else {
 					setError('Failed to fetch user details');
 				}
+			} else if (
+				response.status === 400 &&
+				data.error ===
+					'User is in the trusted list. Remove them from the trusted list before adding as blocked.'
+			) {
+				setError(data.error);
 			} else if (response.status === 404) {
 				setError(data.data?.message || 'User not found in the database. Cannot add non-existent user.');
 			} else if (response.status === 422) {

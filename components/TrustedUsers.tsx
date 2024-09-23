@@ -13,6 +13,7 @@ interface TrustedUsersProps {
 	setAcceptOnlyTrusted: (value: boolean) => void;
 	selectedTrustedUsers: User[];
 	setSelectedTrustedUsers: (users: User[]) => void;
+	selectedBlockedUsers?: User[];
 	context?: 'trade' | 'profile'; // Updated context prop
 }
 
@@ -21,6 +22,7 @@ interface ApiResponse {
 		message?: string;
 		errors?: string;
 	};
+	error?: string; // Add this line to include the error property
 }
 
 const TrustedUsers: React.FC<TrustedUsersProps> = ({
@@ -28,6 +30,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 	setAcceptOnlyTrusted,
 	selectedTrustedUsers,
 	setSelectedTrustedUsers,
+	selectedBlockedUsers = [],
 	context = 'trade' // Default to 'trade' context
 }) => {
 	const { address } = useAccount();
@@ -110,6 +113,14 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			return;
 		}
 
+		// Check if the user is in the blocked list
+		if (selectedBlockedUsers.some((user) => user.address.toLowerCase() === ethAddress.toLowerCase())) {
+			setError(
+				'This user is in your blocked list. Please remove them from the blocked list before adding as trusted.'
+			);
+			return;
+		}
+
 		// Ensure the user address exists
 		if (!address) {
 			setError('User address not found');
@@ -160,6 +171,12 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 				} else {
 					setError('Failed to fetch user details');
 				}
+			} else if (
+				response.status === 400 &&
+				data.error ===
+					'User is in the blocked list. Remove them from the blocked list before adding as trusted.'
+			) {
+				setError(data.error);
 			} else if (response.status === 404) {
 				setError(data.data?.message || 'Trader not found in the database. Cannot add non-existent trader.');
 			} else if (response.status === 422) {
