@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../../utils/utils';
 import axios from 'axios';
 
-// Utility function to extract the JWT token from the Authorization header
 const getTokenFromHeader = (headers: NextApiRequest['headers']): string | null => {
 	const authHeader = headers.authorization;
 	if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -41,7 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					`/user_relationships/${relationship_type}/${target_user_id}`,
 					{
 						headers: {
-							Authorization: `Bearer ${token}`
+							Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+							'X-User-Address': headers['x-user-address']
 						}
 					}
 				);
@@ -54,7 +54,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		}
 	} catch (error) {
 		if (axios.isAxiosError(error) && error.response) {
-			// Pass through the status code and error message from the backend
 			res.status(error.response.status).json(error.response.data);
 		} else {
 			console.error('Error in user_relationships API:', error);
