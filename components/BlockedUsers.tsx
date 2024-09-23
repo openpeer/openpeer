@@ -41,11 +41,14 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			if (!address) {
 				throw new Error('User address not found');
 			}
+			// Fetch user relationships with proper headers
 			const response = await axios.get('/api/user_relationships', {
 				headers: {
-					Authorization: `Bearer ${address}`
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`, // Correctly set API key
+					'X-User-Address': address // Pass the user address separately
 				}
 			});
+
 			if (response.status === 200) {
 				return response.data;
 			} else {
@@ -113,7 +116,8 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			const response = await fetch(`/api/user_relationships/blocked/${ethAddress}`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${address}`,
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+					'X-User-Address': address,
 					'Content-Type': 'application/json'
 				}
 			});
@@ -130,7 +134,8 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			if (response.ok) {
 				const userResponse = await fetch(`/api/user_search/${ethAddress}`, {
 					headers: {
-						Authorization: `Bearer ${address}`
+						Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+						'X-User-Address': address
 					}
 				});
 
@@ -180,7 +185,8 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			const response = await fetch(`/api/user_relationships/blocked/${userToDelete.address}`, {
 				method: 'DELETE',
 				headers: {
-					Authorization: `Bearer ${address}`,
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+					'X-User-Address': address,
 					'Content-Type': 'application/json'
 				}
 			});

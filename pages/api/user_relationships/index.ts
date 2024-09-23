@@ -3,30 +3,40 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { User } from 'models/types';
 import { minkeApi } from '../utils/utils';
 
+// Load the API key from the environment variables
+const API_KEY = process.env.OPENPEER_API_KEY;
+
+if (!API_KEY) {
+	throw new Error('OPENPEER_API_KEY is not defined in the environment variables.');
+}
+
 const getUserRelationshipsFromApi = async (
-	token: string
+	address: string
 ): Promise<{ trusted_users: User[]; blocked_users: User[] }> => {
 	const { data } = await minkeApi.get('/user_relationships', {
 		headers: {
-			Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${API_KEY}`,
+			'X-User-Address': address
 		}
 	});
 	return data.data;
 };
 
-const addTrustedUser = async (token: string, address: string): Promise<{ message: string }> => {
-	const { data } = await minkeApi.post(`/user_relationships/trusted/${address}`, null, {
+const addTrustedUser = async (address: string, targetUserId: string): Promise<{ message: string }> => {
+	const { data } = await minkeApi.post(`/user_relationships/trusted/${targetUserId}`, null, {
 		headers: {
-			Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${API_KEY}`,
+			'X-User-Address': address
 		}
 	});
 	return data.data;
 };
 
-const removeTrustedUser = async (token: string, address: string): Promise<{ message: string }> => {
-	const { data } = await minkeApi.delete(`/user_relationships/trusted/${address}`, {
+const removeTrustedUser = async (address: string, targetUserId: string): Promise<{ message: string }> => {
+	const { data } = await minkeApi.delete(`/user_relationships/trusted/${targetUserId}`, {
 		headers: {
-			Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${API_KEY}`,
+			'X-User-Address': address
 		}
 	});
 	return data.data;
@@ -34,7 +44,7 @@ const removeTrustedUser = async (token: string, address: string): Promise<{ mess
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { method, query } = req;
-	const address = req.headers.authorization?.split(' ')[1];
+	const address = req.headers['x-user-address'] as string;
 
 	if (!address) {
 		return res.status(401).json({ error: 'Unauthorized' });

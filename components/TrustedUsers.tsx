@@ -44,7 +44,8 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			}
 			const response = await axios.get('/api/user_relationships', {
 				headers: {
-					Authorization: `Bearer ${address}`
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`, // Correctly set API key
+					'X-User-Address': address // Pass the user address separately
 				}
 			});
 			if (response.status === 200) {
@@ -121,7 +122,8 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			const response = await fetch(`/api/user_relationships/trusted/${ethAddress}`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${address}`,
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+					'X-User-Address': address,
 					'Content-Type': 'application/json'
 				}
 			});
@@ -139,7 +141,8 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 				// Fetch user details if the addition was successful
 				const userResponse = await fetch(`/api/user_search/${ethAddress}`, {
 					headers: {
-						Authorization: `Bearer ${address}`
+						Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+						'X-User-Address': address
 					}
 				});
 
@@ -189,7 +192,8 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			const response = await fetch(`/api/user_relationships/trusted/${userToDelete.address}`, {
 				method: 'DELETE',
 				headers: {
-					Authorization: `Bearer ${address}`,
+					Authorization: `Bearer ${process.env.OPENPEER_API_KEY}`,
+					'X-User-Address': address,
 					'Content-Type': 'application/json'
 				}
 			});
