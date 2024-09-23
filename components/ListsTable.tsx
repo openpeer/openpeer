@@ -20,6 +20,7 @@ import Flag from './Flag/Flag';
 import Token from './Token/Token';
 import IdVerificationNeeded from './IdVerificationNeeded';
 import Network from './Network/Network';
+import HiddenBadge from './HiddenBadge';
 
 interface ListsTableProps {
 	lists: List[];
@@ -191,12 +192,17 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 						console.log(err);
 					}
 
+					const isHidden = list.status === 'created';
+
 					if (hideLowAmounts && Number(escrowedAmount) < Number(minimumAmount)) {
 						return <></>;
 					}
 
 					return (
-						<tr key={`list-${id}`} className="hover:bg-gray-50">
+						<tr
+							key={`list-${id}`}
+							className={`hover:bg-gray-50 ${isHidden ? 'bg-gray-100 text-gray-500' : ''}`}
+						>
 							<td className="lg:pl-4 py-4">
 								<div className="w-full flex flex-col">
 									<div className="w-full flex flex-row justify-around md:justify-start items-center">
@@ -337,6 +343,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 									</div>
 									{showVerification && acceptOnlyVerified && <IdVerificationNeeded />}
 								</div>
+								{isHidden && <HiddenBadge />}
 							</td>
 							<td className="hidden px-3.5 py-3.5 text-sm text-gray-500 lg:table-cell">
 								<div className="flex flex-col">

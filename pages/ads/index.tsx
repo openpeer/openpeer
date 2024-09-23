@@ -24,8 +24,8 @@ const Ads = () => {
 
 		fetch('/api/lists/ads', {
 			headers: {
-				Authorization: `Bearer ${authToken}`, // Ensure the token is set correctly
-				'X-User-Address': address // Ensure the address is set correctly
+				Authorization: `Bearer ${authToken}`,
+				'X-User-Address': address
 			}
 		})
 			.then((res) => {
@@ -60,9 +60,9 @@ const Ads = () => {
 		router.push('/sell');
 	};
 
-	// Include hidden ads (status === 0) in the sell and buy lists
-	const sellLists = lists.filter((l) => l.type === 'SellList' || (l.status === 0 && l.type === 'SellList'));
-	const buyLists = lists.filter((l) => l.type === 'BuyList' || (l.status === 0 && l.type === 'BuyList'));
+	// Include all ads in the sell and buy lists, regardless of status
+	const sellLists = lists.filter((l) => l.type === 'SellList');
+	const buyLists = lists.filter((l) => l.type === 'BuyList');
 
 	return (
 		<div className="py-6">
@@ -85,13 +85,13 @@ const Ads = () => {
 						{sellLists.length > 0 && (
 							<div className="mb-4">
 								<Label title="Buy Ads" />
-								<ListsTable lists={sellLists} /> {/* Display sell lists including hidden ones */}
+								<ListsTable lists={sellLists} />
 							</div>
 						)}
 						{buyLists.length > 0 && (
 							<div>
 								<Label title="Sell Ads" />
-								<ListsTable lists={buyLists} /> {/* Display buy lists including hidden ones */}
+								<ListsTable lists={buyLists} />
 							</div>
 						)}
 					</>
