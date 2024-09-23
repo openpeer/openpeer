@@ -3,12 +3,12 @@ import { Bank } from '../../models/types';
 import { minkeApi } from './utils/utils';
 
 const fetchBanks = async (params: NextApiRequest['query']): Promise<Bank[]> => {
-	const apiKey = process.env.API_KEY;
+	const apiKey = process.env.OPENPEER_API_KEY;
 	if (!apiKey) {
 		throw new Error('API key is not set in environment variables');
 	}
 
-	const { data } = await minkeApi.get('/api/v1/banks', {
+	const { data } = await minkeApi.get('/banks', {
 		params,
 		headers: {
 			'X-Access-Token': apiKey
