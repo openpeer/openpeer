@@ -19,13 +19,19 @@ const updateUser = async (address: string, body: NextApiRequest['body'], token: 
 	try {
 		const userProfile = body.user_profile;
 
-		// Parse available_from and available_to to integers
-		userProfile.available_from = parseInt(userProfile.available_from, 10);
-		userProfile.available_to = parseInt(userProfile.available_to, 10);
+		// Parse available_from and available_to to integers if they are present
+		if (userProfile.available_from !== undefined) {
+			userProfile.available_from = parseInt(userProfile.available_from, 10);
+			if (isNaN(userProfile.available_from)) {
+				throw new Error('Available from must be a valid integer');
+			}
+		}
 
-		// Ensure available_from and available_to are valid integers
-		if (isNaN(userProfile.available_from) || isNaN(userProfile.available_to)) {
-			throw new Error('Available from and available to must be valid integers');
+		if (userProfile.available_to !== undefined) {
+			userProfile.available_to = parseInt(userProfile.available_to, 10);
+			if (isNaN(userProfile.available_to)) {
+				throw new Error('Available to must be a valid integer');
+			}
 		}
 
 		const { data } = await minkeApi.patch(`/user_profiles/${address}`, userProfile, {
