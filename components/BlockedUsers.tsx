@@ -13,7 +13,7 @@ interface BlockedUsersProps {
 	selectedBlockedUsers: User[];
 	setSelectedBlockedUsers: (users: User[]) => void;
 	selectedTrustedUsers?: User[];
-	context?: 'trade' | 'profile';
+	context?: 'trade' | 'profile' | 'buy'; // Added 'buy' context
 }
 
 interface ApiResponse {
@@ -37,10 +37,10 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadError, setLoadError] = useState('');
-	const [showBlockedUsers, setShowBlockedUsers] = useState(false);
+	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy'); // Default to true for 'buy' context
 
 	useEffect(() => {
-		if (acceptOnlyBlocked || context === 'profile') {
+		if (acceptOnlyBlocked || context === 'profile' || context === 'buy') {
 			setIsLoading(true);
 			setLoadError('');
 			const loadUsers = async () => {
@@ -154,34 +154,36 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	};
 
 	return (
-		<div className="mb-4">
-			<div className="my-2">
-				<Label title="Blocked Traders" />
-				<div
-					onClick={handleToggleBlockedUsers}
-					className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
-				>
-					<svg
-						className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+		<div className={`mb-4 ${context === 'buy' ? 'flex flex-col items-center justify-center' : ''}`}>
+			{context !== 'buy' && (
+				<div className="my-2">
+					<Label title="Blocked Traders" />
+					<div
+						onClick={handleToggleBlockedUsers}
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
 					>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-					</svg>
-					{showBlockedUsers ? 'Hide Blocked Traders' : 'Show Blocked Traders'}
+						<svg
+							className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+						</svg>
+						{showBlockedUsers ? 'Hide Blocked Traders' : 'Show Blocked Traders'}
+					</div>
 				</div>
-			</div>
+			)}
 
-			{(acceptOnlyBlocked || showBlockedUsers) && (
-				<div className="mb-4">
+			{(acceptOnlyBlocked || showBlockedUsers || context === 'buy') && (
+				<div className="mb-4 flex flex-col items-center">
 					{isLoading ? (
 						<p>Loading blocked traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedBlockedUsers && selectedBlockedUsers.length > 0 ? (
-						<ul className="my-4 flex flex-wrap">
+						<ul className="my-4 flex flex-wrap justify-center">
 							{selectedBlockedUsers.map((user) => (
 								<li
 									key={user.id}
@@ -212,7 +214,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					) : (
 						<p className="mb-2">No blocked traders found.</p>
 					)}
-					<form onSubmit={handleAddBlockedUser}>
+					<form onSubmit={handleAddBlockedUser} className="flex flex-col items-center">
 						<input
 							type="text"
 							placeholder="Enter Ethereum address"
