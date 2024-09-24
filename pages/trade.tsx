@@ -1,10 +1,11 @@
 import { Button, ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
-import { usePagination } from 'hooks';
+import { usePagination, useAccount } from 'hooks'; // Added useAccount import
 import { SearchFilters } from 'models/search';
-import { List } from 'models/types';
+import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
@@ -15,7 +16,7 @@ interface PaginationMeta {
 	total_count: number;
 }
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
 	const [buySideLists, setBuySideLists] = useState<List[]>([]);
 	const [sellSideLists, setSellSideLists] = useState<List[]>([]);
 	const [lists, setLists] = useState<List[]>([]);
@@ -27,6 +28,17 @@ const HomePage = () => {
 	const [needToReset, setNeedToReset] = useState(false);
 
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
+	const { address } = useAccount(); // Added useAccount hook
+
+	// Function to fetch blocked users
+	const fetchBlockedUsers = async (): Promise<User[]> => {
+		const response = await axios.get('/api/user_relationships', {
+			headers: {
+				'X-User-Address': address
+			}
+		});
+		return response.data.blocked_users || [];
+	};
 
 	const performSearch = async (selectedPage: number) => {
 		setLoading(true);
@@ -52,22 +64,36 @@ const HomePage = () => {
 			}, {} as { [key: string]: string });
 
 		const searchParams = new URLSearchParams(search);
-		fetch(`/api/lists?${searchParams.toString()}`, {
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		})
-			.then((res) => res.json())
-			.then((response: { data: List[]; meta: any }) => {
-				const { data, meta } = response;
-				setPaginationMeta(meta);
-				const toBuyers = data.filter((list) => list.type === 'SellList');
-				const toSellers = data.filter((list) => list.type === 'BuyList');
-				setSellSideLists(toSellers);
-				setBuySideLists(toBuyers);
-				setLists(toBuyers);
-				setLoading(false);
-			});
+
+		try {
+			const [adsResponse, blockedUsers] = await Promise.all([
+				fetch(`/api/lists?${searchParams.toString()}`, {
+					headers: {
+						Authorization: `Bearer ${getAuthToken()}`
+					}
+				}).then((res) => res.json()),
+				fetchBlockedUsers() // Fetch blocked users
+			]);
+
+			const { data, meta } = adsResponse;
+			setPaginationMeta(meta);
+
+			const blockedUserIds = blockedUsers.map((user) => user.id);
+
+			// Filter out ads from blocked users
+			const filteredAds = data.filter((list: List) => !blockedUserIds.includes(list.seller?.id));
+
+			const toBuyers = filteredAds.filter((list: List) => list.type === 'SellList');
+			const toSellers = filteredAds.filter((list: List) => list.type === 'BuyList');
+
+			setSellSideLists(toSellers);
+			setBuySideLists(toBuyers);
+			setLists(toBuyers);
+		} catch (error) {
+			console.error('Error fetching ads or blocked users:', error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {

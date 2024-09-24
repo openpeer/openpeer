@@ -22,8 +22,8 @@ const fetchLists = async (address: string, token: string): Promise<List[]> => {
 	try {
 		const response = await minkeApi.get('/list_management', {
 			headers: {
-				Authorization: `Bearer ${token}`, // Ensure the API key is included
-				'X-User-Address': address // Include the user's address
+				Authorization: `Bearer ${token}`,
+				'X-User-Address': address
 			}
 		});
 
@@ -33,16 +33,33 @@ const fetchLists = async (address: string, token: string): Promise<List[]> => {
 			return []; // Return an empty array if the response is not as expected
 		}
 
-		return response.data.data; // Return the array of lists
+		const lists = response.data.data;
+
+		// Fetch user relationships to get blocked users
+		const userRelationships = await getUserRelationshipsFromApi(address);
+		if (!userRelationships) {
+			console.error('Failed to fetch user relationships');
+			return [];
+		}
+
+		const blockedUsers = userRelationships.blocked_users.map((user) => user.id);
+
+		// Filter lists to exclude those owned by blocked users
+		const filteredLists = lists.filter((list: List) => {
+			const ownerId = list.seller?.id;
+			return ownerId && !blockedUsers.includes(ownerId);
+		});
+
+		return filteredLists;
 	} catch (error) {
 		console.error('Error fetching lists:', error);
-		return []; // Return an empty array on error to prevent further failures
+		return [];
 	}
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List[] | { error: string }>) {
 	const { method, headers } = req;
-	console.log('Received headers:', headers);
+	// console.log('Received headers:', headers);
 	const address = getUserAddressFromHeader(headers);
 	const token = getAuthorizationTokenFromHeader(headers);
 
@@ -55,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			case 'GET': {
 				// Fetch lists with correct headers
 				const lists = await fetchLists(address, token);
-				console.log('Fetched lists:', lists); // Debug log to check the structure of lists
+				// console.log('Fetched lists:', lists); // Debug log to check the structure of lists
 
 				// Fetch user relationships with correct headers
 				const userRelationships = await getUserRelationshipsFromApi(address);
@@ -67,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				// Filter lists to exclude those owned by blocked users
 				const filteredLists = Array.isArray(lists)
-					? lists.filter((list) => {
+					? lists.filter((list: List) => {
 							const ownerId = list.seller?.id;
 							if (!ownerId) {
 								// Exclude lists without a valid owner ID

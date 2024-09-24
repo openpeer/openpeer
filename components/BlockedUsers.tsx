@@ -12,8 +12,8 @@ interface BlockedUsersProps {
 	setAcceptOnlyBlocked: (value: boolean) => void;
 	selectedBlockedUsers: User[];
 	setSelectedBlockedUsers: (users: User[]) => void;
-	selectedTrustedUsers?: User[]; // New prop
-	context?: 'trade' | 'profile';
+	selectedTrustedUsers?: User[];
+	context?: 'trade' | 'profile' | 'buy'; // Added 'buy' context
 }
 
 interface ApiResponse {
@@ -37,37 +37,20 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadError, setLoadError] = useState('');
-	const [showBlockedUsers, setShowBlockedUsers] = useState(false);
+	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy'); // Default to true for 'buy' context
 
-	const fetchUserRelationships = async () => {
-		try {
-			if (!address) {
-				throw new Error('User address not found');
-			}
-			const response = await axios.get('/api/user_relationships', {
-				headers: {
-					'X-User-Address': address
-				}
-			});
-
-			if (response.status === 200) {
-				return response.data;
-			} else {
-				throw new Error('Failed to fetch user relationships');
-			}
-		} catch (error) {
-			console.error('Error fetching user relationships:', error);
-			throw error;
-		}
-	};
 	useEffect(() => {
-		if (acceptOnlyBlocked || context === 'profile') {
+		if (acceptOnlyBlocked || context === 'profile' || context === 'buy') {
 			setIsLoading(true);
 			setLoadError('');
 			const loadUsers = async () => {
 				try {
-					const data = await fetchUserRelationships();
-					const { blocked_users } = data;
+					const response = await axios.get('/api/user_relationships', {
+						headers: {
+							'X-User-Address': address
+						}
+					});
+					const { blocked_users } = response.data;
 					setSelectedBlockedUsers(blocked_users || []);
 				} catch (error) {
 					console.error('Error fetching user relationships:', error);
@@ -81,7 +64,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 		} else {
 			setSelectedBlockedUsers([]);
 		}
-	}, [acceptOnlyBlocked, context, address]);
+	}, [acceptOnlyBlocked, context, address, setSelectedBlockedUsers]);
 
 	const handleAddBlockedUser = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -107,68 +90,29 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			return;
 		}
 
-		if (!address) {
-			setError('User address not found');
-			return;
-		}
-
 		try {
-			const response = await fetch(`/api/user_relationships/blocked/${ethAddress}`, {
-				method: 'POST',
-				headers: {
-					'X-User-Address': address,
-					'Content-Type': 'application/json'
+			const response = await axios.post(
+				`/api/user_relationships/blocked/${ethAddress}`,
+				{},
+				{
+					headers: {
+						'X-User-Address': address,
+						'Content-Type': 'application/json'
+					}
 				}
-			});
+			);
 
-			let data: ApiResponse = {};
-			try {
-				data = await response.json();
-			} catch (jsonError) {
-				console.error('Error parsing JSON:', jsonError);
-				setError('An error occurred while processing the response');
-				return;
-			}
-
-			if (response.ok) {
-				const userResponse = await fetch(`/api/user_search/${ethAddress}`, {
+			if (response.status === 200) {
+				const userResponse = await axios.get(`/api/user_search/${ethAddress}`, {
 					headers: {
 						'X-User-Address': address
 					}
 				});
-
-				let userData: User;
-				try {
-					userData = await userResponse.json();
-				} catch (userJsonError) {
-					console.error('Error parsing user JSON:', userJsonError);
-					setError('An error occurred while fetching user details');
-					return;
-				}
-
-				if (userResponse.ok) {
-					setSelectedBlockedUsers([...selectedBlockedUsers, userData]);
-					setEthAddress('');
-				} else if (userResponse.status === 404) {
-					setError('User details not found after adding. Please try again.');
-				} else {
-					setError('Failed to fetch user details');
-				}
-			} else if (
-				response.status === 400 &&
-				data.error ===
-					'User is in the trusted list. Remove them from the trusted list before adding as blocked.'
-			) {
-				setError(data.error);
-			} else if (response.status === 404) {
-				setError(data.data?.message || 'User not found in the database. Cannot add non-existent user.');
-			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to add blocked trader: Invalid data');
-			} else if (response.status === 500) {
-				console.error('Server error:', data);
-				setError('An internal server error occurred. Please try again later.');
+				const userData = userResponse.data;
+				setSelectedBlockedUsers([...selectedBlockedUsers, userData]);
+				setEthAddress('');
 			} else {
-				setError(data.data?.message || 'Failed to add blocked trader');
+				setError(response.data?.message || 'Failed to add blocked trader');
 			}
 		} catch (err) {
 			console.error('Failed to add blocked trader:', err);
@@ -181,40 +125,18 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			const userToDelete = selectedBlockedUsers.find((user) => user.id === userId);
 			if (!userToDelete) return;
 
-			if (!address) {
-				setError('User address not found');
-				return;
-			}
-
-			const response = await fetch(`/api/user_relationships/blocked/${userToDelete.address}`, {
-				method: 'DELETE',
+			const response = await axios.delete(`/api/user_relationships/blocked/${userToDelete.address}`, {
 				headers: {
 					'X-User-Address': address,
 					'Content-Type': 'application/json'
 				}
 			});
 
-			let data: ApiResponse = {};
-			try {
-				data = await response.json();
-			} catch (jsonError) {
-				console.error('Error parsing JSON:', jsonError);
-				setError('An error occurred while processing the response');
-				return;
-			}
-
-			if (response.ok) {
+			if (response.status === 200) {
 				const updatedUsers = selectedBlockedUsers.filter((user) => user.id !== userId);
 				setSelectedBlockedUsers(updatedUsers);
-			} else if (response.status === 404) {
-				setError(data.data?.message || 'User not found in your blocked list.');
-			} else if (response.status === 422) {
-				setError(data.data?.message || 'Failed to remove blocked trader: Invalid data');
-			} else if (response.status === 500) {
-				console.error('Server error:', data);
-				setError('An internal server error occurred. Please try again later.');
 			} else {
-				setError(data.data?.message || 'Failed to remove blocked trader');
+				setError(response.data?.message || 'Failed to remove blocked trader');
 			}
 		} catch (err) {
 			console.error('Failed to remove blocked trader:', err);
@@ -232,34 +154,36 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	};
 
 	return (
-		<div className="mb-4">
-			<div className="my-2">
-				<Label title="Blocked Traders" />
-				<div
-					onClick={handleToggleBlockedUsers}
-					className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
-				>
-					<svg
-						className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+		<div className={`mb-4 ${context === 'buy' ? 'flex flex-col items-center justify-center' : ''}`}>
+			{context !== 'buy' && (
+				<div className="my-2">
+					<Label title="Blocked Traders" />
+					<div
+						onClick={handleToggleBlockedUsers}
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
 					>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-					</svg>
-					{showBlockedUsers ? 'Hide Blocked Traders' : 'Show Blocked Traders'}
+						<svg
+							className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+						</svg>
+						{showBlockedUsers ? 'Hide Blocked Traders' : 'Show Blocked Traders'}
+					</div>
 				</div>
-			</div>
+			)}
 
-			{(acceptOnlyBlocked || showBlockedUsers) && (
-				<div className="mb-4">
+			{(acceptOnlyBlocked || showBlockedUsers || context === 'buy') && (
+				<div className="mb-4 flex flex-col items-center">
 					{isLoading ? (
 						<p>Loading blocked traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedBlockedUsers && selectedBlockedUsers.length > 0 ? (
-						<ul className="my-4 flex flex-wrap">
+						<ul className="my-4 flex flex-wrap justify-center">
 							{selectedBlockedUsers.map((user) => (
 								<li
 									key={user.id}
@@ -290,7 +214,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					) : (
 						<p className="mb-2">No blocked traders found.</p>
 					)}
-					<form onSubmit={handleAddBlockedUser}>
+					<form onSubmit={handleAddBlockedUser} className="flex flex-col items-center">
 						<input
 							type="text"
 							placeholder="Enter Ethereum address"

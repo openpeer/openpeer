@@ -5,9 +5,12 @@ import { UIOrder } from 'components/Buy/Buy.types';
 import { useListPrice, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import BlockedUsers from 'components/BlockedUsers'; // Import BlockedUsers component
+import { User } from 'models/types'; // Import User type
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -15,24 +18,62 @@ const PAYMENT_METHOD_STEP = 2;
 const BuyPage = ({ id }: { id: number }) => {
 	const [order, setOrder] = useState<UIOrder>({ step: AMOUNT_STEP } as UIOrder);
 	const [showFilters, setShowFilters] = useState(false);
+	const [isBlocked, setIsBlocked] = useState(false);
+	const [blockedMessage, setBlockedMessage] = useState('');
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
 	const { address } = useAccount();
+	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]); // State for blocked users
+
+	// Add logging to verify the address
+	useEffect(() => {
+		console.log('BuyPage address:', address);
+	}, [address]);
 
 	useEffect(() => {
-		fetch(`/api/lists/${id}`, {
-			headers: {
-				Authorization: `Bearer ${getAuthToken()}`
-			}
-		})
-			.then((res) => res.json())
-			.then((data) => {
+		const fetchData = async () => {
+			try {
+				const [listResponse, blockedUsersResponse] = await Promise.all([
+					fetch(`/api/lists/${id}`, {
+						headers: {
+							Authorization: `Bearer ${getAuthToken()}`
+						}
+					}).then((res) => res.json()),
+					axios.get('/api/user_relationships', {
+						headers: {
+							'X-User-Address': address // Ensure address is correctly set
+						}
+					})
+				]);
+
+				const { blocked_users, blocked_by_users } = blockedUsersResponse.data;
+				const listData = listResponse;
+
 				setOrder({
 					...order,
-					...{ list: data, listId: data.id }
+					...{ list: listData, listId: listData.id }
 				});
-			});
-	}, [id]);
+
+				const seller = listData.seller;
+
+				if (blocked_users.some((user: any) => user.id === seller.id)) {
+					setIsBlocked(true);
+					setBlockedMessage(
+						'You have blocked the owner of this offer. You can unblock them to proceed or you can choose another offer.'
+					);
+				} else if (blocked_by_users.some((user: any) => user.id === seller.id)) {
+					setIsBlocked(true);
+					setBlockedMessage('The owner of this offer has blocked you. Please choose another offer.');
+				}
+
+				setSelectedBlockedUsers(blocked_users || []); // Set blocked users
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}, [id, address]);
 
 	useEffect(() => {
 		setOrder({ ...order, ...{ price } });
@@ -40,6 +81,26 @@ const BuyPage = ({ id }: { id: number }) => {
 
 	const seller = order.seller || list?.seller;
 	const canBuy = seller && seller.address !== address;
+
+	if (isBlocked) {
+		return (
+			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+				<h2 className="text-2xl font-bold text-red-500 mb-4">Access Blocked</h2>
+				<p className="text-lg text-gray-700 text-center">{blockedMessage}</p>
+				{blockedMessage.includes('You have blocked the owner of this offer') && (
+					<div className="mt-8 w-full max-w-2xl">
+						<BlockedUsers
+							acceptOnlyBlocked={true}
+							setAcceptOnlyBlocked={() => {}}
+							selectedBlockedUsers={selectedBlockedUsers}
+							setSelectedBlockedUsers={setSelectedBlockedUsers}
+							context="buy" // Use the new 'buy' context
+						/>
+					</div>
+				)}
+			</div>
+		);
+	}
 
 	if (!list) return <Loading />;
 	if (!canBuy) {
@@ -85,4 +146,5 @@ const BuyPage = ({ id }: { id: number }) => {
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
 	// Pass data to the page via props
 	({ props: { title: 'Trade', id: String(context.params?.id) } });
+
 export default BuyPage;
