@@ -4,7 +4,7 @@ import { minkeApi } from '../utils/utils';
 
 const getUserRelationshipsFromApi = async (
 	address: string
-): Promise<{ trusted_users: User[]; blocked_users: User[] }> => {
+): Promise<{ trusted_users: User[]; blocked_users: User[]; blocked_by_users: User[] }> => {
 	const { data } = await minkeApi.get('/user_relationships', {
 		headers: {
 			'X-User-Address': address

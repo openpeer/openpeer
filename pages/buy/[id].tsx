@@ -25,6 +25,11 @@ const BuyPage = ({ id }: { id: number }) => {
 	const { address } = useAccount();
 	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]); // State for blocked users
 
+	// Add logging to verify the address
+	useEffect(() => {
+		console.log('BuyPage address:', address);
+	}, [address]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -36,7 +41,7 @@ const BuyPage = ({ id }: { id: number }) => {
 					}).then((res) => res.json()),
 					axios.get('/api/user_relationships', {
 						headers: {
-							'X-User-Address': address
+							'X-User-Address': address // Ensure address is correctly set
 						}
 					})
 				]);
@@ -80,17 +85,19 @@ const BuyPage = ({ id }: { id: number }) => {
 	if (isBlocked) {
 		return (
 			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-				<h2 className="text-2xl font-bold text-red-500 mb-4">You Blocked This Trader</h2>
+				<h2 className="text-2xl font-bold text-red-500 mb-4">Access Blocked</h2>
 				<p className="text-lg text-gray-700 text-center">{blockedMessage}</p>
-				<div className="mt-8 w-full max-w-2xl">
-					<BlockedUsers
-						acceptOnlyBlocked={true}
-						setAcceptOnlyBlocked={() => {}}
-						selectedBlockedUsers={selectedBlockedUsers}
-						setSelectedBlockedUsers={setSelectedBlockedUsers}
-						context="buy" // Use the new 'buy' context
-					/>
-				</div>
+				{blockedMessage.includes('You have blocked the owner of this offer') && (
+					<div className="mt-8 w-full max-w-2xl">
+						<BlockedUsers
+							acceptOnlyBlocked={true}
+							setAcceptOnlyBlocked={() => {}}
+							selectedBlockedUsers={selectedBlockedUsers}
+							setSelectedBlockedUsers={setSelectedBlockedUsers}
+							context="buy" // Use the new 'buy' context
+						/>
+					</div>
+				)}
 			</div>
 		);
 	}
