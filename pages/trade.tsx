@@ -41,6 +41,8 @@ const HomePage: React.FC = () => {
 	};
 
 	const performSearch = async (selectedPage: number) => {
+		if (!address) return; // Ensure address is available before making API calls
+
 		setLoading(true);
 		if (Object.keys(filters).length === 0) return;
 
@@ -66,22 +68,34 @@ const HomePage: React.FC = () => {
 		const searchParams = new URLSearchParams(search);
 
 		try {
-			const [adsResponse, blockedUsers] = await Promise.all([
+			console.log('Fetching ads with search params:', searchParams.toString());
+			console.log('Fetching blocked users with address:', address);
+			const [adsResponse, blockedUsersResponse] = await Promise.all([
 				fetch(`/api/lists?${searchParams.toString()}`, {
 					headers: {
 						Authorization: `Bearer ${getAuthToken()}`
 					}
 				}).then((res) => res.json()),
-				fetchBlockedUsers() // Fetch blocked users
+				axios.get('/api/user_relationships', {
+					headers: {
+						'X-User-Address': address
+					}
+				})
 			]);
 
 			const { data, meta } = adsResponse;
 			setPaginationMeta(meta);
 
-			const blockedUserIds = blockedUsers.map((user) => user.id);
+			const blockedUsers = blockedUsersResponse.data.blocked_users || [];
+			const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
+
+			const blockedUserIds = new Set([
+				...blockedUsers.map((user: User) => user.id),
+				...blockedByUsers.map((user: User) => user.id)
+			]);
 
 			// Filter out ads from blocked users
-			const filteredAds = data.filter((list: List) => !blockedUserIds.includes(list.seller?.id));
+			const filteredAds = data.filter((list: List) => !blockedUserIds.has(list.seller?.id));
 
 			const toBuyers = filteredAds.filter((list: List) => list.type === 'SellList');
 			const toSellers = filteredAds.filter((list: List) => list.type === 'BuyList');
@@ -97,13 +111,17 @@ const HomePage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		resetPage();
-		performSearch(1);
-	}, [type, filters]);
+		if (address) {
+			resetPage();
+			performSearch(1);
+		}
+	}, [type, filters, address]);
 
 	useEffect(() => {
-		performSearch(page);
-	}, [page]);
+		if (address) {
+			performSearch(page);
+		}
+	}, [page, address]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
