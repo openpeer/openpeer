@@ -46,7 +46,7 @@ const BuyPage = ({ id }: { id: number }) => {
 					})
 				]);
 
-				const { blocked_users, blocked_by_users } = blockedUsersResponse.data;
+				const { blocked_users, blocked_by_users, trusted_users } = blockedUsersResponse.data;
 				const listData = listResponse;
 
 				setOrder({
@@ -64,6 +64,9 @@ const BuyPage = ({ id }: { id: number }) => {
 				} else if (blocked_by_users.some((user: any) => user.id === seller.id)) {
 					setIsBlocked(true);
 					setBlockedMessage('The owner of this offer has blocked you. Please choose another offer.');
+				} else if (listData.accept_only_trusted && !trusted_users.some((user: any) => user.id === address)) {
+					setIsBlocked(true);
+					setBlockedMessage('This ad is not available');
 				}
 
 				setSelectedBlockedUsers(blocked_users || []); // Set blocked users

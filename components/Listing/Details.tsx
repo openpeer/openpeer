@@ -38,14 +38,27 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		return <div>Loading...</div>;
 	}
 
-	const { terms, depositTimeLimit, paymentTimeLimit, type, chainId, token, acceptOnlyVerified, escrowType } = list;
+	// console.log('list.accept_only_trusted:', list.accept_only_trusted);
+
+	const {
+		terms,
+		depositTimeLimit,
+		paymentTimeLimit,
+		type,
+		chainId,
+		token,
+		acceptOnlyVerified,
+		acceptOnlyTrusted,
+		escrowType
+	} = list;
 	const { address } = useAccount();
 	const router = useRouter();
 	const { user, fetchUserProfile } = useUserProfile({});
 	const [lastVersion, setLastVersion] = useState(0);
 
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
-	const [acceptOnlyTrusted, setAcceptOnlyTrusted] = useState(false);
+
+	const [acceptOnlyTrustedState, setAcceptOnlyTrustedState] = useState(acceptOnlyTrusted);
 
 	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]);
 	const [acceptOnlyBlocked, setAcceptOnlyBlocked] = useState(false);
@@ -56,10 +69,11 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				{
 					list: {
 						...list,
-						bankIds: (list.banks || []).map((b) => b.id)
+						bankIds: (list.banks || []).map((b) => b.id),
+						accept_only_trusted: acceptOnlyTrusted
 					},
 					data,
-					address // Include address in the body
+					address
 				},
 				{ deep: true }
 			);
@@ -119,8 +133,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const onProceed = () => {
 		if (!needToDeployOrFund) {
 			const updatedList = {
-				...list
-				// Removed 'trustedUsers' and 'acceptOnlyTrusted' from updatedList
+				...list,
+				accept_only_trusted: acceptOnlyTrusted
 			};
 			const message = listToMessage(updatedList);
 			signMessage({ message });
@@ -164,6 +178,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		: needToDeploy
 		? 'Create Escrow Account'
 		: 'Deposit in the Escrow Account';
+
+	useEffect(() => {
+		setAcceptOnlyTrustedState(acceptOnlyTrusted);
+	}, [acceptOnlyTrusted]);
 
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
@@ -238,8 +256,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				</div>
 
 				<TrustedUsers
-					acceptOnlyTrusted={acceptOnlyTrusted}
-					setAcceptOnlyTrusted={setAcceptOnlyTrusted}
+					acceptOnlyTrusted={acceptOnlyTrustedState}
+					setAcceptOnlyTrusted={setAcceptOnlyTrustedState}
 					selectedTrustedUsers={selectedTrustedUsers}
 					setSelectedTrustedUsers={setSelectedTrustedUsers}
 					context="trade"

@@ -76,6 +76,7 @@ export interface List {
 	escrow_type: 'manual' | 'instant';
 	contract: `0x${string}` | undefined;
 	price_source: PriceSource;
+	accept_only_trusted: boolean;
 }
 
 export interface AccountField {

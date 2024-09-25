@@ -88,14 +88,28 @@ const HomePage: React.FC = () => {
 
 			const blockedUsers = blockedUsersResponse.data.blocked_users || [];
 			const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
+			const trustedUsers = blockedUsersResponse.data.trusted_users || [];
 
 			const blockedUserIds = new Set([
 				...blockedUsers.map((user: User) => user.id),
 				...blockedByUsers.map((user: User) => user.id)
 			]);
 
-			// Filter out ads from blocked users
-			const filteredAds = data.filter((list: List) => !blockedUserIds.has(list.seller?.id));
+			// Filter out ads from blocked users and ensure trusted users can see the ad
+			const filteredAds = data.filter((list: List) => {
+				const isTrustedOnly = list.accept_only_trusted;
+				const isOwnerTrusted = trustedUsers.some((user: User) => user.id === list.seller?.id);
+
+				if (blockedUserIds.has(list.seller?.id)) {
+					return false;
+				}
+
+				if (isTrustedOnly && !isOwnerTrusted) {
+					return false;
+				}
+
+				return true;
+			});
 
 			const toBuyers = filteredAds.filter((list: List) => list.type === 'SellList');
 			const toSellers = filteredAds.filter((list: List) => list.type === 'BuyList');

@@ -248,6 +248,10 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 		setShowTrustedUsers(!showTrustedUsers);
 	};
 
+	useEffect(() => {
+		// Fetch and set trusted users if acceptOnlyTrusted is true
+	}, [acceptOnlyTrusted, address]);
+
 	return (
 		<div className="mb-4">
 			{context === 'trade' ? (

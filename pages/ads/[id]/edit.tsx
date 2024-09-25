@@ -1,3 +1,5 @@
+// pages/ads/[id]/edit.tsx
+
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/solid';
 import { Loading, Steps } from 'components';
@@ -44,7 +46,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					accept_only_verified: acceptOnlyVerified,
 					escrow_type: escrowType,
 					banks,
-					price_source: priceSource
+					price_source: priceSource,
+					accept_only_trusted: acceptOnlyTrusted
 				} = data;
 				setList(data);
 				const currency = {
@@ -70,7 +73,8 @@ const EditTrade = ({ id }: { id: number }) => {
 					acceptOnlyVerified,
 					escrowType,
 					banks,
-					priceSource
+					priceSource,
+					acceptOnlyTrusted
 				};
 				setUiList(ui);
 			});
