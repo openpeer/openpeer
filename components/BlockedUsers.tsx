@@ -1,4 +1,3 @@
-// components/BlockedUsers.tsx
 import React, { useState, useEffect } from 'react';
 import { useAccount } from 'hooks';
 import axios from 'axios';
@@ -10,26 +9,12 @@ import { ethers } from 'ethers';
 interface BlockedUsersProps {
 	acceptOnlyBlocked: boolean;
 	setAcceptOnlyBlocked: (value: boolean) => void;
-	selectedBlockedUsers: User[];
-	setSelectedBlockedUsers: (users: User[]) => void;
-	selectedTrustedUsers?: User[];
-	context?: 'trade' | 'profile' | 'buy'; // Added 'buy' context
-}
-
-interface ApiResponse {
-	data?: {
-		message?: string;
-		errors?: string;
-	};
-	error?: string;
+	context?: 'trade' | 'profile' | 'buy';
 }
 
 const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	acceptOnlyBlocked,
 	setAcceptOnlyBlocked,
-	selectedBlockedUsers,
-	setSelectedBlockedUsers,
-	selectedTrustedUsers = [],
 	context = 'profile'
 }) => {
 	const { address } = useAccount();
@@ -37,7 +22,10 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadError, setLoadError] = useState('');
-	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy'); // Default to true for 'buy' context
+	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy');
+
+	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]);
+	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 
 	useEffect(() => {
 		if (acceptOnlyBlocked || context === 'profile' || context === 'buy') {
@@ -50,12 +38,14 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 							'X-User-Address': address
 						}
 					});
-					const { blocked_users, trusted_by_users } = response.data;
+					const { blocked_users, trusted_users } = response.data;
 					setSelectedBlockedUsers(blocked_users || []);
+					setSelectedTrustedUsers(trusted_users || []);
 				} catch (error) {
 					console.error('Error fetching user relationships:', error);
 					setLoadError('Failed to load user relationships. Please try again.');
 					setSelectedBlockedUsers([]);
+					setSelectedTrustedUsers([]);
 				} finally {
 					setIsLoading(false);
 				}
@@ -63,8 +53,9 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			loadUsers();
 		} else {
 			setSelectedBlockedUsers([]);
+			setSelectedTrustedUsers([]);
 		}
-	}, [acceptOnlyBlocked, context, address, setSelectedBlockedUsers]);
+	}, [acceptOnlyBlocked, context, address]);
 
 	const handleAddBlockedUser = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -116,7 +107,18 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			}
 		} catch (err) {
 			console.error('Failed to add blocked trader:', err);
-			setError('Failed to add blocked trader');
+			if (axios.isAxiosError(err) && err.response) {
+				const { status, data } = err.response;
+				if (status === 400 && data.error) {
+					setError(data.error);
+				} else if (data.message) {
+					setError(data.message);
+				} else {
+					setError('Failed to add blocked trader');
+				}
+			} else {
+				setError('Failed to add blocked trader');
+			}
 		}
 	};
 
