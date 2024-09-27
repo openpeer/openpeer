@@ -162,7 +162,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					<Label title="Blocked Traders" />
 					<div
 						onClick={handleToggleBlockedUsers}
-						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full cursor-pointer"
 					>
 						<svg
 							className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
@@ -179,13 +179,13 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			)}
 
 			{(acceptOnlyBlocked || showBlockedUsers || context === 'buy') && (
-				<div className="mb-4 flex flex-col items-center">
+				<div className={`mb-4 flex flex-col ${context === 'buy' ? 'items-center' : ''}`}>
 					{isLoading ? (
 						<p>Loading blocked traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedBlockedUsers && selectedBlockedUsers.length > 0 ? (
-						<ul className="my-4 flex flex-wrap justify-center">
+						<ul className={`my-4 flex flex-wrap ${context === 'buy' ? 'justify-center' : 'justify-left'}`}>
 							{selectedBlockedUsers.map((user) => (
 								<li
 									key={user.id}
@@ -216,15 +216,18 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					) : (
 						<p className="mb-2">No blocked traders found.</p>
 					)}
-					<form onSubmit={handleAddBlockedUser} className="flex flex-col items-center">
+					<form
+						onSubmit={handleAddBlockedUser}
+						className={`${context === 'buy' ? 'flex items-center' : 'justify-left'}`}
+					>
 						<input
 							type="text"
 							placeholder="Enter Ethereum address"
 							value={ethAddress}
 							onChange={(e) => setEthAddress(e.target.value)}
-							className="border p-2 rounded w-96"
+							className="border p-2 mr-2 rounded w-96"
 						/>
-						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded ml-2">
+						<button type="submit" className="p-2 bg-blue-500 text-white rounded ml-2 mt-2">
 							Add Blocked Trader
 						</button>
 					</form>

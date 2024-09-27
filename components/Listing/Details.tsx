@@ -1,4 +1,3 @@
-// components/Listing/Details.tsx
 import { useConfirmationSignMessage, useAccount, useUserProfile } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
@@ -14,31 +13,20 @@ import { listToMessage } from 'utils';
 import dynamic from 'next/dynamic';
 import Label from 'components/Label/Label';
 import Selector from 'components/Selector';
-import AddressTooltip from 'components/AddressTooltip';
 import { ListStepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import FundEscrow from 'components/Listing/FundEscrow';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
 import TrustedUsers from 'components/TrustedUsers';
 import BlockedUsers from 'components/BlockedUsers';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
-interface ApiResponse {
-	data?: {
-		message?: string;
-		errors?: string;
-	};
-}
-
 const Details = ({ list, updateList }: ListStepProps) => {
 	if (!list) {
 		return <div>Loading...</div>;
 	}
-
-	// console.log('list.accept_only_trusted:', list.accept_only_trusted);
 
 	const {
 		terms,
@@ -51,16 +39,13 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		acceptOnlyTrusted,
 		escrowType
 	} = list;
+
 	const { address } = useAccount();
 	const router = useRouter();
 	const { user, fetchUserProfile } = useUserProfile({});
 	const [lastVersion, setLastVersion] = useState(0);
-
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
-
 	const [acceptOnlyTrustedState, setAcceptOnlyTrustedState] = useState(acceptOnlyTrusted);
-
-	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]);
 	const [acceptOnlyBlocked, setAcceptOnlyBlocked] = useState(false);
 
 	const { signMessage } = useConfirmationSignMessage({
@@ -118,8 +103,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		chainId,
 		watch: true
 	});
-	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chainId && Number(c.version) >= 2);
 
+	const contracts = (user?.contracts || []).filter((c) => c.chain_id === chainId && Number(c.version) >= 2);
 	const lastDeployedVersion = contracts.reduce((acc, c) => Math.max(acc, Number(c.version)), 0);
 	const outdatedContract = contracts.length === 0 || lastDeployedVersion < lastVersion;
 	const lastDeployedContract = sellerContract as `0x${string}` | undefined;
@@ -141,6 +126,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		}
 	};
 
+	// Move all useEffect Hooks before any return statements
 	useEffect(() => {
 		if (lastDeployedContract && contracts.length > 0) {
 			const deployed = contracts.find(
@@ -161,6 +147,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		fetchSettings();
 	}, []);
 
+	useEffect(() => {
+		setAcceptOnlyTrustedState(acceptOnlyTrusted);
+	}, [acceptOnlyTrusted]);
+
 	if (needToDeployOrFund) {
 		return (
 			<FundEscrow
@@ -178,10 +168,6 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		: needToDeploy
 		? 'Create Escrow Account'
 		: 'Deposit in the Escrow Account';
-
-	useEffect(() => {
-		setAcceptOnlyTrustedState(acceptOnlyTrusted);
-	}, [acceptOnlyTrusted]);
 
 	return (
 		<StepLayout onProceed={onProceed} buttonText={buttonText}>
@@ -266,8 +252,6 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				<BlockedUsers
 					acceptOnlyBlocked={acceptOnlyBlocked}
 					setAcceptOnlyBlocked={setAcceptOnlyBlocked}
-					selectedBlockedUsers={selectedBlockedUsers}
-					setSelectedBlockedUsers={setSelectedBlockedUsers}
 					context="profile"
 				/>
 
