@@ -9,8 +9,8 @@ import axios from 'axios';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
-import BlockedUsers from 'components/BlockedUsers'; // Import BlockedUsers component
-import { User } from 'models/types'; // Import User type
+import BlockedUsers from 'components/BlockedUsers';
+import { User } from 'models/types';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -41,12 +41,15 @@ const BuyPage = ({ id }: { id: number }) => {
 					}).then((res) => res.json()),
 					axios.get('/api/user_relationships', {
 						headers: {
-							'X-User-Address': address // Ensure address is correctly set
+							'X-User-Address': address
 						}
 					})
 				]);
 
-				const { blocked_users, blocked_by_users, trusted_users } = blockedUsersResponse.data;
+				const { blocked_users, blocked_by_users, trusted_by_users } = blockedUsersResponse.data;
+				console.log('blocked_users:', blocked_users);
+				console.log('blocked_by_users:', blocked_by_users);
+				console.log('trusted_by_users:', trusted_by_users);
 				const listData = listResponse;
 
 				setOrder({
@@ -55,18 +58,34 @@ const BuyPage = ({ id }: { id: number }) => {
 				});
 
 				const seller = listData.seller;
+				console.log('Seller:', seller);
+
+				if (!seller) {
+					console.log('Seller information is not available yet.');
+					return;
+				}
 
 				if (blocked_users.some((user: any) => user.id === seller.id)) {
+					console.log('User has blocked the seller.');
 					setIsBlocked(true);
 					setBlockedMessage(
 						'You have blocked the owner of this offer. You can unblock them to proceed or you can choose another offer.'
 					);
 				} else if (blocked_by_users.some((user: any) => user.id === seller.id)) {
+					console.log('Seller has blocked the user.');
 					setIsBlocked(true);
 					setBlockedMessage('The owner of this offer has blocked you. Please choose another offer.');
-				} else if (listData.accept_only_trusted && !trusted_users.some((user: any) => user.id === address)) {
+				} else if (
+					listData.accept_only_trusted &&
+					!trusted_by_users.some((user: any) => user.id === seller.id)
+				) {
+					console.log('Ad accepts only trusted users and the seller does not trust the current user.');
 					setIsBlocked(true);
 					setBlockedMessage('This ad is not available');
+				} else {
+					console.log('The seller trusts the current user.');
+					setIsBlocked(false);
+					setBlockedMessage('');
 				}
 
 				setSelectedBlockedUsers(blocked_users || []); // Set blocked users
@@ -75,14 +94,18 @@ const BuyPage = ({ id }: { id: number }) => {
 			}
 		};
 
-		fetchData();
+		if (address) {
+			fetchData();
+		}
 	}, [id, address]);
 
 	useEffect(() => {
 		setOrder({ ...order, ...{ price } });
 	}, [price]);
 
+	// this needs to be adjusted so trusted by has something to match against.
 	const seller = order.seller || list?.seller;
+	console.log('seller:', seller);
 	const canBuy = seller && seller.address !== address;
 
 	if (isBlocked) {
