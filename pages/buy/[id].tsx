@@ -103,8 +103,8 @@ const BuyPage = ({ id }: { id: number }) => {
 		setOrder({ ...order, ...{ price } });
 	}, [price]);
 
-	// this needs to be adjusted so trusted by has something to match against.
-	const seller = order.seller || list?.seller;
+	// Adjusted logic for checking seller
+	const seller = list?.seller || order.seller;
 	console.log('seller:', seller);
 	const canBuy = seller && seller.address !== address;
 
@@ -118,8 +118,6 @@ const BuyPage = ({ id }: { id: number }) => {
 						<BlockedUsers
 							acceptOnlyBlocked={true}
 							setAcceptOnlyBlocked={() => {}}
-							selectedBlockedUsers={selectedBlockedUsers}
-							setSelectedBlockedUsers={setSelectedBlockedUsers}
 							context="buy" // Use the new 'buy' context
 						/>
 					</div>
@@ -169,8 +167,8 @@ const BuyPage = ({ id }: { id: number }) => {
 	);
 };
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) =>
-	// Pass data to the page via props
-	({ props: { title: 'Trade', id: String(context.params?.id) } });
+export const getServerSideProps: GetServerSideProps<{ id: string }> = async (context) => ({
+	props: { title: 'Trade', id: String(context.params?.id) }
+});
 
 export default BuyPage;

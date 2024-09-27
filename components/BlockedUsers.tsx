@@ -1,4 +1,3 @@
-// components/BlockedUsers.tsx
 import React, { useState, useEffect } from 'react';
 import { useAccount } from 'hooks';
 import axios from 'axios';
@@ -10,26 +9,12 @@ import { ethers } from 'ethers';
 interface BlockedUsersProps {
 	acceptOnlyBlocked: boolean;
 	setAcceptOnlyBlocked: (value: boolean) => void;
-	selectedBlockedUsers: User[];
-	setSelectedBlockedUsers: (users: User[]) => void;
-	selectedTrustedUsers?: User[];
-	context?: 'trade' | 'profile' | 'buy'; // Added 'buy' context
-}
-
-interface ApiResponse {
-	data?: {
-		message?: string;
-		errors?: string;
-	};
-	error?: string;
+	context?: 'trade' | 'profile' | 'buy';
 }
 
 const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	acceptOnlyBlocked,
 	setAcceptOnlyBlocked,
-	selectedBlockedUsers,
-	setSelectedBlockedUsers,
-	selectedTrustedUsers = [],
 	context = 'profile'
 }) => {
 	const { address } = useAccount();
@@ -37,7 +22,10 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [loadError, setLoadError] = useState('');
-	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy'); // Default to true for 'buy' context
+	const [showBlockedUsers, setShowBlockedUsers] = useState(context === 'buy');
+
+	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]);
+	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
 
 	useEffect(() => {
 		if (acceptOnlyBlocked || context === 'profile' || context === 'buy') {
@@ -50,12 +38,14 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 							'X-User-Address': address
 						}
 					});
-					const { blocked_users, trusted_by_users } = response.data;
+					const { blocked_users, trusted_users } = response.data;
 					setSelectedBlockedUsers(blocked_users || []);
+					setSelectedTrustedUsers(trusted_users || []);
 				} catch (error) {
 					console.error('Error fetching user relationships:', error);
 					setLoadError('Failed to load user relationships. Please try again.');
 					setSelectedBlockedUsers([]);
+					setSelectedTrustedUsers([]);
 				} finally {
 					setIsLoading(false);
 				}
@@ -63,8 +53,9 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			loadUsers();
 		} else {
 			setSelectedBlockedUsers([]);
+			setSelectedTrustedUsers([]);
 		}
-	}, [acceptOnlyBlocked, context, address, setSelectedBlockedUsers]);
+	}, [acceptOnlyBlocked, context, address]);
 
 	const handleAddBlockedUser = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -116,7 +107,18 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			}
 		} catch (err) {
 			console.error('Failed to add blocked trader:', err);
-			setError('Failed to add blocked trader');
+			if (axios.isAxiosError(err) && err.response) {
+				const { status, data } = err.response;
+				if (status === 400 && data.error) {
+					setError(data.error);
+				} else if (data.message) {
+					setError(data.message);
+				} else {
+					setError('Failed to add blocked trader');
+				}
+			} else {
+				setError('Failed to add blocked trader');
+			}
 		}
 	};
 
@@ -160,7 +162,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					<Label title="Blocked Traders" />
 					<div
 						onClick={handleToggleBlockedUsers}
-						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full"
+						className="text-blue-500 hover:text-blue-700 flex items-center justify-left w-full cursor-pointer"
 					>
 						<svg
 							className={`w-4 h-4 mr-1 transition-transform ${showBlockedUsers ? 'rotate-90' : ''}`}
@@ -177,13 +179,13 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 			)}
 
 			{(acceptOnlyBlocked || showBlockedUsers || context === 'buy') && (
-				<div className="mb-4 flex flex-col items-center">
+				<div className={`mb-4 flex flex-col ${context === 'buy' ? 'items-center' : ''}`}>
 					{isLoading ? (
 						<p>Loading blocked traders...</p>
 					) : loadError ? (
 						<p className="text-red-500">{loadError}</p>
 					) : selectedBlockedUsers && selectedBlockedUsers.length > 0 ? (
-						<ul className="my-4 flex flex-wrap justify-center">
+						<ul className={`my-4 flex flex-wrap ${context === 'buy' ? 'justify-center' : 'justify-left'}`}>
 							{selectedBlockedUsers.map((user) => (
 								<li
 									key={user.id}
@@ -214,15 +216,18 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 					) : (
 						<p className="mb-2">No blocked traders found.</p>
 					)}
-					<form onSubmit={handleAddBlockedUser} className="flex flex-col items-center">
+					<form
+						onSubmit={handleAddBlockedUser}
+						className={`${context === 'buy' ? 'flex items-center' : 'justify-left'}`}
+					>
 						<input
 							type="text"
 							placeholder="Enter Ethereum address"
 							value={ethAddress}
 							onChange={(e) => setEthAddress(e.target.value)}
-							className="border p-2 rounded w-96"
+							className="border p-2 mr-2 rounded w-96"
 						/>
-						<button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded ml-2">
+						<button type="submit" className="p-2 bg-blue-500 text-white rounded ml-2 mt-2">
 							Add Blocked Trader
 						</button>
 					</form>

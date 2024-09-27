@@ -297,11 +297,10 @@ const EditProfile = ({ id }: { id: `0x${string}` }) => {
 						setSelectedTrustedUsers={setSelectedTrustedUsers}
 						context="profile"
 					/>
+
 					<BlockedUsers
 						acceptOnlyBlocked={acceptOnlyBlocked}
 						setAcceptOnlyBlocked={setAcceptOnlyBlocked}
-						selectedBlockedUsers={selectedBlockedUsers}
-						setSelectedBlockedUsers={setSelectedBlockedUsers}
 						context="profile"
 					/>
 				</div>

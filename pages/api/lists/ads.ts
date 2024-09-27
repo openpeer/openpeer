@@ -2,7 +2,6 @@
 import { List } from 'models/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { minkeApi } from '../utils/utils';
-import { getUserRelationshipsFromApi } from '../user_relationships/index';
 
 // Utility function to extract the user's address from the headers
 const getUserAddressFromHeader = (headers: NextApiRequest['headers']): string | null => {
@@ -35,35 +34,16 @@ const fetchLists = async (address: string, token: string): Promise<List[]> => {
 
 		const lists = response.data.data;
 
-		// Fetch user relationships to get blocked users
-		const userRelationships = await getUserRelationshipsFromApi(address);
-		if (!userRelationships) {
-			console.error('Failed to fetch user relationships');
-			return [];
-		}
-
-		const blockedUsers = userRelationships.blocked_users.map((user) => user.id);
-		const trustedUsers = userRelationships.trusted_users.map((user) => user.id);
-
-		// Filter lists to exclude those owned by blocked users and ensure trusted users can see the ad
+		// Filter lists to include only ads owned by the user
 		const filteredLists = lists.filter((list: List) => {
-			const ownerId = list.seller?.id;
-			const isTrustedOnly = list.accept_only_trusted;
-			const isOwnerTrusted = trustedUsers.includes(ownerId);
+			const ownerAddress = list.seller?.address;
 
-			if (!ownerId) {
+			if (!ownerAddress) {
 				return false;
 			}
 
-			if (blockedUsers.includes(ownerId)) {
-				return false;
-			}
-
-			if (isTrustedOnly && !isOwnerTrusted) {
-				return false;
-			}
-
-			return true;
+			// Include only ads where the seller's address matches the user's address
+			return ownerAddress === address;
 		});
 
 		return filteredLists;
@@ -75,7 +55,6 @@ const fetchLists = async (address: string, token: string): Promise<List[]> => {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<List[] | { error: string }>) {
 	const { method, headers } = req;
-	// console.log('Received headers:', headers);
 	const address = getUserAddressFromHeader(headers);
 	const token = getAuthorizationTokenFromHeader(headers);
 
@@ -88,29 +67,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			case 'GET': {
 				// Fetch lists with correct headers
 				const lists = await fetchLists(address, token);
-				// console.log('Fetched lists:', lists); // Debug log to check the structure of lists
 
-				// Fetch user relationships with correct headers
-				const userRelationships = await getUserRelationshipsFromApi(address);
-				if (!userRelationships) {
-					return res.status(500).json({ error: 'Failed to fetch user relationships' });
-				}
-
-				const blockedUsers = userRelationships.blocked_users.map((user) => user.id);
-
-				// Filter lists to exclude those owned by blocked users
-				const filteredLists = Array.isArray(lists)
-					? lists.filter((list: List) => {
-							const ownerId = list.seller?.id;
-							if (!ownerId) {
-								// Exclude lists without a valid owner ID
-								return false;
-							}
-							return !blockedUsers.includes(ownerId);
-					  })
-					: [];
-
-				res.status(200).json(filteredLists);
+				res.status(200).json(lists);
 				break;
 			}
 			default:
