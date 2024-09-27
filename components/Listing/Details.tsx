@@ -1,6 +1,8 @@
-import { useConfirmationSignMessage, useAccount, useUserProfile } from 'hooks';
-import { useRouter } from 'next/router';
+// components/Listing/Details.tsx
+
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useAccount, useUserProfile, useConfirmationSignMessage } from 'hooks';
 import snakecaseKeys from 'snakecase-keys';
 import { Token, User } from 'models/types';
 import Checkbox from 'components/Checkbox/Checkbox';
@@ -45,11 +47,12 @@ const Details = ({ list, updateList }: ListStepProps) => {
 	const { user, fetchUserProfile } = useUserProfile({});
 	const [lastVersion, setLastVersion] = useState(0);
 	const [selectedTrustedUsers, setSelectedTrustedUsers] = useState<User[]>([]);
-	const [acceptOnlyTrustedState, setAcceptOnlyTrustedState] = useState(acceptOnlyTrusted);
+	const [acceptOnlyTrustedState, setAcceptOnlyTrustedState] = useState(list.acceptOnlyTrusted);
 	const [acceptOnlyBlocked, setAcceptOnlyBlocked] = useState(false);
 
 	const { signMessage } = useConfirmationSignMessage({
 		onSuccess: async (data) => {
+			console.log('acceptOnlyTrusted state:', acceptOnlyTrusted);
 			const body = snakecaseKeys(
 				{
 					list: {
@@ -62,6 +65,8 @@ const Details = ({ list, updateList }: ListStepProps) => {
 				},
 				{ deep: true }
 			);
+
+			console.log('Updating list with payload:', body); // Add logging
 
 			const result = await fetch(list.id ? `/api/lists/${list.id}` : '/api/lists', {
 				method: list.id ? 'PUT' : 'POST',
@@ -79,6 +84,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 			}
 		}
 	});
+
+	useEffect(() => {
+		updateList({ ...list, acceptOnlyTrusted: acceptOnlyTrustedState });
+	}, [acceptOnlyTrustedState]);
 
 	const onTermsChange = (value: string) => {
 		updateList({ ...list, terms: value });
@@ -119,7 +128,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 		if (!needToDeployOrFund) {
 			const updatedList = {
 				...list,
-				accept_only_trusted: acceptOnlyTrusted
+				accept_only_trusted: acceptOnlyTrustedState
 			};
 			const message = listToMessage(updatedList);
 			signMessage({ message });
