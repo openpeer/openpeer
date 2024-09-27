@@ -9,6 +9,9 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import coins from './post-ad.png';
 import { UIList } from './Listing.types';
 
+// Import the Badge component
+import Badge from 'components/TrustedBadge'; // Adjust the import path as necessary
+
 interface SummaryProps {
 	list: UIList;
 }
@@ -33,8 +36,10 @@ const Summary = ({ list }: SummaryProps) => {
 		terms,
 		type,
 		acceptOnlyVerified,
+		acceptOnlyTrusted, // Destructure acceptOnlyTrusted
 		escrowType
 	} = list;
+
 	const currencySymbol = (currency as FiatCurrency)?.symbol;
 	const instantEscrow = escrowType === 'instant';
 
@@ -158,6 +163,14 @@ const Summary = ({ list }: SummaryProps) => {
 							</div>
 						</li>
 					)}
+
+					{/* Add the Trusted Only badge here */}
+					{!!acceptOnlyTrusted && (
+						<li className="w-full flex flex-row mb-4">
+							<Badge text="Trusted Only" />
+						</li>
+					)}
+
 					{!!acceptOnlyVerified && (
 						<li className="w-full flex flex-row justify-between mb-4">
 							<div>Accept only verified {type === 'SellList' ? 'buyers' : 'sellers'}</div>
@@ -167,7 +180,7 @@ const Summary = ({ list }: SummaryProps) => {
 			</div>
 			{!!terms && (
 				<div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm md:ml-16 md:px-8 md:py-4 p-4">
-					<div className="font-bold mb-2">Merchant&apos;s Terms</div>
+					<div className="font-bold mb-2">Merchant's Terms</div>
 					<div
 						className={`break-words mb-4 ${isTermsContentExpanded ? 'h-auto' : 'h-24'} overflow-hidden`}
 						dangerouslySetInnerHTML={{ __html: terms }}
