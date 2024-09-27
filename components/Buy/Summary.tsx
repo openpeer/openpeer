@@ -1,3 +1,5 @@
+// components/Buy/Summary.tsx
+
 /* eslint-disable react/no-danger */
 /* eslint-disable @typescript-eslint/indent */
 import Avatar from 'components/Avatar';
@@ -10,6 +12,9 @@ import { ChartBarSquareIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { UIOrder } from './Buy.types';
 import Chat from './Chat';
+
+// Import the Badge component
+import Badge from 'components/TrustedBadge';
 
 const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const {
@@ -30,6 +35,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 		terms,
 		type,
 		accept_only_verified: acceptOnlyVerified,
+		accept_only_trusted: acceptOnlyTrusted, // Destructure accept_only_trusted
 		escrow_type: escrowType,
 		payment_methods: paymentMethods
 	} = list!;
@@ -38,7 +44,7 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 	const seller = order.seller || list.seller;
 	const selling = seller.address === address;
 	const chatAddress = selling ? buyer.address : seller.address;
-	const user = !!selling && !!buyer ? buyer : seller;
+	const user = selling && buyer ? buyer : seller;
 	const banks = paymentMethod
 		? [paymentMethod.bank]
 		: type === 'BuyList'
@@ -101,10 +107,6 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 								{currency.symbol} {Number(price).toFixed(2)}
 							</div>
 						</div>
-						{/* <div className="w-full flex flex-row mb-4">
-						<div className="text-sm">Payment Limit</div>
-						<div className="text-sm font-bold">10 minutes</div>
-					</div> */}
 					</div>
 
 					<div className="w-full flex flex-row justify-between">
@@ -185,6 +187,14 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 							</div>
 						</div>
 					)}
+
+					{/* Trusted Only Badge */}
+					{!!acceptOnlyTrusted && (
+						<div className="w-full flex flex-row mb-4 space-x-2">
+							<Badge text="Trusted Only" />
+						</div>
+					)}
+
 					{!!acceptOnlyVerified && (
 						<div className="w-full flex flex-row mb-4 space-x-2">
 							<div className="text-sm">
@@ -201,19 +211,19 @@ const SummaryBuy = ({ order }: { order: UIOrder }) => {
 				</div>
 
 				<div className="mt-6">
-					<span className="text-gray-800 text-sm font-bold">Seller&apos;s Note</span>
+					<span className="text-gray-800 text-sm font-bold">Seller's Note</span>
 					<p className="mt-2 text-sm text-gray-500">
-						Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Ensure
-						you&apos;re including the reference number {id ? `(${String(Number(id) * 10000)})` : ''} on your
-						transfer. Thanks for trading with me.
+						Please do not include any crypto related keywords like {token.symbol} or OpenPeer. Ensure you're
+						including the reference number {id ? `(${String(Number(id) * 10000)})` : ''} on your transfer.
+						Thanks for trading with me.
 					</p>
 				</div>
 				{!!chatAddress && <Chat address={chatAddress} label={selling ? 'buyer' : 'seller'} />}
 				<div className="bg-[#FEFAF5] text-[#E37A00] p-4 rounded">
 					<p className="text-sm font-bold mb-2">Disclaimer</p>
 					<p className="text-sm">
-						Trades settled outside of OpenPeer cannot have funds escrowed and can&apos;t be disputed. You
-						should only trade with sellers through OpenPeer.
+						Trades settled outside of OpenPeer cannot have funds escrowed and can't be disputed. You should
+						only trade with sellers through OpenPeer.
 					</p>
 				</div>
 			</div>
