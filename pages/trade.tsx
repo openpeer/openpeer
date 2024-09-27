@@ -1,6 +1,6 @@
 import { Button, ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
-import { usePagination, useAccount } from 'hooks'; // Added useAccount import
+import { usePagination, useAccount } from 'hooks';
 import { SearchFilters } from 'models/search';
 import { List, User } from 'models/types';
 import { GetServerSideProps } from 'next';
@@ -28,23 +28,10 @@ const HomePage: React.FC = () => {
 	const [needToReset, setNeedToReset] = useState(false);
 
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
-	const { address } = useAccount(); // Added useAccount hook
-
-	// Function to fetch blocked users
-	const fetchBlockedUsers = async (): Promise<User[]> => {
-		const response = await axios.get('/api/user_relationships', {
-			headers: {
-				'X-User-Address': address
-			}
-		});
-		return response.data.blocked_users || [];
-	};
+	const { address } = useAccount();
 
 	const performSearch = async (selectedPage: number) => {
-		if (!address) return; // Ensure address is available before making API calls
-
 		setLoading(true);
-		if (Object.keys(filters).length === 0) return;
 
 		const params: { [key: string]: string | undefined } = {
 			page: selectedPage.toString(),
@@ -69,33 +56,36 @@ const HomePage: React.FC = () => {
 
 		try {
 			console.log('Fetching ads with search params:', searchParams.toString());
-			console.log('Fetching blocked users with address:', address);
-			const [adsResponse, blockedUsersResponse] = await Promise.all([
-				fetch(`/api/lists?${searchParams.toString()}`, {
-					headers: {
-						Authorization: `Bearer ${getAuthToken()}`
-					}
-				}).then((res) => res.json()),
-				axios.get('/api/user_relationships', {
-					headers: {
-						'X-User-Address': address
-					}
-				})
-			]);
+			const adsResponse = await fetch(`/api/lists?${searchParams.toString()}`, {
+				headers: {
+					Authorization: `Bearer ${getAuthToken()}`
+				}
+			}).then((res) => res.json());
 
 			const { data, meta } = adsResponse;
 			setPaginationMeta(meta);
 
-			const blockedUsers = blockedUsersResponse.data.blocked_users || [];
-			const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
-			const trustedUsers = blockedUsersResponse.data.trusted_users || [];
+			let blockedUserIds = new Set<number>();
+			let trustedUsers: User[] = [];
 
-			const blockedUserIds = new Set([
-				...blockedUsers.map((user: User) => user.id),
-				...blockedByUsers.map((user: User) => user.id)
-			]);
+			if (address) {
+				console.log('Fetching blocked users with address:', address);
+				const blockedUsersResponse = await axios.get('/api/user_relationships', {
+					headers: {
+						'X-User-Address': address
+					}
+				});
 
-			// Filter out ads from blocked users and ensure trusted users can see the ad
+				const blockedUsers = blockedUsersResponse.data.blocked_users || [];
+				const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
+				trustedUsers = blockedUsersResponse.data.trusted_users || [];
+
+				blockedUserIds = new Set([
+					...blockedUsers.map((user: User) => user.id),
+					...blockedByUsers.map((user: User) => user.id)
+				]);
+			}
+
 			const filteredAds = data.filter((list: List) => {
 				const isTrustedOnly = list.accept_only_trusted;
 				const isOwnerTrusted = trustedUsers.some((user: User) => user.id === list.seller?.id);
@@ -104,7 +94,7 @@ const HomePage: React.FC = () => {
 					return false;
 				}
 
-				if (isTrustedOnly && !isOwnerTrusted) {
+				if (isTrustedOnly && (!address || !isOwnerTrusted)) {
 					return false;
 				}
 
@@ -125,17 +115,13 @@ const HomePage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (address) {
-			resetPage();
-			performSearch(1);
-		}
-	}, [type, filters, address]);
+		resetPage();
+		performSearch(1);
+	}, [type, filters]);
 
 	useEffect(() => {
-		if (address) {
-			performSearch(page);
-		}
-	}, [page, address]);
+		performSearch(page);
+	}, [page]);
 
 	useEffect(() => {
 		if (type === 'Buy') {
