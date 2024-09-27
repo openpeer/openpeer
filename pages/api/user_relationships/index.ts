@@ -4,17 +4,22 @@ import { minkeApi } from '../utils/utils';
 
 const getUserRelationshipsFromApi = async (
 	address: string
-): Promise<{ trusted_users: User[]; blocked_users: User[]; blocked_by_users: User[] }> => {
+): Promise<{ trusted_users: User[]; blocked_users: User[]; blocked_by_users: User[]; trusted_by_users: User[] }> => {
 	const { data } = await minkeApi.get('/user_relationships', {
 		headers: {
 			'X-User-Address': address
 		}
 	});
-	return data.data;
+	return {
+		trusted_users: data.data.trusted_users,
+		blocked_users: data.data.blocked_users,
+		blocked_by_users: data.data.blocked_by_users,
+		trusted_by_users: data.data.trusted_by_users // Ensure this field is returned by the API
+	};
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const { method, query } = req;
+	const { method } = req;
 	const address = req.headers['x-user-address'] as string;
 
 	if (!address) {

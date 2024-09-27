@@ -43,11 +43,27 @@ const fetchLists = async (address: string, token: string): Promise<List[]> => {
 		}
 
 		const blockedUsers = userRelationships.blocked_users.map((user) => user.id);
+		const trustedUsers = userRelationships.trusted_users.map((user) => user.id);
 
-		// Filter lists to exclude those owned by blocked users
+		// Filter lists to exclude those owned by blocked users and ensure trusted users can see the ad
 		const filteredLists = lists.filter((list: List) => {
 			const ownerId = list.seller?.id;
-			return ownerId && !blockedUsers.includes(ownerId);
+			const isTrustedOnly = list.accept_only_trusted;
+			const isOwnerTrusted = trustedUsers.includes(ownerId);
+
+			if (!ownerId) {
+				return false;
+			}
+
+			if (blockedUsers.includes(ownerId)) {
+				return false;
+			}
+
+			if (isTrustedOnly && !isOwnerTrusted) {
+				return false;
+			}
+
+			return true;
 		});
 
 		return filteredLists;

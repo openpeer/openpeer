@@ -1,3 +1,4 @@
+// components/ListsTable.tsx
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/indent */
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
@@ -21,6 +22,7 @@ import Token from './Token/Token';
 import IdVerificationNeeded from './IdVerificationNeeded';
 import Network from './Network/Network';
 import HiddenBadge from './HiddenBadge';
+import TrustedBadge from './TrustedBadge';
 
 interface ListsTableProps {
 	lists: List[];
@@ -161,7 +163,8 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 						payment_time_limit: paymentTimeLimit,
 						escrow_type: escrowType,
 						type,
-						accept_only_verified: acceptOnlyVerified
+						accept_only_verified: acceptOnlyVerified,
+						accept_only_trusted: acceptOnlyTrusted
 					} = list;
 					const banks = type === 'BuyList' ? list.banks : paymentMethods.map((pm) => pm.bank);
 					const { address: sellerAddress, name } = seller;
@@ -342,6 +345,7 @@ const ListsTable = ({ lists, fiatAmount, tokenAmount, hideLowAmounts }: ListsTab
 										</div>
 									</div>
 									{showVerification && acceptOnlyVerified && <IdVerificationNeeded />}
+									{acceptOnlyTrusted && <TrustedBadge text="Trusted Only" />}
 								</div>
 								{isHidden && <HiddenBadge />}
 							</td>

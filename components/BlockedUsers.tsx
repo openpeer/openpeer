@@ -50,7 +50,7 @@ const BlockedUsers: React.FC<BlockedUsersProps> = ({
 							'X-User-Address': address
 						}
 					});
-					const { blocked_users } = response.data;
+					const { blocked_users, trusted_by_users } = response.data;
 					setSelectedBlockedUsers(blocked_users || []);
 				} catch (error) {
 					console.error('Error fetching user relationships:', error);

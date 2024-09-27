@@ -68,7 +68,7 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 			const loadUsers = async () => {
 				try {
 					const data = await fetchUserRelationships();
-					const { trusted_users } = data; // Adjusted to match backend response
+					const { trusted_users, trusted_by_users } = data; // Adjusted to match backend response
 					setSelectedTrustedUsers(trusted_users || []);
 				} catch (error) {
 					console.error('Error fetching user relationships:', error);
@@ -247,6 +247,10 @@ const TrustedUsers: React.FC<TrustedUsersProps> = ({
 	const handleToggleTrustedUsers = () => {
 		setShowTrustedUsers(!showTrustedUsers);
 	};
+
+	useEffect(() => {
+		// Fetch and set trusted users if acceptOnlyTrusted is true
+	}, [acceptOnlyTrusted, address]);
 
 	return (
 		<div className="mb-4">

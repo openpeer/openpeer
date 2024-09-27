@@ -30,6 +30,7 @@ export interface UIList {
 	escrowType: List['escrow_type'];
 	banks: Bank[];
 	priceSource: PriceSource | undefined;
+	acceptOnlyTrusted: boolean;
 }
 
 export interface ListStepProps {
