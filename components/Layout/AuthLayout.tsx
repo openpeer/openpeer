@@ -100,9 +100,7 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 						key={item.name}
 					>
 						{isAuthenticated ? (
-							<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer">
-								Support Coming Soon
-							</div>
+							<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer"></div>
 						) : (
 							<DynamicConnectButton>
 								<Button

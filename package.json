@@ -19,6 +19,7 @@
 		"@ethersproject/providers": "^5.7.2",
 		"@headlessui/react": "^1.7.5",
 		"@heroicons/react": "^2.0.13",
+		"@intercom/messenger-js-sdk": "^0.0.14",
 		"@knocklabs/client": "^0.8.6",
 		"@next/font": "13.0.6",
 		"@openzeppelin/merkle-tree": "^1.0.4",
