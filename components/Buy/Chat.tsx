@@ -92,7 +92,11 @@ const Chat = ({ address, label }: ChatParams) => {
 				outlined
 			/>
 			{showChat && (
-				<Chatbox syncConversation={syncConversation} style={{ height: '500px', width: '100% !important' }} />
+				<Chatbox
+					syncConversation={syncConversation}
+					className="mb-4"
+					style={{ height: '500px', width: '100%' }}
+				/>
 			)}
 		</>
 	);
