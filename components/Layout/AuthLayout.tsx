@@ -31,7 +31,6 @@ import {
 	useAuthenticateConnectedUser,
 	useDynamicContext
 } from '@dynamic-labs/sdk-react-core';
-import { ChatWithOwner } from 'react-wallet-chat-sso';
 import Avatar from '../Avatar';
 import Button from '../Button/Button';
 import { CollapseButton } from '../Navigation';
@@ -101,29 +100,9 @@ const NavItems = ({ selected, onClick }: { selected: string | undefined; onClick
 						key={item.name}
 					>
 						{isAuthenticated ? (
-							<ChatWithOwner
-								ownerAddress="0x630220d00Cf136270f553c8577aF18300F7b812c"
-								render={
-									<Button
-										title={
-											<div
-												className={`${
-													selected === item.name ? 'bg-gray-700' : ''
-												} text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-4 py-8 text-base font-medium cursor-pointer`}
-											>
-												<item.icon
-													className="text-gray-400 group-hover:text-gray-300 flex-shrink-0 h-6 w-6 mr-2"
-													aria-hidden="true"
-												/>
-												<span className="nav-item h-6 lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity lg:duration-150 lg:visibility-hidden lg:group-hover:visibility-visible">
-													{item.name}
-												</span>
-											</div>
-										}
-										link
-									/>
-								}
-							/>
+							<div className="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center text-base font-medium cursor-pointer">
+								Support Coming Soon
+							</div>
 						) : (
 							<DynamicConnectButton>
 								<Button
