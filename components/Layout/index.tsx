@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import { DynamicWagmiConnector } from '@dynamic-labs/wagmi-connector';
 import { MessageContextProvider } from 'contexts/MessageContext';
-import ChatProvider from 'providers/ChatProvider';
+import TalkProvider from 'providers/TalkProvider';
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 import { MagicWalletConnectors } from '@dynamic-labs/magic';
 import { blastEvmNetwork } from 'models/networks';
@@ -50,10 +50,10 @@ const App = ({ Component, pageProps }: AppProps) => {
 							// @ts-expect-error
 							<NoAuthLayout pageProps={pageProps} Component={Component} />
 						) : (
-							<ChatProvider>
+							<TalkProvider>
 								{/* @ts-expect-error */}
 								<AuthLayout pageProps={pageProps} Component={Component} />
-							</ChatProvider>
+							</TalkProvider>
 						)}
 					</TransactionFeedbackProvider>
 				</MessageContextProvider>
