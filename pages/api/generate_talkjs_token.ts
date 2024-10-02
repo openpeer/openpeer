@@ -6,7 +6,10 @@ import jwt from 'jsonwebtoken';
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { user_id } = req.body;
 	const secret_key = process.env.TALKJS_SECRET_KEY;
-	const app_id = process.env.TALKJS_APP_ID;
+	const app_id = process.env.NEXT_PUBLIC_TALKJS_APP_ID;
+
+	// Log received parameters
+	console.log('Received parameters:', { user_id, secret_key, app_id });
 
 	if (!user_id || !secret_key || !app_id) {
 		return res.status(400).json({ error: 'Missing parameters' });

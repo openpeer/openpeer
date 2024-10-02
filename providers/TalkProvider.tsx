@@ -1,11 +1,9 @@
-// providers/TalkProvider.tsx
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import Talk from 'talkjs';
 import { Session } from '@talkjs/react';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext, getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { useAccount } from 'wagmi';
 import axios from 'axios';
 import { bootIntercom } from 'utils/intercom';
@@ -17,6 +15,7 @@ interface UserDetails {
 	name?: string;
 	email?: string;
 	image_url?: string;
+	created_at?: string;
 }
 
 interface TalkProviderProps {
@@ -27,20 +26,46 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 	const { address: account } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-	const [token, setToken] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchUserDetails = async () => {
 			if (!account || !isAuthenticated) return;
 
+			const authToken = getAuthToken();
+			console.log('authToken:', authToken, typeof authToken);
+			if (!authToken || authToken === 'undefined') {
+				console.log('Auth token is not available yet or is invalid');
+				return;
+			}
+
 			try {
+				console.log('Fetching user details for account:', account);
+
 				// Fetch user details from your API
-				const response = await axios.get(`/api/users/${account}`);
+				const response = await axios.get(`/api/user_profiles/${account}`, {
+					headers: {
+						Authorization: `Bearer ${authToken}`
+					}
+				});
 				setUserDetails(response.data);
 
-				// Fetch the TalkJS token
-				const tokenResponse = await axios.post('/api/generate_talkjs_token', { user_id: response.data.id });
-				setToken(tokenResponse.data.token);
+				// Log user details
+				console.log('User details:', response.data);
+
+				// Fetch the TalkJS token (if needed)
+				const tokenResponse = await axios.post(
+					'/api/generate_talkjs_token',
+					{ user_id: response.data.id },
+					{
+						headers: {
+							Authorization: `Bearer ${authToken}`
+						}
+					}
+				);
+				const token = tokenResponse.data.token;
+
+				// Log token response
+				console.log('Token response:', tokenResponse.data);
 
 				// Boot Intercom with user data
 				bootIntercom({
@@ -57,10 +82,11 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 	}, [account, isAuthenticated]);
 
 	const syncUser = useCallback(() => {
-		const id = userDetails?.id || account!;
-		const name = userDetails?.name || account!;
-		const email = userDetails?.email || null;
-		const photoUrl = userDetails?.image_url || undefined;
+		// At this point, userDetails is guaranteed to be not null
+		const id = userDetails!.id || account!;
+		const name = userDetails!.name || account!;
+		const email = userDetails!.email || null;
+		const photoUrl = userDetails!.image_url || undefined;
 
 		return new Talk.User({
 			id,
@@ -71,16 +97,21 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 		});
 	}, [userDetails, account]);
 
-	// Move the check here to avoid conditional hooks
-	if (!isAuthenticated || !account || !userDetails) {
-		return null; // or a loading indicator
+	if (!TALKJS_APP_ID) {
+		console.error('TALKJS_APP_ID is not defined');
+		return <>{children}</>;
 	}
 
-	return (
-		<Session appId={TALKJS_APP_ID} syncUser={syncUser}>
-			{children}
-		</Session>
-	);
+	if (isAuthenticated && userDetails) {
+		return (
+			<Session appId={TALKJS_APP_ID} syncUser={syncUser}>
+				{children}
+			</Session>
+		);
+	}
+
+	// Render children even if not authenticated
+	return <>{children}</>;
 };
 
 export default TalkProvider;
