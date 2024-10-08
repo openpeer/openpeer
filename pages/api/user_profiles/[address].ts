@@ -1,16 +1,18 @@
 // pages/api/user_profiles/[address].ts
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { User } from 'models/types';
 import { minkeApi } from '../utils/utils';
-// eslint-disable-next-line import/order
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 const fetchUser = async (address: string, token: string): Promise<User> => {
+	console.log(`Fetching user profile for address: ${address}`);
+	console.log('Headers:', { Authorization: `Bearer ${token}` });
+
 	const { data } = await minkeApi.get(`/user_profiles/${address}`, {
 		headers: {
-			Authorization: token
-		}
+			Authorization: `Bearer ${token}`
+		},
+		timeout: 5000
 	});
 	return data.data;
 };
@@ -36,7 +38,7 @@ const updateUser = async (address: string, body: NextApiRequest['body'], token: 
 
 		const { data } = await minkeApi.patch(`/user_profiles/${address}`, userProfile, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -53,7 +55,7 @@ const verifyUser = async (chainId: string, token: string): Promise<User> => {
 		{},
 		{
 			headers: {
-				Authorization: token
+				Authorization: `Bearer ${token}`
 			}
 		}
 	);
@@ -70,21 +72,26 @@ export default async function handler(
 	console.log(`Incoming ${method} request for address: ${address}`);
 	console.log('Request body:', body);
 
-	if (!headers.authorization) {
-		return res.status(401).json({ error: 'Missing authorization token' });
+	const authHeader = headers.authorization;
+
+	if (!authHeader || authHeader === 'Bearer undefined') {
+		return res.status(401).json({ error: 'Missing or invalid authorization token' });
 	}
+
+	// Extract the token by removing the 'Bearer ' prefix
+	const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
 	try {
 		switch (method) {
 			case 'GET':
-				res.status(200).json(await fetchUser(address as string, headers.authorization));
+				res.status(200).json(await fetchUser(address as string, token));
 				break;
 			case 'PATCH':
-				const updatedUser = await updateUser(address as string, body, headers.authorization);
+				const updatedUser = await updateUser(address as string, body, token);
 				res.status(200).json(updatedUser);
 				break;
 			case 'POST':
-				res.status(200).json(await verifyUser(address as string, headers.authorization));
+				res.status(200).json(await verifyUser(address as string, token));
 				break;
 			default:
 				res.setHeader('Allow', ['GET', 'PATCH', 'POST']);
@@ -95,8 +102,8 @@ export default async function handler(
 
 		if (axios.isAxiosError(error)) {
 			const status = error.response?.status || 500;
-			const data = error.response?.data;
-			res.status(status).json(data);
+			const errorMessage = error.response?.data?.error || 'Unknown error occurred';
+			res.status(status).json({ error: errorMessage, details: error.message });
 		} else if (error instanceof Error) {
 			res.status(500).json({
 				error: 'An error occurred while processing your request',

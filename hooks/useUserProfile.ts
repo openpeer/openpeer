@@ -1,15 +1,11 @@
 // hooks/useUserProfile.ts
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { S3 } from 'aws-sdk';
-import { Errors, ERROR_FIELDS, ErrorFields } from 'models/errors';
+import { Errors } from 'models/errors';
 import { User } from 'models/types';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useAccount } from 'wagmi';
 import { isEqual, debounce, DebouncedFunc } from 'lodash';
-
-interface ErrorObject {
-	[fieldName: string]: string[];
-}
 
 const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) => void }) => {
 	const [user, setUser] = useState<User | null>(null);
@@ -18,6 +14,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [errors, setErrors] = useState<Errors>({});
 	const [previousProfile, setPreviousProfile] = useState<Partial<User> | null>(null);
 	const { address } = useAccount();
+	const { authToken } = useDynamicContext(); // Get authToken from useDynamicContext
 
 	const telegramBotLinkRef = useRef<string>('');
 
@@ -34,15 +31,20 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	}, []);
 
 	const fetchUserProfile = useCallback(async () => {
-		if (!address) return;
+		if (!address || !authToken) return;
 
 		try {
 			console.log('Fetching user profile...');
 			const res = await fetch(`/api/user_profiles/${address}`, {
 				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
+					Authorization: `Bearer ${authToken}`
 				}
 			});
+			if (res.status === 401) {
+				console.error('Unauthorized: Invalid or missing auth token');
+				setUser(null);
+				return;
+			}
 			const data = await res.json();
 			if (data.errors) {
 				setUser(null);
@@ -54,7 +56,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
 		}
-	}, [address, updateUserState]);
+	}, [address, authToken, updateUserState]);
 
 	useEffect(() => {
 		fetchUserProfile();
@@ -108,6 +110,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 
 	const updateUserProfile = useCallback(
 		async (profile: Partial<User>, showNotification = true) => {
+			if (!authToken) return; // Ensure authToken is available
 			console.log('Profile data before validation:', profile);
 			const validationErrors = validateProfile(profile);
 			if (Object.keys(validationErrors).length > 0) {
@@ -145,18 +148,13 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				});
 
-				// Include email in the update even if it hasn't changed
-				// if (user && user.email) {
-				// 	userProfileData.email = user.email;
-				// }
-
 				console.log('Sending user profile data to API:', userProfileData);
 
 				const result = await fetch(`/api/user_profiles/${address}`, {
 					method: 'PATCH',
 					body: JSON.stringify({ user_profile: userProfileData }),
 					headers: {
-						Authorization: `Bearer ${getAuthToken()}`,
+						Authorization: `Bearer ${authToken}`,
 						'Content-Type': 'application/json'
 					}
 				});
@@ -202,7 +200,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				setIsUpdating(false);
 			}
 		},
-		[address, onUpdateProfile, updateUserState, validateProfile, previousProfile, user, fetchUserProfile]
+		[address, authToken, onUpdateProfile, updateUserState, validateProfile, previousProfile, user, fetchUserProfile]
 	);
 
 	const debouncedUpdateUserProfile = useCallback(
@@ -239,28 +237,33 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	safeUpdateProfile.flush = debouncedUpdateUserProfile.flush;
 
 	const deleteTelegramInfo = useCallback(async () => {
-		await updateUserProfile({
-			telegram_user_id: null,
-			telegram_username: null
-		});
+		if (!authToken) return;
+		await updateUserProfile(
+			{
+				telegram_user_id: null,
+				telegram_username: null
+			},
+			false
+		);
 		await fetchUserProfile();
-	}, [updateUserProfile, fetchUserProfile]);
+	}, [updateUserProfile, fetchUserProfile, authToken]);
 
 	const onUploadFinished = useCallback(
 		async ({ Key: image }: S3.ManagedUpload.SendData) => {
+			if (!authToken) return;
 			updateUserProfile({ ...user, image } as User, false);
 		},
-		[user, updateUserProfile]
+		[user, updateUserProfile, authToken]
 	);
 
 	const refreshUserProfile = useCallback(async () => {
-		if (!address) return { success: false, error: 'No address provided' };
+		if (!address || !authToken) return { success: false, error: 'No address or auth token provided' };
 
 		try {
 			console.log('Refreshing user profile...');
 			const res = await fetch(`/api/user_profiles/${address}`, {
 				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
+					Authorization: `Bearer ${authToken}`
 				}
 			});
 			if (!res.ok) {
@@ -279,7 +282,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 				error: error instanceof Error ? error.message : 'An error occurred while fetching the user profile'
 			};
 		}
-	}, [address, updateUserState]);
+	}, [address, authToken, updateUserState]);
 
 	return useMemo(
 		() => ({
