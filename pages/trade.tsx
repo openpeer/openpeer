@@ -1,3 +1,5 @@
+// pages/trade.tsx
+
 import { Button, ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination, useAccount } from 'hooks';
@@ -8,7 +10,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+// Replace getAuthToken import
+// import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 interface PaginationMeta {
 	current_page: number;
@@ -29,6 +33,7 @@ const HomePage: React.FC = () => {
 
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
 	const { address } = useAccount();
+	const { authToken } = useDynamicContext(); // Get authToken
 
 	const performSearch = async (selectedPage: number) => {
 		setLoading(true);
@@ -58,7 +63,7 @@ const HomePage: React.FC = () => {
 			console.log('Fetching ads with search params:', searchParams.toString());
 			const adsResponse = await fetch(`/api/lists?${searchParams.toString()}`, {
 				headers: {
-					Authorization: `Bearer ${getAuthToken()}`
+					Authorization: `Bearer ${authToken}`
 				}
 			}).then((res) => res.json());
 
@@ -67,6 +72,7 @@ const HomePage: React.FC = () => {
 
 			let blockedUserIds = new Set<number>();
 			let trustedUsers: User[] = [];
+			let trustedByUsers: User[] = [];
 
 			if (address) {
 				console.log('Fetching blocked users with address:', address);
@@ -76,30 +82,73 @@ const HomePage: React.FC = () => {
 					}
 				});
 
+				console.log('Blocked users response:', blockedUsersResponse.data);
+
 				const blockedUsers = blockedUsersResponse.data.blocked_users || [];
 				const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
 				trustedUsers = blockedUsersResponse.data.trusted_users || [];
+				trustedByUsers = blockedUsersResponse.data.trusted_by_users || [];
 
 				blockedUserIds = new Set([
-					...blockedUsers.map((user: User) => user.id),
-					...blockedByUsers.map((user: User) => user.id)
+					...blockedUsers.map((user: User) => Number(user.id)),
+					...blockedByUsers.map((user: User) => Number(user.id))
 				]);
+
+				console.log('Blocked User IDs:', Array.from(blockedUserIds));
+				console.log(
+					'Trusted Users IDs:',
+					trustedUsers.map((user) => ({ id: Number(user.id), type: typeof user.id }))
+				);
+				console.log(
+					'Trusted By Users IDs:',
+					trustedByUsers.map((user) => ({ id: Number(user.id), type: typeof user.id }))
+				);
 			}
 
 			const filteredAds = data.filter((list: List) => {
 				const isTrustedOnly = list.accept_only_trusted;
-				const isOwnerTrusted = trustedUsers.some((user: User) => user.id === list.seller?.id);
+				const sellerId = Number(list.seller?.id);
 
-				if (blockedUserIds.has(list.seller?.id)) {
+				if (!sellerId) {
+					console.log(`Excluding list ${list.id} because seller ID is missing or invalid`);
 					return false;
 				}
 
-				if (isTrustedOnly && (!address || !isOwnerTrusted)) {
+				const sellerTrustedByMe = trustedUsers.some((user: User) => Number(user.id) === sellerId);
+				const sellerTrustsMe = trustedByUsers.some((user: User) => Number(user.id) === sellerId);
+
+				const isSellerBlocked = blockedUserIds.has(sellerId);
+				const cannotAccessTrustedOnlyAd =
+					isTrustedOnly && (!address || (!sellerTrustedByMe && !sellerTrustsMe));
+
+				console.log('Evaluating list:', {
+					listId: list.id,
+					sellerId,
+					isTrustedOnly,
+					sellerTrustedByMe,
+					sellerTrustsMe,
+					isSellerBlocked,
+					cannotAccessTrustedOnlyAd
+				});
+
+				if (isSellerBlocked) {
+					console.log(`Excluding list ${list.id} because seller ${sellerId} is blocked`);
 					return false;
 				}
 
+				if (cannotAccessTrustedOnlyAd) {
+					console.log(
+						`Excluding list ${list.id} because it's trusted-only and seller ${sellerId} is neither trusted by you nor trusts you`
+					);
+					return false;
+				}
+
+				console.log(`Including list ${list.id}`);
 				return true;
 			});
+
+			console.log('Total ads fetched:', data.length);
+			console.log('Filtered ads count:', filteredAds.length);
 
 			const toBuyers = filteredAds.filter((list: List) => list.type === 'SellList');
 			const toSellers = filteredAds.filter((list: List) => list.type === 'BuyList');
