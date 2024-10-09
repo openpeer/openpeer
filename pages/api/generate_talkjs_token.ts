@@ -9,11 +9,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const app_id = process.env.NEXT_PUBLIC_TALKJS_APP_ID;
 
 	// Log received parameters
-	console.log('Received parameters:', { user_id, secret_key, app_id });
+	// console.log('Received parameters:', { user_id, secret_key, app_id });
 
-	// Added logging for secret_key and app_id
-	console.log('Secret key:', secret_key);
-	console.log('App ID:', app_id);
+	// console.log('Secret key:', secret_key);
+	// console.log('App ID:', app_id);
+	// console.log('User ID:', user_id);
 
 	if (!user_id || !secret_key || !app_id) {
 		return res.status(400).json({ error: 'Missing parameters' });
@@ -25,7 +25,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 				tokenType: 'user',
 				iss: app_id,
 				sub: String(user_id),
-				expiresIn: '1d'
+				expiresIn: '1d',
+				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 // Expiration in seconds (1 day)
 			},
 			secret_key,
 			{ algorithm: 'HS256' }

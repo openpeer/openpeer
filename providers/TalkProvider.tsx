@@ -1,5 +1,3 @@
-// providers/TalkProvider.tsx
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -28,7 +26,6 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 	const { address: account } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-	const [talkJsToken, setTalkJsToken] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchUserDetails = async () => {
@@ -55,20 +52,6 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 				// Log user details
 				console.log('User details:', response.data);
 
-				// Fetch the TalkJS token
-				const tokenResponse = await axios.post(
-					'/api/generate_talkjs_token',
-					{ user_id: response.data.id },
-					{
-						headers: {
-							Authorization: `Bearer ${authToken}`
-						}
-					}
-				);
-
-				setTalkJsToken(tokenResponse.data.token);
-				console.log('TalkJS token:', tokenResponse.data.token);
-
 				// Boot Intercom with user data
 				bootIntercom({
 					email: response.data.email,
@@ -83,17 +66,8 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 		fetchUserDetails();
 	}, [account, isAuthenticated]);
 
-	const syncUser = useCallback((): Talk.User => {
-		if (!userDetails || !account) {
-			console.error('syncUser called without userDetails or account being set.');
-			// Return a default user object if userDetails or account is not available
-			return new Talk.User({
-				id: 'default-user',
-				name: 'Default User',
-				role: 'default'
-			});
-		}
-
+	const syncUser = useCallback(() => {
+		// At this point, userDetails is guaranteed to be not null
 		const id = userDetails!.id || account!;
 		const name = userDetails!.name || account!;
 		const email = userDetails!.email || null;
@@ -113,9 +87,9 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 		return <>{children}</>;
 	}
 
-	if (isAuthenticated && userDetails && talkJsToken) {
+	if (isAuthenticated && userDetails) {
 		return (
-			<Session appId={TALKJS_APP_ID} syncUser={syncUser} token={talkJsToken}>
+			<Session appId={TALKJS_APP_ID} syncUser={syncUser}>
 				{children}
 			</Session>
 		);

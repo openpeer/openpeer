@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		switch (method) {
 			case 'GET': {
 				const fetchedList = await fetchList(id as string, token);
-				console.log('Fetched list:', fetchedList);
+				// console.log('Fetched list:', fetchedList);
 				res.status(200).json(fetchedList);
 				break;
 			}
