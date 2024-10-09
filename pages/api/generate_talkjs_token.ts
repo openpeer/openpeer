@@ -11,13 +11,22 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Log received parameters
 	console.log('Received parameters:', { user_id, secret_key, app_id });
 
+	// Added logging for secret_key and app_id
+	console.log('Secret key:', secret_key);
+	console.log('App ID:', app_id);
+
 	if (!user_id || !secret_key || !app_id) {
 		return res.status(400).json({ error: 'Missing parameters' });
 	}
 
 	try {
 		const token = jwt.sign(
-			{ tokenType: 'user', iss: app_id, sub: user_id, exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60 },
+			{
+				tokenType: 'user',
+				iss: app_id,
+				sub: String(user_id),
+				expiresIn: '1d'
+			},
 			secret_key,
 			{ algorithm: 'HS256' }
 		);
