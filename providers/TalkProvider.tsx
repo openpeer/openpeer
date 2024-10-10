@@ -26,6 +26,7 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 	const { address: account } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+	const [jwtToken, setJwtToken] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchUserDetails = async () => {
@@ -58,8 +59,21 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 					user_id: response.data.id,
 					created_at: Math.floor(new Date(response.data.created_at).getTime() / 1000)
 				});
+
+				// Fetch JWT token
+				await fetchJwtToken(response.data.id);
 			} catch (error) {
 				console.error('Error fetching user details:', error);
+			}
+		};
+
+		const fetchJwtToken = async (userId: string) => {
+			try {
+				const response = await axios.post('/api/generate_talkjs_token', { user_id: userId });
+				setJwtToken(response.data.token);
+				console.log('JWT token:', response.data.token);
+			} catch (error) {
+				console.error('Error fetching JWT token:', error);
 			}
 		};
 
@@ -88,8 +102,13 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 	}
 
 	if (isAuthenticated && userDetails) {
+		console.log('Session data:', {
+			appId: TALKJS_APP_ID,
+			jwtToken,
+			userDetails
+		});
 		return (
-			<Session appId={TALKJS_APP_ID} syncUser={syncUser}>
+			<Session appId={TALKJS_APP_ID} token={jwtToken ?? undefined} syncUser={syncUser}>
 				{children}
 			</Session>
 		);

@@ -20,17 +20,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	}
 
 	try {
-		const token = jwt.sign(
-			{
-				tokenType: 'user',
-				iss: app_id,
-				sub: String(user_id),
-				expiresIn: '1d',
-				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 // Expiration in seconds (1 day)
-			},
-			secret_key,
-			{ algorithm: 'HS256' }
-		);
+		const token = jwt.sign({ tokenType: 'user' }, secret_key, {
+			issuer: app_id,
+			subject: String(user_id),
+			expiresIn: '1d'
+		});
+		// console.log(token);
+
 		return res.status(200).json({ token });
 	} catch (error) {
 		if (error instanceof Error) {
