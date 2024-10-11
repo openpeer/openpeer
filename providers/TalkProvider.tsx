@@ -33,14 +33,14 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 			if (!account || !isAuthenticated) return;
 
 			const authToken = getAuthToken();
-			console.log('authToken:', authToken, typeof authToken);
+			// console.log('authToken:', authToken, typeof authToken);
 			if (!authToken || authToken === 'undefined') {
 				console.log('Auth token is not available yet or is invalid');
 				return;
 			}
 
 			try {
-				console.log('Fetching user details for account:', account);
+				// console.log('Fetching user details for account:', account);
 
 				// Fetch user details from your API
 				const response = await axios.get(`/api/user_profiles/${account}`, {
@@ -51,7 +51,7 @@ const TalkProvider = ({ children }: TalkProviderProps) => {
 				setUserDetails(response.data);
 
 				// Log user details
-				console.log('User details:', response.data);
+				// console.log('User details:', response.data);
 
 				// Boot Intercom with user data
 				bootIntercom({
