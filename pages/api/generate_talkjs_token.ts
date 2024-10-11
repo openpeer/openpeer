@@ -1,5 +1,3 @@
-// pages/api/generate_talkjs_token.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'jsonwebtoken';
 
@@ -8,25 +6,23 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const secret_key = process.env.TALKJS_SECRET_KEY;
 	const app_id = process.env.NEXT_PUBLIC_TALKJS_APP_ID;
 
-	// Log received parameters
-	// console.log('Received parameters:', { user_id, secret_key, app_id });
-
-	// console.log('Secret key:', secret_key);
-	// console.log('App ID:', app_id);
-	// console.log('User ID:', user_id);
-
 	if (!user_id || !secret_key || !app_id) {
 		return res.status(400).json({ error: 'Missing parameters' });
 	}
 
 	try {
-		const token = jwt.sign({ tokenType: 'user' }, secret_key, {
-			issuer: app_id,
-			subject: String(user_id),
-			expiresIn: '1d'
-		});
-		// console.log(token);
-
+		const token = jwt.sign(
+			{
+				tokenType: 'user',
+				iss: app_id,
+				sub: String(user_id),
+				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
+			},
+			secret_key
+			// {
+			// 	expiresIn: '1d'
+			// }
+		);
 		return res.status(200).json({ token });
 	} catch (error) {
 		if (error instanceof Error) {
