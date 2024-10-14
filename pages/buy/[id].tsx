@@ -1,16 +1,17 @@
 // pages/buy/[id].tsx
+
 import { Loading, Steps } from 'components';
 import { Amount, OrderPaymentMethod, Summary } from 'components/Buy';
 import { UIOrder } from 'components/Buy/Buy.types';
 import { useListPrice, useAccount } from 'hooks';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import { AdjustmentsVerticalIcon } from '@heroicons/react/24/outline';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import BlockedUsers from 'components/BlockedUsers';
 import { User } from 'models/types';
+import useUserRelationships from 'hooks/useUserRelationships';
 
 const AMOUNT_STEP = 1;
 const PAYMENT_METHOD_STEP = 2;
@@ -23,41 +24,29 @@ const BuyPage = ({ id }: { id: number }) => {
 	const { step = AMOUNT_STEP, list } = order;
 	const { price } = useListPrice(list);
 	const { address } = useAccount();
-	const [selectedBlockedUsers, setSelectedBlockedUsers] = useState<User[]>([]); // State for blocked users
 
-	// Add logging to verify the address
+	// Logging the address for debugging
 	useEffect(() => {
 		console.log('BuyPage address:', address);
 	}, [address]);
 
+	const userRelationships = useUserRelationships(address);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const [listResponse, blockedUsersResponse] = await Promise.all([
-					fetch(`/api/lists/${id}`, {
-						headers: {
-							Authorization: `Bearer ${getAuthToken()}`
-						}
-					}).then((res) => res.json()),
-					axios.get('/api/user_relationships', {
-						headers: {
-							'X-User-Address': address
-						}
-					})
-				]);
-
-				const { blocked_users, blocked_by_users, trusted_by_users } = blockedUsersResponse.data;
-				console.log('blocked_users:', blocked_users);
-				console.log('blocked_by_users:', blocked_by_users);
-				console.log('trusted_by_users:', trusted_by_users);
-				const listData = listResponse;
+				const listResponse = await fetch(`/api/lists/${id}`, {
+					headers: {
+						Authorization: `Bearer ${getAuthToken()}`
+					}
+				}).then((res) => res.json());
 
 				setOrder({
 					...order,
-					...{ list: listData, listId: listData.id }
+					...{ list: listResponse, listId: listResponse.id }
 				});
 
-				const seller = listData.seller;
+				const seller = listResponse.seller;
 				console.log('Seller:', seller);
 
 				if (!seller) {
@@ -65,20 +54,26 @@ const BuyPage = ({ id }: { id: number }) => {
 					return;
 				}
 
-				if (blocked_users.some((user: any) => user.id === seller.id)) {
+				if (!userRelationships) {
+					console.log('User relationships not loaded yet.');
+					return;
+				}
+
+				const { blocked_users, blocked_by_users, trusted_by_users } = userRelationships;
+
+				const sellerTrustsMe = trusted_by_users.some((user: User) => user.id === seller.id);
+
+				if (blocked_users.some((user: User) => user.id === seller.id)) {
 					console.log('User has blocked the seller.');
 					setIsBlocked(true);
 					setBlockedMessage(
 						'You have blocked the owner of this offer. You can unblock them to proceed or you can choose another offer.'
 					);
-				} else if (blocked_by_users.some((user: any) => user.id === seller.id)) {
+				} else if (blocked_by_users.some((user: User) => user.id === seller.id)) {
 					console.log('Seller has blocked the user.');
 					setIsBlocked(true);
 					setBlockedMessage('The owner of this offer has blocked you. Please choose another offer.');
-				} else if (
-					listData.accept_only_trusted &&
-					!trusted_by_users.some((user: any) => user.id === seller.id)
-				) {
+				} else if (listResponse.accept_only_trusted && !sellerTrustsMe) {
 					console.log('Ad accepts only trusted users and the seller does not trust the current user.');
 					setIsBlocked(true);
 					setBlockedMessage('This ad is not available');
@@ -87,17 +82,15 @@ const BuyPage = ({ id }: { id: number }) => {
 					setIsBlocked(false);
 					setBlockedMessage('');
 				}
-
-				setSelectedBlockedUsers(blocked_users || []); // Set blocked users
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
 		};
 
-		if (address) {
+		if (address && userRelationships) {
 			fetchData();
 		}
-	}, [id, address]);
+	}, [id, address, userRelationships]);
 
 	useEffect(() => {
 		setOrder({ ...order, ...{ price } });

@@ -4,14 +4,12 @@ import { Button, ListsTable, Loading, Pagination, Switcher } from 'components';
 import Filters from 'components/Buy/Filters';
 import { usePagination, useAccount } from 'hooks';
 import { SearchFilters } from 'models/search';
-import { List, User } from 'models/types';
+import { List } from 'models/types';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import useUserRelationships from 'hooks/useUserRelationships';
+import filterAdsByUserRelationships from 'utils/filterAds';
 import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-// Replace getAuthToken import
-// import { getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 interface PaginationMeta {
@@ -33,7 +31,9 @@ const HomePage: React.FC = () => {
 
 	const { page, onNextPage, onPrevPage, resetPage } = usePagination();
 	const { address } = useAccount();
-	const { authToken } = useDynamicContext(); // Get authToken
+	const { authToken } = useDynamicContext();
+
+	const userRelationships = useUserRelationships(address);
 
 	const performSearch = async (selectedPage: number) => {
 		setLoading(true);
@@ -70,82 +70,10 @@ const HomePage: React.FC = () => {
 			const { data, meta } = adsResponse;
 			setPaginationMeta(meta);
 
-			let blockedUserIds = new Set<number>();
-			let trustedUsers: User[] = [];
-			let trustedByUsers: User[] = [];
-
-			if (address) {
-				console.log('Fetching blocked users with address:', address);
-				const blockedUsersResponse = await axios.get('/api/user_relationships', {
-					headers: {
-						'X-User-Address': address
-					}
-				});
-
-				console.log('Blocked users response:', blockedUsersResponse.data);
-
-				const blockedUsers = blockedUsersResponse.data.blocked_users || [];
-				const blockedByUsers = blockedUsersResponse.data.blocked_by_users || [];
-				trustedUsers = blockedUsersResponse.data.trusted_users || [];
-				trustedByUsers = blockedUsersResponse.data.trusted_by_users || [];
-
-				blockedUserIds = new Set([
-					...blockedUsers.map((user: User) => Number(user.id)),
-					...blockedByUsers.map((user: User) => Number(user.id))
-				]);
-
-				console.log('Blocked User IDs:', Array.from(blockedUserIds));
-				console.log(
-					'Trusted Users IDs:',
-					trustedUsers.map((user) => ({ id: Number(user.id), type: typeof user.id }))
-				);
-				console.log(
-					'Trusted By Users IDs:',
-					trustedByUsers.map((user) => ({ id: Number(user.id), type: typeof user.id }))
-				);
-			}
-
-			const filteredAds = data.filter((list: List) => {
-				const isTrustedOnly = list.accept_only_trusted;
-				const sellerId = Number(list.seller?.id);
-
-				if (!sellerId) {
-					console.log(`Excluding list ${list.id} because seller ID is missing or invalid`);
-					return false;
-				}
-
-				const sellerTrustedByMe = trustedUsers.some((user: User) => Number(user.id) === sellerId);
-				const sellerTrustsMe = trustedByUsers.some((user: User) => Number(user.id) === sellerId);
-
-				const isSellerBlocked = blockedUserIds.has(sellerId);
-				const cannotAccessTrustedOnlyAd =
-					isTrustedOnly && (!address || (!sellerTrustedByMe && !sellerTrustsMe));
-
-				console.log('Evaluating list:', {
-					listId: list.id,
-					sellerId,
-					isTrustedOnly,
-					sellerTrustedByMe,
-					sellerTrustsMe,
-					isSellerBlocked,
-					cannotAccessTrustedOnlyAd
-				});
-
-				if (isSellerBlocked) {
-					console.log(`Excluding list ${list.id} because seller ${sellerId} is blocked`);
-					return false;
-				}
-
-				if (cannotAccessTrustedOnlyAd) {
-					console.log(
-						`Excluding list ${list.id} because it's trusted-only and seller ${sellerId} is neither trusted by you nor trusts you`
-					);
-					return false;
-				}
-
-				console.log(`Including list ${list.id}`);
-				return true;
-			});
+			// Use the utility function to filter ads based on user relationships
+			const filteredAds = userRelationships
+				? filterAdsByUserRelationships(data, userRelationships, address)
+				: data;
 
 			console.log('Total ads fetched:', data.length);
 			console.log('Filtered ads count:', filteredAds.length);
@@ -155,9 +83,11 @@ const HomePage: React.FC = () => {
 
 			setSellSideLists(toSellers);
 			setBuySideLists(toBuyers);
-			setLists(toBuyers);
+
+			// Update the lists based on the current type
+			setLists(type === 'Buy' ? toBuyers : toSellers);
 		} catch (error) {
-			console.error('Error fetching ads or blocked users:', error);
+			console.error('Error fetching ads:', error);
 		} finally {
 			setLoading(false);
 		}
