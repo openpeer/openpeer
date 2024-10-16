@@ -15,6 +15,7 @@ import { listToMessage } from 'utils';
 import dynamic from 'next/dynamic';
 import Label from 'components/Label/Label';
 import Selector from 'components/Selector';
+import FriendlySelector from 'components/FriendlySelector';
 import { ListStepProps } from 'components/Listing/Listing.types';
 import StepLayout from 'components/Listing/StepLayout';
 import FundEscrow from 'components/Listing/FundEscrow';
@@ -190,7 +191,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 								{depositTimeLimit > 0 ? (
 									<div>
 										Your order will be cancelled if {type === 'SellList' ? 'you' : 'the seller'}{' '}
-										don't deposit after <FriendlyTime timeInMinutes={Number(depositTimeLimit)} />
+										don't deposit after <FriendlyTime timeInMinutes={Number(depositTimeLimit)} />.{' '}
 										<strong>You can set this to 0 to disable this feature.</strong>
 									</div>
 								) : (
@@ -201,12 +202,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 								)}
 							</span>
 						</div>
-						<Selector
+						<FriendlySelector
 							value={depositTimeLimit}
-							suffix={depositTimeLimit === 1 ? ' min' : ' mins'}
-							changeableAmount={1}
 							updateValue={(n) => updateList({ ...list, depositTimeLimit: n })}
-							decimals={0}
+							error={depositTimeLimit < 15 ? 'Minimum time is 15 mins' : undefined}
 						/>
 					</>
 				)}
@@ -217,7 +216,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						{paymentTimeLimit > 0 ? (
 							<div>
 								Your order can be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} don't pay
-								after <FriendlyTime timeInMinutes={Number(paymentTimeLimit)} />
+								after <FriendlyTime timeInMinutes={Number(paymentTimeLimit)} />.{' '}
 								<strong>Minimum 15 minutes. Maximum 24 hours.</strong>
 							</div>
 						) : (
@@ -225,14 +224,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						)}
 					</span>
 				</div>
-				<Selector
+				<FriendlySelector
 					value={paymentTimeLimit}
-					suffix={paymentTimeLimit === 1 ? ' min' : ' mins'}
-					changeableAmount={1}
 					updateValue={(n) => updateList({ ...list, paymentTimeLimit: n })}
-					decimals={0}
-					minValue={15}
-					maxValue={24 * 60}
+					error={paymentTimeLimit < 15 ? 'Minimum time is 15 mins' : undefined}
 				/>
 
 				<div className="mb-[-2]">

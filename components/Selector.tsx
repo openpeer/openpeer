@@ -1,3 +1,5 @@
+// components/Selector.tsx
+
 import React from 'react';
 import { NumericFormat, OnValueChange } from 'react-number-format';
 
