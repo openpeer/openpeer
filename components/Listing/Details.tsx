@@ -22,6 +22,7 @@ import 'react-quill/dist/quill.snow.css';
 import TrustedUsers from 'components/TrustedUsers';
 import BlockedUsers from 'components/BlockedUsers';
 import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import FriendlyTime from 'components/FriendlyTime';
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -189,8 +190,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 								{depositTimeLimit > 0 ? (
 									<div>
 										Your order will be cancelled if {type === 'SellList' ? 'you' : 'the seller'}{' '}
-										don't deposit after {depositTimeLimit}{' '}
-										{depositTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
+										don't deposit after <FriendlyTime timeInMinutes={Number(depositTimeLimit)} />
 										<strong>You can set this to 0 to disable this feature.</strong>
 									</div>
 								) : (
@@ -217,7 +217,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						{paymentTimeLimit > 0 ? (
 							<div>
 								Your order can be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} don't pay
-								after {paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}.{' '}
+								after <FriendlyTime timeInMinutes={Number(paymentTimeLimit)} />
 								<strong>Minimum 15 minutes. Maximum 24 hours.</strong>
 							</div>
 						) : (

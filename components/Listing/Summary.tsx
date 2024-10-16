@@ -1,3 +1,5 @@
+// components/Listing/Summary.tsx
+
 /* eslint-disable react/no-danger */
 import Flag from 'components/Flag/Flag';
 import Token from 'components/Token/Token';
@@ -10,7 +12,8 @@ import coins from './post-ad.png';
 import { UIList } from './Listing.types';
 
 // Import the Badge component
-import Badge from 'components/TrustedBadge'; // Adjust the import path as necessary
+import Badge from 'components/TrustedBadge';
+import FriendlyTime from 'components/FriendlyTime';
 
 interface SummaryProps {
 	list: UIList;
@@ -150,7 +153,7 @@ const Summary = ({ list }: SummaryProps) => {
 							<li className="w-full flex flex-row justify-between mb-4">
 								<div>Deposit Time Limit</div>
 								<div className="font-bold">
-									{depositTimeLimit} {depositTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+									<FriendlyTime timeInMinutes={Number(depositTimeLimit)} />
 								</div>
 							</li>
 						)
@@ -159,7 +162,7 @@ const Summary = ({ list }: SummaryProps) => {
 						<li className="w-full flex flex-row justify-between mb-4">
 							<div>Payment Time Limit</div>
 							<div className="font-bold">
-								{paymentTimeLimit} {paymentTimeLimit === 1 ? 'minute' : 'minutes'}{' '}
+								<FriendlyTime timeInMinutes={Number(paymentTimeLimit)} />
 							</div>
 						</li>
 					)}
