@@ -188,18 +188,10 @@ const Details = ({ list, updateList }: ListStepProps) => {
 						<Label title="Deposit Time Limit" />
 						<div className="mb-4">
 							<span className="text-sm text-gray-600">
-								{depositTimeLimit > 0 ? (
-									<div>
-										Your order will be cancelled if {type === 'SellList' ? 'you' : 'the seller'}{' '}
-										don't deposit after <FriendlyTime timeInMinutes={Number(depositTimeLimit)} />.{' '}
-										<strong>You can set this to 0 to disable this feature.</strong>
-									</div>
-								) : (
-									<div>
-										Your orders will not be cancelled automatically.{' '}
-										<strong>You can set this to 0 to disable this feature.</strong>
-									</div>
-								)}
+								<div>
+									Your order will be cancelled if {type === 'SellList' ? 'you' : 'the seller'} don't
+									deposit after <FriendlyTime timeInMinutes={Number(depositTimeLimit)} />.{' '}
+								</div>
 							</span>
 						</div>
 						<FriendlySelector
@@ -217,7 +209,7 @@ const Details = ({ list, updateList }: ListStepProps) => {
 							<div>
 								Your order can be cancelled if {type === 'SellList' ? 'the buyer' : 'you'} don't pay
 								after <FriendlyTime timeInMinutes={Number(paymentTimeLimit)} />.{' '}
-								<strong>Minimum 15 minutes. Maximum 24 hours.</strong>
+								<strong>Minimum 15 minutes. Maximum 72 hours.</strong>
 							</div>
 						) : (
 							<div>Your orders will not be cancelled automatically.</div>
