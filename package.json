@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@biconomy/mexa": "^3.0.6",
+		"@civic/ethereum-gateway-react": "0.13.6",
 		"@coingecko/cryptoformat": "^0.5.4",
 		"@dynamic-labs/ethereum": "^1.4.13",
 		"@dynamic-labs/magic": "^1.4.13",
@@ -24,9 +25,6 @@
 		"@next/font": "13.0.6",
 		"@openzeppelin/merkle-tree": "^1.0.4",
 		"@parcel/watcher": "^2.1.0",
-		"@quadrata/client-react": "^1.0.7",
-		"@quadrata/contracts": "^1.0.3",
-		"@quadrata/core-react": "^1.0.5",
 		"@rails/actioncable": "^7.0.4-2",
 		"@synaps-io/react-verify": "^1.0.3",
 		"@tailwindcss/forms": "^0.5.3",

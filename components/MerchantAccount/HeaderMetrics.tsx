@@ -1,5 +1,4 @@
 import Avatar from 'components/Avatar';
-import QuadrataClient from 'components/QuadrataClient';
 import { providers } from 'ethers';
 import { useVerificationStatus, useAccount } from 'hooks';
 import { User } from 'models/types';
@@ -280,11 +279,6 @@ const HeaderMetrics = ({ user, verificationOpen }: HeaderMetricsProps) => {
 					</div>
 				</div>
 			</div>
-			<QuadrataClient
-				onFinish={onFinish}
-				open={verificationModal && !verified}
-				onHide={() => setVerificationModal(false)}
-			/>
 		</>
 	);
 };
