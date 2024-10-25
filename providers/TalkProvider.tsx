@@ -1,4 +1,4 @@
-// hooks/useUserProfile.ts
+// providers/TalkProvider.tsx
 
 'use client';
 
@@ -8,12 +8,12 @@ import { Session } from '@talkjs/react';
 import { useDynamicContext, getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { useAccount } from 'wagmi';
 import axios from 'axios';
-import { bootIntercom } from 'utils/intercom';
+import { isEqual } from 'lodash';
 
 const TALKJS_APP_ID = process.env.NEXT_PUBLIC_TALKJS_APP_ID!;
-const DEBUG = process.env.NODE_ENV === 'development';
-const WEBSOCKET_TIMEOUT = 5000;
 const CONNECTION_RETRY_DELAY = 1000;
+const MAX_RECONNECT_ATTEMPTS = 3;
+const INITIALIZATION_DELAY = 500;
 
 interface UserDetails {
 	id: string;
@@ -35,28 +35,32 @@ interface ProviderState {
 	error: Error | null;
 }
 
-const initDebugLog = (message: string, data?: any): void => {
-	console.log(`🔄 [TalkJS Init] ${message}`, data ? JSON.stringify(data, null, 2) : '');
-};
+interface TalkJSError {
+	message: string;
+	code?: string;
+	details?: unknown;
+}
+
+// const initDebugLog = (message: string, data?: any): void => {
+// 	console.log(`🔄 [TalkJS Init] ${message}`, data ? JSON.stringify(data, null, 2) : '');
+// };
 
 const normalizeEmail = (email: string | string[] | null | undefined): string | null => {
 	if (!email) {
-		initDebugLog('No email provided');
+		// initDebugLog('No email provided');
 		return null;
 	}
 	if (Array.isArray(email)) {
-		initDebugLog('Email is array, taking first value:', email);
+		// initDebugLog('Email is array, taking first value:', email);
 		return email[0] || null;
 	}
-	// Check if email is masked (contains asterisks)
 	if (typeof email === 'string' && email.includes('*')) {
-		initDebugLog('Masked email detected, returning null');
+		// initDebugLog('Masked email detected, returning null');
 		return null;
 	}
 	return email;
 };
 
-// Add validation helper
 const validateUserDetails = (userData: any): boolean => {
 	if (!userData?.id) return false;
 	if (!userData?.email || (typeof userData.email === 'string' && userData.email.includes('*'))) return false;
@@ -70,31 +74,37 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 		jwtToken: null,
 		error: null
 	});
+	const [talkInitialized, setTalkInitialized] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const connectionRefs = useRef({
 		mountedAt: Date.now(),
 		wsTimeout: null as NodeJS.Timeout | null,
 		wsConnection: null as WebSocket | null,
 		retryCount: 0,
-		maxRetries: 3,
+		maxRetries: MAX_RECONNECT_ATTEMPTS,
 		lastUserHash: null as string | null,
 		isInitializing: false,
-		wsCheckInterval: null as NodeJS.Timeout | null
+		wsCheckInterval: null as NodeJS.Timeout | null,
+		lastCheckTime: Date.now()
 	}).current;
 
 	const { address: account } = useAccount();
 	const { isAuthenticated, primaryWallet } = useDynamicContext();
 
 	const safeSetState = useCallback((updates: Partial<ProviderState>): void => {
-		initDebugLog('Updating state:', updates);
-		setState((prev) => ({
-			...prev,
-			...updates
-		}));
+		// initDebugLog('Updating state:', updates);
+		setState((prev) => {
+			const newState = {
+				...prev,
+				...updates
+			};
+			return isEqual(prev, newState) ? prev : newState;
+		});
 	}, []);
 
 	const cleanup = useCallback((): void => {
-		initDebugLog('Cleaning up connections');
+		// initDebugLog('Cleaning up connections');
 		if (connectionRefs.wsTimeout) {
 			clearTimeout(connectionRefs.wsTimeout);
 			connectionRefs.wsTimeout = null;
@@ -107,11 +117,27 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 			clearInterval(connectionRefs.wsCheckInterval);
 			connectionRefs.wsCheckInterval = null;
 		}
+		connectionRefs.isInitializing = false;
 	}, [connectionRefs]);
+
+	const handleWebSocketError = useCallback(() => {
+		if (connectionRefs.retryCount < connectionRefs.maxRetries) {
+			connectionRefs.retryCount++;
+			setTimeout(() => {
+				cleanup();
+				establishConnection();
+			}, CONNECTION_RETRY_DELAY * connectionRefs.retryCount);
+		} else {
+			safeSetState({
+				status: 'error',
+				error: new Error('Failed to establish WebSocket connection')
+			});
+		}
+	}, [connectionRefs, cleanup]);
 
 	const fetchUserDetails = useCallback(async (): Promise<UserDetails | null> => {
 		if (!account || !isAuthenticated) {
-			initDebugLog('Cannot fetch user details - not authenticated or no account');
+			// initDebugLog('Cannot fetch user details - not authenticated or no account');
 			return null;
 		}
 
@@ -119,37 +145,31 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 			const authToken = getAuthToken();
 			if (!authToken) throw new Error('No auth token available');
 
-			initDebugLog('Fetching user details for account:', account);
+			// initDebugLog('Fetching user details for account:', account);
 
 			const response = await axios.get(`/api/user_profiles/${account}`, {
 				headers: { Authorization: `Bearer ${authToken}` }
 			});
 
 			const userData = response.data;
-			initDebugLog('Received user data:', userData);
+			// initDebugLog('Received user data:', userData);
 
-			// Validate that this is the current user's data and not masked
 			if (!validateUserDetails(userData)) {
-				initDebugLog('Invalid or masked user data received');
+				// initDebugLog('Invalid or masked user data received');
 				return null;
 			}
 
-			// Create consistent hash for user data
 			const userHash = JSON.stringify({
 				id: userData.id,
 				unique_identifier: userData.unique_identifier,
 				email: userData.email
 			});
 
-			// Update the hash but always return valid user data
 			if (userHash !== connectionRefs.lastUserHash) {
 				connectionRefs.lastUserHash = userHash;
-				initDebugLog('User data hash updated');
-			} else {
-				initDebugLog('User data hash unchanged');
+				// initDebugLog('User data hash updated');
 			}
 
-			// Always return valid user data
 			return userData;
 		} catch (error) {
 			console.error('Error fetching user details:', error);
@@ -159,9 +179,9 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 
 	const fetchJwtToken = useCallback(async (userId: string): Promise<string> => {
 		try {
-			initDebugLog('Fetching JWT token for user:', userId);
+			// initDebugLog('Fetching JWT token for user:', userId);
 			const response = await axios.post('/api/generate_talkjs_token', { user_id: userId });
-			initDebugLog('JWT token received');
+			// initDebugLog('JWT token received');
 			return response.data.token;
 		} catch (error) {
 			console.error('Error fetching JWT token:', error);
@@ -170,47 +190,47 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 	}, []);
 
 	const establishConnection = useCallback(async (): Promise<void> => {
-		if (connectionRefs.isInitializing) {
-			initDebugLog('Connection already initializing');
+		if (!talkInitialized || connectionRefs.isInitializing) {
+			// initDebugLog('Cannot establish connection - Talk not initialized or already initializing');
 			return;
 		}
 
 		connectionRefs.isInitializing = true;
-		initDebugLog('Starting connection establishment');
+		// initDebugLog('Starting connection establishment');
 
 		try {
-			safeSetState({ status: 'connecting' });
+			if (state.status !== 'connecting') {
+				safeSetState({ status: 'connecting' });
+			}
 
 			const userData = await fetchUserDetails();
 			if (!userData) {
 				throw new Error('Failed to get user details');
 			}
 
-			initDebugLog('User details fetched:', userData);
-
 			const token = await fetchJwtToken(userData.id);
 			if (!token) {
 				throw new Error('Failed to get JWT token');
 			}
 
-			// Update state before attempting WebSocket connection
-			safeSetState({
-				userDetails: userData,
-				jwtToken: token,
-				status: 'connected',
-				error: null
-			});
+			// Increased delay to ensure proper initialization
+			await new Promise((resolve) => setTimeout(resolve, INITIALIZATION_DELAY));
 
-			// Don't set a timeout that could interrupt the TalkJS initialization
-			connectionRefs.wsTimeout = null;
+			if (!isEqual(userData, state.userDetails) || token !== state.jwtToken) {
+				safeSetState({
+					userDetails: userData,
+					jwtToken: token,
+					status: 'connected',
+					error: null
+				});
+			}
 		} catch (error) {
 			console.error('Connection establishment failed:', error);
 			cleanup();
 
 			if (connectionRefs.retryCount < connectionRefs.maxRetries) {
 				connectionRefs.retryCount++;
-				initDebugLog(`Retrying connection (attempt ${connectionRefs.retryCount})`);
-				setTimeout(establishConnection, CONNECTION_RETRY_DELAY);
+				setTimeout(establishConnection, CONNECTION_RETRY_DELAY * connectionRefs.retryCount);
 			} else {
 				safeSetState({
 					status: 'error',
@@ -220,151 +240,169 @@ const TalkProvider = ({ children }: TalkProviderProps): JSX.Element => {
 		} finally {
 			connectionRefs.isInitializing = false;
 		}
-	}, [state.status, fetchUserDetails, fetchJwtToken, cleanup, safeSetState, connectionRefs]);
+	}, [
+		talkInitialized,
+		state.status,
+		state.userDetails,
+		state.jwtToken,
+		fetchUserDetails,
+		fetchJwtToken,
+		cleanup,
+		safeSetState,
+		connectionRefs
+	]);
+
+	useEffect(() => {
+		// Initialize Talk
+		if (!talkInitialized && TALKJS_APP_ID) {
+			Talk.ready
+				.then(() => {
+					// initDebugLog('TalkJS initialized successfully');
+					setTalkInitialized(true);
+				})
+				.catch((error) => {
+					console.error('Failed to initialize TalkJS:', error);
+					safeSetState({
+						status: 'error',
+						error: new Error('Failed to initialize TalkJS')
+					});
+				});
+		}
+	}, [talkInitialized, safeSetState]);
 
 	useEffect(() => {
 		if (state.status === 'connected') {
 			let reconnectAttempt = 0;
-			const maxReconnectAttempts = 3;
-			let reconnectTimeout: NodeJS.Timeout | null = null;
+			let lastCheckTime = Date.now();
 
-			const checkConnection = () => {
+			const checkConnection = async () => {
 				const talkSession = document.querySelector('iframe[title*="TalkJS"]');
+				const currentTime = Date.now();
 
-				if (!talkSession) {
-					initDebugLog('TalkJS iframe not found, handling reconnection');
+				if (currentTime - lastCheckTime < 2000) {
+					return;
+				}
+				lastCheckTime = currentTime;
 
-					// Clear any existing timeouts
-					if (reconnectTimeout) {
-						clearTimeout(reconnectTimeout);
-					}
+				if (!talkSession && state.userDetails?.id) {
+					// initDebugLog('TalkJS iframe not found, handling reconnection');
 
-					if (reconnectAttempt < maxReconnectAttempts) {
+					if (reconnectAttempt < MAX_RECONNECT_ATTEMPTS) {
 						reconnectAttempt++;
-						initDebugLog(`Attempting gentle reconnect (${reconnectAttempt}/${maxReconnectAttempts})`);
 
-						// Instead of resetting to initializing, try to re-establish just the WebSocket
-						reconnectTimeout = setTimeout(async () => {
-							try {
-								const token = await fetchJwtToken(state.userDetails!.id);
-								if (token) {
-									safeSetState({
-										jwtToken: token,
-										status: 'connected' // Keep the connected status
-									});
-								}
-							} catch (error) {
-								console.error('Reconnection failed:', error);
-								if (reconnectAttempt === maxReconnectAttempts) {
-									cleanup();
-									safeSetState({
-										status: 'error',
-										error: new Error('Failed to re-establish connection')
-									});
-								}
+						try {
+							cleanup();
+							await new Promise((resolve) => setTimeout(resolve, CONNECTION_RETRY_DELAY));
+							const newToken = await fetchJwtToken(state.userDetails.id);
+							if (newToken && newToken !== state.jwtToken) {
+								safeSetState({
+									jwtToken: newToken,
+									error: null
+								});
 							}
-						}, CONNECTION_RETRY_DELAY * reconnectAttempt);
+						} catch (error) {
+							console.error('Reconnection attempt failed:', error);
+							if (reconnectAttempt === MAX_RECONNECT_ATTEMPTS) {
+								cleanup();
+								safeSetState({ status: 'error' });
+							}
+						}
 					} else {
-						// Only reset to initializing if all reconnect attempts fail
 						cleanup();
 						safeSetState({ status: 'error' });
 					}
 				} else {
-					// Reset reconnect counter if connection is good
 					reconnectAttempt = 0;
 				}
 			};
 
 			const checkInterval = setInterval(checkConnection, 5000);
-
-			return () => {
-				if (reconnectTimeout) {
-					clearTimeout(reconnectTimeout);
-				}
-				clearInterval(checkInterval);
-			};
+			return () => clearInterval(checkInterval);
 		}
-	}, [state.status, state.userDetails, cleanup, safeSetState, fetchJwtToken]);
+	}, [state.status, state.userDetails, state.jwtToken, fetchJwtToken, cleanup, safeSetState]);
 
 	useEffect(() => {
-		const shouldConnect = isAuthenticated && account && primaryWallet?.connected && state.status === 'initializing';
-
-		initDebugLog('Checking connection conditions:', {
-			isAuthenticated,
-			account,
-			walletConnected: primaryWallet?.connected,
-			status: state.status,
-			shouldConnect
-		});
+		const shouldConnect =
+			talkInitialized &&
+			isAuthenticated &&
+			account &&
+			primaryWallet?.connected &&
+			state.status === 'initializing';
 
 		if (shouldConnect) {
 			establishConnection();
 		}
+	}, [talkInitialized, isAuthenticated, account, primaryWallet?.connected, state.status, establishConnection]);
 
-		return cleanup;
-	}, [isAuthenticated, account, primaryWallet?.connected, state.status, establishConnection, cleanup]);
+	useEffect(() => {
+		if (state.status === 'connected') {
+			const timer = setTimeout(() => setIsLoading(false), 1000);
+			return () => clearTimeout(timer);
+		}
+	}, [state.status]);
 
 	const syncUser = useCallback((): Talk.User => {
-		if (
-			!state.userDetails?.id ||
-			!state.userDetails?.email ||
-			(typeof state.userDetails.email === 'string' && state.userDetails.email.includes('*'))
-		) {
-			throw new Error('Valid user details required for sync');
+		const normalizedEmail = state.userDetails?.email ? normalizeEmail(state.userDetails.email) : null;
+
+		if (!state.userDetails?.id || !normalizedEmail) {
+			throw new Error('Invalid user data for sync');
 		}
 
-		const normalizedEmail = normalizeEmail(state.userDetails.email);
-		if (!normalizedEmail) {
-			throw new Error('Valid email required for TalkJS sync');
+		try {
+			const user = new Talk.User({
+				id: state.userDetails.id,
+				name: state.userDetails.name || state.userDetails.unique_identifier || state.userDetails.id,
+				email: normalizedEmail,
+				photoUrl: state.userDetails.image_url,
+				role: 'user'
+			});
+
+			// initDebugLog('User sync successful:', {
+			// 	id: user.id,
+			// 	email: user.email
+			// });
+
+			return user;
+		} catch (error) {
+			console.error('Error syncing user:', error);
+			safeSetState({ status: 'error', error: new Error('Failed to sync user') });
+			throw new Error('Failed to sync user');
 		}
+	}, [state.userDetails, safeSetState]);
 
-		initDebugLog('Pre-User Creation:', {
-			id: state.userDetails.id,
-			email: state.userDetails.email,
-			normalizedEmail,
-			emailType: typeof state.userDetails.email
-		});
-
-		const user = new Talk.User({
-			id: state.userDetails.id,
-			name: state.userDetails.name || state.userDetails.unique_identifier || state.userDetails.id,
-			email: normalizedEmail,
-			photoUrl: state.userDetails.image_url,
-			role: 'user'
-		});
-
-		initDebugLog('Post-User Creation:', {
-			id: user.id,
-			email: user.email,
-			emailType: typeof user.email
-		});
-
-		return user;
-	}, [state.userDetails]);
+	useEffect(() => {
+		return () => {
+			cleanup();
+			connectionRefs.retryCount = 0;
+			connectionRefs.isInitializing = false;
+		};
+	}, [cleanup, connectionRefs]);
 
 	if (!TALKJS_APP_ID) {
-		initDebugLog('No TalkJS App ID provided');
+		// initDebugLog('No TalkJS App ID provided');
 		return <>{children}</>;
 	}
 
 	return React.useMemo(() => {
 		if (
+			isLoading ||
+			!talkInitialized ||
 			state.status !== 'connected' ||
 			!state.userDetails?.email ||
 			(typeof state.userDetails.email === 'string' && state.userDetails.email.includes('*'))
 		) {
-			initDebugLog('Not rendering TalkJS session - invalid status or email');
+			// initDebugLog('Not rendering TalkJS session - invalid status or email');
 			return <>{children}</>;
 		}
 
-		initDebugLog('Rendering TalkJS session with user:', state.userDetails);
+		// initDebugLog('Rendering TalkJS session with user:', state.userDetails);
 
 		return (
 			<Session appId={TALKJS_APP_ID} syncUser={syncUser} token={state.jwtToken!}>
 				{children}
 			</Session>
 		);
-	}, [state.status, state.userDetails, state.jwtToken, syncUser, children]);
+	}, [isLoading, talkInitialized, state.status, state.userDetails, state.jwtToken, syncUser, children]);
 };
 
 export default React.memo(TalkProvider);

@@ -15,6 +15,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const [previousProfile, setPreviousProfile] = useState<Partial<User> | null>(null);
 	const { address } = useAccount();
 	const { authToken } = useDynamicContext(); // Get authToken from useDynamicContext
+	const [talkInitialized, setTalkInitialized] = useState(false);
 
 	const telegramBotLinkRef = useRef<string>('');
 
@@ -23,7 +24,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			if (!isEqual(prevUser, data)) {
 				const uniqueIdentifier = data.unique_identifier;
 				telegramBotLinkRef.current = `https://telegram.me/openpeer_bot?start=${uniqueIdentifier}`;
-				console.log('User updated:', data);
+				// console.log('User updated:', data);
 				return data;
 			}
 			return prevUser;
@@ -34,7 +35,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		if (!address || !authToken) return;
 
 		try {
-			console.log('Fetching user profile...');
+			// console.log('Fetching user profile...');
 			const res = await fetch(`/api/user_profiles/${address}`, {
 				headers: {
 					Authorization: `Bearer ${authToken}`
@@ -51,7 +52,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			} else {
 				updateUserState(data);
 				setPreviousProfile(data);
-				console.log('User profile fetched:', data);
+				// console.log('User profile fetched:', data);
 			}
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
@@ -111,14 +112,14 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 	const updateUserProfile = useCallback(
 		async (profile: Partial<User>, showNotification = true) => {
 			if (!authToken) return; // Ensure authToken is available
-			console.log('Profile data before validation:', profile);
+			// console.log('Profile data before validation:', profile);
 			const validationErrors = validateProfile(profile);
 			if (Object.keys(validationErrors).length > 0) {
 				setErrors(validationErrors);
 				return;
 			}
 
-			console.log('Profile data after validation:', profile);
+			// console.log('Profile data after validation:', profile);
 
 			if (previousProfile && isEqual(previousProfile, profile)) {
 				// console.log('Profile has not changed, skipping update.');
@@ -148,7 +149,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					}
 				});
 
-				console.log('Sending user profile data to API:', userProfileData);
+				// console.log('Sending user profile data to API:', userProfileData);
 
 				const result = await fetch(`/api/user_profiles/${address}`, {
 					method: 'PATCH',
@@ -184,9 +185,9 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 					if (showNotification) {
 						onUpdateProfile?.(responseData.data);
 					}
-					console.log('User profile updated:', responseData.data);
+					// console.log('User profile updated:', responseData.data);
 				} else {
-					console.log('Profile updated successfully, but no data returned. Fetching latest profile.');
+					// console.log('Profile updated successfully, but no data returned. Fetching latest profile.');
 					await fetchUserProfile();
 				}
 			} catch (error) {
@@ -260,7 +261,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 		if (!address || !authToken) return { success: false, error: 'No address or auth token provided' };
 
 		try {
-			console.log('Refreshing user profile...');
+			// console.log('Refreshing user profile...');
 			const res = await fetch(`/api/user_profiles/${address}`, {
 				headers: {
 					Authorization: `Bearer ${authToken}`
@@ -273,7 +274,7 @@ const useUserProfile = ({ onUpdateProfile }: { onUpdateProfile?: (user: User) =>
 			const data = await res.json();
 			updateUserState(data);
 			setPreviousProfile(data);
-			console.log('User profile refreshed:', data);
+			// console.log('User profile refreshed:', data);
 			return { success: true, user: data };
 		} catch (error) {
 			console.error('Error refreshing user profile:', error);
