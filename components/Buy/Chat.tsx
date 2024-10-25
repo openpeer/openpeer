@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Talk from 'talkjs';
 import { Chatbox } from '@talkjs/react';
 import Button from 'components/Button/Button';
 import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { useAccount } from 'wagmi';
-import axios from 'axios';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import axios from 'axios';
 
 interface UserDetails {
 	id: string;
@@ -24,59 +24,42 @@ interface ChatParams {
 const Chat = ({ address, label }: ChatParams) => {
 	const { address: currentUserAddress } = useAccount();
 	const { isAuthenticated } = useDynamicContext();
-	const [otherUserDetails, setOtherUserDetails] = useState<UserDetails | null>(null);
-	const [showChat, setShowChat] = React.useState(false);
+	const [showChat, setShowChat] = useState(false);
+	const [otherId, setOtherId] = useState<string | null>(null);
 
 	useEffect(() => {
-		const fetchOtherUserDetails = async () => {
+		const fetchOtherId = async () => {
 			if (!address || !isAuthenticated) return;
 
 			try {
-				// Fetch other user details from your API
 				const response = await axios.get(`/api/users/${address}`);
-				setOtherUserDetails(response.data);
+				setOtherId(response.data.id);
 			} catch (error) {
-				console.error('Error fetching other user details:', error);
-				// Handle error, maybe set default values
-				setOtherUserDetails({
-					id: address.toLowerCase(),
-					name: address,
-					email: `${address}@example.com`,
-					photoUrl: '' // or a default image URL
-				});
+				console.error('Error fetching user ID:', error);
 			}
 		};
 
-		fetchOtherUserDetails();
+		fetchOtherId();
 	}, [address, isAuthenticated]);
 
 	const syncConversation = useCallback(
 		(session: Talk.Session) => {
-			const otherUser = new Talk.User({
-				id: otherUserDetails?.id || address,
-				name: otherUserDetails?.name || address,
-				email: otherUserDetails?.email || '',
-				photoUrl: otherUserDetails?.photoUrl || undefined, // Ensure photoUrl is either a valid URL or undefined
-				role: 'default'
-			});
-
+			const otherUser = new Talk.User(otherId!);
 			const conversationId = Talk.oneOnOneId(session.me, otherUser);
 			const conversation = session.getOrCreateConversation(conversationId);
 			conversation.setParticipant(session.me);
 			conversation.setParticipant(otherUser);
-
 			return conversation;
 		},
-		[otherUserDetails, address]
+		[otherId]
 	);
 
 	const handleOpenChat = () => {
 		setShowChat(true);
 	};
 
-	// Move the check here to avoid conditional hooks
-	if (!otherUserDetails) {
-		return null; // or a loading indicator
+	if (!isAuthenticated || !currentUserAddress || !otherId) {
+		return null;
 	}
 
 	return (
@@ -91,7 +74,7 @@ const Chat = ({ address, label }: ChatParams) => {
 				}
 				outlined
 			/>
-			{showChat && (
+			{showChat && otherId && (
 				<Chatbox
 					syncConversation={syncConversation}
 					className="mb-4"
