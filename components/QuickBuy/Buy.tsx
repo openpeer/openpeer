@@ -181,7 +181,7 @@ const Buy = ({ lists, updateLists, onSeeOptions, onLoading }: BuyProps) => {
 					onClick={onButtonClick}
 				/>
 				<div className="text-center mt-4">
-					<span className="text-xs text-gray-600 text-center">Always zero fees 🎉</span>
+					<span className="text-xs text-gray-600 text-center">Always zero fees for buyers 🎉</span>
 				</div>
 			</div>
 			<div className={`${!creatingAd ? 'hidden' : ''}`}>
